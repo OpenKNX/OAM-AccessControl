@@ -254,8 +254,8 @@
             </Script>
           </Static>
           <Dynamic>
-            <Channel Id="%AID%_CH-Basic" Name="BasicChannel" Number="1" Text="Fingerabdruckleser" Icon="fingerprint" HelpContext="Empty">
-              <ParameterBlock Id="%AID%_PB-nnn" Name="Basic" Text="Allgemein" Icon="cog-outline" HelpContext="Empty" ShowInComObjectTree="true">
+            <Channel Id="%AID%_CH-Basic" Name="BasicChannel" Number="1" Text="Fingerabdruckleser" Icon="fingerprint" HelpContext="FIN-Dokumentation">
+              <ParameterBlock Id="%AID%_PB-nnn" Name="Basic" Text="Allgemein" Icon="cog-outline" HelpContext="FIN-Dokumentation" ShowInComObjectTree="true">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Version des Fingerprint-Moduls: %ModuleVersion%" UIHint="Headline" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 
@@ -469,10 +469,6 @@
                     <Button Id="%AID%_B-%T%00007" Text="Jetzt löschen" Name="resetScanner" EventHandler="FIN_resetScanner" EventHandlerOnline="ConnectionOriented" />
                   </when>
                 </choose>
-              </ParameterBlock>
-              <ParameterBlock Name="Docu" Text="Dokumentation" Id="%AID%_PB-nnn" Icon="information-outline" HelpContext="FIN-Dokumentation">
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Dokumentation" UIHint="Headline" />
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Die Dokumentation ist als Kontextsensitive Hilfe verfügbar, siehe den Text im unteren Bereich des Bildschirms." />
               </ParameterBlock>
               <ParameterBlock Id="%AID%_PB-nnn" Name="Actions" Text="Aktionen" Icon="dots-hexagon" HelpContext="Empty" ShowInComObjectTree="true">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Aktionen" UIHint="Headline" />

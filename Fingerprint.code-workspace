@@ -7,7 +7,7 @@
 			"path": "./../OFM-Logicmodule"
 		},
 		{
-			"path": "../knx"
+			"path": "../OFM-ConfigTransfer"
 		},
 		{
 			"path": "../OGM-Common"
@@ -17,6 +17,9 @@
 		},
 		{
 			"path": "../OFM-FileTransferModule"
+		},
+		{
+			"path": "../knx"
 		}
 	],
 	"settings": {

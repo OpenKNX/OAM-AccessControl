@@ -2,17 +2,20 @@
 <?xml-model href="../../Organization/knxprod-support/knx_project_20/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
 
+  <op:config name="%ApplicationVersion%" value="0.5" />
+  <op:config name="%ReplacesVersions%" value="0.4 0.3 0.2" />
+
   <op:config href="FingerprintModule.conf.xml" />
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x00"
     ApplicationVersion="%ApplicationVersion%"
     ReplacesVersions="%ReplacesVersions%"
-    ApplicationRevision="0"
+    ApplicationRevision="3"
     ProductName="Fingerabdruckleser"
     ApplicationName="AB-Finger-Logic-Button"
-    BuildSuffix="-R503"
-    BuildSuffixText=" (R503)"
+    BuildSuffix="-WP"
+    BuildSuffixText=" (WP)"
     OrderNumber="OpenKnxFingerprint"
   />
 
@@ -25,9 +28,8 @@
     share="../../OFM-ConfigTransfer/src/ConfigTransfer.share.xml"
     noConfigTransfer="true"
     ModuleType="99">
-    <op:verify File="../../OFM-ConfigTransfer/library.json" ModuleVersion="%UCT_VerifyVersion%" />
+    <op:verify File="../../OFM-ConfigTransfer/library.json" ModuleVersion="0.1" />
   </op:define>
-
 
   <!-- for FIN, we have to stay with ModuleType 2!!! -->
   <op:define prefix="FIN"
@@ -37,11 +39,12 @@
     KoSingleOffset="20"
     KoOffset="100"
     NumChannels="200">
-    <op:verify File="../library.json" ModuleVersion="%ApplicationVersion%" />
+    <op:verify File="../library.json" ModuleVersion="0.2" />
   </op:define>
 
   <op:define prefix="FINACT"
     prefixDoc="FIN"
+    noConfigTransfer="true"
     share="FingerAction.share.xml"
     template="FingerAction.templ.xml"
     ModuleType="2"
@@ -49,6 +52,7 @@
 
   <op:define prefix="FINACTSER"
     prefixDoc="FIN"
+    noConfigTransfer="true"
     template="FingerActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />

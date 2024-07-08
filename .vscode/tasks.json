@@ -107,9 +107,19 @@
         {
             "label": "Build-Release R503",
             "type": "shell",
-            "command": "scripts/Build-Release.ps1", 
+            "command": "scripts/Build-Release.ps1",
             "args": [
                 "ReleaseR503"
+            ],
+            "problemMatcher": [],
+            "group": "test"
+        },
+        {
+            "label": "Build-Release R503-WP",
+            "type": "shell",
+            "command": "scripts/Build-Release.ps1",
+            "args": [
+                "ReleaseR503-WP"
             ],
             "problemMatcher": [],
             "group": "test"
