@@ -10,7 +10,7 @@
                                              
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 71
+#define MAIN_ApplicationVersion 72
 #define MAIN_ParameterSize 11361
 #define MAIN_MaxKoNumber 796
 #define MAIN_OrderNumber "OpenKnxFingerprint"
@@ -423,63 +423,67 @@
 #define SWA_ChannelCentralFunction               0      // 1 Bit, Bit 3
 #define     SWA_ChannelCentralFunctionMask 0x08
 #define     SWA_ChannelCentralFunctionShift 3
+#define SWA_ChannelStatusSend                    0      // 2 Bits, Bit 2-1
+#define     SWA_ChannelStatusSendMask 0x06
+#define     SWA_ChannelStatusSendShift 1
+#define SWA_ChannelStatusInverted                0      // 1 Bit, Bit 0
+#define     SWA_ChannelStatusInvertedMask 0x01
+#define     SWA_ChannelStatusInvertedShift 0
 #define SWA_ChannelTurnOnDelayBase               1      // 2 Bits, Bit 7-6
 #define     SWA_ChannelTurnOnDelayBaseMask 0xC0
 #define     SWA_ChannelTurnOnDelayBaseShift 6
 #define SWA_ChannelTurnOnDelayTime               1      // 14 Bits, Bit 13-0
 #define     SWA_ChannelTurnOnDelayTimeMask 0x3FFF
 #define     SWA_ChannelTurnOnDelayTimeShift 0
-#define SWA_ChannelTurnOffDelayBase              1      // 2 Bits, Bit 3-2
-#define     SWA_ChannelTurnOffDelayBaseMask 0x0C
-#define     SWA_ChannelTurnOffDelayBaseShift 2
-#define SWA_ChannelTurnOffDelayTime              1      // 14 Bits, Bit 9--4
-#define SWA_ChannelStatusSend                    0      // 2 Bits, Bit 7-6
-#define     SWA_ChannelStatusSendMask 0xC0
-#define     SWA_ChannelStatusSendShift 6
-#define SWA_ChannelStatusCyclicBase              2      // 2 Bits, Bit 6-5
-#define     SWA_ChannelStatusCyclicBaseMask 0x60
-#define     SWA_ChannelStatusCyclicBaseShift 5
-#define SWA_ChannelStatusCyclicTime              2      // 14 Bits, Bit 12--1
-#define SWA_ChannelStatusInverted                2      // 1 Bit, Bit 2
-#define     SWA_ChannelStatusInvertedMask 0x04
-#define     SWA_ChannelStatusInvertedShift 2
-#define SWA_ChannelBehaviorLock                  3      // 2 Bits, Bit 7-6
+#define SWA_ChannelTurnOffDelayBase              3      // 2 Bits, Bit 7-6
+#define     SWA_ChannelTurnOffDelayBaseMask 0xC0
+#define     SWA_ChannelTurnOffDelayBaseShift 6
+#define SWA_ChannelTurnOffDelayTime              3      // 14 Bits, Bit 13-0
+#define     SWA_ChannelTurnOffDelayTimeMask 0x3FFF
+#define     SWA_ChannelTurnOffDelayTimeShift 0
+#define SWA_ChannelStatusCyclicBase              5      // 2 Bits, Bit 7-6
+#define     SWA_ChannelStatusCyclicBaseMask 0xC0
+#define     SWA_ChannelStatusCyclicBaseShift 6
+#define SWA_ChannelStatusCyclicTime              5      // 14 Bits, Bit 13-0
+#define     SWA_ChannelStatusCyclicTimeMask 0x3FFF
+#define     SWA_ChannelStatusCyclicTimeShift 0
+#define SWA_ChannelBehaviorLock                  7      // 2 Bits, Bit 7-6
 #define     SWA_ChannelBehaviorLockMask 0xC0
 #define     SWA_ChannelBehaviorLockShift 6
-#define SWA_ChannelBehaviorUnlock                3      // 3 Bits, Bit 5-3
+#define SWA_ChannelBehaviorUnlock                7      // 3 Bits, Bit 5-3
 #define     SWA_ChannelBehaviorUnlockMask 0x38
 #define     SWA_ChannelBehaviorUnlockShift 3
-#define SWA_ChannelBehaviorPowerLoss             4      // 2 Bits, Bit 7-6
+#define SWA_ChannelBehaviorPowerLoss             8      // 2 Bits, Bit 7-6
 #define     SWA_ChannelBehaviorPowerLossMask 0xC0
 #define     SWA_ChannelBehaviorPowerLossShift 6
-#define SWA_ChannelBehaviorPowerRegain           4      // 2 Bits, Bit 5-4
+#define SWA_ChannelBehaviorPowerRegain           8      // 2 Bits, Bit 5-4
 #define     SWA_ChannelBehaviorPowerRegainMask 0x30
 #define     SWA_ChannelBehaviorPowerRegainShift 4
-#define SWA_ChannelStairLightActive              5      // 1 Bit, Bit 7
+#define SWA_ChannelStairLightActive              9      // 1 Bit, Bit 7
 #define     SWA_ChannelStairLightActiveMask 0x80
 #define     SWA_ChannelStairLightActiveShift 7
-#define SWA_ChannelScenesActive                  5      // 1 Bit, Bit 6
+#define SWA_ChannelScenesActive                  9      // 1 Bit, Bit 6
 #define     SWA_ChannelScenesActiveMask 0x40
 #define     SWA_ChannelScenesActiveShift 6
-#define SWA_ChannelSceneLearn                    5      // 1 Bit, Bit 0
+#define SWA_ChannelSceneLearn                    9      // 1 Bit, Bit 0
 #define     SWA_ChannelSceneLearnMask 0x01
 #define     SWA_ChannelSceneLearnShift 0
-#define SWA_ChannelStairTimeBase                 6      // 2 Bits, Bit 7-6
+#define SWA_ChannelStairTimeBase                10      // 2 Bits, Bit 7-6
 #define     SWA_ChannelStairTimeBaseMask 0xC0
 #define     SWA_ChannelStairTimeBaseShift 6
-#define SWA_ChannelStairTimeTime                 6      // 14 Bits, Bit 13-0
+#define SWA_ChannelStairTimeTime                10      // 14 Bits, Bit 13-0
 #define     SWA_ChannelStairTimeTimeMask 0x3FFF
 #define     SWA_ChannelStairTimeTimeShift 0
-#define SWA_ChannelStairRetrigger                6      // 1 Bit, Bit 3
-#define     SWA_ChannelStairRetriggerMask 0x08
-#define     SWA_ChannelStairRetriggerShift 3
-#define SWA_ChannelStairOff                      6      // 1 Bit, Bit 2
-#define     SWA_ChannelStairOffMask 0x04
-#define     SWA_ChannelStairOffShift 2
-#define SWA_ChannelStairBlinkBase                7      // 2 Bits, Bit 7-6
+#define SWA_ChannelStairRetrigger               12      // 1 Bit, Bit 7
+#define     SWA_ChannelStairRetriggerMask 0x80
+#define     SWA_ChannelStairRetriggerShift 7
+#define SWA_ChannelStairOff                     12      // 1 Bit, Bit 6
+#define     SWA_ChannelStairOffMask 0x40
+#define     SWA_ChannelStairOffShift 6
+#define SWA_ChannelStairBlinkBase               13      // 2 Bits, Bit 7-6
 #define     SWA_ChannelStairBlinkBaseMask 0xC0
 #define     SWA_ChannelStairBlinkBaseShift 6
-#define SWA_ChannelStairBlinkTime                7      // 14 Bits, Bit 13-0
+#define SWA_ChannelStairBlinkTime               13      // 14 Bits, Bit 13-0
 #define     SWA_ChannelStairBlinkTimeMask 0x3FFF
 #define     SWA_ChannelStairBlinkTimeShift 0
 #define SWA_ChannelSceneAActive                 58      // 1 Bit, Bit 7
@@ -547,6 +551,10 @@
 #define ParamSWA_ChannelOperationMode                ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelOperationMode)) & SWA_ChannelOperationModeMask))
 // Zentralfunktion
 #define ParamSWA_ChannelCentralFunction              ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelCentralFunction)) & SWA_ChannelCentralFunctionMask))
+// Status senden
+#define ParamSWA_ChannelStatusSend                   ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelStatusSend)) & SWA_ChannelStatusSendMask) >> SWA_ChannelStatusSendShift)
+// Zusätzlicher invertierter Status
+#define ParamSWA_ChannelStatusInverted               ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelStatusInverted)) & SWA_ChannelStatusInvertedMask))
 // Zeitbasis
 #define ParamSWA_ChannelTurnOnDelayBase              ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelTurnOnDelayBase)) & SWA_ChannelTurnOnDelayBaseMask) >> SWA_ChannelTurnOnDelayBaseShift)
 // Zeit
@@ -555,12 +563,16 @@
 #define ParamSWA_ChannelTurnOnDelayTimeMS            (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChannelTurnOnDelayTime))))
 // Zeitbasis
 #define ParamSWA_ChannelTurnOffDelayBase             ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelTurnOffDelayBase)) & SWA_ChannelTurnOffDelayBaseMask) >> SWA_ChannelTurnOffDelayBaseShift)
-// Status senden
-#define ParamSWA_ChannelStatusSend                   ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelStatusSend)) & SWA_ChannelStatusSendMask) >> SWA_ChannelStatusSendShift)
+// Zeit
+#define ParamSWA_ChannelTurnOffDelayTime             (knx.paramWord(SWA_ParamCalcIndex(SWA_ChannelTurnOffDelayTime)) & SWA_ChannelTurnOffDelayTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_ChannelTurnOffDelayTimeMS           (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChannelTurnOffDelayTime))))
 // Zeitbasis
 #define ParamSWA_ChannelStatusCyclicBase             ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelStatusCyclicBase)) & SWA_ChannelStatusCyclicBaseMask) >> SWA_ChannelStatusCyclicBaseShift)
-// Zusätzlicher invertierter Status
-#define ParamSWA_ChannelStatusInverted               ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelStatusInverted)) & SWA_ChannelStatusInvertedMask))
+// Zeit
+#define ParamSWA_ChannelStatusCyclicTime             (knx.paramWord(SWA_ParamCalcIndex(SWA_ChannelStatusCyclicTime)) & SWA_ChannelStatusCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_ChannelStatusCyclicTimeMS           (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChannelStatusCyclicTime))))
 // bei Sperren
 #define ParamSWA_ChannelBehaviorLock                 ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChannelBehaviorLock)) & SWA_ChannelBehaviorLockMask) >> SWA_ChannelBehaviorLockShift)
 // bei Entsperren

@@ -4,8 +4,8 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="4.7"
-    ReplacesVersions="4.6 4.5 4.4 4.3 4.2 4.1 4.0"
+    ApplicationVersion="4.8"
+    ReplacesVersions="4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
     ApplicationRevision="0"
     ProductName="Fingerabdruckleser"
     ApplicationName="AB-Finger-Logic-Button"
