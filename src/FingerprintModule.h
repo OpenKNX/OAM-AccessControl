@@ -8,20 +8,6 @@
 #include "CRC16.h"
 #include "lz4.h"
 
-#define SCANNER_TOUCH_PIN 2
-
-#define TOUCH_LEFT_PIN 26
-#define TOUCH_RIGHT_PIN 27
-#define LED_GREEN_PIN 24
-#define LED_RED_PIN 25
-
-#define EXT0 14
-#define EXT1 15
-#define EXT2 28 // ADC
-#define EXT3 18
-#define EXT4 29 // ADC
-#define EXT5 19
-
 #define INIT_RESET_TIMEOUT 1000
 #define LED_RESET_TIMEOUT 1000
 #define ENROLL_REQUEST_DELAY 100

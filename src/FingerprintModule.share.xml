@@ -17,13 +17,6 @@
               <ParameterType Id="%AID%_PT-FINNumChannels" Name="FINNumChannels">
                 <TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="1" maxInclusive="%N%" />
               </ParameterType>
-              <ParameterType Id="%AID%_PT-ChannelActive" Name="ChannelActive">
-                <TypeRestriction Base="Value" SizeInBit="2">
-                  <Enumeration Text="Inaktiv" Value="0" Id="%ENID%" />
-                  <Enumeration Text="Aktiv" Value="1" Id="%ENID%" />
-                  <Enumeration Text="Funktionslos" Value="2" Id="%ENID%" />
-                </TypeRestriction>
-              </ParameterType>
               <ParameterType Id="%AID%_PT-FingerprintColor" Name="FingerprintColor">
                 <TypeRestriction Base="Value" SizeInBit="3">
                   <Enumeration Text="Aus" Value="0" Id="%ENID%" />
