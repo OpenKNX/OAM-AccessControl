@@ -2,6 +2,10 @@
 <?xml-model href="../../Organization/knxprod-support/knx_project_20/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
 
+  <op:config name="%IsSecureEnabled%" value="false" />
+  <op:config name="%LOG_NumChannelsDefault%" value="3" />
+  <op:config name="%BTN_NumChannelsDefault%" value="3" />
+
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
     ApplicationVersion="4.8"
@@ -15,10 +19,18 @@
     BaggagesRootDir="A6/01"
   />
 
-    <op:define prefix="BASE" ModuleType="1"
-              share="../lib/OGM-Common/src/Common.share.xml">
-      <op:verify File="../lib/OGM-Common/library.json" ModuleVersion="1.2" />
-    </op:define>
+  <op:define prefix="BASE" ModuleType="1"
+            share="../lib/OGM-Common/src/Common.share.xml">
+    <op:verify File="../lib/OGM-Common/library.json" ModuleVersion="1.2" />
+  </op:define>
+
+  <op:define prefix="UCT"
+    share="../../OFM-ConfigTransfer/src/ConfigTransfer.share.xml"
+    noConfigTransfer="true"
+    ModuleType="99">
+    <op:verify File="../../OFM-ConfigTransfer/library.json" ModuleVersion="0.1" />
+  </op:define>
+
 
   <!-- for FIN, we have to stay with ModuleType 2!!! -->
   <op:define prefix="FIN"
@@ -60,7 +72,7 @@
     NumChannels="99"
     KoOffset="100"
     ModuleType="1">
-      <op:verify File="../lib/OFM-LogicModule/library.json" ModuleVersion="3.2" />
+    <op:verify File="../lib/OFM-LogicModule/library.json" ModuleVersion="3.3" />
     </op:define>
 
     <op:define prefix="BTN"
@@ -81,9 +93,11 @@
     <op:verify File="../lib/OFM-BinaryInput/library.json" ModuleVersion="0.2" />
     </op:define>
 
-    <generate>
+    <!-- <generate> -->
+    <generate base="SecureApplication.xml">
       <Dynamic>
-        <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
+      <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
+      <op:include href="../../OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
         <op:include href="FingerprintModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="FIN" />
         <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
         <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />

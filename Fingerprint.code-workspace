@@ -4,10 +4,10 @@
 			"path": "."
 		},
 		{
-			"path": "./../OFM-Logicmodule"
+			"path": "./../OFM-SwitchActuator"
 		},
 		{
-			"path": "../knx"
+			"path": "./../OFM-Logicmodule"
 		},
 		{
 			"path": "../OGM-Common"
@@ -16,7 +16,16 @@
 			"path": "../OFM-VirtualButton"
 		},
 		{
+			"path": "../OFM-BinaryInput"
+		},
+		{
+			"path": "../OFM-ConfigTransfer"
+		},
+		{
 			"path": "../OFM-FileTransferModule"
+		},
+		{
+			"path": "../knx"
 		}
 	],
 	"settings": {
