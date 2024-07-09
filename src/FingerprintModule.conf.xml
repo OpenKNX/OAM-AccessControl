@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-model href="../../Organization/knxprod-support/knx_project_20/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
+
   <op:config name="%LOG_NumChannelsDefault%" value="3" />
   <op:config name="%BTN_NumChannelsDefault%" value="3" />
+  <op:config name="%BI_NumChannelsDefault%" value="2" />
 
   <!-- <op:config name="%UCT_VerifyVersion%" value="0.1" /> -->
+  <op:config name="%SWA_VerifyVersion%" value="0.1" />
   <op:config name="%BTN_VerifyVersion%" value="0.4" />
+  <op:config name="%BI_VerifyVersion%" value="0.2" />
   <op:config name="%UCT_VerifyVersion%" value="0.1" />
-  <op:config name="%LOG_VerifyVersion%" value="3.2" />
-  <op:config name="%BASE_VerifyVersion%" value="1.1" />
+  <op:config name="%LOG_VerifyVersion%" value="3.3" />
+  <op:config name="%BASE_VerifyVersion%" value="1.2" />
 
-  <op:config name="%ApplicationVersion%" value="0.2" />
-  <op:config name="%ReplacesVersions%" value="0.0" />
+  <op:config name="%FIN_ApplicationVersion%" value="0.3" />
+  <op:config name="%FIN_ReplacesVersions%" value="0.2" />
 </KNX>

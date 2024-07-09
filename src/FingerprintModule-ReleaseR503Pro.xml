@@ -6,8 +6,8 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x00"
-    ApplicationVersion="%ApplicationVersion%"
-    ReplacesVersions="%ReplacesVersions%"
+    ApplicationVersion="%FIN_ApplicationVersion%"
+    ReplacesVersions="%FIN_ReplacesVersions%"
     ApplicationRevision="0"
     ProductName="Fingerabdruckleser"
     ApplicationName="AB-Finger-Logic-Button"
@@ -37,7 +37,7 @@
     KoSingleOffset="20"
     KoOffset="100"
     NumChannels="1500">
-    <op:verify File="../library.json" ModuleVersion="%ApplicationVersion%" />
+    <op:verify File="../library.json" ModuleVersion="%FIN_ApplicationVersion%" />
   </op:define>
 
   <op:define prefix="FINACT"
@@ -52,6 +52,16 @@
     template="FingerActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />
+
+    <op:define prefix="SWA"
+    share="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml"
+    template="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.templ.xml"
+    NumChannels="1"
+    KoSingleOffset="90"
+    KoOffset="91"
+    ModuleType="4">
+    <op:verify File="../lib/OFM-SwitchActuator/library.json" ModuleVersion="%SWA_VerifyVersion%" />
+    </op:define>
 
   <op:define prefix="LOG"
             share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
@@ -71,13 +81,25 @@
     <op:verify File="../lib/OFM-VirtualButton/library.json" ModuleVersion="%BTN_VerifyVersion%" />
   </op:define>
 
+    <op:define prefix="BI"
+    share="../lib/OFM-BinaryInput/src/BinaryInputChannel.share.xml"
+    template="../lib/OFM-BinaryInput/src/BinaryInputChannel.templ.xml"
+    NumChannels="4"
+    KoOffset="86"
+    ModuleType="5">
+    <op:verify File="../lib/OFM-BinaryInput/library.json" ModuleVersion="%BI_VerifyVersion%" />
+    </op:define>
+
   <generate>
+    <!-- <generate base="SecureApplication.xml"> -->
     <Dynamic>
       <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
       <op:include href="../../OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
       <op:include href="FingerprintModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="FIN" />
+      <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
       <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
       <op:include href="../lib/OFM-VirtualButton/src/VirtualButton.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BTN" />
+      <op:include href="../lib/OFM-BinaryInput/src/BinaryInputChannel.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BI" />
     </Dynamic>
   </generate>
 </KNX>

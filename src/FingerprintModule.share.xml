@@ -249,7 +249,8 @@
           <Dynamic>
             <Channel Id="%AID%_CH-Basic" Name="BasicChannel" Number="1" Text="Fingerabdruckleser" Icon="fingerprint" HelpContext="FIN-Dokumentation">
               <ParameterBlock Id="%AID%_PB-nnn" Name="Basic" Text="Allgemein" Icon="cog-outline" HelpContext="FIN-Dokumentation" ShowInComObjectTree="true">
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Version des Fingerprint-Moduls: %ModuleVersion%" UIHint="Headline" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Fingerprint" UIHint="Headline" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Version: %ModuleVersion%" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hardware" UIHint="Headline" />
