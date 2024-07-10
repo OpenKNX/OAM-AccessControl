@@ -108,6 +108,12 @@
               <ParameterType Id="%AID%_PT-SyncDelay" Name="SyncDelay">
                 <TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="20" maxInclusive="255" />
               </ParameterType>
+              <ParameterType Id="%AID%_PT-ScanMode" Name="ScanMode">
+                <TypeRestriction Base="Value" SizeInBit="1" UIHint="DropDown">
+                  <Enumeration Text="Bei Berührung" Value="0" Id="%ENID%" />
+                  <Enumeration Text="Fortlaufend" Value="1" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
             </ParameterTypes>
             <Parameters>
               <Parameter Id="%AID%_P-%T%000003" Name="EnrollPersonName" ParameterType="%AID%_PT-Text28Byte" Text="Name der Person" Value="" />
@@ -133,7 +139,8 @@
                 <Parameter Id="%AID%_UP-%T%000009" Name="AuthDelayTime" ParameterType="%AID%_PT-DelayTime" Offset="2" BitOffset="2" Text="Zeit" Value="5" />
                 <Parameter Id="%AID%_UP-%T%000002" Name="FingerprintScanner" ParameterType="%AID%_PT-FingerprintScanner" Offset="4" BitOffset="0" Text="Fingerprint Scanner" Value="0" />
                 <Parameter Id="%AID%_UP-%T%000010" Name="FingerprintColor" ParameterType="%AID%_PT-FingerprintColor" Offset="4" BitOffset="2" Text="Blinkfarbe während der Autorisierung" Value="2" Access="None" />
-                <!-- 4 bits free -->
+                <Parameter Id="%AID%_UP-%T%000028" Name="ScanMode" ParameterType="%AID%_PT-ScanMode" Offset="4" BitOffset="4" Text="Wann wird der Finger abgefragt?" Value="0" />
+                <!-- 3 bits free -->
                 <Parameter Id="%AID%_UP-%T%000011" Name="EnableRawData" Offset="4" BitOffset="0" ParameterType="%AID%_PT-OnOffYesNo" Text="Rohdaten auf den Bus senden" Value="0" />
                 <Parameter Id="%AID%_UP-%T%000012" Name="EnableSync" Offset="4" BitOffset="1" ParameterType="%AID%_PT-OnOffYesNo" Text="Synchronisation mehrerer Scanner" Value="0" />
                 <Parameter Id="%AID%_UP-%T%000013" Name="EnableExternalControl" Offset="4" BitOffset="2" ParameterType="%AID%_PT-OnOffYesNo" Text="Externe Kontrolle ermöglichen" Value="0" />
@@ -171,6 +178,7 @@
               <ParameterRef Id="%AID%_P-%T%000025_R-%T%00002501" RefId="%AID%_P-%T%000025" />
               <ParameterRef Id="%AID%_P-%T%000026_R-%T%00002601" RefId="%AID%_P-%T%000026" />
               <ParameterRef Id="%AID%_UP-%T%000027_R-%T%00002701" RefId="%AID%_UP-%T%000027" SuffixText="ms" />
+              <ParameterRef Id="%AID%_UP-%T%000028_R-%T%00002801" RefId="%AID%_UP-%T%000028" />
             </ParameterRefs>
             <ComObjectTable>
               <ComObject Id="%AID%_O-%T%000001" Name="Touched" Number="1" ObjectSize="1 Bit" Text="Berührung (sofort, immer)" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
@@ -255,6 +263,7 @@
 
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hardware" UIHint="Headline" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000002_R-%T%00000201" IndentLevel="1" HelpContext="%DOC%" />
+                <ParameterRefRef RefId="%AID%_UP-%T%000028_R-%T%00002801" IndentLevel="1" HelpContext="%DOC%" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Autorisierung" UIHint="Headline" />

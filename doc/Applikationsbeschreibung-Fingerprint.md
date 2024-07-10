@@ -12,11 +12,20 @@ cSpell:words mgeramb ambiente Ambientenbeleuchtung
 
 Die Applikation Fingerprint erlaubt eine Parametrisierung einer Zutrittskontrolle per Fingerabdruck mit der ETS.
 
-Es gibt eine kleinere Applikationsversion mit bis zu 200 Aktionen/Fingerzuordnungen und eine größere mit bis zu 1500 Aktionen/Fingerzuordnungen. Während die größere hauptsächlich für das "großen" Lesegerät R503Pro angeboten wird, kann sie bei Bedarf an beispeilsweise mehr als 200 Fingerzuordnungen auch für das "kleinere" Lesegerät R503 verwendet werden.
+Es gibt eine kleinere Applikationsversion mit bis zu 200 Aktionen/Fingerzuordnungen und eine größere mit bis zu 1500 Aktionen/Fingerzuordnungen. Während die größere hauptsächlich für das "großen" Lesegerät R503Pro angeboten wird, kann sie bei Bedarf an mehr als 200 Fingerzuordnungen auch für das "kleinere" Lesegerät R503 verwendet werden.
 
 ## Änderungshistorie
 
 Im folgenden werden Änderungen an dem Dokument erfasst, damit man nicht immer das Gesamtdokument lesen muss, um Neuerungen zu erfahren.
+
+10.07.2024: Firmware 0.3, Applikation 0.3
+
+* NEU: Man kann jetzt einstellen, ob der Finger nur bei einem Touch oder fortlaufend gescanned wird.
+* NEU: Es gibt jetzt ein KO, dass signalisiert, dass der Hardware-Scanner von der Hauptplatine getrennt wurde.
+* NEU: Das Schaltaktor-Modul wurde hinzugefügt.
+* NEU: Das Binäreingang-Modul wurde hinzugefügt.
+* NEU: Das Konfigurationstransfer-Modul wurde hinzugefügt.
+* NEU: Das Logikmodul wurde auf die Version 3.3 aktualisiert.
 
 02.06.2024: Firmware 0.2.1, Applikation 0.2
 
@@ -32,16 +41,59 @@ Im folgenden werden Änderungen an dem Dokument erfasst, damit man nicht immer d
 
 * Initiales Release als OpenKNX Fingerprint
 
-## **Einleitung**
+## **Verwendete Module**
+
+Der Fingerprint verwendet weitere OpenKNX-Module, die alle ihre eigene Dokumentation besitzen. Im folgenden werden die Module und die Verweise auf deren Dokumentation aufgelistet.
+
+### **OpenKNX**
+
+Dies ist eine Seite mit allgemeinen Parametern, die unter [Applikationsbeschreibung-Common](https://github.com/OpenKNX/OGM-Common/blob/v1/doc/Applikationsbeschreibung-Common.md) beschrieben sind. 
+
+### **Konfigurationstransfer**
+
+Der Konfigurationstransfer erlaubt einen
+
+* Export von Konfigurationen von OpenKNX-Modulen und deren Kanälen
+* Import von Konfigurationen von OpenKNX-Modulen und deren Kanälen
+* Kopieren der Konfiguration von einem OpenKNX-Modulkanal auf einen anderen
+* Zurücksetzen der Konfiguration eines OpenKNX-Modulkanals auf Standardwerte
+
+Die Funktionen vom Konfigurationstranfer-Modul sind unter [Applikationsbeschreibung-ConfigTransfer](https://github.com/OpenKNX/OFM-ConfigTransfer/blob/v1/doc/Applikationsbeschreibung-ConfigTransfer.md) beschrieben.
+
+### **Schaltaktor**
+
+--ToDo--
+
+
+
+### **Logiken**
+
+Wie die meisten OpenKNX-Applikationen enthält auch die Fingerprint-Applikation ein Logikmodul.
+
+Die Funktionen des Logikmoduls sind unter [Applikationsbeschreibung-Logik](https://github.com/OpenKNX/OFM-LogicModule/blob/v1/doc/Applikationsbeschreibung-Logik.md) beschrieben.
+
+### **Virtuelle Taster**
+
+Es werden auch virtuelle Taster von der Fingerprint-Applikation angeboten. Mit der Nutzung der Binäreingänge oder der Touch-Platine (als Erweiterung) - können es auch echte Taster werden.
+
+Die Funktionen des Tastermoduls sind unter [Applikationsbeschreibung-Taster](https://github.com/OpenKNX/OFM-VirtualButton/blob/v1/doc/Applikationsbeschreibung-Taster.md) beschrieben.
+
+### **Binäreingänge**
+
+Die Fingerprint-Applikation unterstützt auch Binäreingänge.
+
+Die Funktionen der Binäreingänge sind unter [Applikationsbeschreibung-Binäreingang](https://github.com/OpenKNX/OFM-BinaryInput/blob/v1/doc/Applikationsbeschreibung-Binaereingang.md) beschrieben.
+
+
+
+## **Fingerabdruckleser**
 
 <!-- DOC HelpContext="Dokumentation" -->
-Mit diesem Modul können Finger im Lesegerät angelernt, gelöscht, Aktion verknüft und Finger den Aktionen zugeordnet werden.
+Mit diesem Modul können Finger im Lesegerät angelernt, gelöscht, Aktion verknüpft und Finger den Aktionen zugeordnet werden.
 
-## **Allgemein**
+### **Hardware**
 
-Hier werden Einstellungen vorgenommen, die für das gesamte Logikmodul und alle Kanäle gelten.
-
-### Hardware
+Hier erfolgen Einstellungen, die den Hardware-Scanner für Fingerabdrücke betreffen.
 
 <!-- DOC -->
 #### **Fingerprint Scanner**
@@ -53,6 +105,13 @@ Aktuell werden folgende Scanner unterstützt:
 * R503 (Standard): Speicherplatz für 200 Finger
 * R503S: Speicherplatz für 150 Finger
 * R503Pro: Speicherplatz für 1500 Finger
+
+<!-- DOC -->
+#### **Wann wird der Finger abgefragt?**
+
+Normalerweise wird die Fingererkennung "Bei Berührung" des Fingerprints gestartet. Es gib aber einige Fälle, in den der Touch nicht zuverlässig erkannt wird. In solchen Fällen kann mit der Einstellung "Fortlaufend" die Fingererkennung unabhängig von einer Berührung erfolgen.
+
+Die Einstellung "Fortlaufend" kann zur Folge haben, dass Logiken, die auf dem Fingerprint definiert sind, nicht mehr zuverlässig bzw. stark verzögert laufen. Sie sollte nur gewählt werden, wenn die normale Erkennung "Bei Berührung" nicht funktioniert.
 
 ### Autorisierung
 
@@ -179,13 +238,3 @@ Die Software für dieses Release wurde auf folgender Hardware getestet und läuf
 Andere Hardware kann genutzt werden, jedoch muss das Projekt dann neu kompiliert und gegebenenfalls angepasst werden. Alle notwendigen Teile für ein Aufsetzen der Build-Umgebung inklusive aller notwendigen Projekte finden sich im [OpenKNX-Projekt](https://github.com/OpenKNX).
 
 Interessierte sollten auch die Beiträge im [OpenKNX-Forum](https://knx-user-forum.de/forum/projektforen/openknx) studieren.
-
-## **Übersicht der vorhandenen Kommunikationsobjekte**
-
-Hier werden nur Kommunikationsobjekte (KO) des Fingerprint-Moduls beschrieben, die KO anderer Module sind in der jeweiligen Applikationsbeschreibung dokumentiert.
-
-KO | Name | DPT | Bedeutung
-:---:|:---|---:|:--
-1 | in Betrieb | 1.002 | Meldet zyklisch auf den Bus, dass das Gerät noch funktioniert. Das KO steht nicht zur Verfügung, wenn kein Sendezyklus eingestellt wurde.
-2 | Uhrzeit | 10.001 | Eingang zum empfangen der Uhrzeit
-3 | Datum | 11.001 | Eingang zum empfangen des Datums
