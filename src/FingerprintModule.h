@@ -60,6 +60,7 @@ class FingerprintModule : public OpenKNX::Module
     void processScanSuccess(uint16_t location, bool external = false);
     bool enrollFinger(uint16_t location);
     bool deleteFinger(uint16_t location, bool sync = true);
+    bool searchForFinger();
     void setLedDefault();
     void startSyncDelete(uint16_t fingerId);
     void startSyncSend(uint16_t fingerId, bool loadModel = true);

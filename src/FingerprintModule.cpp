@@ -118,36 +118,16 @@ void FingerprintModule::loop()
         unsigned long captureStart = delayTimerInit();
         while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
         {
-            if (finger.hasFinger())
-            {
-                Fingerprint::FindFingerResult findFingerResult = finger.findFingerprint();
-
-                if (findFingerResult.found)
-                {
-                    logInfoP("Finger found in location %d", findFingerResult.location);
-                    processScanSuccess(findFingerResult.location);
-                }
-                else
-                {
-                    finger.setLed(Fingerprint::ScanNoMatch);
-
-                    logInfoP("Finger not found");
-                    KoFIN_ScanSuccess.value(false, DPT_Switch);
-
-                    KoFIN_ScanSuccessData.valueNoSend((uint32_t)0, Dpt(15, 1, 0)); // access identification code (unknown)
-                    KoFIN_ScanSuccessData.valueNoSend(true, Dpt(15, 1, 1));        // detection error
-                    KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 2));       // permission accepted
-                    KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));       // read direction (not used)
-                    KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));       // encryption (not used for now)
-                    KoFIN_ScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));        // index of access identification code (not used)
-                }
-
-                resetLedsTimer = delayTimerInit();
+            if (searchForFinger())
                 break;
-            }
         }
 
         touched = false;
+    }
+    else
+    {
+        if (ParamFIN_ScanMode == 1)
+            searchForFinger();
     }
 
     if (enrollRequestedTimer > 0 and delayCheck(enrollRequestedTimer, ENROLL_REQUEST_DELAY))
@@ -198,6 +178,37 @@ void FingerprintModule::loop()
     }
 
     processSyncSend();
+}
+
+bool FingerprintModule::searchForFinger()
+{
+    if (!finger.hasFinger())
+        return false;
+    
+    Fingerprint::FindFingerResult findFingerResult = finger.findFingerprint();
+
+    if (findFingerResult.found)
+    {
+        logInfoP("Finger found in location %d", findFingerResult.location);
+        processScanSuccess(findFingerResult.location);
+    }
+    else
+    {
+        finger.setLed(Fingerprint::ScanNoMatch);
+
+        logInfoP("Finger not found");
+        KoFIN_ScanSuccess.value(false, DPT_Switch);
+
+        KoFIN_ScanSuccessData.valueNoSend((uint32_t)0, Dpt(15, 1, 0)); // access identification code (unknown)
+        KoFIN_ScanSuccessData.valueNoSend(true, Dpt(15, 1, 1));        // detection error
+        KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 2));       // permission accepted
+        KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));       // read direction (not used)
+        KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));       // encryption (not used for now)
+        KoFIN_ScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));        // index of access identification code (not used)
+    }
+
+    resetLedsTimer = delayTimerInit();
+    return true;
 }
 
 void FingerprintModule::setLedDefault()
