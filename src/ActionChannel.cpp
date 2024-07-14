@@ -14,12 +14,7 @@ const std::string ActionChannel::name()
 void ActionChannel::loop()
 {
     if (_actionCallResetTime > 0 && delayCheck(_actionCallResetTime, ParamFIN_AuthDelayTimeMS))
-    {
-        KoFIN_ActionCall.value(false, DPT_Switch);
-        _finger.setLed(Fingerprint::State::None);
-        _actionCallResetTime = 0;
-        _authenticateActive = false;
-    }
+        resetActionCall();
 
     if (_stairLightTime > 0 && delayCheck(_stairLightTime, ParamFIN_ActionDelayTimeMS))
     {
@@ -91,4 +86,15 @@ void ActionChannel::processReadRequests()
         _readRequestSent = openknxFingerprintModule.sendReadRequest(KoFIN_ActionState);
     else
         _readRequestSent = true;
+}
+
+void ActionChannel::resetActionCall()
+{
+    _actionCallResetTime = 0;
+    if (!_authenticateActive)
+        return;
+    
+    KoFIN_ActionCall.value(false, DPT_Switch);
+    _finger.setLed(Fingerprint::State::None);
+    _authenticateActive = false;
 }

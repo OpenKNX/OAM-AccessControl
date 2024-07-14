@@ -19,4 +19,5 @@ class ActionChannel : public OpenKNX::Channel
     void processInputKo(GroupObject &ko) override;
     bool processScan(uint16_t location);
     void processReadRequests();
+    void resetActionCall();
 };

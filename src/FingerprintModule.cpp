@@ -205,6 +205,10 @@ bool FingerprintModule::searchForFinger()
         KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));       // read direction (not used)
         KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));       // encryption (not used for now)
         KoFIN_ScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));        // index of access identification code (not used)
+
+        // if finger present, but scan failed, reset all authentication action calls
+        for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
+            _channels[i]->resetActionCall();
     }
 
     resetLedsTimer = delayTimerInit();
