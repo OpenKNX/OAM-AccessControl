@@ -139,7 +139,7 @@
                 <Parameter Id="%AID%_UP-%T%000009" Name="AuthDelayTime" ParameterType="%AID%_PT-DelayTime" Offset="2" BitOffset="2" Text="Zeit" Value="5" />
                 <Parameter Id="%AID%_UP-%T%000002" Name="FingerprintScanner" ParameterType="%AID%_PT-FingerprintScanner" Offset="4" BitOffset="0" Text="Fingerprint Scanner" Value="0" />
                 <Parameter Id="%AID%_UP-%T%000010" Name="FingerprintColor" ParameterType="%AID%_PT-FingerprintColor" Offset="4" BitOffset="2" Text="Blinkfarbe während der Autorisierung" Value="2" Access="None" />
-                <Parameter Id="%AID%_UP-%T%000028" Name="ScanMode" ParameterType="%AID%_PT-ScanMode" Offset="4" BitOffset="4" Text="Wann wird der Finger abgefragt?" Value="0" />
+                <Parameter Id="%AID%_UP-%T%000028" Name="ScanMode" ParameterType="%AID%_PT-ScanMode" Offset="4" BitOffset="4" Text="Fingerabfrage" Value="0" />
                 <!-- 3 bits free -->
                 <Parameter Id="%AID%_UP-%T%000011" Name="EnableRawData" Offset="4" BitOffset="0" ParameterType="%AID%_PT-OnOffYesNo" Text="Rohdaten auf den Bus senden" Value="0" />
                 <Parameter Id="%AID%_UP-%T%000012" Name="EnableSync" Offset="4" BitOffset="1" ParameterType="%AID%_PT-OnOffYesNo" Text="Synchronisation mehrerer Scanner" Value="0" />

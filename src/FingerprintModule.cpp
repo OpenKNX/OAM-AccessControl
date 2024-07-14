@@ -1121,6 +1121,20 @@ void FingerprintModule::delayCallback(uint32_t period)
     delayCallbackActive = false;
 }
 
+bool FingerprintModule::sendReadRequest(GroupObject &ko)
+{
+    // ensure, that we do not send too many read requests at the same time
+    if (delayCheck(readRequestDelay, 300)) // 3 per second
+    {
+        // we handle input KO and we send only read requests, if KO is uninitialized
+        if (!ko.initialized())
+            ko.requestObjectRead();
+        readRequestDelay = delayTimerInit();
+        return true;
+    }
+    return false;
+}
+
 FingerprintModule openknxFingerprintModule;
 
 // void FingerprintModule::writeFlash()

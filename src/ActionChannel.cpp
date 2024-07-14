@@ -1,4 +1,4 @@
-#include "ActionChannel.h"
+#include "FingerprintModule.h"
 
 ActionChannel::ActionChannel(uint8_t index, Fingerprint finger)
 {
@@ -26,6 +26,7 @@ void ActionChannel::loop()
         KoFIN_ActionSwitch.value(false, DPT_Switch);
         _stairLightTime = 0;
     }
+    processReadRequests();
 }
 
 void ActionChannel::processInputKo(GroupObject &ko)
@@ -75,4 +76,16 @@ void ActionChannel::processScan(uint16_t location)
             _authenticateActive = false;
         }
     }
+}
+
+void ActionChannel::processReadRequests()
+{
+    // we send a read request just once per channel
+    if (_readRequestSent) return;
+
+    // is there a state field to read?
+    if (ParamFIN_ActionActionType == 2) // toggle
+        _readRequestSent = openknxFingerprintModule.sendReadRequest(KoFIN_ActionState);
+    else
+        _readRequestSent = true;
 }

@@ -20,8 +20,9 @@ Im folgenden werden Änderungen an dem Dokument erfasst, damit man nicht immer d
 
 10.07.2024: Firmware 0.3, Applikation 0.3
 
-* NEU: Man kann jetzt einstellen, ob der Finger nur bei einem Touch oder fortlaufend gescanned wird.
+* NEU: Man kann jetzt einstellen, ob der Finger nur bei einem Touch oder fortlaufend abgefragt wird.
 * NEU: Es gibt jetzt ein KO, dass signalisiert, dass der Hardware-Scanner von der Hauptplatine getrennt wurde.
+* NEU: Für Aktionen vom Typ "Umschalten" wird nach einem Neustart das Status-KO vom Bus gelesen.
 * NEU: Das Schaltaktor-Modul wurde hinzugefügt.
 * NEU: Das Binäreingang-Modul wurde hinzugefügt.
 * NEU: Das Konfigurationstransfer-Modul wurde hinzugefügt.
@@ -107,9 +108,9 @@ Aktuell werden folgende Scanner unterstützt:
 * R503Pro: Speicherplatz für 1500 Finger
 
 <!-- DOC -->
-#### **Wann wird der Finger abgefragt?**
+#### **Fingerabfrage**
 
-Normalerweise wird die Fingererkennung "Bei Berührung" des Fingerprints gestartet. Es gib aber einige Fälle, in den der Touch nicht zuverlässig erkannt wird. In solchen Fällen kann mit der Einstellung "Fortlaufend" die Fingererkennung unabhängig von einer Berührung erfolgen.
+Normalerweise wird die Fingerabfrage "Bei Berührung" des Fingerprints gestartet. Es gib aber einige Fälle, in den der Touch nicht zuverlässig erkannt wird. In solchen Fällen kann mit der Einstellung "Fortlaufend" die Fingerabfrage unabhängig von einer Berührung erfolgen.
 
 Die Einstellung "Fortlaufend" kann zur Folge haben, dass Logiken, die auf dem Fingerprint definiert sind, nicht mehr zuverlässig bzw. stark verzögert laufen. Sie sollte nur gewählt werden, wenn die normale Erkennung "Bei Berührung" nicht funktioniert.
 
@@ -138,7 +139,7 @@ Der Finger der Person, welcher zusammen mit den neu angelernten Fingerdaten gesp
 Die ID des Fingers (= der Speicherplatz), auf welche die neu angelernten Fingerdaten gespeichert werden soll.
 
 Dabei sind die verfügbaren SPeicherplätze abhängig von der ausgewählten Hardware des Fingerprint-Scanners:
-Sie werden dabei von 0 beginnned durchnummeriert. Hat der Scanner also beispielsweise 200 Speicherplätze, stehen die IDs 0-199 zur Verfügung.
+Sie werden dabei von 0 beginnend durchnummeriert. Hat der Scanner also beispielsweise 200 Speicherplätze, stehen die IDs 0-199 zur Verfügung.
 
 ### Finger löschen
 

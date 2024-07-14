@@ -44,6 +44,7 @@ class FingerprintModule : public OpenKNX::Module
     void processInputKo(GroupObject &ko) override;
 		bool processFunctionProperty(uint8_t objectIndex, uint8_t propertyId, uint8_t length, uint8_t *data, uint8_t *resultData, uint8_t &resultLength) override;
 		// bool processFunctionPropertyState(uint8_t objectIndex, uint8_t propertyId, uint8_t length, uint8_t *data, uint8_t *resultData, uint8_t &resultLength) override;
+    bool sendReadRequest(GroupObject &ko);
 
     const std::string name() override;
     const std::string version() override;
@@ -109,6 +110,8 @@ class FingerprintModule : public OpenKNX::Module
     uint8_t syncReceivePacketCount = 0;
     uint8_t syncReceivePacketReceivedCount = 0;
     bool syncReceivePacketReceived[SYNC_BUFFER_SIZE] = {false};
+
+    uint32_t readRequestDelay = 0;
 };
 
 extern FingerprintModule openknxFingerprintModule;

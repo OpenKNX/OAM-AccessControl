@@ -10,7 +10,7 @@
                                              
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 72
+#define MAIN_ApplicationVersion 74
 #define MAIN_ParameterSize 14361
 #define MAIN_MaxKoNumber 796
 #define MAIN_OrderNumber "OpenKnxFingerprint"
@@ -194,7 +194,7 @@
 #define ParamFIN_FingerprintScanner                  ((knx.paramByte(FIN_FingerprintScanner) & FIN_FingerprintScannerMask) >> FIN_FingerprintScannerShift)
 // Blinkfarbe während der Autorisierung
 #define ParamFIN_FingerprintColor                    ((knx.paramByte(FIN_FingerprintColor) & FIN_FingerprintColorMask) >> FIN_FingerprintColorShift)
-// Wann wird der Finger abgefragt?
+// Fingerabfrage
 #define ParamFIN_ScanMode                            ((bool)(knx.paramByte(FIN_ScanMode) & FIN_ScanModeMask))
 // Rohdaten auf den Bus senden
 #define ParamFIN_EnableRawData                       ((bool)(knx.paramByte(FIN_EnableRawData) & FIN_EnableRawDataMask))
@@ -671,12 +671,12 @@
 #define SWA_KoCalcIndex(number) ((number >= SWA_KoCalcNumber(0) && number < SWA_KoCalcNumber(SWA_KoBlockSize)) ? (number - SWA_KoBlockOffset) % SWA_KoBlockSize : -1)
 #define SWA_KoCalcChannel(number) ((number >= SWA_KoBlockOffset && number < SWA_KoBlockOffset + SWA_ChannelCount * SWA_KoBlockSize) ? (number - SWA_KoBlockOffset) / SWA_KoBlockSize : -1)
 
-#define SWA_KoChannelSwitch 1
-#define SWA_KoChannelStatus 2
-#define SWA_KoChannelStatusInverted 3
-#define SWA_KoChannelLock 4
-#define SWA_KoChannelLockStatus 5
-#define SWA_KoChannelScene 6
+#define SWA_KoChannelSwitch 0
+#define SWA_KoChannelStatus 1
+#define SWA_KoChannelStatusInverted 2
+#define SWA_KoChannelLock 3
+#define SWA_KoChannelLockStatus 4
+#define SWA_KoChannelScene 5
 
 // 
 #define KoSWA_ChannelSwitch                       (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChannelSwitch)))
