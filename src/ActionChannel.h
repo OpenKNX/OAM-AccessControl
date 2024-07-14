@@ -16,5 +16,5 @@ class ActionChannel : public OpenKNX::Channel
 
         void loop();
         void processInputKo(GroupObject &ko) override;
-        void processScan(uint16_t location);
+        bool processScan(uint16_t location);
 };
