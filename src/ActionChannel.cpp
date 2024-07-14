@@ -44,10 +44,10 @@ void ActionChannel::processInputKo(GroupObject &ko)
     }
 }
 
-void ActionChannel::processScan(uint16_t location)
+bool ActionChannel::processScan(uint16_t location)
 {
     if (_authenticateActive && !ParamFIN_ActionAuthenticate)
-        return;
+        return false;
 
     if (!ParamFIN_ActionAuthenticate || KoFIN_ActionCall.value(DPT_Switch))
     {
@@ -71,11 +71,14 @@ void ActionChannel::processScan(uint16_t location)
         if (KoFIN_ActionCall.value(DPT_Switch))
         {
             KoFIN_ActionCall.value(false, DPT_Switch);
-            // finger->setLed(Fingerprint::State::None); do not use here
             _actionCallResetTime = 0;
             _authenticateActive = false;
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void ActionChannel::processReadRequests()

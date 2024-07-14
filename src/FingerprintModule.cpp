@@ -228,7 +228,7 @@ void FingerprintModule::processScanSuccess(uint16_t location, bool external)
     KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
     KoFIN_ScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
-    bool actionFound = false;
+    bool actionExecuted = false;
     for (size_t i = 0; i < ParamFINACT_FingerActionCount; i++)
     {
         uint16_t fingerId = knx.paramWord(FINACT_faFingerId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize);
@@ -236,16 +236,13 @@ void FingerprintModule::processScanSuccess(uint16_t location, bool external)
         {
             uint16_t actionId = knx.paramWord(FINACT_faActionId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize) - 1;
             if (actionId < FIN_VisibleActions)
-            {
-                _channels[actionId]->processScan(location); // #ToDo: when not executed, not green
-                actionFound = true;
-            }
+                actionExecuted |= _channels[actionId]->processScan(location);
             else
                 logInfoP("Invalid ActionId: %d", actionId);
         }
     }
 
-    if (actionFound)
+    if (actionExecuted)
     {
         if (!external)
             finger.setLed(Fingerprint::ScanMatch);

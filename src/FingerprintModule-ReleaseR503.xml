@@ -42,12 +42,14 @@
 
   <op:define prefix="FINACT"
     prefixDoc="FIN"
+    configTransferName="  Aktionen"
     share="FingerAction.share.xml"
     template="FingerAction.templ.xml"
     ModuleType="2"
     NumChannels="300" />
 
   <op:define prefix="FINACTSER"
+    noConfigTransfer="true"
     prefixDoc="FIN"
     template="FingerActionSearch.templ.xml"
     ModuleType="2"

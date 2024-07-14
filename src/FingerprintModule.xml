@@ -9,8 +9,8 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="4.10"
-    ReplacesVersions="4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
+    ApplicationVersion="4.13"
+    ReplacesVersions="4.12 4.11 4.10 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
     ApplicationRevision="0"
     ProductName="Fingerabdruckleser"
     ApplicationName="AB-Finger-Logic-Button"
@@ -46,12 +46,14 @@
 
     <op:define prefix="FINACT"
     prefixDoc="FIN"
+    configTransferName="  Aktionen"
     share="FingerAction.share.xml"
     template="FingerAction.templ.xml"
     ModuleType="2"
     NumChannels="99" />
 
     <op:define prefix="FINACTSER"
+    noConfigTransfer="true"
     prefixDoc="FIN"
     template="FingerActionSearch.templ.xml"
     ModuleType="2"

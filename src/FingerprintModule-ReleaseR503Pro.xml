@@ -11,9 +11,9 @@
     ApplicationRevision="0"
     ProductName="Fingerabdruckleser"
     ApplicationName="AB-Finger-Logic-Button"
-    BuildSuffix="-R503"
-    BuildSuffixText=" (R503)"
-    OrderNumber="OpenKnxFingerprint"
+    BuildSuffix="-R503Pro"
+    BuildSuffixText=" (R503Pro)"
+    OrderNumber="OpenKnxFingerprintPro"
   />
 
   <op:define prefix="BASE" ModuleType="1"
@@ -42,12 +42,14 @@
 
   <op:define prefix="FINACT"
     prefixDoc="FIN"
+    configTransferName="  Aktionen"
     share="FingerAction.share.xml"
     template="FingerAction.templ.xml"
     ModuleType="2"
     NumChannels="1500" />
 
   <op:define prefix="FINACTSER"
+    noConfigTransfer="true"
     prefixDoc="FIN"
     template="FingerActionSearch.templ.xml"
     ModuleType="2"
