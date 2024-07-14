@@ -8,6 +8,17 @@
 #include "CRC16.h"
 #include "lz4.h"
 
+
+#include "Electroniccats_PN7150.h"
+#define NFC_WIRE Wire
+#define NFC_ADDR 0x28
+#define NFC_SDA 20
+#define NFC_SCL 21
+#define NFC_IRQ 16
+#define NFC_VEN 17
+#define NFC_DWL_REQ 23
+
+
 #define INIT_RESET_TIMEOUT 1000
 #define LED_RESET_TIMEOUT 1000
 #define ENROLL_REQUEST_DELAY 100
