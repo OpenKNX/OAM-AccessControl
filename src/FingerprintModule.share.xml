@@ -12,6 +12,10 @@
                   <Enumeration Text="Externes KO" Value="0" Id="%ENID%" />
                   <Enumeration Text="Touch-Front: Taste links" Value="71" Id="%ENID%" />
                   <Enumeration Text="Touch-Front: Taste rechts" Value="72" Id="%ENID%" />
+                  <Enumeration Text="Binäreingang A" Value="86" Id="%ENID%" />
+                  <Enumeration Text="Binäreingang B" Value="87" Id="%ENID%" />
+                  <Enumeration Text="Binäreingang C" Value="88" Id="%ENID%" />
+                  <Enumeration Text="Binäreingang D" Value="89" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-FINNumChannels" Name="FINNumChannels">
@@ -497,7 +501,7 @@
                 </ParameterBlock>
                 <op:include href="FingerprintModule.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="FIN" IsInner="true" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="D*)  Deaktiviert die Aktion, ohne die Parameter und KO-Zuordnungen zu löschen" />
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="A**) Authentifizierungs-Aktion, wird durch einen entsprechenden Finger freigeschaltet" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="A**) Autorisierungsaktion, wird durch einen entsprechenden Finger freigeschaltet" />
               </ParameterBlock>
               <op:include href="FingerAction.share.xml" xpath="//Dynamic/ChannelIndependentBlock/*" prefix="FINACT" />
             </Channel>
