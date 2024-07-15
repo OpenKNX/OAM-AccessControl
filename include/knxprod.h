@@ -10,13 +10,13 @@
                                              
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 81
+#define MAIN_ApplicationVersion 82
 #define MAIN_ParameterSize 14361
 #define MAIN_MaxKoNumber 796
 #define MAIN_OrderNumber "OpenKnxFingerprint"
 #define BASE_ModuleVersion 18
 #define UCT_ModuleVersion 1
-#define FIN_ModuleVersion 3
+#define FIN_ModuleVersion 6
 #define SWA_ModuleVersion 1
 #define LOG_ModuleVersion 51
 #define BTN_ModuleVersion 4
