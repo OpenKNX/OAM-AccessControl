@@ -235,10 +235,10 @@ void FingerprintModule::processScanSuccess(uint16_t location, bool external)
     bool actionExecuted = false;
     for (size_t i = 0; i < ParamFINACT_FingerActionCount; i++)
     {
-        uint16_t fingerId = knx.paramWord(FINACT_faFingerId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize);
+        uint16_t fingerId = knx.paramWord(FINACT_FaFingerId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize);
         if (fingerId == location)
         {
-            uint16_t actionId = knx.paramWord(FINACT_faActionId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize) - 1;
+            uint16_t actionId = knx.paramWord(FINACT_FaActionId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize) - 1;
             if (actionId < FIN_VisibleActions)
                 actionExecuted |= _channels[actionId]->processScan(location);
             else

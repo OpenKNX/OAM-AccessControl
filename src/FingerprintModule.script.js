@@ -14,19 +14,19 @@ function FIN_sort(device, online, progress, context) {
     while (endIndex - 1 > startIndex + 1) {
         do {
             endIndex--;
-            var parEndAction = device.getParameterByName("FINACT_fa" + endIndex + "ActionId");
+            var parEndAction = device.getParameterByName("FINACT_Fa" + endIndex + "ActionId");
         } while (parEndAction.value == 0);
         do {
             startIndex++;
-            var parStartAction = device.getParameterByName("FINACT_fa" + startIndex + "ActionId");
+            var parStartAction = device.getParameterByName("FINACT_Fa" + startIndex + "ActionId");
         } while (parStartAction.value != 0);
         // now startIndex points to a zero entry and endIndex to a non-zero entry, we move end to start
         if (endIndex > startIndex) {
             FingerActionInfo
-            var parStartFinger = device.getParameterByName("FINACT_fa" + startIndex + "FingerId");
-            var parEndFinger = device.getParameterByName("FINACT_fa" + endIndex + "FingerId");
-            var parStartInfo = device.getParameterByName("FINACT_fa" + startIndex + "FingerActionInfo");
-            var parEndInfo = device.getParameterByName("FINACT_fa" + endIndex + "FingerActionInfo");
+            var parStartFinger = device.getParameterByName("FINACT_Fa" + startIndex + "FingerId");
+            var parEndFinger = device.getParameterByName("FINACT_Fa" + endIndex + "FingerId");
+            var parStartInfo = device.getParameterByName("FINACT_Fa" + startIndex + "FingerActionInfo");
+            var parEndInfo = device.getParameterByName("FINACT_Fa" + endIndex + "FingerActionInfo");
             parStartAction.value = parEndAction.value;
             parStartFinger.value = parEndFinger.value;
             parStartInfo.value = parEndInfo.value;
@@ -39,16 +39,16 @@ function FIN_sort(device, online, progress, context) {
     do {
         var continueSort = false;
         for (var current = 1; current < parFingerActionCount.value; current++) {
-            var parCurrAction = device.getParameterByName("FINACT_fa" + current + "ActionId");
-            var parNextAction = device.getParameterByName("FINACT_fa" + (current + 1) + "ActionId");
-            var parCurrFinger = device.getParameterByName("FINACT_fa" + current + "FingerId");
-            var parNextFinger = device.getParameterByName("FINACT_fa" + (current + 1) + "FingerId");
+            var parCurrAction = device.getParameterByName("FINACT_Fa" + current + "ActionId");
+            var parNextAction = device.getParameterByName("FINACT_Fa" + (current + 1) + "ActionId");
+            var parCurrFinger = device.getParameterByName("FINACT_Fa" + current + "FingerId");
+            var parNextFinger = device.getParameterByName("FINACT_Fa" + (current + 1) + "FingerId");
             if (parNextAction.value == 0) { break; }
             var swap = (parCurrAction.value > parNextAction.value || (parCurrAction.value == parNextAction.value && parCurrFinger.value > parNextFinger.value));
             if (swap) {
                 continueSort = true;
-                var parCurrInfo = device.getParameterByName("FINACT_fa" + current + "FingerActionInfo");
-                var parNextInfo = device.getParameterByName("FINACT_fa" + (current + 1) + "FingerActionInfo");
+                var parCurrInfo = device.getParameterByName("FINACT_Fa" + current + "FingerActionInfo");
+                var parNextInfo = device.getParameterByName("FINACT_Fa" + (current + 1) + "FingerActionInfo");
                 var tmpAction = parCurrAction.value;
                 var tmpFinger = parCurrFinger.value;
                 var tmpInfo = parCurrInfo.value;
@@ -66,7 +66,7 @@ function FIN_sort(device, online, progress, context) {
 function FIN_assignFingerId(device, online, progress, context) {
     var parFingerId = device.getParameterByName("FINACT_FingerId");
     var parFingerActionLine = device.getParameterByName("FINACT_FingerActionLine");
-    var parTargetId = device.getParameterByName("FINACT_fa" + parFingerActionLine.value + "FingerId");
+    var parTargetId = device.getParameterByName("FINACT_Fa" + parFingerActionLine.value + "FingerId");
     parTargetId.value = parFingerId.value;
 }
 
@@ -83,9 +83,9 @@ function FIN_checkFingerIdRange(input, changed, prevValue, context) {
 }
 
 function FIN_checkFingerAction(device, online, progress, context) {
-    var parActionId = device.getParameterByName("FINACT_fa" + context.Channel + "ActionId");
-    var parFingerId = device.getParameterByName("FINACT_fa" + context.Channel + "FingerId");
-    var parFingerActionInfo = device.getParameterByName("FINACT_fa" + context.Channel + "FingerActionInfo");
+    var parActionId = device.getParameterByName("FINACT_Fa" + context.Channel + "ActionId");
+    var parFingerId = device.getParameterByName("FINACT_Fa" + context.Channel + "FingerId");
+    var parFingerActionInfo = device.getParameterByName("FINACT_Fa" + context.Channel + "FingerActionInfo");
     var parVisibleActions = device.getParameterByName("FIN_VisibleActions");
 
     if (parActionId.value <= parVisibleActions.value) {
@@ -158,7 +158,7 @@ function FIN_checkFingerAction(device, online, progress, context) {
             personText = "Unbekannter Finger";
         }
 
-        var parActionDescription = device.getParameterByName("FIN_a" + parActionId.value + "Description");
+        var parActionDescription = device.getParameterByName("FIN_Act" + parActionId.value + "Description");
         parFingerActionInfo.value = (parActionDescription.value + "; " + personText).substring(0, 80);
     } else {
         parFingerActionInfo.value = "Aktion ist nicht definiert, Finger wurde nicht ermittelt";

@@ -10,7 +10,7 @@
                                              
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 80
+#define MAIN_ApplicationVersion 81
 #define MAIN_ParameterSize 14361
 #define MAIN_MaxKoNumber 796
 #define MAIN_OrderNumber "OpenKnxFingerprint"
@@ -317,39 +317,39 @@
 #define FIN_ParamBlockSize 21
 #define FIN_ParamCalcIndex(index) (index + FIN_ParamBlockOffset + _channelIndex * FIN_ParamBlockSize)
 
-#define FIN_aInactive                            0      // 1 Bit, Bit 7
-#define     FIN_aInactiveMask 0x80
-#define     FIN_aInactiveShift 7
-#define FIN_aAuthenticate                        0      // 1 Bit, Bit 6
-#define     FIN_aAuthenticateMask 0x40
-#define     FIN_aAuthenticateShift 6
-#define FIN_aActionType                          0      // 2 Bits, Bit 5-4
-#define     FIN_aActionTypeMask 0x30
-#define     FIN_aActionTypeShift 4
-#define FIN_aDelayBase                           1      // 2 Bits, Bit 7-6
-#define     FIN_aDelayBaseMask 0xC0
-#define     FIN_aDelayBaseShift 6
-#define FIN_aDelayTime                           1      // 14 Bits, Bit 13-0
-#define     FIN_aDelayTimeMask 0x3FFF
-#define     FIN_aDelayTimeShift 0
-#define FIN_aOnOff                               1      // 1 Bit, Bit 7
-#define     FIN_aOnOffMask 0x80
-#define     FIN_aOnOffShift 7
+#define FIN_ActInactive                          0      // 1 Bit, Bit 7
+#define     FIN_ActInactiveMask 0x80
+#define     FIN_ActInactiveShift 7
+#define FIN_ActAuthenticate                      0      // 1 Bit, Bit 6
+#define     FIN_ActAuthenticateMask 0x40
+#define     FIN_ActAuthenticateShift 6
+#define FIN_ActActionType                        0      // 2 Bits, Bit 5-4
+#define     FIN_ActActionTypeMask 0x30
+#define     FIN_ActActionTypeShift 4
+#define FIN_ActDelayBase                         1      // 2 Bits, Bit 7-6
+#define     FIN_ActDelayBaseMask 0xC0
+#define     FIN_ActDelayBaseShift 6
+#define FIN_ActDelayTime                         1      // 14 Bits, Bit 13-0
+#define     FIN_ActDelayTimeMask 0x3FFF
+#define     FIN_ActDelayTimeShift 0
+#define FIN_ActOnOff                             1      // 1 Bit, Bit 7
+#define     FIN_ActOnOffMask 0x80
+#define     FIN_ActOnOffShift 7
 
 // deaktivieren
-#define ParamFIN_aInactive                           ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_aInactive)) & FIN_aInactiveMask))
+#define ParamFIN_ActInactive                         ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_ActInactive)) & FIN_ActInactiveMask))
 // Authentifizierungs-Aktion
-#define ParamFIN_aAuthenticate                       ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_aAuthenticate)) & FIN_aAuthenticateMask))
+#define ParamFIN_ActAuthenticate                     ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_ActAuthenticate)) & FIN_ActAuthenticateMask))
 // Aktionstyp
-#define ParamFIN_aActionType                         ((knx.paramByte(FIN_ParamCalcIndex(FIN_aActionType)) & FIN_aActionTypeMask) >> FIN_aActionTypeShift)
+#define ParamFIN_ActActionType                       ((knx.paramByte(FIN_ParamCalcIndex(FIN_ActActionType)) & FIN_ActActionTypeMask) >> FIN_ActActionTypeShift)
 // Zeitbasis
-#define ParamFIN_aDelayBase                          ((knx.paramByte(FIN_ParamCalcIndex(FIN_aDelayBase)) & FIN_aDelayBaseMask) >> FIN_aDelayBaseShift)
+#define ParamFIN_ActDelayBase                        ((knx.paramByte(FIN_ParamCalcIndex(FIN_ActDelayBase)) & FIN_ActDelayBaseMask) >> FIN_ActDelayBaseShift)
 // Zeit
-#define ParamFIN_aDelayTime                          (knx.paramWord(FIN_ParamCalcIndex(FIN_aDelayTime)) & FIN_aDelayTimeMask)
+#define ParamFIN_ActDelayTime                        (knx.paramWord(FIN_ParamCalcIndex(FIN_ActDelayTime)) & FIN_ActDelayTimeMask)
 // Zeit (in Millisekunden)
-#define ParamFIN_aDelayTimeMS                        (paramDelay(knx.paramWord(FIN_ParamCalcIndex(FIN_aDelayTime))))
+#define ParamFIN_ActDelayTimeMS                      (paramDelay(knx.paramWord(FIN_ParamCalcIndex(FIN_ActDelayTime))))
 // Schaltwert
-#define ParamFIN_aOnOff                              ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_aOnOff)) & FIN_aOnOffMask))
+#define ParamFIN_ActOnOff                            ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_ActOnOff)) & FIN_ActOnOffMask))
 
 // deprecated
 #define FIN_KoOffset 500
@@ -362,16 +362,16 @@
 #define FIN_KoCalcIndex(number) ((number >= FIN_KoCalcNumber(0) && number < FIN_KoCalcNumber(FIN_KoBlockSize)) ? (number - FIN_KoBlockOffset) % FIN_KoBlockSize : -1)
 #define FIN_KoCalcChannel(number) ((number >= FIN_KoBlockOffset && number < FIN_KoBlockOffset + FIN_ChannelCount * FIN_KoBlockSize) ? (number - FIN_KoBlockOffset) / FIN_KoBlockSize : -1)
 
-#define FIN_KoaSwitch 0
-#define FIN_KoaState 1
-#define FIN_KoaCall 2
+#define FIN_KoActSwitch 0
+#define FIN_KoActState 1
+#define FIN_KoActCall 2
 
 // Ausgang
-#define KoFIN_aSwitch                             (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoaSwitch)))
+#define KoFIN_ActSwitch                           (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActSwitch)))
 // Eingang
-#define KoFIN_aState                              (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoaState)))
+#define KoFIN_ActState                            (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActState)))
 // Eingang
-#define KoFIN_aCall                               (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoaCall)))
+#define KoFIN_ActCall                             (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActCall)))
 
 #define FINACT_FingerActionCount                   2131      // uint16_t
 
@@ -385,13 +385,13 @@
 #define FINACT_ParamBlockSize 4
 #define FINACT_ParamCalcIndex(index) (index + FINACT_ParamBlockOffset + _channelIndex * FINACT_ParamBlockSize)
 
-#define FINACT_faActionId                           0      // uint16_t
-#define FINACT_faFingerId                           2      // uint16_t
+#define FINACT_FaActionId                           0      // uint16_t
+#define FINACT_FaFingerId                           2      // uint16_t
 
 // Aktion
-#define ParamFINACT_faActionId                          (knx.paramWord(FINACT_ParamCalcIndex(FINACT_faActionId)))
+#define ParamFINACT_FaActionId                          (knx.paramWord(FINACT_ParamCalcIndex(FINACT_FaActionId)))
 // Scanner Finger ID
-#define ParamFINACT_faFingerId                          (knx.paramWord(FINACT_ParamCalcIndex(FINACT_faFingerId)))
+#define ParamFINACT_FaFingerId                          (knx.paramWord(FINACT_ParamCalcIndex(FINACT_FaFingerId)))
 
 #define FINACTSER_ChannelCount 7
 
@@ -419,246 +419,246 @@
 #define SWA_ParamBlockSize 74
 #define SWA_ParamCalcIndex(index) (index + SWA_ParamBlockOffset + _channelIndex * SWA_ParamBlockSize)
 
-#define SWA_cActive                              0      // 2 Bits, Bit 7-6
-#define     SWA_cActiveMask 0xC0
-#define     SWA_cActiveShift 6
-#define SWA_cSyncSwitch                          0      // 1 Bit, Bit 5
-#define     SWA_cSyncSwitchMask 0x20
-#define     SWA_cSyncSwitchShift 5
-#define SWA_cOperationMode                       0      // 1 Bit, Bit 4
-#define     SWA_cOperationModeMask 0x10
-#define     SWA_cOperationModeShift 4
-#define SWA_cCentralFunction                     0      // 1 Bit, Bit 3
-#define     SWA_cCentralFunctionMask 0x08
-#define     SWA_cCentralFunctionShift 3
-#define SWA_cStatusSend                          0      // 2 Bits, Bit 2-1
-#define     SWA_cStatusSendMask 0x06
-#define     SWA_cStatusSendShift 1
-#define SWA_cStatusInverted                      0      // 1 Bit, Bit 0
-#define     SWA_cStatusInvertedMask 0x01
-#define     SWA_cStatusInvertedShift 0
-#define SWA_cTurnOnDelayBase                     1      // 2 Bits, Bit 7-6
-#define     SWA_cTurnOnDelayBaseMask 0xC0
-#define     SWA_cTurnOnDelayBaseShift 6
-#define SWA_cTurnOnDelayTime                     1      // 14 Bits, Bit 13-0
-#define     SWA_cTurnOnDelayTimeMask 0x3FFF
-#define     SWA_cTurnOnDelayTimeShift 0
-#define SWA_cTurnOffDelayBase                    3      // 2 Bits, Bit 7-6
-#define     SWA_cTurnOffDelayBaseMask 0xC0
-#define     SWA_cTurnOffDelayBaseShift 6
-#define SWA_cTurnOffDelayTime                    3      // 14 Bits, Bit 13-0
-#define     SWA_cTurnOffDelayTimeMask 0x3FFF
-#define     SWA_cTurnOffDelayTimeShift 0
-#define SWA_cStatusCyclicBase                    5      // 2 Bits, Bit 7-6
-#define     SWA_cStatusCyclicBaseMask 0xC0
-#define     SWA_cStatusCyclicBaseShift 6
-#define SWA_cStatusCyclicTime                    5      // 14 Bits, Bit 13-0
-#define     SWA_cStatusCyclicTimeMask 0x3FFF
-#define     SWA_cStatusCyclicTimeShift 0
-#define SWA_cBehaviorLock                        7      // 2 Bits, Bit 7-6
-#define     SWA_cBehaviorLockMask 0xC0
-#define     SWA_cBehaviorLockShift 6
-#define SWA_cBehaviorUnlock                      7      // 3 Bits, Bit 5-3
-#define     SWA_cBehaviorUnlockMask 0x38
-#define     SWA_cBehaviorUnlockShift 3
-#define SWA_cBehaviorPowerLoss                   8      // 2 Bits, Bit 7-6
-#define     SWA_cBehaviorPowerLossMask 0xC0
-#define     SWA_cBehaviorPowerLossShift 6
-#define SWA_cBehaviorPowerRegain                 8      // 2 Bits, Bit 5-4
-#define     SWA_cBehaviorPowerRegainMask 0x30
-#define     SWA_cBehaviorPowerRegainShift 4
-#define SWA_cStairLightActive                    9      // 1 Bit, Bit 7
-#define     SWA_cStairLightActiveMask 0x80
-#define     SWA_cStairLightActiveShift 7
-#define SWA_cScenesActive                        9      // 1 Bit, Bit 6
-#define     SWA_cScenesActiveMask 0x40
-#define     SWA_cScenesActiveShift 6
-#define SWA_cSceneLearn                          9      // 1 Bit, Bit 0
-#define     SWA_cSceneLearnMask 0x01
-#define     SWA_cSceneLearnShift 0
-#define SWA_cStairTimeBase                      10      // 2 Bits, Bit 7-6
-#define     SWA_cStairTimeBaseMask 0xC0
-#define     SWA_cStairTimeBaseShift 6
-#define SWA_cStairTimeTime                      10      // 14 Bits, Bit 13-0
-#define     SWA_cStairTimeTimeMask 0x3FFF
-#define     SWA_cStairTimeTimeShift 0
-#define SWA_cStairRetrigger                     12      // 1 Bit, Bit 7
-#define     SWA_cStairRetriggerMask 0x80
-#define     SWA_cStairRetriggerShift 7
-#define SWA_cStairOff                           12      // 1 Bit, Bit 6
-#define     SWA_cStairOffMask 0x40
-#define     SWA_cStairOffShift 6
-#define SWA_cStairBlinkBase                     13      // 2 Bits, Bit 7-6
-#define     SWA_cStairBlinkBaseMask 0xC0
-#define     SWA_cStairBlinkBaseShift 6
-#define SWA_cStairBlinkTime                     13      // 14 Bits, Bit 13-0
-#define     SWA_cStairBlinkTimeMask 0x3FFF
-#define     SWA_cStairBlinkTimeShift 0
-#define SWA_cSceneAActive                       58      // 1 Bit, Bit 7
-#define     SWA_cSceneAActiveMask 0x80
-#define     SWA_cSceneAActiveShift 7
-#define SWA_cSceneABehavior                     58      // 2 Bits, Bit 6-5
-#define     SWA_cSceneABehaviorMask 0x60
-#define     SWA_cSceneABehaviorShift 5
-#define SWA_cSceneANumber                       59      // 8 Bits, Bit 7-0
-#define SWA_cSceneBActive                       60      // 1 Bit, Bit 7
-#define     SWA_cSceneBActiveMask 0x80
-#define     SWA_cSceneBActiveShift 7
-#define SWA_cSceneBBehavior                     60      // 2 Bits, Bit 6-5
-#define     SWA_cSceneBBehaviorMask 0x60
-#define     SWA_cSceneBBehaviorShift 5
-#define SWA_cSceneBNumber                       61      // 8 Bits, Bit 7-0
-#define SWA_cSceneCActive                       62      // 1 Bit, Bit 7
-#define     SWA_cSceneCActiveMask 0x80
-#define     SWA_cSceneCActiveShift 7
-#define SWA_cSceneCBehavior                     62      // 2 Bits, Bit 6-5
-#define     SWA_cSceneCBehaviorMask 0x60
-#define     SWA_cSceneCBehaviorShift 5
-#define SWA_cSceneCNumber                       63      // 8 Bits, Bit 7-0
-#define SWA_cSceneDActive                       64      // 1 Bit, Bit 7
-#define     SWA_cSceneDActiveMask 0x80
-#define     SWA_cSceneDActiveShift 7
-#define SWA_cSceneDBehavior                     64      // 2 Bits, Bit 6-5
-#define     SWA_cSceneDBehaviorMask 0x60
-#define     SWA_cSceneDBehaviorShift 5
-#define SWA_cSceneDNumber                       65      // 8 Bits, Bit 7-0
-#define SWA_cSceneEActive                       66      // 1 Bit, Bit 7
-#define     SWA_cSceneEActiveMask 0x80
-#define     SWA_cSceneEActiveShift 7
-#define SWA_cSceneEBehavior                     66      // 2 Bits, Bit 6-5
-#define     SWA_cSceneEBehaviorMask 0x60
-#define     SWA_cSceneEBehaviorShift 5
-#define SWA_cSceneENumber                       67      // 8 Bits, Bit 7-0
-#define SWA_cSceneFActive                       68      // 1 Bit, Bit 7
-#define     SWA_cSceneFActiveMask 0x80
-#define     SWA_cSceneFActiveShift 7
-#define SWA_cSceneFBehavior                     68      // 2 Bits, Bit 6-5
-#define     SWA_cSceneFBehaviorMask 0x60
-#define     SWA_cSceneFBehaviorShift 5
-#define SWA_cSceneFNumber                       69      // 8 Bits, Bit 7-0
-#define SWA_cSceneGActive                       70      // 1 Bit, Bit 7
-#define     SWA_cSceneGActiveMask 0x80
-#define     SWA_cSceneGActiveShift 7
-#define SWA_cSceneGBehavior                     70      // 2 Bits, Bit 6-5
-#define     SWA_cSceneGBehaviorMask 0x60
-#define     SWA_cSceneGBehaviorShift 5
-#define SWA_cSceneGNumber                       71      // 8 Bits, Bit 7-0
-#define SWA_cSceneHActive                       72      // 1 Bit, Bit 7
-#define     SWA_cSceneHActiveMask 0x80
-#define     SWA_cSceneHActiveShift 7
-#define SWA_cSceneHBehavior                     72      // 2 Bits, Bit 6-5
-#define     SWA_cSceneHBehaviorMask 0x60
-#define     SWA_cSceneHBehaviorShift 5
-#define SWA_cSceneHNumber                       73      // 8 Bits, Bit 7-0
+#define SWA_ChActive                             0      // 2 Bits, Bit 7-6
+#define     SWA_ChActiveMask 0xC0
+#define     SWA_ChActiveShift 6
+#define SWA_ChSyncSwitch                         0      // 1 Bit, Bit 5
+#define     SWA_ChSyncSwitchMask 0x20
+#define     SWA_ChSyncSwitchShift 5
+#define SWA_ChOperationMode                      0      // 1 Bit, Bit 4
+#define     SWA_ChOperationModeMask 0x10
+#define     SWA_ChOperationModeShift 4
+#define SWA_ChCentralFunction                    0      // 1 Bit, Bit 3
+#define     SWA_ChCentralFunctionMask 0x08
+#define     SWA_ChCentralFunctionShift 3
+#define SWA_ChStatusSend                         0      // 2 Bits, Bit 2-1
+#define     SWA_ChStatusSendMask 0x06
+#define     SWA_ChStatusSendShift 1
+#define SWA_ChStatusInverted                     0      // 1 Bit, Bit 0
+#define     SWA_ChStatusInvertedMask 0x01
+#define     SWA_ChStatusInvertedShift 0
+#define SWA_ChTurnOnDelayBase                    1      // 2 Bits, Bit 7-6
+#define     SWA_ChTurnOnDelayBaseMask 0xC0
+#define     SWA_ChTurnOnDelayBaseShift 6
+#define SWA_ChTurnOnDelayTime                    1      // 14 Bits, Bit 13-0
+#define     SWA_ChTurnOnDelayTimeMask 0x3FFF
+#define     SWA_ChTurnOnDelayTimeShift 0
+#define SWA_ChTurnOffDelayBase                   3      // 2 Bits, Bit 7-6
+#define     SWA_ChTurnOffDelayBaseMask 0xC0
+#define     SWA_ChTurnOffDelayBaseShift 6
+#define SWA_ChTurnOffDelayTime                   3      // 14 Bits, Bit 13-0
+#define     SWA_ChTurnOffDelayTimeMask 0x3FFF
+#define     SWA_ChTurnOffDelayTimeShift 0
+#define SWA_ChStatusCyclicBase                   5      // 2 Bits, Bit 7-6
+#define     SWA_ChStatusCyclicBaseMask 0xC0
+#define     SWA_ChStatusCyclicBaseShift 6
+#define SWA_ChStatusCyclicTime                   5      // 14 Bits, Bit 13-0
+#define     SWA_ChStatusCyclicTimeMask 0x3FFF
+#define     SWA_ChStatusCyclicTimeShift 0
+#define SWA_ChBehaviorLock                       7      // 2 Bits, Bit 7-6
+#define     SWA_ChBehaviorLockMask 0xC0
+#define     SWA_ChBehaviorLockShift 6
+#define SWA_ChBehaviorUnlock                     7      // 3 Bits, Bit 5-3
+#define     SWA_ChBehaviorUnlockMask 0x38
+#define     SWA_ChBehaviorUnlockShift 3
+#define SWA_ChBehaviorPowerLoss                  8      // 2 Bits, Bit 7-6
+#define     SWA_ChBehaviorPowerLossMask 0xC0
+#define     SWA_ChBehaviorPowerLossShift 6
+#define SWA_ChBehaviorPowerRegain                8      // 2 Bits, Bit 5-4
+#define     SWA_ChBehaviorPowerRegainMask 0x30
+#define     SWA_ChBehaviorPowerRegainShift 4
+#define SWA_ChStairLightActive                   9      // 1 Bit, Bit 7
+#define     SWA_ChStairLightActiveMask 0x80
+#define     SWA_ChStairLightActiveShift 7
+#define SWA_ChScenesActive                       9      // 1 Bit, Bit 6
+#define     SWA_ChScenesActiveMask 0x40
+#define     SWA_ChScenesActiveShift 6
+#define SWA_ChSceneLearn                         9      // 1 Bit, Bit 0
+#define     SWA_ChSceneLearnMask 0x01
+#define     SWA_ChSceneLearnShift 0
+#define SWA_ChStairTimeBase                     10      // 2 Bits, Bit 7-6
+#define     SWA_ChStairTimeBaseMask 0xC0
+#define     SWA_ChStairTimeBaseShift 6
+#define SWA_ChStairTimeTime                     10      // 14 Bits, Bit 13-0
+#define     SWA_ChStairTimeTimeMask 0x3FFF
+#define     SWA_ChStairTimeTimeShift 0
+#define SWA_ChStairRetrigger                    12      // 1 Bit, Bit 7
+#define     SWA_ChStairRetriggerMask 0x80
+#define     SWA_ChStairRetriggerShift 7
+#define SWA_ChStairOff                          12      // 1 Bit, Bit 6
+#define     SWA_ChStairOffMask 0x40
+#define     SWA_ChStairOffShift 6
+#define SWA_ChStairBlinkBase                    13      // 2 Bits, Bit 7-6
+#define     SWA_ChStairBlinkBaseMask 0xC0
+#define     SWA_ChStairBlinkBaseShift 6
+#define SWA_ChStairBlinkTime                    13      // 14 Bits, Bit 13-0
+#define     SWA_ChStairBlinkTimeMask 0x3FFF
+#define     SWA_ChStairBlinkTimeShift 0
+#define SWA_ChSceneAActive                      58      // 1 Bit, Bit 7
+#define     SWA_ChSceneAActiveMask 0x80
+#define     SWA_ChSceneAActiveShift 7
+#define SWA_ChSceneABehavior                    58      // 2 Bits, Bit 6-5
+#define     SWA_ChSceneABehaviorMask 0x60
+#define     SWA_ChSceneABehaviorShift 5
+#define SWA_ChSceneANumber                      59      // 8 Bits, Bit 7-0
+#define SWA_ChSceneBActive                      60      // 1 Bit, Bit 7
+#define     SWA_ChSceneBActiveMask 0x80
+#define     SWA_ChSceneBActiveShift 7
+#define SWA_ChSceneBBehavior                    60      // 2 Bits, Bit 6-5
+#define     SWA_ChSceneBBehaviorMask 0x60
+#define     SWA_ChSceneBBehaviorShift 5
+#define SWA_ChSceneBNumber                      61      // 8 Bits, Bit 7-0
+#define SWA_ChSceneCActive                      62      // 1 Bit, Bit 7
+#define     SWA_ChSceneCActiveMask 0x80
+#define     SWA_ChSceneCActiveShift 7
+#define SWA_ChSceneCBehavior                    62      // 2 Bits, Bit 6-5
+#define     SWA_ChSceneCBehaviorMask 0x60
+#define     SWA_ChSceneCBehaviorShift 5
+#define SWA_ChSceneCNumber                      63      // 8 Bits, Bit 7-0
+#define SWA_ChSceneDActive                      64      // 1 Bit, Bit 7
+#define     SWA_ChSceneDActiveMask 0x80
+#define     SWA_ChSceneDActiveShift 7
+#define SWA_ChSceneDBehavior                    64      // 2 Bits, Bit 6-5
+#define     SWA_ChSceneDBehaviorMask 0x60
+#define     SWA_ChSceneDBehaviorShift 5
+#define SWA_ChSceneDNumber                      65      // 8 Bits, Bit 7-0
+#define SWA_ChSceneEActive                      66      // 1 Bit, Bit 7
+#define     SWA_ChSceneEActiveMask 0x80
+#define     SWA_ChSceneEActiveShift 7
+#define SWA_ChSceneEBehavior                    66      // 2 Bits, Bit 6-5
+#define     SWA_ChSceneEBehaviorMask 0x60
+#define     SWA_ChSceneEBehaviorShift 5
+#define SWA_ChSceneENumber                      67      // 8 Bits, Bit 7-0
+#define SWA_ChSceneFActive                      68      // 1 Bit, Bit 7
+#define     SWA_ChSceneFActiveMask 0x80
+#define     SWA_ChSceneFActiveShift 7
+#define SWA_ChSceneFBehavior                    68      // 2 Bits, Bit 6-5
+#define     SWA_ChSceneFBehaviorMask 0x60
+#define     SWA_ChSceneFBehaviorShift 5
+#define SWA_ChSceneFNumber                      69      // 8 Bits, Bit 7-0
+#define SWA_ChSceneGActive                      70      // 1 Bit, Bit 7
+#define     SWA_ChSceneGActiveMask 0x80
+#define     SWA_ChSceneGActiveShift 7
+#define SWA_ChSceneGBehavior                    70      // 2 Bits, Bit 6-5
+#define     SWA_ChSceneGBehaviorMask 0x60
+#define     SWA_ChSceneGBehaviorShift 5
+#define SWA_ChSceneGNumber                      71      // 8 Bits, Bit 7-0
+#define SWA_ChSceneHActive                      72      // 1 Bit, Bit 7
+#define     SWA_ChSceneHActiveMask 0x80
+#define     SWA_ChSceneHActiveShift 7
+#define SWA_ChSceneHBehavior                    72      // 2 Bits, Bit 6-5
+#define     SWA_ChSceneHBehaviorMask 0x60
+#define     SWA_ChSceneHBehaviorShift 5
+#define SWA_ChSceneHNumber                      73      // 8 Bits, Bit 7-0
 
 // Kanalaktivität
-#define ParamSWA_cActive                             ((knx.paramByte(SWA_ParamCalcIndex(SWA_cActive)) & SWA_cActiveMask) >> SWA_cActiveShift)
+#define ParamSWA_ChActive                            ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChActive)) & SWA_ChActiveMask) >> SWA_ChActiveShift)
 // 
-#define ParamSWA_cSyncSwitch                         ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSyncSwitch)) & SWA_cSyncSwitchMask))
+#define ParamSWA_ChSyncSwitch                        ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSyncSwitch)) & SWA_ChSyncSwitchMask))
 // Betriebsmodus
-#define ParamSWA_cOperationMode                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cOperationMode)) & SWA_cOperationModeMask))
+#define ParamSWA_ChOperationMode                     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChOperationMode)) & SWA_ChOperationModeMask))
 // Zentralfunktion
-#define ParamSWA_cCentralFunction                    ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cCentralFunction)) & SWA_cCentralFunctionMask))
+#define ParamSWA_ChCentralFunction                   ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChCentralFunction)) & SWA_ChCentralFunctionMask))
 // Status senden
-#define ParamSWA_cStatusSend                         ((knx.paramByte(SWA_ParamCalcIndex(SWA_cStatusSend)) & SWA_cStatusSendMask) >> SWA_cStatusSendShift)
+#define ParamSWA_ChStatusSend                        ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChStatusSend)) & SWA_ChStatusSendMask) >> SWA_ChStatusSendShift)
 // Zusätzlicher invertierter Status
-#define ParamSWA_cStatusInverted                     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cStatusInverted)) & SWA_cStatusInvertedMask))
+#define ParamSWA_ChStatusInverted                    ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChStatusInverted)) & SWA_ChStatusInvertedMask))
 // Zeitbasis
-#define ParamSWA_cTurnOnDelayBase                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_cTurnOnDelayBase)) & SWA_cTurnOnDelayBaseMask) >> SWA_cTurnOnDelayBaseShift)
+#define ParamSWA_ChTurnOnDelayBase                   ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChTurnOnDelayBase)) & SWA_ChTurnOnDelayBaseMask) >> SWA_ChTurnOnDelayBaseShift)
 // Zeit
-#define ParamSWA_cTurnOnDelayTime                    (knx.paramWord(SWA_ParamCalcIndex(SWA_cTurnOnDelayTime)) & SWA_cTurnOnDelayTimeMask)
+#define ParamSWA_ChTurnOnDelayTime                   (knx.paramWord(SWA_ParamCalcIndex(SWA_ChTurnOnDelayTime)) & SWA_ChTurnOnDelayTimeMask)
 // Zeit (in Millisekunden)
-#define ParamSWA_cTurnOnDelayTimeMS                  (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_cTurnOnDelayTime))))
+#define ParamSWA_ChTurnOnDelayTimeMS                 (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChTurnOnDelayTime))))
 // Zeitbasis
-#define ParamSWA_cTurnOffDelayBase                   ((knx.paramByte(SWA_ParamCalcIndex(SWA_cTurnOffDelayBase)) & SWA_cTurnOffDelayBaseMask) >> SWA_cTurnOffDelayBaseShift)
+#define ParamSWA_ChTurnOffDelayBase                  ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChTurnOffDelayBase)) & SWA_ChTurnOffDelayBaseMask) >> SWA_ChTurnOffDelayBaseShift)
 // Zeit
-#define ParamSWA_cTurnOffDelayTime                   (knx.paramWord(SWA_ParamCalcIndex(SWA_cTurnOffDelayTime)) & SWA_cTurnOffDelayTimeMask)
+#define ParamSWA_ChTurnOffDelayTime                  (knx.paramWord(SWA_ParamCalcIndex(SWA_ChTurnOffDelayTime)) & SWA_ChTurnOffDelayTimeMask)
 // Zeit (in Millisekunden)
-#define ParamSWA_cTurnOffDelayTimeMS                 (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_cTurnOffDelayTime))))
+#define ParamSWA_ChTurnOffDelayTimeMS                (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChTurnOffDelayTime))))
 // Zeitbasis
-#define ParamSWA_cStatusCyclicBase                   ((knx.paramByte(SWA_ParamCalcIndex(SWA_cStatusCyclicBase)) & SWA_cStatusCyclicBaseMask) >> SWA_cStatusCyclicBaseShift)
+#define ParamSWA_ChStatusCyclicBase                  ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChStatusCyclicBase)) & SWA_ChStatusCyclicBaseMask) >> SWA_ChStatusCyclicBaseShift)
 // Zeit
-#define ParamSWA_cStatusCyclicTime                   (knx.paramWord(SWA_ParamCalcIndex(SWA_cStatusCyclicTime)) & SWA_cStatusCyclicTimeMask)
+#define ParamSWA_ChStatusCyclicTime                  (knx.paramWord(SWA_ParamCalcIndex(SWA_ChStatusCyclicTime)) & SWA_ChStatusCyclicTimeMask)
 // Zeit (in Millisekunden)
-#define ParamSWA_cStatusCyclicTimeMS                 (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_cStatusCyclicTime))))
+#define ParamSWA_ChStatusCyclicTimeMS                (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChStatusCyclicTime))))
 // bei Sperren
-#define ParamSWA_cBehaviorLock                       ((knx.paramByte(SWA_ParamCalcIndex(SWA_cBehaviorLock)) & SWA_cBehaviorLockMask) >> SWA_cBehaviorLockShift)
+#define ParamSWA_ChBehaviorLock                      ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChBehaviorLock)) & SWA_ChBehaviorLockMask) >> SWA_ChBehaviorLockShift)
 // bei Entsperren
-#define ParamSWA_cBehaviorUnlock                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cBehaviorUnlock)) & SWA_cBehaviorUnlockMask) >> SWA_cBehaviorUnlockShift)
+#define ParamSWA_ChBehaviorUnlock                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChBehaviorUnlock)) & SWA_ChBehaviorUnlockMask) >> SWA_ChBehaviorUnlockShift)
 // bei Busspannungsverlust
-#define ParamSWA_cBehaviorPowerLoss                  ((knx.paramByte(SWA_ParamCalcIndex(SWA_cBehaviorPowerLoss)) & SWA_cBehaviorPowerLossMask) >> SWA_cBehaviorPowerLossShift)
+#define ParamSWA_ChBehaviorPowerLoss                 ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChBehaviorPowerLoss)) & SWA_ChBehaviorPowerLossMask) >> SWA_ChBehaviorPowerLossShift)
 // bei Busspannungswiederkehr
-#define ParamSWA_cBehaviorPowerRegain                ((knx.paramByte(SWA_ParamCalcIndex(SWA_cBehaviorPowerRegain)) & SWA_cBehaviorPowerRegainMask) >> SWA_cBehaviorPowerRegainShift)
+#define ParamSWA_ChBehaviorPowerRegain               ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChBehaviorPowerRegain)) & SWA_ChBehaviorPowerRegainMask) >> SWA_ChBehaviorPowerRegainShift)
 // Treppenlicht aktivieren
-#define ParamSWA_cStairLightActive                   ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cStairLightActive)) & SWA_cStairLightActiveMask))
+#define ParamSWA_ChStairLightActive                  ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChStairLightActive)) & SWA_ChStairLightActiveMask))
 // Szenen aktivieren
-#define ParamSWA_cScenesActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cScenesActive)) & SWA_cScenesActiveMask))
+#define ParamSWA_ChScenesActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChScenesActive)) & SWA_ChScenesActiveMask))
 // Szene lernen
-#define ParamSWA_cSceneLearn                         ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneLearn)) & SWA_cSceneLearnMask))
+#define ParamSWA_ChSceneLearn                        ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneLearn)) & SWA_ChSceneLearnMask))
 // Zeit für Treppenlicht
-#define ParamSWA_cStairTimeBase                      ((knx.paramByte(SWA_ParamCalcIndex(SWA_cStairTimeBase)) & SWA_cStairTimeBaseMask) >> SWA_cStairTimeBaseShift)
+#define ParamSWA_ChStairTimeBase                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChStairTimeBase)) & SWA_ChStairTimeBaseMask) >> SWA_ChStairTimeBaseShift)
 // Zeit für Treppenlicht
-#define ParamSWA_cStairTimeTime                      (knx.paramWord(SWA_ParamCalcIndex(SWA_cStairTimeTime)) & SWA_cStairTimeTimeMask)
+#define ParamSWA_ChStairTimeTime                     (knx.paramWord(SWA_ParamCalcIndex(SWA_ChStairTimeTime)) & SWA_ChStairTimeTimeMask)
 // Zeit für Treppenlicht (in Millisekunden)
-#define ParamSWA_cStairTimeTimeMS                    (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_cStairTimeTime))))
+#define ParamSWA_ChStairTimeTimeMS                   (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChStairTimeTime))))
 // Treppenlicht kann verlängert werden
-#define ParamSWA_cStairRetrigger                     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cStairRetrigger)) & SWA_cStairRetriggerMask))
+#define ParamSWA_ChStairRetrigger                    ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChStairRetrigger)) & SWA_ChStairRetriggerMask))
 // Treppenlicht kann ausgeschaltet werden
-#define ParamSWA_cStairOff                           ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cStairOff)) & SWA_cStairOffMask))
+#define ParamSWA_ChStairOff                          ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChStairOff)) & SWA_ChStairOffMask))
 // Treppenlicht blinkt im Rhythmus
-#define ParamSWA_cStairBlinkBase                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cStairBlinkBase)) & SWA_cStairBlinkBaseMask) >> SWA_cStairBlinkBaseShift)
+#define ParamSWA_ChStairBlinkBase                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChStairBlinkBase)) & SWA_ChStairBlinkBaseMask) >> SWA_ChStairBlinkBaseShift)
 // Treppenlicht blinkt im Rhythmus
-#define ParamSWA_cStairBlinkTime                     (knx.paramWord(SWA_ParamCalcIndex(SWA_cStairBlinkTime)) & SWA_cStairBlinkTimeMask)
+#define ParamSWA_ChStairBlinkTime                    (knx.paramWord(SWA_ParamCalcIndex(SWA_ChStairBlinkTime)) & SWA_ChStairBlinkTimeMask)
 // Treppenlicht blinkt im Rhythmus (in Millisekunden)
-#define ParamSWA_cStairBlinkTimeMS                   (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_cStairBlinkTime))))
+#define ParamSWA_ChStairBlinkTimeMS                  (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChStairBlinkTime))))
 // Szene aktiv
-#define ParamSWA_cSceneAActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneAActive)) & SWA_cSceneAActiveMask))
+#define ParamSWA_ChSceneAActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneAActive)) & SWA_ChSceneAActiveMask))
 // Szene Verhalten
-#define ParamSWA_cSceneABehavior                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneABehavior)) & SWA_cSceneABehaviorMask) >> SWA_cSceneABehaviorShift)
+#define ParamSWA_ChSceneABehavior                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneABehavior)) & SWA_ChSceneABehaviorMask) >> SWA_ChSceneABehaviorShift)
 // Szene Nummer
-#define ParamSWA_cSceneANumber                       (knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneANumber)))
+#define ParamSWA_ChSceneANumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneANumber)))
 // Szene aktiv
-#define ParamSWA_cSceneBActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneBActive)) & SWA_cSceneBActiveMask))
+#define ParamSWA_ChSceneBActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneBActive)) & SWA_ChSceneBActiveMask))
 // Szene Verhalten
-#define ParamSWA_cSceneBBehavior                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneBBehavior)) & SWA_cSceneBBehaviorMask) >> SWA_cSceneBBehaviorShift)
+#define ParamSWA_ChSceneBBehavior                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneBBehavior)) & SWA_ChSceneBBehaviorMask) >> SWA_ChSceneBBehaviorShift)
 // Szene Nummer
-#define ParamSWA_cSceneBNumber                       (knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneBNumber)))
+#define ParamSWA_ChSceneBNumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneBNumber)))
 // Szene aktiv
-#define ParamSWA_cSceneCActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneCActive)) & SWA_cSceneCActiveMask))
+#define ParamSWA_ChSceneCActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneCActive)) & SWA_ChSceneCActiveMask))
 // Szene Verhalten
-#define ParamSWA_cSceneCBehavior                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneCBehavior)) & SWA_cSceneCBehaviorMask) >> SWA_cSceneCBehaviorShift)
+#define ParamSWA_ChSceneCBehavior                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneCBehavior)) & SWA_ChSceneCBehaviorMask) >> SWA_ChSceneCBehaviorShift)
 // Szene Nummer
-#define ParamSWA_cSceneCNumber                       (knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneCNumber)))
+#define ParamSWA_ChSceneCNumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneCNumber)))
 // Szene aktiv
-#define ParamSWA_cSceneDActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneDActive)) & SWA_cSceneDActiveMask))
+#define ParamSWA_ChSceneDActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneDActive)) & SWA_ChSceneDActiveMask))
 // Szene Verhalten
-#define ParamSWA_cSceneDBehavior                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneDBehavior)) & SWA_cSceneDBehaviorMask) >> SWA_cSceneDBehaviorShift)
+#define ParamSWA_ChSceneDBehavior                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneDBehavior)) & SWA_ChSceneDBehaviorMask) >> SWA_ChSceneDBehaviorShift)
 // Szene Nummer
-#define ParamSWA_cSceneDNumber                       (knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneDNumber)))
+#define ParamSWA_ChSceneDNumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneDNumber)))
 // Szene aktiv
-#define ParamSWA_cSceneEActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneEActive)) & SWA_cSceneEActiveMask))
+#define ParamSWA_ChSceneEActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneEActive)) & SWA_ChSceneEActiveMask))
 // Szene Verhalten
-#define ParamSWA_cSceneEBehavior                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneEBehavior)) & SWA_cSceneEBehaviorMask) >> SWA_cSceneEBehaviorShift)
+#define ParamSWA_ChSceneEBehavior                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneEBehavior)) & SWA_ChSceneEBehaviorMask) >> SWA_ChSceneEBehaviorShift)
 // Szene Nummer
-#define ParamSWA_cSceneENumber                       (knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneENumber)))
+#define ParamSWA_ChSceneENumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneENumber)))
 // Szene aktiv
-#define ParamSWA_cSceneFActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneFActive)) & SWA_cSceneFActiveMask))
+#define ParamSWA_ChSceneFActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneFActive)) & SWA_ChSceneFActiveMask))
 // Szene Verhalten
-#define ParamSWA_cSceneFBehavior                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneFBehavior)) & SWA_cSceneFBehaviorMask) >> SWA_cSceneFBehaviorShift)
+#define ParamSWA_ChSceneFBehavior                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneFBehavior)) & SWA_ChSceneFBehaviorMask) >> SWA_ChSceneFBehaviorShift)
 // Szene Nummer
-#define ParamSWA_cSceneFNumber                       (knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneFNumber)))
+#define ParamSWA_ChSceneFNumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneFNumber)))
 // Szene aktiv
-#define ParamSWA_cSceneGActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneGActive)) & SWA_cSceneGActiveMask))
+#define ParamSWA_ChSceneGActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneGActive)) & SWA_ChSceneGActiveMask))
 // Szene Verhalten
-#define ParamSWA_cSceneGBehavior                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneGBehavior)) & SWA_cSceneGBehaviorMask) >> SWA_cSceneGBehaviorShift)
+#define ParamSWA_ChSceneGBehavior                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneGBehavior)) & SWA_ChSceneGBehaviorMask) >> SWA_ChSceneGBehaviorShift)
 // Szene Nummer
-#define ParamSWA_cSceneGNumber                       (knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneGNumber)))
+#define ParamSWA_ChSceneGNumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneGNumber)))
 // Szene aktiv
-#define ParamSWA_cSceneHActive                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneHActive)) & SWA_cSceneHActiveMask))
+#define ParamSWA_ChSceneHActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneHActive)) & SWA_ChSceneHActiveMask))
 // Szene Verhalten
-#define ParamSWA_cSceneHBehavior                     ((knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneHBehavior)) & SWA_cSceneHBehaviorMask) >> SWA_cSceneHBehaviorShift)
+#define ParamSWA_ChSceneHBehavior                    ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneHBehavior)) & SWA_ChSceneHBehaviorMask) >> SWA_ChSceneHBehaviorShift)
 // Szene Nummer
-#define ParamSWA_cSceneHNumber                       (knx.paramByte(SWA_ParamCalcIndex(SWA_cSceneHNumber)))
+#define ParamSWA_ChSceneHNumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneHNumber)))
 
 // deprecated
 #define SWA_KoOffset 91
@@ -671,25 +671,25 @@
 #define SWA_KoCalcIndex(number) ((number >= SWA_KoCalcNumber(0) && number < SWA_KoCalcNumber(SWA_KoBlockSize)) ? (number - SWA_KoBlockOffset) % SWA_KoBlockSize : -1)
 #define SWA_KoCalcChannel(number) ((number >= SWA_KoBlockOffset && number < SWA_KoBlockOffset + SWA_ChannelCount * SWA_KoBlockSize) ? (number - SWA_KoBlockOffset) / SWA_KoBlockSize : -1)
 
-#define SWA_KocSwitch 0
-#define SWA_KocStatus 1
-#define SWA_KocStatusInverted 2
-#define SWA_KocLock 3
-#define SWA_KocLockStatus 4
-#define SWA_KocScene 5
+#define SWA_KoChSwitch 0
+#define SWA_KoChStatus 1
+#define SWA_KoChStatusInverted 2
+#define SWA_KoChLock 3
+#define SWA_KoChLockStatus 4
+#define SWA_KoChScene 5
 
 // 
-#define KoSWA_cSwitch                             (knx.getGroupObject(SWA_KoCalcNumber(SWA_KocSwitch)))
+#define KoSWA_ChSwitch                            (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChSwitch)))
 // 
-#define KoSWA_cStatus                             (knx.getGroupObject(SWA_KoCalcNumber(SWA_KocStatus)))
+#define KoSWA_ChStatus                            (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChStatus)))
 // 
-#define KoSWA_cStatusInverted                     (knx.getGroupObject(SWA_KoCalcNumber(SWA_KocStatusInverted)))
+#define KoSWA_ChStatusInverted                    (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChStatusInverted)))
 // 
-#define KoSWA_cLock                               (knx.getGroupObject(SWA_KoCalcNumber(SWA_KocLock)))
+#define KoSWA_ChLock                              (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChLock)))
 // 
-#define KoSWA_cLockStatus                         (knx.getGroupObject(SWA_KoCalcNumber(SWA_KocLockStatus)))
+#define KoSWA_ChLockStatus                        (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChLockStatus)))
 // 
-#define KoSWA_cScene                              (knx.getGroupObject(SWA_KoCalcNumber(SWA_KocScene)))
+#define KoSWA_ChScene                             (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChScene)))
 
 #define LOG_BuzzerInstalled                     2604      // 1 Bit, Bit 7
 #define     LOG_BuzzerInstalledMask 0x80
@@ -2833,9 +2833,9 @@
 
 // Mehrfach-Klick
 #define ParamBTN_ReactionTimeMultiClick              (knx.paramByte(BTN_ReactionTimeMultiClick))
-// Langer Tastendruck
+// Langer Tasterdruck
 #define ParamBTN_ReactionTimeLong                    (knx.paramByte(BTN_ReactionTimeLong))
-// Extra langer Tastendruck
+// Extra langer Tastedruck
 #define ParamBTN_ReactionTimeExtraLong               (knx.paramByte(BTN_ReactionTimeExtraLong))
 // Verfügbare Kanäle
 #define ParamBTN_VisibleChannels                     (knx.paramByte(BTN_VisibleChannels))
@@ -3062,9 +3062,9 @@
 #define ParamBTN_bInB                                (knx.paramWord(BTN_ParamCalcIndex(BTN_bInB)))
 // Mehrfach-Klick
 #define ParamBTN_bReactionTimeMultiClick             (knx.paramByte(BTN_ParamCalcIndex(BTN_bReactionTimeMultiClick)))
-// Langer Tastendruck
+// Langer Tasterdruck
 #define ParamBTN_bReactionTimeLong                   (knx.paramByte(BTN_ParamCalcIndex(BTN_bReactionTimeLong)))
-// Extra langer Tastendruck
+// Extra langer Tasterdruck
 #define ParamBTN_bReactionTimeExtraLong              (knx.paramByte(BTN_ParamCalcIndex(BTN_bReactionTimeExtraLong)))
 // Datentyp
 #define ParamBTN_bOutShort_DPT                       (knx.paramByte(BTN_ParamCalcIndex(BTN_bOutShort_DPT)))
@@ -3402,8 +3402,6 @@
 // 
 #define KoBTN_Out6                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut6)))
 
-
-
 #define BI_ChannelCount 4
 
 // Parameter per channel
@@ -3468,7 +3466,7 @@
 
 // Header generation for Module 'BASE_KommentarModule'
 
-#define BASE_KommentarModuleCount 0
+#define BASE_KommentarModuleCount 99
 #define BASE_KommentarModuleModuleParamSize 0
 #define BASE_KommentarModuleSubmodulesParamSize 0
 #define BASE_KommentarModuleParamSize 0

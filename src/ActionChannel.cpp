@@ -16,9 +16,9 @@ void ActionChannel::loop()
     if (_actionCallResetTime > 0 && delayCheck(_actionCallResetTime, ParamFIN_AuthDelayTimeMS))
         resetActionCall();
 
-    if (_stairLightTime > 0 && delayCheck(_stairLightTime, ParamFIN_aDelayTimeMS))
+    if (_stairLightTime > 0 && delayCheck(_stairLightTime, ParamFIN_ActDelayTimeMS))
     {
-        KoFIN_aSwitch.value(false, DPT_Switch);
+        KoFIN_ActSwitch.value(false, DPT_Switch);
         _stairLightTime = 0;
     }
     processReadRequests();
@@ -28,7 +28,7 @@ void ActionChannel::processInputKo(GroupObject &ko)
 {
     switch (FIN_KoCalcIndex(ko.asap()))
     {
-        case FIN_KoaCall:
+        case FIN_KoActCall:
             if (ko.value(DPT_Switch))
             {
                 _authenticateActive = true;
@@ -41,31 +41,31 @@ void ActionChannel::processInputKo(GroupObject &ko)
 
 bool ActionChannel::processScan(uint16_t location)
 {
-    if (_authenticateActive && !ParamFIN_aAuthenticate)
+    if (_authenticateActive && !ParamFIN_ActAuthenticate)
         return false;
 
-    if (!ParamFIN_aAuthenticate || KoFIN_aCall.value(DPT_Switch))
+    if (!ParamFIN_ActAuthenticate || KoFIN_ActCall.value(DPT_Switch))
     {
-        switch (ParamFIN_aActionType)
+        switch (ParamFIN_ActActionType)
         {
             case 0: // action deactivated
                 break;
             case 1: // switch
-                KoFIN_aSwitch.value(ParamFIN_aOnOff, DPT_Switch);
+                KoFIN_ActSwitch.value(ParamFIN_ActOnOff, DPT_Switch);
                 break;
             case 2: // toggle
-                KoFIN_aSwitch.value(!KoFIN_aState.value(DPT_Switch), DPT_Switch);
-                KoFIN_aState.value(KoFIN_aSwitch.value(DPT_Switch), DPT_Switch);
+                KoFIN_ActSwitch.value(!KoFIN_ActState.value(DPT_Switch), DPT_Switch);
+                KoFIN_ActState.value(KoFIN_ActSwitch.value(DPT_Switch), DPT_Switch);
                 break;
             case 3: // stair light
-                KoFIN_aSwitch.value(true, DPT_Switch);
+                KoFIN_ActSwitch.value(true, DPT_Switch);
                 _stairLightTime = delayTimerInit();
                 break;
         }
 
-        if (KoFIN_aCall.value(DPT_Switch))
+        if (KoFIN_ActCall.value(DPT_Switch))
         {
-            KoFIN_aCall.value(false, DPT_Switch);
+            KoFIN_ActCall.value(false, DPT_Switch);
             _actionCallResetTime = 0;
             _authenticateActive = false;
         }
@@ -82,8 +82,8 @@ void ActionChannel::processReadRequests()
     if (_readRequestSent) return;
 
     // is there a state field to read?
-    if (ParamFIN_aActionType == 2) // toggle
-        _readRequestSent = openknxFingerprintModule.sendReadRequest(KoFIN_aState);
+    if (ParamFIN_ActActionType == 2) // toggle
+        _readRequestSent = openknxFingerprintModule.sendReadRequest(KoFIN_ActState);
     else
         _readRequestSent = true;
 }
@@ -94,7 +94,7 @@ void ActionChannel::resetActionCall()
     if (!_authenticateActive)
         return;
 
-    KoFIN_aCall.value(false, DPT_Switch);
+    KoFIN_ActCall.value(false, DPT_Switch);
     _finger.setLed(Fingerprint::State::None);
     _authenticateActive = false;
 }
