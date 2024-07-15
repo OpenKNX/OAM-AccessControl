@@ -158,7 +158,7 @@ function FIN_checkFingerAction(device, online, progress, context) {
             personText = "Unbekannter Finger";
         }
 
-        var parActionDescription = device.getParameterByName("FIN_Action" + parActionId.value + "Description");
+        var parActionDescription = device.getParameterByName("FIN_a" + parActionId.value + "Description");
         parFingerActionInfo.value = (parActionDescription.value + "; " + personText).substring(0, 80);
     } else {
         parFingerActionInfo.value = "Aktion ist nicht definiert, Finger wurde nicht ermittelt";

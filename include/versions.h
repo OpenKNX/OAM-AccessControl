@@ -1,10 +1,10 @@
 #pragma once
 
-#define MAIN_Version "49dad07"
+#define MAIN_Version "e212972"
 #define KNX_Version "e69f636"
 #define MODULE_Common_Version "1.2.0+1aa43bb"
 #define MODULE_Common_ETS 18
-#define MODULE_SwitchActuator_Version "0.1.0+68ec16f"
+#define MODULE_SwitchActuator_Version "0.1.0+8efec85"
 #define MODULE_SwitchActuator_ETS 1
 #define MODULE_LogicModule_Version "3.3.0+0834fc0"
 #define MODULE_LogicModule_ETS 51
