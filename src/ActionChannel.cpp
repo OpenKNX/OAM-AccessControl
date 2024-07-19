@@ -41,7 +41,10 @@ void ActionChannel::processInputKo(GroupObject &ko)
 
 bool ActionChannel::processScan(uint16_t location)
 {
-    if (_authenticateActive && !ParamFIN_ActAuthenticate)
+    // here are 2 cases relevant:
+    // authentication is active and the action is without auth-flag => skip processing
+    // authentication is inaction and the action has te auth-flag => skip processing
+    if (_authenticateActive != ParamFIN_ActAuthenticate)
         return false;
 
     if (!ParamFIN_ActAuthenticate || KoFIN_ActCall.value(DPT_Switch))
