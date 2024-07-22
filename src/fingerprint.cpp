@@ -87,6 +87,7 @@ bool Fingerprint::setLed(State state)
             return _finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_YELLOW, 0) == FINGERPRINT_OK;
         case ScanNoMatch:
         case Failed:
+        case Locked:
             return _finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_RED, 0) == FINGERPRINT_OK;
         case WaitForFinger:
             return _finger.LEDcontrol(FINGERPRINT_LED_FLASHING, 20, FINGERPRINT_LED_BLUE, 0) == FINGERPRINT_OK;

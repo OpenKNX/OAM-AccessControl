@@ -35,6 +35,7 @@ class Fingerprint
         DeleteNotFound,
         Success,
         Failed,
+        Locked,
         Busy
     };
 

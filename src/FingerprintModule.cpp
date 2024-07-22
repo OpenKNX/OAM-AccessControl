@@ -108,66 +108,69 @@ void FingerprintModule::loop()
     if (delayCallbackActive)
         return;
 
-    if (touched)
+    if (!KoFIN_LockStatus.value(DPT_Switch))
     {
-        touched = false;
-        logInfoP("Touched");
-
-        KoFIN_Touched.value(true, DPT_Switch);
-
-        unsigned long captureStart = delayTimerInit();
-        while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
+        if (touched)
         {
-            if (searchForFinger())
-                break;
+            touched = false;
+            logInfoP("Touched");
+
+            KoFIN_Touched.value(true, DPT_Switch);
+
+            unsigned long captureStart = delayTimerInit();
+            while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
+            {
+                if (searchForFinger())
+                    break;
+            }
+
+            touched = false;
+        }
+        else
+        {
+            if (ParamFIN_ScanMode == 1)
+                searchForFinger();
         }
 
-        touched = false;
-    }
-    else
-    {
-        if (ParamFIN_ScanMode == 1)
-            searchForFinger();
-    }
-
-    if (enrollRequestedTimer > 0 and delayCheck(enrollRequestedTimer, ENROLL_REQUEST_DELAY))
-    {
-        bool success = enrollFinger(enrollRequestedLocation);
-        if (success)
+        if (enrollRequestedTimer > 0 and delayCheck(enrollRequestedTimer, ENROLL_REQUEST_DELAY))
         {
-            syncRequestedFingerId = enrollRequestedLocation;
-            syncRequestedTimer = delayTimerInit();
+            bool success = enrollFinger(enrollRequestedLocation);
+            if (success)
+            {
+                syncRequestedFingerId = enrollRequestedLocation;
+                syncRequestedTimer = delayTimerInit();
+            }
+
+            enrollRequestedTimer = 0;
+            enrollRequestedLocation = 0;
         }
 
-        enrollRequestedTimer = 0;
-        enrollRequestedLocation = 0;
+        if (checkSensorTimer > 0 && delayCheck(checkSensorTimer, CHECK_SENSOR_DELAY))
+        {
+            bool currentStatus = KoFIN_ScannerStatus.value(DPT_Switch);
+            bool success = finger.checkSensor();
+            if (currentStatus != success)
+                KoFIN_ScannerStatus.value(success, DPT_Switch);
+
+            checkSensorTimer = delayTimerInit();
+        }
+
+        if (initResetTimer > 0 && delayCheck(initResetTimer, INIT_RESET_TIMEOUT))
+        {
+            finger.setLed(Fingerprint::State::None);
+            digitalWrite(LED_GREEN_PIN, LOW);
+            initResetTimer = 0;
+        }
+
+        if (resetLedsTimer > 0 && delayCheck(resetLedsTimer, LED_RESET_TIMEOUT))
+        {
+            setLedDefault();
+            resetLedsTimer = 0;
+        }
+
+        for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
+            _channels[i]->loop();
     }
-
-    if (checkSensorTimer > 0 && delayCheck(checkSensorTimer, CHECK_SENSOR_DELAY))
-    {
-        bool currentStatus = KoFIN_ScannerStatus.value(DPT_Switch);
-        bool success = finger.checkSensor();
-        if (currentStatus != success)
-            KoFIN_ScannerStatus.value(success, DPT_Switch);
-
-        checkSensorTimer = delayTimerInit();
-    }
-
-    if (initResetTimer > 0 && delayCheck(initResetTimer, INIT_RESET_TIMEOUT))
-    {
-        finger.setLed(Fingerprint::State::None);
-        digitalWrite(LED_GREEN_PIN, LOW);
-        initResetTimer = 0;
-    }
-
-    if (resetLedsTimer > 0 && delayCheck(resetLedsTimer, LED_RESET_TIMEOUT))
-    {
-        setLedDefault();
-        resetLedsTimer = 0;
-    }
-
-    for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
-        _channels[i]->loop();
 
     if (syncRequestedTimer > 0 && delayCheck(syncRequestedTimer, SYNC_AFTER_ENROLL_DELAY))
     {
@@ -368,7 +371,23 @@ void FingerprintModule::processInputKo(GroupObject& iKo)
         case FIN_KoLock:
             KoFIN_LockStatus.value(KoFIN_Lock.value(DPT_Switch), DPT_Switch);
             logInfoP("Locked: %d", KoFIN_Lock.value(DPT_Switch));
+
+            if (KoFIN_LockStatus.value(DPT_Switch))
+                finger.setLed(Fingerprint::State::Locked);
+            else
+                setLedDefault();
+
             break;
+        case FIN_KoSync:
+            processSyncReceive(iKo.valueRef());
+            break;
+    }
+
+    if (KoFIN_LockStatus.value(DPT_Switch))
+        return;
+
+    switch (lAsap)
+    {
         case FIN_KoLedRingColor:
         case FIN_KoLedRingControl:
         case FIN_KoLedRingSpeed:
@@ -432,9 +451,6 @@ void FingerprintModule::processInputKo(GroupObject& iKo)
             else
                 digitalWrite(LED_GREEN_PIN, LOW);
             
-            break;
-        case FIN_KoSync:
-            processSyncReceive(iKo.valueRef());
             break;
         default:
         {
