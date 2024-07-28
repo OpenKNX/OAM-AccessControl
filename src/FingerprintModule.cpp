@@ -378,6 +378,27 @@ void FingerprintModule::processInputKo(GroupObject& iKo)
                 setLedDefault();
 
             break;
+        case FIN_KoLedRingColor:
+        case FIN_KoLedRingControl:
+        case FIN_KoLedRingSpeed:
+        case FIN_KoLedRingCount:
+            setLedDefault();
+            logInfoP("LED ring: color=%u, control=%u, speed=%u, count=%u", (uint8_t)KoFIN_LedRingColor.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingControl.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingSpeed.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingCount.value(Dpt(5, 10)));
+            break;
+        case FIN_KoTouchPcbLedRed:
+            if (iKo.value(DPT_Switch))
+                digitalWrite(LED_RED_PIN, HIGH);
+            else
+                digitalWrite(LED_RED_PIN, LOW);
+            
+            break;
+        case FIN_KoTouchPcbLedGreen:
+            if (iKo.value(DPT_Switch))
+                digitalWrite(LED_GREEN_PIN, HIGH);
+            else
+                digitalWrite(LED_GREEN_PIN, LOW);
+            
+            break;
         case FIN_KoSync:
             processSyncReceive(iKo.valueRef());
             break;
@@ -388,13 +409,6 @@ void FingerprintModule::processInputKo(GroupObject& iKo)
 
     switch (lAsap)
     {
-        case FIN_KoLedRingColor:
-        case FIN_KoLedRingControl:
-        case FIN_KoLedRingSpeed:
-        case FIN_KoLedRingCount:
-            setLedDefault();
-            logInfoP("LED ring: color=%u, control=%u, speed=%u, count=%u", (uint8_t)KoFIN_LedRingColor.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingControl.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingSpeed.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingCount.value(Dpt(5, 10)));
-            break;
         case FIN_KoEnrollNext:
         case FIN_KoEnrollId:
         case FIN_KoEnrollData:
@@ -437,20 +451,6 @@ void FingerprintModule::processInputKo(GroupObject& iKo)
             logInfoP("FingerID received: %d", location);
 
             processScanSuccess(location, true);
-            break;
-        case FIN_KoTouchPcbLedRed:
-            if (iKo.value(DPT_Switch))
-                digitalWrite(LED_RED_PIN, HIGH);
-            else
-                digitalWrite(LED_RED_PIN, LOW);
-            
-            break;
-        case FIN_KoTouchPcbLedGreen:
-            if (iKo.value(DPT_Switch))
-                digitalWrite(LED_GREEN_PIN, HIGH);
-            else
-                digitalWrite(LED_GREEN_PIN, LOW);
-            
             break;
         default:
         {
