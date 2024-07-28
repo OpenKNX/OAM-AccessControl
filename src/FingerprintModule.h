@@ -81,6 +81,8 @@ class FingerprintModule : public OpenKNX::Module
     ActionChannel *_channels[FIN_ChannelCount];
 
     Fingerprint finger;
+    bool hasLastFoundLocation = false;
+    uint16_t lastFoundLocation = 0;
     uint32_t initResetTimer = 0;
     uint32_t resetLedsTimer = 0;
     uint32_t enrollRequestedTimer = 0;

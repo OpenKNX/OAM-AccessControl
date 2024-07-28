@@ -186,17 +186,32 @@ void FingerprintModule::loop()
 bool FingerprintModule::searchForFinger()
 {
     if (!finger.hasFinger())
+    {
+        hasLastFoundLocation = false;
         return false;
+    }
     
     Fingerprint::FindFingerResult findFingerResult = finger.findFingerprint();
 
     if (findFingerResult.found)
     {
+        if (ParamFIN_ScanMode == 1 &&
+            hasLastFoundLocation && lastFoundLocation == findFingerResult.location)
+        {
+            logDebugP("Same finger found in location %d and ignored", findFingerResult.location);
+            resetLedsTimer = delayTimerInit();
+            return true;
+        }
+
         logInfoP("Finger found in location %d", findFingerResult.location);
         processScanSuccess(findFingerResult.location);
+
+        hasLastFoundLocation = true;
+        lastFoundLocation = findFingerResult.location;
     }
     else
     {
+        hasLastFoundLocation = false;
         finger.setLed(Fingerprint::ScanNoMatch);
 
         logInfoP("Finger not found");
