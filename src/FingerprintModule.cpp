@@ -110,27 +110,33 @@ void FingerprintModule::loop()
 
     if (!KoFIN_LockStatus.value(DPT_Switch))
     {
-        if (touched)
+        if (ParamFIN_ScanMode == 0)
         {
-            touched = false;
-            logInfoP("Touched");
-
-            KoFIN_Touched.value(true, DPT_Switch);
-
-            unsigned long captureStart = delayTimerInit();
-            while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
+            if (touched)
             {
-                if (searchForFinger())
-                    break;
-            }
+                touched = false;
+                logInfoP("Touched");
 
-            touched = false;
+                KoFIN_Touched.value(true, DPT_Switch);
+
+                unsigned long captureStart = delayTimerInit();
+                while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
+                {
+                    if (searchForFinger())
+                        break;
+                }
+
+                touched = false;
+            }
+            else
+            {
+                if (KoFIN_Touched.value(DPT_Switch) &&
+                    !finger.hasFinger())
+                    KoFIN_Touched.value(false, DPT_Switch);
+            }
         }
         else
-        {
-            if (ParamFIN_ScanMode == 1)
-                searchForFinger();
-        }
+            searchForFinger();
 
         if (enrollRequestedTimer > 0 and delayCheck(enrollRequestedTimer, ENROLL_REQUEST_DELAY))
         {
@@ -187,8 +193,22 @@ bool FingerprintModule::searchForFinger()
 {
     if (!finger.hasFinger())
     {
+        if (ParamFIN_ScanMode == 1 &&
+            KoFIN_Touched.value(DPT_Switch))
+        {
+            logDebugP("TOUCHED=FALSE");
+            KoFIN_Touched.value(false, DPT_Switch);
+        }
+
         hasLastFoundLocation = false;
         return false;
+    }
+
+    if (ParamFIN_ScanMode == 1 &&
+        !KoFIN_Touched.value(DPT_Switch))
+    {
+        logDebugP("TOUCHED=TRUE");
+        KoFIN_Touched.value(true, DPT_Switch);
     }
     
     Fingerprint::FindFingerResult findFingerResult = finger.findFingerprint();
