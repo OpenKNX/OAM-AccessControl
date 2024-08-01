@@ -135,8 +135,11 @@ void FingerprintModule::loop()
                     KoFIN_Touched.value(false, DPT_Switch);
             }
         }
-        else
+        else if (searchForFingerDelayTimer == 0 || delayCheck(searchForFingerDelayTimer, 100))
+        {
             searchForFinger();
+            searchForFingerDelayTimer = delayTimerInit();
+        }
 
         if (enrollRequestedTimer > 0 and delayCheck(enrollRequestedTimer, ENROLL_REQUEST_DELAY))
         {

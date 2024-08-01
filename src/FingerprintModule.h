@@ -88,6 +88,7 @@ class FingerprintModule : public OpenKNX::Module
     uint32_t enrollRequestedTimer = 0;
     uint16_t enrollRequestedLocation = 0;
     uint32_t checkSensorTimer = 0;
+    uint32_t searchForFingerDelayTimer = 0;
     inline static bool delayCallbackActive = false;
 
     inline volatile static bool touched = false;
