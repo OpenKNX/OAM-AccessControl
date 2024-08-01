@@ -198,10 +198,7 @@ bool FingerprintModule::searchForFinger()
     {
         if (ParamFIN_ScanMode == 1 &&
             KoFIN_Touched.value(DPT_Switch))
-        {
-            logDebugP("TOUCHED=FALSE");
             KoFIN_Touched.value(false, DPT_Switch);
-        }
 
         hasLastFoundLocation = false;
         return false;
@@ -209,10 +206,7 @@ bool FingerprintModule::searchForFinger()
 
     if (ParamFIN_ScanMode == 1 &&
         !KoFIN_Touched.value(DPT_Switch))
-    {
-        logDebugP("TOUCHED=TRUE");
         KoFIN_Touched.value(true, DPT_Switch);
-    }
     
     Fingerprint::FindFingerResult findFingerResult = finger.findFingerprint();
 
