@@ -184,7 +184,7 @@ public:
   void begin(uint32_t baud, int8_t rxPin = -1, int8_t txPin = -1);
   void close();
 
-  boolean verifyPassword(void);
+  uint8_t verifyPassword(void);
   uint8_t getParameters(void);
 
   uint8_t getImage(void);

@@ -189,11 +189,12 @@ void Adafruit_Fingerprint::close() {
     @returns True if password is correct
 */
 /**************************************************************************/
-boolean Adafruit_Fingerprint::verifyPassword(void) {
-  if(checkPassword() == FINGERPRINT_OK){   
-    return getParameters()== FINGERPRINT_OK;  //properly configure the object by reading system parameters
+uint8_t Adafruit_Fingerprint::verifyPassword(void) {
+  uint8_t p = checkPassword();
+  if (p == FINGERPRINT_OK) {   
+    return getParameters(); // properly configure the object by reading system parameters
   }
-  return false;
+  return p;
 }
 
 /**************************************************************************/

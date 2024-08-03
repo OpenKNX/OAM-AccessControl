@@ -28,14 +28,17 @@ bool Fingerprint::start()
 
     _delayMs(500);
 
-    if (_finger.verifyPassword())
+    switch (_finger.verifyPassword())
     {
-        logInfoP("Found fingerprint sensor!");
-    }
-    else
-    {
-        logInfoP("Did not find fingerprint sensor :(");
-        return false;
+        case FINGERPRINT_OK:
+            logInfoP("Found fingerprint sensor!");
+            break;
+        case FINGERPRINT_PASSFAIL:
+            logErrorP("Fingerprint password invalid!");
+            return false;
+        default:
+            logErrorP("Fingerprint scanner not found!");
+            return false;
     }
 
     scannerReady = true;
