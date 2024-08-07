@@ -108,7 +108,7 @@ void FingerprintModule::loop()
     if (delayCallbackActive)
         return;
 
-    if (!KoFIN_LockStatus.value(DPT_Switch))
+    if (!isLocked)
     {
         if (ParamFIN_ScanMode == 0)
         {
@@ -401,10 +401,11 @@ void FingerprintModule::processInputKo(GroupObject& iKo)
     switch (lAsap)
     {
         case FIN_KoLock:
-            KoFIN_LockStatus.value(KoFIN_Lock.value(DPT_Switch), DPT_Switch);
-            logInfoP("Locked: %d", KoFIN_Lock.value(DPT_Switch));
+            isLocked = KoFIN_Lock.value(DPT_Switch);
+            KoFIN_LockStatus.value(isLocked, DPT_Switch);
+            logInfoP("Locked: %d", isLocked);
 
-            if (KoFIN_LockStatus.value(DPT_Switch))
+            if (isLocked)
                 finger.setLed(Fingerprint::State::Locked);
             else
                 setLedDefault();
@@ -436,7 +437,7 @@ void FingerprintModule::processInputKo(GroupObject& iKo)
             break;
     }
 
-    if (KoFIN_LockStatus.value(DPT_Switch))
+    if (isLocked)
         return;
 
     switch (lAsap)

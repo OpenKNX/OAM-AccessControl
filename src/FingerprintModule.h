@@ -92,6 +92,7 @@ class FingerprintModule : public OpenKNX::Module
     inline static bool delayCallbackActive = false;
 
     inline volatile static bool touched = false;
+    bool isLocked = false;
 
     uint32_t syncIgnoreTimer = 0;
 
