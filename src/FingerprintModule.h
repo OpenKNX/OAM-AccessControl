@@ -62,11 +62,14 @@ class FingerprintModule : public OpenKNX::Module
     bool enrollFinger(uint16_t location);
     bool deleteFinger(uint16_t location, bool sync = true);
     bool searchForFinger();
-    void setLedDefault();
+    void resetRingLed();
     void startSyncDelete(uint16_t fingerId);
     void startSyncSend(uint16_t fingerId, bool loadModel = true);
     void processSyncSend();
     void processSyncReceive(uint8_t* data);
+    void processInputKoLock(GroupObject &ko);
+    void processInputKoTouchPcbLed(GroupObject &ko);
+    void processInputKoEnroll(GroupObject &ko);
     void handleFunctionPropertyEnrollFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertySyncFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertyDeleteFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
