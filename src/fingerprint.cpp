@@ -6,7 +6,7 @@ Fingerprint::Fingerprint(uint32_t overridePassword)
     _delayMs = _delayCallbackDefault;
 }
 
-Fingerprint::Fingerprint(fingerprint_delay_fptr_t delayCallback, uint32_t overridePassword)
+Fingerprint::Fingerprint(DelayCalback delayCallback, uint32_t overridePassword)
     : _finger(Adafruit_Fingerprint(&mySerial, overridePassword))
 {
     _delayMs = delayCallback;
@@ -317,7 +317,7 @@ bool Fingerprint::createTemplate()
         }
 
         logIndentUp();
-        ulong start = millis() == 0 ? 1 : millis();
+        ulong start = delayTimerInit();
         while (true)
         {
             p = _finger.getImage();
@@ -330,25 +330,28 @@ bool Fingerprint::createTemplate()
             switch (p)
             {
                 case FINGERPRINT_NOFINGER:
-                    if (millis() - start > 10000)
+                    if (delayCheck(start, 10000))
                     {
                         logDebugP("Cancel");
                         setLed(Failed);
-                        logIndent(0);
+                        logIndentDown();
+                        logIndentDown();
                         return false;
                     }
 
                     logDebugP("Waiting");
-                    continue;
+                    break;
                 case FINGERPRINT_IMAGEFAIL:
                     logDebugP("Imaging error");
                     setLed(Failed);
-                    logIndent(0);
+                    logIndentDown();
+                    logIndentDown();
                     return false;
                 default:
                     logDebugP("Other error");
                     setLed(Failed);
-                    logIndent(0);
+                    logIndentDown();
+                    logIndentDown();
                     return false;
             }
 
@@ -367,22 +370,26 @@ bool Fingerprint::createTemplate()
             case FINGERPRINT_IMAGEMESS:
                 logDebugP("Imaging too messy");
                 setLed(Failed);
-                logIndent(0);
+                logIndentDown();
+                logIndentDown();
                 return false;
             case FINGERPRINT_FEATUREFAIL:
                 logDebugP("Could not identify features");
                 setLed(Failed);
-                logIndent(0);
+                logIndentDown();
+                logIndentDown();
                 return false;
             case FINGERPRINT_INVALIDIMAGE:
                 logDebugP("Image invalid");
                 setLed(Failed);
-                logIndent(0);
+                logIndentDown();
+                logIndentDown();
                 return false;
             default:
                 logDebugP("Other error");
                 setLed(Failed);
-                logIndent(0);
+                logIndentDown();
+                logIndentDown();
                 return false;
         }
         logIndentDown();

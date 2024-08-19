@@ -1,6 +1,6 @@
 #include "FingerprintModule.h"
 
-ActionChannel::ActionChannel(uint8_t index, Fingerprint finger)
+ActionChannel::ActionChannel(uint8_t index, Fingerprint *finger)
 {
     _channelIndex = index;
     _finger = finger;
@@ -33,7 +33,7 @@ void ActionChannel::processInputKo(GroupObject &ko)
             {
                 _authenticateActive = true;
                 _actionCallResetTime = delayTimerInit();
-                _finger.setLed(Fingerprint::State::WaitForFinger);
+                _finger->setLed(Fingerprint::State::WaitForFinger);
             }
             break;
     }
@@ -98,6 +98,6 @@ void ActionChannel::resetActionCall()
         return;
 
     KoFIN_ActCall.value(false, DPT_Switch);
-    _finger.setLed(Fingerprint::State::None);
+    _finger->setLed(Fingerprint::State::None);
     _authenticateActive = false;
 }

@@ -83,7 +83,7 @@ class FingerprintModule : public OpenKNX::Module
     OpenKNX::Flash::Driver _fingerprintStorage;
     ActionChannel *_channels[FIN_ChannelCount];
 
-    Fingerprint finger;
+    Fingerprint *finger = nullptr;
     bool hasLastFoundLocation = false;
     uint16_t lastFoundLocation = 0;
     uint32_t initResetTimer = 0;
