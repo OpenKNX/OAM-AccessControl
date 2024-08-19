@@ -246,6 +246,8 @@ Fingerprint::FindFingerResult Fingerprint::findFingerprint()
         return findFingerResult;
     }
 
+    _delayMs(10);
+
     logDebugP("Searching... ");
     p = _finger.fingerSearch();
     if (p == FINGERPRINT_OK)
