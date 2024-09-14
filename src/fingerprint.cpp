@@ -21,7 +21,7 @@ bool Fingerprint::start()
 #elif ESP32_POE_ISO
     _finger.begin(57600, 36, 4);
 #elif ARDUINO_ARCH_RP2040
-    _finger.begin(57600, 5, 4);
+    _finger.begin(57600, SCANNER_RX_PIN, SCANNER_TX_PIN);
 #else
     _finger.begin(57600, 39, 33);
 #endif
