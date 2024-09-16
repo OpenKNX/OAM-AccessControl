@@ -60,9 +60,9 @@
 // F_SCL 19  Touch
 // F_SDA 18
 
-    #define SCANNER_RX_PIN 5 // fingerprint.cpp L23
-    #define SCANNER_TX_PIN 4 // fingerprint.cpp L23   
-    #define SCANNER_TOUCH_PIN 2
+    #define SCANNER_RX_PIN 21 // fingerprint.cpp L23
+    #define SCANNER_TX_PIN 20 // fingerprint.cpp L23   
+    #define SCANNER_TOUCH_PIN 19
     #define TOUCH_LEFT_PIN 26
     #define TOUCH_RIGHT_PIN 27
     #define LED_GREEN_PIN 24
