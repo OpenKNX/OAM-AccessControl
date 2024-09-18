@@ -55,20 +55,20 @@
 
 #ifdef OKNXHW_UP1_CONTROLLER2040
 
-    #define THPCHANNEL_A_SCL 29 // Relais
-    #define THPCHANNEL_A_SDA 28 // Relais
+    #define THPCHANNEL_A_SCL 29 // Relais (future)
+    #define THPCHANNEL_A_SDA 28 // Relais (future)
     #define THPCHANNEL_B_SCL 27 // Touch Right
     #define THPCHANNEL_B_SDA 26 // Touch Left
     #define THPCHANNEL_C_SCL 25 // LED Red
     #define THPCHANNEL_C_SDA 24 // LED Green
-    #define THPCHANNEL_D_SCL 23 // GPIO
-    #define THPCHANNEL_D_SDA 22 // GPIO
+    #define THPCHANNEL_D_SCL 23 // Binary
+    #define THPCHANNEL_D_SDA 22 // Binary
     #define THPCHANNEL_E_SCL 21 // RX
     #define THPCHANNEL_E_SDA 20 // TX
     #define THPCHANNEL_F_SCL 19 // Touch
-    #define THPCHANNEL_F_SDA 18 // GPIO
-    #define THPCHANNEL_G_SCL 17 // GPIO
-    #define THPCHANNEL_G_SDA 16
+    #define THPCHANNEL_F_SDA 18
+    #define THPCHANNEL_G_SCL 17 // Binary
+    #define THPCHANNEL_G_SDA 16 // Binary
     #define THPCHANNEL_H_SCL 15
     #define THPCHANNEL_H_SDA 14​
 
@@ -80,13 +80,13 @@
     #define LED_GREEN_PIN THPCHANNEL_C_SDA 
     #define LED_RED_PIN THPCHANNEL_C_SCL
 
-    #define OPENKNX_SWA_CHANNEL_COUNT 1
-    #define OPENKNX_SWA_SET_PINS THPCHANNEL_A_SCL
-    #define OPENKNX_SWA_RESET_PINS THPCHANNEL_A_SDA
+    #define OPENKNX_SWA_CHANNEL_COUNT 0
+    #define OPENKNX_SWA_SET_PINS   //THPCHANNEL_A_SCL (future)
+    #define OPENKNX_SWA_RESET_PINS //THPCHANNEL_A_SDA (future)
     #define OPENKNX_SWA_SET_ACTIVE_ON LOW
     #define OPENKNX_SWA_RESET_ACTIVE_ON LOW
     #define OPENKNX_SWA_BISTABLE_IMPULSE_LENGTH 50
 
-    #define OPENKNX_BI_GPIO_PINS THPCHANNEL_D_SCL, THPCHANNEL_D_SDA, THPCHANNEL_F_SDA, THPCHANNEL_G_SCL
+    #define OPENKNX_BI_GPIO_PINS THPCHANNEL_D_SCL, THPCHANNEL_D_SDA, THPCHANNEL_G_SCL, THPCHANNEL_G_SDA
     #define OPENKNX_BI_GPIO_COUNT 4
 #endif

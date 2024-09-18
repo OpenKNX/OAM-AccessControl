@@ -13,6 +13,7 @@ Weitere Fingerabdruckleser können bei Bedarf angebunden werden.
 
 ## Kompatible Hardware
 
+### AB-Tools Fingerprint-Modul
 Die kompakte Steuerplatine kann vollständig in ein Standard-Schalterprogramm integriert werden. Hier als Beispiel mit Gira-Schalterprogramm in matt schwarz und Edelstahlrahmen:
 
 <kbd>![Gira vorne](hardware/fingerprint-with-gira-front.jpg)</kbd>
@@ -24,3 +25,11 @@ Dabei ist lediglich eine Einbautiefe von ca. 2 cm in einer Standard-60-mm-Unterp
 <kbd>![Gira vorne](hardware/fingerprint-in-mounting-box.jpg)</kbd>
 
 Alle Infos zur kompatiblen Hardware findet sich [hier](https://www.ab-smarthouse.com/produkt/openknx-fingerprint-leser/) oder bei Interesse einfach Kontakt per [E-Mail](mailto:info@ab-smarthouse.com?subject=[OpenKNX]%20Fingerprint) aufnehmen.
+
+### SEN-UP1-8xTH
+Ursprünglich als Sensormodul entwickelt, kann dieses Modul auch für den Fingerprint genutzt wwerden.
+<kbd>![UP1 Pinout](hardware/PinoutSenUP1-8TH.png)</kbd>
+Dabei wird allerdings kein Relais (Schaltaktorkanal) unterstützt.
+
+
+https://muster.ing-dom.de/OpenKNX-UP1/OpenKNX-SEN-UP1-8xTH.html?force_sid=3iu9l733pu73eersm1gus77lf3
