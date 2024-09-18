@@ -32,4 +32,4 @@ Ursprünglich als Sensormodul entwickelt, kann dieses Modul auch für den Finger
 Dabei wird allerdings kein Relais (Schaltaktorkanal) unterstützt.
 
 
-https://muster.ing-dom.de/OpenKNX-UP1/OpenKNX-SEN-UP1-8xTH.html?force_sid=3iu9l733pu73eersm1gus77lf3
+https://muster.ing-dom.de/OpenKNX-UP1/OpenKNX-SEN-UP1-8xTH.html
