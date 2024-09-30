@@ -56,7 +56,7 @@ void FingerprintModule::setup()
     logIndentDown();
 }
 
-bool FingerprintModule::switchFingerprintPower(bool on)
+bool FingerprintModule::switchFingerprintPower(bool on, bool testMode)
 {
     logDebugP("Switch power on: %u", on);
 
@@ -66,11 +66,13 @@ bool FingerprintModule::switchFingerprintPower(bool on)
             return true; // already on
 
         digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_ON);
-        initFingerprintScanner();
+        initFingerprintScanner(testMode);
 
         logInfoP("Fingerprint start");
         bool success = finger->start();
-        KoFIN_ScannerStatus.value(success, DPT_Switch);
+
+        if (!testMode)
+            KoFIN_ScannerStatus.value(success, DPT_Switch);
         
         return success;
     }
@@ -87,9 +89,9 @@ bool FingerprintModule::switchFingerprintPower(bool on)
     }
 }
 
-void FingerprintModule::initFingerprintScanner()
+void FingerprintModule::initFingerprintScanner(bool testMode)
 {
-    uint32_t scannerPassword = _fingerprintStorage.readInt(FLASH_SCANNER_PASSWORD_OFFSET);
+    uint32_t scannerPassword = testMode ? 0 : _fingerprintStorage.readInt(FLASH_SCANNER_PASSWORD_OFFSET);
     logDebugP("Initialize scanner with password: %u", scannerPassword);
     finger = new Fingerprint(FingerprintModule::delayCallback, scannerPassword);
 }
@@ -1274,8 +1276,69 @@ bool FingerprintModule::processCommand(const std::string cmd, bool diagnoseKo)
         digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_OFF);
         result = true;
     }
+    else if (cmd.length() == 13 && cmd.substr(4, 9) == "test mode")
+    {
+        runTestMode();
+        result = true;
+    }
 
     return result;
+}
+
+void FingerprintModule::runTestMode()
+{
+    logInfoP("Starting test mode");
+    logIndentUp();
+
+    logInfoP("Testing scanner:");
+    logIndentUp();
+    pinMode(SCANNER_PWR_PIN, OUTPUT);
+    if (switchFingerprintPower(true, true))
+        finger->logSystemParameters();
+    finger->setLed(Fingerprint::State::Success);
+    logIndentDown();
+    delay(1000);
+    finger->setLed(Fingerprint::State::None);
+
+    logInfoP("Testing LEDs:");
+    logIndentUp();
+    logInfoP("Touch buttons red");
+    pinMode(LED_RED_PIN, OUTPUT);
+    digitalWrite(LED_RED_PIN, HIGH);
+    delay(1000);
+    digitalWrite(LED_RED_PIN, LOW);
+
+    logInfoP("Touch buttons green");
+    pinMode(LED_GREEN_PIN, OUTPUT);
+    digitalWrite(LED_GREEN_PIN, HIGH);
+    delay(1000);
+    digitalWrite(LED_GREEN_PIN, LOW);
+    logIndentDown();
+
+    logInfoP("Testing relay:");
+    logIndentUp();
+    logInfoP("Relay off");
+    pinMode(OPENKNX_SWA_SET_PINS, OUTPUT);
+    pinMode(OPENKNX_SWA_RESET_PINS, OUTPUT);
+    digitalWrite(OPENKNX_SWA_SET_PINS, OPENKNX_SWA_SET_ACTIVE_ON == HIGH ? LOW : HIGH);
+    digitalWrite(OPENKNX_SWA_RESET_PINS, OPENKNX_SWA_RESET_ACTIVE_ON == HIGH ? LOW : HIGH);
+    for (uint8_t i = 0; i < 2; i++)
+    {
+        logInfoP("Relay set");
+        digitalWrite(OPENKNX_SWA_SET_PINS, OPENKNX_SWA_SET_ACTIVE_ON == HIGH ? HIGH : LOW);
+        delay(OPENKNX_SWA_BISTABLE_IMPULSE_LENGTH);
+        digitalWrite(OPENKNX_SWA_SET_PINS, OPENKNX_SWA_SET_ACTIVE_ON == HIGH ? LOW : HIGH);
+        delay(1000);
+        logInfoP("Relay reset");
+        digitalWrite(OPENKNX_SWA_RESET_PINS, OPENKNX_SWA_RESET_ACTIVE_ON == HIGH ? HIGH : LOW);
+        delay(OPENKNX_SWA_BISTABLE_IMPULSE_LENGTH);
+        digitalWrite(OPENKNX_SWA_RESET_PINS, OPENKNX_SWA_RESET_ACTIVE_ON == HIGH ? LOW : HIGH);
+        delay(1000);
+    }
+    logIndentDown();
+
+    logInfoP("Testing finished.");
+    logIndentDown();
 }
 
 FingerprintModule openknxFingerprintModule;

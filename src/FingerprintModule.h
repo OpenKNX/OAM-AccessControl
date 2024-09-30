@@ -63,8 +63,8 @@ class FingerprintModule : public OpenKNX::Module
     static void interruptDisplayTouched();
     static void interruptTouchLeft();
     static void interruptTouchRight();
-    bool switchFingerprintPower(bool on);
-    void initFingerprintScanner();
+    bool switchFingerprintPower(bool on, bool testMode = false);
+    void initFingerprintScanner(bool testMode = false);
     void initFlash();
     void processScanSuccess(uint16_t location, bool external = false);
     bool enrollFinger(uint16_t location);
@@ -87,6 +87,7 @@ class FingerprintModule : public OpenKNX::Module
     void handleFunctionPropertySearchPersonByFingerId(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertySearchFingerIdByPerson(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     static void delayCallback(uint32_t period);
+    void runTestMode();
 
     OpenKNX::Flash::Driver _fingerprintStorage;
     ActionChannel *_channels[FIN_ChannelCount];
