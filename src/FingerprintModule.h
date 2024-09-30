@@ -14,6 +14,7 @@
 #define CAPTURE_RETRIES_TOUCH_TIMEOUT 500
 #define CAPTURE_RETRIES_LOCK_TIMEOUT 3000
 #define CHECK_SENSOR_DELAY 1000
+#define SHUTDOWN_SENSOR_DELAY 3000
 
 #define MAX_FINGERS 1500
 
@@ -27,6 +28,9 @@
 #define SYNC_SEND_PACKET_DATA_LENGTH 13
 #define SYNC_AFTER_ENROLL_DELAY 500
 #define SYNC_IGNORE_DELAY 500
+
+#define FINGER_PWR_ON    SCANNER_PWR_PIN_ACTIVE_ON == HIGH ? HIGH : LOW
+#define FINGER_PWR_OFF   SCANNER_PWR_PIN_ACTIVE_ON == HIGH ? LOW : HIGH
 
 /*
 Flash Storage Layout:
@@ -48,6 +52,9 @@ class FingerprintModule : public OpenKNX::Module
 
     const std::string name() override;
     const std::string version() override;
+    void savePower() override;
+    bool restorePower() override;
+    bool processCommand(const std::string cmd, bool diagnoseKo);
     // void writeFlash() override;
     // void readFlash(const uint8_t* data, const uint16_t size) override;
     // uint16_t flashSize() override;
@@ -56,6 +63,7 @@ class FingerprintModule : public OpenKNX::Module
     static void interruptDisplayTouched();
     static void interruptTouchLeft();
     static void interruptTouchRight();
+    bool switchFingerprintPower(bool on);
     void initFingerprintScanner();
     void initFlash();
     void processScanSuccess(uint16_t location, bool external = false);
@@ -92,6 +100,7 @@ class FingerprintModule : public OpenKNX::Module
     uint16_t enrollRequestedLocation = 0;
     uint32_t checkSensorTimer = 0;
     uint32_t searchForFingerDelayTimer = 0;
+    uint32_t shutdownSensorTimer = 0;
     inline static bool delayCallbackActive = false;
 
     inline volatile static bool touched = false;

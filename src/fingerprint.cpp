@@ -1,13 +1,13 @@
 #include "Fingerprint.h"
 
 Fingerprint::Fingerprint(uint32_t overridePassword)
-    : _finger(Adafruit_Fingerprint(&mySerial, overridePassword))
+    : _finger(Adafruit_Fingerprint(&SCANNER_SERIAL, overridePassword))
 {
     _delayMs = _delayCallbackDefault;
 }
 
 Fingerprint::Fingerprint(DelayCalback delayCallback, uint32_t overridePassword)
-    : _finger(Adafruit_Fingerprint(&mySerial, overridePassword))
+    : _finger(Adafruit_Fingerprint(&SCANNER_SERIAL, overridePassword))
 {
     _delayMs = delayCallback;
 }
@@ -16,15 +16,11 @@ bool Fingerprint::start()
 {
     scannerReady = false;
 
-#ifdef ESP32_S3_DEVKIT
-    _finger.begin(57600, 5, 4);
-#elif ESP32_POE_ISO
-    _finger.begin(57600, 36, 4);
-#elif ARDUINO_ARCH_RP2040
-    _finger.begin(57600, 5, 4);
-#else
-    _finger.begin(57600, 39, 33);
-#endif
+    _finger.begin(57600, SCANNER_SERIAL_RX_PIN, SCANNER_SERIAL_TX_PIN);
+
+    // uint32_t timeoutTimer = delayTimerInit();
+    // while(!delayCheck(timeoutTimer, 500) && _finger.verifyPassword() != FINGERPRINT_OK)
+    //     _delayMs(10);
 
     _delayMs(500);
 
@@ -42,7 +38,11 @@ bool Fingerprint::start()
     }
 
     scannerReady = true;
+    return true;
+}
 
+void Fingerprint::logSystemParameters()
+{
     logInfoP("System parameters:");
     logIndentUp();
     logInfoP("Status register: %d", _finger.status_reg);
@@ -57,13 +57,12 @@ bool Fingerprint::start()
     _listTemplates();
 #endif
     logIndentDown();
-
-    return true;
 }
 
 void Fingerprint::close()
 {
     _finger.close();
+    scannerReady = false;
 }
 
 std::string Fingerprint::logPrefix()
@@ -133,7 +132,8 @@ uint16_t Fingerprint::getTemplateCount()
 
 bool Fingerprint::_listTemplates()
 {
-    if (_finger.getTemplateIndices() == FINGERPRINT_OK)
+    uint8_t p = _finger.getTemplateIndices();
+    if (p == FINGERPRINT_OK)
     {
         logDebugP("Stored template locations:");
         logIndentUp();
@@ -148,7 +148,7 @@ bool Fingerprint::_listTemplates()
     }
     else
     {
-        logErrorP("Error getting template locations.");
+        logErrorP("Error getting template locations (%u).", p);
     }
 
     return false;
@@ -579,7 +579,7 @@ bool Fingerprint::setPassword(uint32_t newPasswort)
     return success;
 }
 
-bool Fingerprint::emptyDatabase(void)
+bool Fingerprint::emptyDatabase()
 {
     if (!scannerReady)
         return false;
@@ -604,7 +604,7 @@ bool Fingerprint::emptyDatabase(void)
     return success;
 }
 
-bool Fingerprint::checkSensor(void)
+bool Fingerprint::checkSensor()
 {
     if (!scannerReady)
         return false;

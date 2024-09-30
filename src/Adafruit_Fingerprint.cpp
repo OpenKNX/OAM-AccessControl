@@ -844,3 +844,15 @@ Adafruit_Fingerprint::getStructuredPacket(Adafruit_Fingerprint_Packet *packet,
   // Shouldn't get here so...
   return FINGERPRINT_BADPACKET;
 }
+
+uint8_t Adafruit_Fingerprint::checkScannerBooted() {
+  Serial.print("checkScannerBooted:");
+  while(mySerial->available() > 0) {
+    uint8_t byte = mySerial->read();
+    Serial.println(byte);
+    if (byte == FINGERPRINT_BOOTED)
+      return FINGERPRINT_OK;
+  }
+
+  return FINGERPRINT_ABNORMAL;
+}

@@ -14,6 +14,7 @@
 #endif
 
 #define FINGERPRINT_OK 0x00               //!< Command execution is complete
+#define FINGERPRINT_BOOTED 0x55
 #define FINGERPRINT_PACKETRECIEVEERR 0x01 //!< Error when receiving data package
 #define FINGERPRINT_NOFINGER 0x02         //!< No finger on the sensor
 #define FINGERPRINT_IMAGEFAIL 0x03        //!< Failed to enroll the finger
@@ -218,6 +219,8 @@ public:
   void writeStructuredPacket(const Adafruit_Fingerprint_Packet &p);
   uint8_t getStructuredPacket(Adafruit_Fingerprint_Packet *p,
                               uint16_t timeout = DEFAULTTIMEOUT);
+
+  uint8_t checkScannerBooted(void);
 
   /// The matching location that is set by fingerFastSearch()
   uint16_t fingerID;

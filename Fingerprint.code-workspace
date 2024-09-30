@@ -84,7 +84,16 @@
 			"list": "cpp",
 			"chrono": "cpp",
 			"ranges": "cpp",
-			"variant": "cpp"
+			"variant": "cpp",
+			"xtree": "cpp",
+			"format": "cpp",
+			"forward_list": "cpp",
+			"span": "cpp",
+			"valarray": "cpp",
+			"xhash": "cpp",
+			"xstring": "cpp",
+			"xutility": "cpp",
+			"xlocale": "cpp"
 		}
 	}
 }

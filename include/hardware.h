@@ -12,6 +12,11 @@
     #define KNX_UART_RX_PIN 13
     #define SAVE_INTERRUPT_PIN 0
 
+    #define SCANNER_SERIAL Serial2
+    #define SCANNER_SERIAL_RX_PIN 5
+    #define SCANNER_SERIAL_TX_PIN 4
+    #define SCANNER_PWR_PIN 1
+    #define SCANNER_PWR_PIN_ACTIVE_ON LOW
     #define SCANNER_TOUCH_PIN 2
     #define TOUCH_LEFT_PIN 26
     #define TOUCH_RIGHT_PIN 27

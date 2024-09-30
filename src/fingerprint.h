@@ -11,12 +11,6 @@
 #include <string>
 #include <functional>
 
-#if defined ESP32_WESP32 || defined ARDUINO_ARCH_RP2040
-    #define mySerial Serial2
-#else
-    #define mySerial Serial1
-#endif
-
 typedef std::function<void(uint32_t)> DelayCalback;
 
 class Fingerprint
@@ -52,6 +46,7 @@ class Fingerprint
     Fingerprint(DelayCalback delayCallback, uint32_t overridePassword = 0);
 
     bool start();
+    void logSystemParameters();
     void close();
     std::string logPrefix();
     bool setLed(State state);
@@ -71,8 +66,8 @@ class Fingerprint
     bool storeTemplate(uint16_t location);
     bool deleteTemplate(uint16_t location);
     bool setPassword(uint32_t newPasswort);
-    bool emptyDatabase(void);
-    bool checkSensor(void);
+    bool emptyDatabase();
+    bool checkSensor();
 
   private:
     struct GetNotepadPageIndexResult

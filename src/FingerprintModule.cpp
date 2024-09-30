@@ -16,7 +16,10 @@ void FingerprintModule::setup()
     logIndentUp();
 
     initFlash();
-    initFingerprintScanner();
+
+    pinMode(SCANNER_PWR_PIN, OUTPUT);
+    if (switchFingerprintPower(true))
+        finger->logSystemParameters();
 
     for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
     {
@@ -36,12 +39,10 @@ void FingerprintModule::setup()
     attachInterrupt(digitalPinToInterrupt(TOUCH_LEFT_PIN), FingerprintModule::interruptTouchLeft, CHANGE);
     attachInterrupt(digitalPinToInterrupt(TOUCH_RIGHT_PIN), FingerprintModule::interruptTouchRight, CHANGE);
 
-    logInfoP("Fingerprint start");
-    bool success = finger->start();
-    KoFIN_ScannerStatus.value(success, DPT_Switch);
-
     digitalWrite(LED_RED_PIN, LOW);
     digitalWrite(LED_GREEN_PIN, HIGH);
+
+
     finger->setLed(Fingerprint::State::Success);
 
     KoFIN_LedRingColor.valueNoSend((uint8_t)0, Dpt(5, 10));
@@ -53,6 +54,37 @@ void FingerprintModule::setup()
     initResetTimer = delayTimerInit();
     logInfoP("Fingerprint module ready.");
     logIndentDown();
+}
+
+bool FingerprintModule::switchFingerprintPower(bool on)
+{
+    logDebugP("Switch power on: %u", on);
+
+    if (on)
+    {
+        if (finger != nullptr)
+            return true; // already on
+
+        digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_ON);
+        initFingerprintScanner();
+
+        logInfoP("Fingerprint start");
+        bool success = finger->start();
+        KoFIN_ScannerStatus.value(success, DPT_Switch);
+        
+        return success;
+    }
+    else
+    {
+        if (finger == nullptr)
+            return true; // already off
+
+        finger->close();
+        finger = nullptr;
+
+        digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_OFF);
+        return true;
+    }
 }
 
 void FingerprintModule::initFingerprintScanner()
@@ -114,16 +146,17 @@ void FingerprintModule::loop()
         {
             if (touched)
             {
-                touched = false;
                 logInfoP("Touched");
-
                 KoFIN_Touched.value(true, DPT_Switch);
 
-                unsigned long captureStart = delayTimerInit();
-                while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
+                if (switchFingerprintPower(true))
                 {
-                    if (searchForFinger())
-                        break;
+                    unsigned long captureStart = delayTimerInit();
+                    while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
+                    {
+                        if (searchForFinger())
+                            break;
+                    }
                 }
 
                 touched = false;
@@ -132,7 +165,10 @@ void FingerprintModule::loop()
             {
                 if (KoFIN_Touched.value(DPT_Switch) &&
                     !finger->hasFinger())
+                {
                     KoFIN_Touched.value(false, DPT_Switch);
+                    shutdownSensorTimer = delayTimerInit();
+                }
             }
         }
         else if (searchForFingerDelayTimer == 0 || delayCheck(searchForFingerDelayTimer, 100))
@@ -164,10 +200,20 @@ void FingerprintModule::loop()
             checkSensorTimer = delayTimerInit();
         }
 
+        if (shutdownSensorTimer > 0 && delayCheck(shutdownSensorTimer, SHUTDOWN_SENSOR_DELAY))
+        {
+            switchFingerprintPower(false);
+            shutdownSensorTimer = 0;
+        }
+
         if (initResetTimer > 0 && delayCheck(initResetTimer, INIT_RESET_TIMEOUT))
         {
             finger->setLed(Fingerprint::State::None);
             digitalWrite(LED_GREEN_PIN, LOW);
+
+            if (ParamFIN_ScanMode == 0)
+                switchFingerprintPower(false);
+
             initResetTimer = 0;
         }
 
@@ -1189,6 +1235,47 @@ bool FingerprintModule::sendReadRequest(GroupObject &ko)
         return true;
     }
     return false;
+}
+
+void FingerprintModule::savePower()
+{
+    switchFingerprintPower(false);
+}
+
+bool FingerprintModule::restorePower()
+{
+    if (ParamFIN_ScanMode == 1)
+        switchFingerprintPower(true);
+
+    return true;
+}
+
+bool FingerprintModule::processCommand(const std::string cmd, bool diagnoseKo)
+{
+    bool result = false;
+
+    if (cmd.substr(0, 3) != "fin" || cmd.length() < 5)
+        return result;
+
+    if (cmd.length() == 5 && cmd.substr(4, 1) == "h")
+    {
+        openknx.console.writeDiagenoseKo("-> pwr on");
+        openknx.console.writeDiagenoseKo("");
+        openknx.console.writeDiagenoseKo("-> pwr off");
+        openknx.console.writeDiagenoseKo("");
+    }
+    else if (cmd.length() == 10 && cmd.substr(4, 6) == "pwr on")
+    {
+        digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_ON);
+        result = true;
+    }
+    else if (cmd.length() == 11 && cmd.substr(4, 7) == "pwr off")
+    {
+        digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_OFF);
+        result = true;
+    }
+
+    return result;
 }
 
 FingerprintModule openknxFingerprintModule;
