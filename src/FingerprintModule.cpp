@@ -58,6 +58,12 @@ void FingerprintModule::setup()
 
 bool FingerprintModule::switchFingerprintPower(bool on, bool testMode)
 {
+    if (!on && !testMode)
+    {
+        logDebugP("Ignore power off switch for now");
+        return true;
+    }
+
     logDebugP("Switch power on: %u", on);
 
     if (on)
