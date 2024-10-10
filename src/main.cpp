@@ -7,7 +7,7 @@
 
 void setup()
 {
-    const uint8_t firmwareRevision = 6;
+    const uint8_t firmwareRevision = 7;
     openknx.init(firmwareRevision);
     openknx.addModule(1, openknxLogic);
     openknx.addModule(2, openknxFingerprintModule);
