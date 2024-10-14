@@ -425,8 +425,12 @@ bool Fingerprint::createTemplate()
             logDebugP("Prints did not match");
             setLed(Failed);
             break;
+        case FINGERPRINT_PACKETRECIEVEERR:
+            logDebugP("Packet receive error");
+            setLed(Failed);
+            break;
         default:
-            logDebugP("Other error");
+            logDebugP("Other error: %u", p);
             setLed(Failed);
             break;
     }
