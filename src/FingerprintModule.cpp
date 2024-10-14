@@ -400,7 +400,7 @@ bool FingerprintModule::enrollFinger(uint16_t location)
     else
     {
         logInfoP("Enrolling template failed.");
-        KoFIN_EnrollSuccess.value(true, DPT_Switch);
+        KoFIN_EnrollSuccess.value(false, DPT_Switch);
         KoFIN_EnrollFailedId.value(location, Dpt(7, 1));
 
         KoFIN_EnrollSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
