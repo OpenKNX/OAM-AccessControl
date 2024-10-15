@@ -794,6 +794,9 @@ Adafruit_Fingerprint::getStructuredPacket(Adafruit_Fingerprint_Packet *packet,
         return FINGERPRINT_TIMEOUT;
       }
     }
+#ifdef FINGERPRINT_DEBUG
+    Serial.printf("(%u ms)", timer);
+#endif
     byte = mySerial->read();
 #ifdef FINGERPRINT_DEBUG
     Serial.print("0x");
