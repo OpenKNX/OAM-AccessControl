@@ -38,7 +38,9 @@
   Adafruit_Fingerprint_Packet packet(FINGERPRINT_COMMANDPACKET, sizeof(data),  \
                                      data);                                    \
   writeStructuredPacket(packet);                                               \
-  if (getStructuredPacket(&packet) != FINGERPRINT_OK)                          \
+  uint16_t timeout = data[0] ==                                                \
+    FINGERPRINT_REGMODEL ? TIMEOUT_CREATEMODEL : DEFAULTTIMEOUT;               \
+  if (getStructuredPacket(&packet, timeout) != FINGERPRINT_OK)                 \
     return FINGERPRINT_PACKETRECIEVEERR;                                       \
   if (packet.type != FINGERPRINT_ACKPACKET)                                    \
     return FINGERPRINT_PACKETRECIEVEERR;
@@ -780,7 +782,9 @@ Adafruit_Fingerprint::getStructuredPacket(Adafruit_Fingerprint_Packet *packet,
   uint16_t idx = 0, timer = 0;
 
 #ifdef FINGERPRINT_DEBUG
-  Serial.print("<- ");
+  Serial.print("max. ");
+  Serial.print(timeout);
+  Serial.print(" ms: <- ");
 #endif
 
   while (true) {
