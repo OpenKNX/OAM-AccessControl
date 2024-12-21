@@ -9,7 +9,6 @@
 #include "lz4.h"
 
 
-#include "Electroniccats_PN7150.h"
 #define NFC_WIRE Wire
 #define NFC_ADDR 0x28
 #define NFC_SDA 20

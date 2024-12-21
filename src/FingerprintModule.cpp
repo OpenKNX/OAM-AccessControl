@@ -57,53 +57,11 @@ void FingerprintModule::setup()
 
 
 
-    Electroniccats_PN7150 nfc = Electroniccats_PN7150(NFC_IRQ, NFC_VEN, NFC_ADDR, &NFC_WIRE);
-    
     NFC_WIRE.setSDA(NFC_SDA);
     NFC_WIRE.setSCL(NFC_SCL);
-    /*NFC_WIRE.begin();
-    NFC_WIRE.setClock(400000);
+    NFC_WIRE.begin();
 
-
-    digitalWrite(NFC_VEN, HIGH);
-    delay(1);
-    digitalWrite(NFC_VEN, LOW);
-    delay(1);
-    digitalWrite(NFC_VEN, HIGH);
-    delay(100);
-
-
-*/
-
-
-    logInfoP("NFC: Initializing...");
-    /*if (nfc.begin()) {
-        logInfoP("NFC: Error begin");
-        return;
-    }*/
-    if (nfc.connectNCI()) {  // Wake up the board
-        logInfoP("NFC: Error while setting up the mode, check connections!");
-
-        Serial.println("Scan for I2C devices:");
-        I2Cdev _i2c = I2Cdev(&NFC_WIRE);
-        _i2c.I2Cscan();
-        
-        return;
-    }
-
-    if (nfc.configureSettings()) {
-        logInfoP("NFC: The Configure Settings is failed!");
-        return;
-    }
-
-    // Read/Write mode as default
-    if (nfc.configMode()) {  // Set up the configuration mode
-        logInfoP("NFC: The Configure Mode is failed!!");
-        return;
-    }
-    nfc.startDiscovery();  // NCI Discovery mode
-    logInfoP("NFC: Waiting for an Card ...");
-
+    PN7160Interface::initialize(2, 3, 0x28);
 
 }
 
@@ -157,6 +115,23 @@ void FingerprintModule::interruptTouchRight()
 
 void FingerprintModule::loop()
 {
+    nci::run();
+    tagStatus currentTagStatus = nci::getTagStatus();
+    switch (currentTagStatus) {
+        case tagStatus::foundNew:
+            logging::snprintf(logging::source::tagEvents, "New tag detected : ");
+            nci::tagData.dump();
+            break;
+        case tagStatus::removed:
+            logging::snprintf(logging::source::tagEvents, "Tag removed\n");
+            break;
+        default:
+            break;
+    }
+
+    return;
+
+
     if (delayCallbackActive)
         return;
 
