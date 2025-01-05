@@ -2,6 +2,10 @@
 
 OpenKNX Firmware und Anwendung zur OpenKNX-kompatiblen Einbindung von Fingerabdrucklesern.
 
+## Inbetriebnahme
+
+Die Inbetriebnahme geht am einfachsten mit der [OpenKNX Toolbox](https://github.com/OpenKNX/OpenKNX/wiki/Verwendung-der-OpenKNX-Toolbox).
+
 ## Kompatible Fingerabdruckleser
 
 Aktuell werden folgende Fingerabdruckleser unterstützt:
