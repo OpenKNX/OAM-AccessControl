@@ -121,6 +121,10 @@ Die Einstellung "Fortlaufend" kann zur Folge haben, dass Logiken, die auf dem Fi
 
 Ist eine Autorisierung für eine Aktion angefordert, wird die hier angegebene Zeit auf das Auflegen eines Fingers auf den Scanner gewartet, bis die Aktion abgebrochen wird.
 
+Es werden zwei Modi unterstützt:
+im Normalmodus (A** ist aus), kann jeder Finger eine Aktion direkt auslösen. Das ist das, was man meistens will, ich lege den Daumen auf und die Tür geht auf, der Zeigefinger macht das Garagentor auf und der Mittelfinger die Gartentür.
+im Authorisierungsmodus (A** ist an) dient der Finger dazu, eine Aktion zu bestätigen. Da kann ein und derselbe Finger dazu dienen, die Haustür aufzumachen, das Garagentor zu öffnen, die Hintertür aufzumachen oder die Alarmanlage zu deaktivieren. Dazu muss aber VORHER die Aktion "aufgerufen" werden (in Deiner KO-Liste ist das das KO 102 (Test1: Aufrufen)), dann blinkt der Fingerprint und man kann mit dem Finger die Aktion authorisieren. Wenn man da einfach so den Finger auflegt, weiß der FP ja nicht, was er jetzt tun soll, deswegen wird es gelb (Finger erkannt, keine Aktion ausgeführt).
+
 ### Neuen Finger anlernen
 
 <!-- DOC -->
@@ -198,6 +202,8 @@ Bei Aktivierung werden entsprechende Kommunikationsobjekte freigeschaltet, die d
 <!-- DOC -->
 #### **Passwort**
 
+Ein Passwort dient dazu, zu verhindern dass dritte bei direktem Zugang zur Hardware eigene Fingerabdrücke anlernen. Es sollte beachtet werden, dass die Kommunikation weiterhin nicht verschlüsselt stattfindet.
+
 Wenn Sie hier ein Passwort vergeben und dieses vergessen, wird das Fingerprint-Lesegerät unbrauchbar. Das Passwort kann nicht wiederhergestellt werden!
 
 Sie haben die Möglichkeit ein Passwort erstmalig festzulegen oder ein bereits vorhandenes zu ändern. Im letzteren Fall muss auch das alte Passwort eingegeben werden.
@@ -237,5 +243,22 @@ Die Software für dieses Release wurde auf folgender Hardware getestet und läuf
 * **AB-SmartHouse Fingerprint-Leser** [www.ab-smarthouse.com](https://www.ab-smarthouse.com/produkt/openknx-fingerprint-leser/) als Basisplatine mit Finger-Lesegeräte R503, R503S und R503Pro
 
 Andere Hardware kann genutzt werden, jedoch muss das Projekt dann neu kompiliert und gegebenenfalls angepasst werden. Alle notwendigen Teile für ein Aufsetzen der Build-Umgebung inklusive aller notwendigen Projekte finden sich im [OpenKNX-Projekt](https://github.com/OpenKNX).
+Unterstützung für die SEN-UP1-8xTH Hardware befindet sich im development-Branch
 
 Interessierte sollten auch die Beiträge im [OpenKNX-Forum](https://knx-user-forum.de/forum/projektforen/openknx) studieren.
+
+
+## **Sicherheit** ##
+Unten einige Überlegungen zur Sicherheit. 
+Von der Nutzung als Klingel sollte abgesehen werden. Hier besteht die Gefahr, dass es irgendwann zu einem false positive kommt.
+| **Potenzielle Gefährdung**                           | **Mögliche Maßnahmen**                                                                                           | **Zu beachten**                                                                                                                                                                                                                                         |
+|------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| KNX-Leitung im Außenbereich                          | 1. Fingerprint abgesetzt von der KNX-Steuerung installieren (z. B. Wand-Außenseite und Steuerung auf Wand-Innenseite)  2. KNX Secure – wird noch nicht unterstützt                                             | 1. Verbindung zwischen Fingerprint und Steuerung nicht für lange Leitungen ausgelegt, fehleranfällig bei mehr als 1 m.  2. Umsetzung von KNX Secure „mittelfristig“.          |
+| Tausch des Fingerprint Sensors (Einbrecher bringt eigenen Sensor mit)    | 1. Ab Release 0.3: KO verwenden, falls Sensor abgesteckt wird  --> Aktor sperren. 2. Hardware sicher verbauen               |  Mögliche Idee: Automatisches Sperren nach Abstecken bis Neuprogrammierung mit ETS.                    |
+| Anlernen eines eigenen Fingers durch Einbrecher    | Passwort in der ETS setzen              | Passwort wird auf serieller Schnittstelle beim Start unverschlüsselt übertragen.                      |
+| Auslesen der Fingerabdrücke (Templates) aus dem Sensor |                                                                             | Ohne Passwort können Templates aus einem ausgebauten Sensor extrahiert werden.                                                                                                                                                                         |
+| Finger-Synchronisation: Templates unverschlüsselt    | KNX Secure                                                                                                    | Siehe oben.                                                                                                                                                                                                                                            |
+| Passwortauslesen mit der ETS                         | Ab Release 0.2: Passwort kann nicht rekonstruiert werden.                                                      | Passwort wird verschlüsselt gespeichert und nicht über ETS-Programmierung übertragen.  Passwort kann aus der ETS gelöscht werden, sollte aber gesichert und das ETS-Projekt geschützt bleiben.                                                     |
+| False Positives                                      | FAR ist mit ≤0.00001% angegeben                                                                                   |   Diese Zahl ist bei Nutzung als Zugriffskontrolle gering. Wird der FP aber gleichzeitig als Haustürklingel verwendet, so gibt es wesentlich mehr Nutzung und somit eine wesentlich höhere Chance auf ein False Positive                                                                                                                                                                                                                                                      |
+
+
