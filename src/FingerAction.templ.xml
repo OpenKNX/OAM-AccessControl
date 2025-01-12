@@ -9,10 +9,10 @@
             <Parameters>
               <Union SizeInBit="32">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCCC+3000%01" Name="fa%C%ActionId" ParameterType="%AID%_PT-Action" Offset="0" BitOffset="0" Text="Aktion" Value="0" />
-                <Parameter Id="%AID%_UP-%T%%CCCC+3000%02" Name="fa%C%FingerId" ParameterType="%AID%_PT-FingerId" Offset="2" BitOffset="0" Text="Scanner Finger ID" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCCC+3000%01" Name="Fa%C%ActionId" ParameterType="%AID%_PT-Action" Offset="0" BitOffset="0" Text="Aktion" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCCC+3000%02" Name="Fa%C%FingerId" ParameterType="%AID%_PT-FingerId" Offset="2" BitOffset="0" Text="Scanner Finger ID" Value="0" />
               </Union>
-              <Parameter Id="%AID%_P-%T%%CCCC+3000%03" Name="fa%C%FingerActionInfo" ParameterType="%AID%_PT-Text80Byte" Text="Finger-Aktion-Info" Value="" />
+              <Parameter Id="%AID%_P-%T%%CCCC+3000%03" Name="Fa%C%FingerActionInfo" ParameterType="%AID%_PT-Text80Byte" Text="Finger-Aktion-Info" Value="" />
             </Parameters>
             <ParameterRefs>
               <ParameterRef Id="%AID%_UP-%T%%CCCC+3000%01_R-%T%%CCCC+3000%0101" RefId="%AID%_UP-%T%%CCCC+3000%01" />

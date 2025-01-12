@@ -7,17 +7,17 @@
         <ApplicationProgram Id="%AID%" ApplicationNumber="200" ApplicationVersion="1" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" Name="FIN" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="de" DynamicTableManagement="false" Linkable="false" MinEtsVersion="4.0">
           <Static>
             <Parameters>
-              <Parameter Id="%AID%_P-%T%%CCCC%00" Name="Action%C%Description" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung des Fingers" Value="" />
+              <Parameter Id="%AID%_P-%T%%CCCC%00" Name="Act%C%Description" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung des Fingers" Value="" />
               <!-- <Parameter Id="%AID%_P-%T%%CCCC%01" Name="Channel%C%FingerIds" ParameterType="%AID%_PT-FingerIdList" Text="Scanner Finger IDs" Value="" /> -->
               <Union SizeInBit="168">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCCC%02" Name="Action%C%Inactive" Offset="0" BitOffset="0" ParameterType="%AID%_PT-CheckBox" Text="deaktivieren" Value="0" />
-                <Parameter Id="%AID%_UP-%T%%CCCC%07" Name="Action%C%Authenticate" ParameterType="%AID%_PT-CheckBox" Offset="0" BitOffset="1" Text="Authentifizierungs-Aktion" Value="0" />
-                <Parameter Id="%AID%_UP-%T%%CCCC%03" Name="Action%C%ActionType" ParameterType="%AID%_PT-ActionType" Offset="0" BitOffset="2" Text="Aktionstyp" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCCC%02" Name="Act%C%Inactive" Offset="0" BitOffset="0" ParameterType="%AID%_PT-CheckBox" Text="deaktivieren" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCCC%07" Name="Act%C%Authenticate" ParameterType="%AID%_PT-CheckBox" Offset="0" BitOffset="1" Text="Authentifizierungs-Aktion" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCCC%03" Name="Act%C%ActionType" ParameterType="%AID%_PT-ActionType" Offset="0" BitOffset="2" Text="Aktionstyp" Value="0" />
                 <!-- 4 bit -->
-                <Parameter Id="%AID%_UP-%T%%CCCC%04" Name="Action%C%DelayBase" ParameterType="%AID%_PT-DelayBase" Offset="1" BitOffset="0" Text="Zeitbasis" Value="0" />
-                <Parameter Id="%AID%_UP-%T%%CCCC%05" Name="Action%C%DelayTime" ParameterType="%AID%_PT-DelayTime" Offset="1" BitOffset="2" Text="Zeit" Value="0" />
-                <Parameter Id="%AID%_UP-%T%%CCCC%06" Name="Action%C%OnOff" ParameterType="%AID%_PT-OnOff" Offset="1" BitOffset="0" Text="Schaltwert" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCCC%04" Name="Act%C%DelayBase" ParameterType="%AID%_PT-DelayBase" Offset="1" BitOffset="0" Text="Zeitbasis" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCCC%05" Name="Act%C%DelayTime" ParameterType="%AID%_PT-DelayTime" Offset="1" BitOffset="2" Text="Zeit" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCCC%06" Name="Act%C%OnOff" ParameterType="%AID%_PT-OnOff" Offset="1" BitOffset="0" Text="Schaltwert" Value="0" />
               </Union>
             </Parameters>
             <ParameterRefs>
@@ -31,7 +31,7 @@
               <ParameterRef Id="%AID%_UP-%T%%CCCC%07_R-%T%%CCCC%0701" RefId="%AID%_UP-%T%%CCCC%07" />
             </ParameterRefs>
             <!-- <ParameterCalculations>
-              <ParameterCalculation Id="%AID%_PC-%T%%CCCC%02" Language="JavaScript" Name="RefreshFingerAction%C%" LRTransformationFunc="FIN_refreshFingerAction" LRTransformationParameters="{ &quot;Action&quot;: %C% }" RLTransformationFunc="FIN_dummy">
+              <ParameterCalculation Id="%AID%_PC-%T%%CCCC%02" Language="JavaScript" Name="RefreshFingerAct%C%" LRTransformationFunc="FIN_refreshFingerAction" LRTransformationParameters="{ &quot;Action&quot;: %C% }" RLTransformationFunc="FIN_dummy">
                 <LParameters>
                   <ParameterRefRef RefId="%AID%_UP-%T%%CCCC%02_R-%T%%CCCC%0201" AliasName="ActionActive" />
                 </LParameters>
@@ -41,9 +41,9 @@
               </ParameterCalculation>
             </ParameterCalculations> -->
             <ComObjectTable>
-              <ComObject Id="%AID%_O-%T%%CCCC%01" Name="Action%C%Switch" Number="%K0%" ObjectSize="1 Bit" Text="Ausgang" FunctionText="Aktion %C%, Schalten" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%T%%CCCC%02" Name="Action%C%State" Number="%K1%" ObjectSize="1 Bit" Text="Eingang" FunctionText="Aktion %C%, Status" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%T%%CCCC%03" Name="Action%C%Call" Number="%K2%" ObjectSize="1 Bit" Text="Eingang" FunctionText="Aktion %C%, Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%%CCCC%01" Name="Act%C%Switch" Number="%K0%" ObjectSize="1 Bit" Text="Ausgang" FunctionText="Aktion %C%, Schalten" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%%CCCC%02" Name="Act%C%State" Number="%K1%" ObjectSize="1 Bit" Text="Eingang" FunctionText="Aktion %C%, Status" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%%CCCC%03" Name="Act%C%Call" Number="%K2%" ObjectSize="1 Bit" Text="Eingang" FunctionText="Aktion %C%, Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <ComObjectRef Id="%AID%_O-%T%%CCCC%01_R-%T%%CCCC%0101" RefId="%AID%_O-%T%%CCCC%01" Text="{{0:Aktion %C%}}: Ausgang" TextParameterRefId="%AID%_P-%T%%CCCC%00_R-%T%%CCCC%0001" />

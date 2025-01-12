@@ -31,6 +31,7 @@
 
   <!-- for FIN, we have to stay with ModuleType 2!!! -->
   <op:define prefix="FIN"
+    configTransferName="Fingerprint (Aktionen)"
     share="FingerprintModule.share.xml"
     template="FingerprintModule.templ.xml"
     ModuleType="2"
@@ -42,7 +43,7 @@
 
   <op:define prefix="FINACT"
     prefixDoc="FIN"
-    configTransferName="  Aktionen"
+    configTransferName="Fingerprint (Finger)"
     share="FingerAction.share.xml"
     template="FingerAction.templ.xml"
     ModuleType="2"

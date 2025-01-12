@@ -38,7 +38,9 @@
   Adafruit_Fingerprint_Packet packet(FINGERPRINT_COMMANDPACKET, sizeof(data),  \
                                      data);                                    \
   writeStructuredPacket(packet);                                               \
-  if (getStructuredPacket(&packet) != FINGERPRINT_OK)                          \
+  uint16_t timeout = data[0] ==                                                \
+    FINGERPRINT_REGMODEL ? TIMEOUT_CREATEMODEL : DEFAULTTIMEOUT;               \
+  if (getStructuredPacket(&packet, timeout) != FINGERPRINT_OK)                 \
     return FINGERPRINT_PACKETRECIEVEERR;                                       \
   if (packet.type != FINGERPRINT_ACKPACKET)                                    \
     return FINGERPRINT_PACKETRECIEVEERR;
@@ -189,11 +191,12 @@ void Adafruit_Fingerprint::close() {
     @returns True if password is correct
 */
 /**************************************************************************/
-boolean Adafruit_Fingerprint::verifyPassword(void) {
-  if(checkPassword() == FINGERPRINT_OK){   
-    return getParameters()== FINGERPRINT_OK;  //properly configure the object by reading system parameters
+uint8_t Adafruit_Fingerprint::verifyPassword(void) {
+  uint8_t p = checkPassword();
+  if (p == FINGERPRINT_OK) {   
+    return getParameters(); // properly configure the object by reading system parameters
   }
-  return false;
+  return p;
 }
 
 /**************************************************************************/
@@ -779,7 +782,9 @@ Adafruit_Fingerprint::getStructuredPacket(Adafruit_Fingerprint_Packet *packet,
   uint16_t idx = 0, timer = 0;
 
 #ifdef FINGERPRINT_DEBUG
-  Serial.print("<- ");
+  Serial.print("max. ");
+  Serial.print(timeout);
+  Serial.print(" ms: <- ");
 #endif
 
   while (true) {
@@ -793,6 +798,9 @@ Adafruit_Fingerprint::getStructuredPacket(Adafruit_Fingerprint_Packet *packet,
         return FINGERPRINT_TIMEOUT;
       }
     }
+#ifdef FINGERPRINT_DEBUG
+    Serial.printf("(%u ms)", timer);
+#endif
     byte = mySerial->read();
 #ifdef FINGERPRINT_DEBUG
     Serial.print("0x");
@@ -842,4 +850,16 @@ Adafruit_Fingerprint::getStructuredPacket(Adafruit_Fingerprint_Packet *packet,
   }
   // Shouldn't get here so...
   return FINGERPRINT_BADPACKET;
+}
+
+uint8_t Adafruit_Fingerprint::checkScannerBooted() {
+  Serial.print("checkScannerBooted:");
+  while(mySerial->available() > 0) {
+    uint8_t byte = mySerial->read();
+    Serial.println(byte);
+    if (byte == FINGERPRINT_BOOTED)
+      return FINGERPRINT_OK;
+  }
+
+  return FINGERPRINT_ABNORMAL;
 }

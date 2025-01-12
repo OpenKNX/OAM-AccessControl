@@ -17,7 +17,10 @@ void FingerprintModule::setup()
     logIndentUp();
 
     initFlash();
-    initFingerprintScanner();
+
+    pinMode(SCANNER_PWR_PIN, OUTPUT);
+    if (switchFingerprintPower(true))
+        finger->logSystemParameters();
 
     for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
     {
@@ -37,13 +40,11 @@ void FingerprintModule::setup()
     attachInterrupt(digitalPinToInterrupt(TOUCH_LEFT_PIN), FingerprintModule::interruptTouchLeft, CHANGE);
     attachInterrupt(digitalPinToInterrupt(TOUCH_RIGHT_PIN), FingerprintModule::interruptTouchRight, CHANGE);
 
-    logInfoP("Fingerprint start");
-    bool success = finger.start();
-    KoFIN_ScannerStatus.value(success, DPT_Switch);
-
     digitalWrite(LED_RED_PIN, LOW);
     digitalWrite(LED_GREEN_PIN, HIGH);
-    finger.setLed(Fingerprint::State::Success);
+
+
+    finger->setLed(Fingerprint::State::Success);
 
     KoFIN_LedRingColor.valueNoSend((uint8_t)0, Dpt(5, 10));
     KoFIN_LedRingControl.valueNoSend((uint8_t)FINGERPRINT_LED_OFF, Dpt(5, 10));
@@ -65,11 +66,56 @@ void FingerprintModule::setup()
 
 }
 
-void FingerprintModule::initFingerprintScanner()
+bool FingerprintModule::switchFingerprintPower(bool on, bool testMode)
 {
-    uint32_t scannerPassword = _fingerprintStorage.readInt(FLASH_SCANNER_PASSWORD_OFFSET);
+    if (!on && !testMode)
+    {
+        logDebugP("Ignore power off switch for now");
+        return true;
+    }
+
+    logDebugP("Switch power on: %u", on);
+
+    if (on)
+    {
+        if (finger != nullptr)
+        {
+            logDebugP("Fingerprint power already on");
+            return true;
+        }
+
+        digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_ON);
+        initFingerprintScanner(testMode);
+
+        logInfoP("Fingerprint start");
+        bool success = finger->start();
+
+        if (!testMode)
+            KoFIN_ScannerStatus.value(success, DPT_Switch);
+        
+        return success;
+    }
+    else
+    {
+        if (finger == nullptr)
+        {
+            logDebugP("Fingerprint power already off");
+            return true;
+        }
+
+        finger->close();
+        finger = nullptr;
+
+        digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_OFF);
+        return true;
+    }
+}
+
+void FingerprintModule::initFingerprintScanner(bool testMode)
+{
+    uint32_t scannerPassword = testMode ? 0 : _fingerprintStorage.readInt(FLASH_SCANNER_PASSWORD_OFFSET);
     logDebugP("Initialize scanner with password: %u", scannerPassword);
-    finger = Fingerprint(delayCallback, scannerPassword);
+    finger = new Fingerprint(FingerprintModule::delayCallback, scannerPassword);
 }
 
 void FingerprintModule::initFlash()
@@ -135,66 +181,95 @@ void FingerprintModule::loop()
     if (delayCallbackActive)
         return;
 
-    if (touched)
+    if (!isLocked)
     {
-        touched = false;
-        logInfoP("Touched");
-
-        KoFIN_Touched.value(true, DPT_Switch);
-
-        unsigned long captureStart = delayTimerInit();
-        while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
+        if (ParamFIN_ScanMode == 0)
         {
-            if (searchForFinger())
-                break;
-        }
+            if (touched)
+            {
+                logInfoP("Touched");
+                KoFIN_Touched.value(true, DPT_Switch);
 
-        touched = false;
-    }
-    else
-    {
-        if (ParamFIN_ScanMode == 1)
+                if (switchFingerprintPower(true))
+                {
+                    unsigned long captureStart = delayTimerInit();
+                    while (!delayCheck(captureStart, CAPTURE_RETRIES_TOUCH_TIMEOUT))
+                    {
+                        if (searchForFinger())
+                            break;
+                    }
+                }
+
+                touched = false;
+            }
+            else
+            {
+                if (KoFIN_Touched.value(DPT_Switch) &&
+                    !finger->hasFinger())
+                {
+                    KoFIN_Touched.value(false, DPT_Switch);
+                    shutdownSensorTimer = delayTimerInit();
+                }
+            }
+        }
+        else if (searchForFingerDelayTimer == 0 || delayCheck(searchForFingerDelayTimer, 100))
+        {
             searchForFinger();
-    }
-
-    if (enrollRequestedTimer > 0 and delayCheck(enrollRequestedTimer, ENROLL_REQUEST_DELAY))
-    {
-        bool success = enrollFinger(enrollRequestedLocation);
-        if (success)
-        {
-            syncRequestedFingerId = enrollRequestedLocation;
-            syncRequestedTimer = delayTimerInit();
+            searchForFingerDelayTimer = delayTimerInit();
         }
 
-        enrollRequestedTimer = 0;
-        enrollRequestedLocation = 0;
+        if (enrollRequestedTimer > 0 and delayCheck(enrollRequestedTimer, ENROLL_REQUEST_DELAY))
+        {
+            bool success = enrollFinger(enrollRequestedLocation);
+            if (success)
+            {
+                syncRequestedFingerId = enrollRequestedLocation;
+                syncRequestedTimer = delayTimerInit();
+            }
+
+            enrollRequestedTimer = 0;
+            enrollRequestedLocation = 0;
+        }
+
+        if (checkSensorTimer > 0 && delayCheck(checkSensorTimer, CHECK_SENSOR_DELAY))
+        {
+            bool currentStatus = KoFIN_ScannerStatus.value(DPT_Switch);
+            bool success = finger->checkSensor();
+            if (currentStatus != success)
+            {
+                KoFIN_ScannerStatus.value(success, DPT_Switch);
+                logInfoP("Check scanner status: %u", success);
+            }
+
+            checkSensorTimer = delayTimerInit();
+        }
+
+        if (shutdownSensorTimer > 0 && delayCheck(shutdownSensorTimer, SHUTDOWN_SENSOR_DELAY))
+        {
+            switchFingerprintPower(false);
+            shutdownSensorTimer = 0;
+        }
+
+        if (initResetTimer > 0 && delayCheck(initResetTimer, INIT_RESET_TIMEOUT))
+        {
+            finger->setLed(Fingerprint::State::None);
+            digitalWrite(LED_GREEN_PIN, LOW);
+
+            if (ParamFIN_ScanMode == 0)
+                switchFingerprintPower(false);
+
+            initResetTimer = 0;
+        }
+
+        if (resetLedsTimer > 0 && delayCheck(resetLedsTimer, LED_RESET_TIMEOUT))
+        {
+            resetRingLed();
+            resetLedsTimer = 0;
+        }
+
+        for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
+            _channels[i]->loop();
     }
-
-    if (checkSensorTimer > 0 && delayCheck(checkSensorTimer, CHECK_SENSOR_DELAY))
-    {
-        bool currentStatus = KoFIN_ScannerStatus.value(DPT_Switch);
-        bool success = finger.checkSensor();
-        if (currentStatus != success)
-            KoFIN_ScannerStatus.value(success, DPT_Switch);
-
-        checkSensorTimer = delayTimerInit();
-    }
-
-    if (initResetTimer > 0 && delayCheck(initResetTimer, INIT_RESET_TIMEOUT))
-    {
-        finger.setLed(Fingerprint::State::None);
-        digitalWrite(LED_GREEN_PIN, LOW);
-        initResetTimer = 0;
-    }
-
-    if (resetLedsTimer > 0 && delayCheck(resetLedsTimer, LED_RESET_TIMEOUT))
-    {
-        setLedDefault();
-        resetLedsTimer = 0;
-    }
-
-    for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
-        _channels[i]->loop();
 
     if (syncRequestedTimer > 0 && delayCheck(syncRequestedTimer, SYNC_AFTER_ENROLL_DELAY))
     {
@@ -209,19 +284,42 @@ void FingerprintModule::loop()
 
 bool FingerprintModule::searchForFinger()
 {
-    if (!finger.hasFinger())
+    if (!finger->hasFinger())
+    {
+        if (ParamFIN_ScanMode == 1 &&
+            KoFIN_Touched.value(DPT_Switch))
+            KoFIN_Touched.value(false, DPT_Switch);
+
+        hasLastFoundLocation = false;
         return false;
+    }
+
+    if (ParamFIN_ScanMode == 1 &&
+        !KoFIN_Touched.value(DPT_Switch))
+        KoFIN_Touched.value(true, DPT_Switch);
     
-    Fingerprint::FindFingerResult findFingerResult = finger.findFingerprint();
+    Fingerprint::FindFingerResult findFingerResult = finger->findFingerprint();
 
     if (findFingerResult.found)
     {
+        if (ParamFIN_ScanMode == 1 &&
+            hasLastFoundLocation && lastFoundLocation == findFingerResult.location)
+        {
+            logDebugP("Same finger found in location %d and ignored", findFingerResult.location);
+            resetLedsTimer = delayTimerInit();
+            return true;
+        }
+
         logInfoP("Finger found in location %d", findFingerResult.location);
         processScanSuccess(findFingerResult.location);
+
+        hasLastFoundLocation = true;
+        lastFoundLocation = findFingerResult.location;
     }
     else
     {
-        finger.setLed(Fingerprint::ScanNoMatch);
+        hasLastFoundLocation = false;
+        finger->setLed(Fingerprint::ScanNoMatch);
 
         logInfoP("Finger not found");
         KoFIN_ScanSuccess.value(false, DPT_Switch);
@@ -232,15 +330,20 @@ bool FingerprintModule::searchForFinger()
         KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));       // read direction (not used)
         KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));       // encryption (not used for now)
         KoFIN_ScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));        // index of access identification code (not used)
+
+        // if finger present, but scan failed, reset all authentication action calls
+        for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
+            _channels[i]->resetActionCall();
     }
 
     resetLedsTimer = delayTimerInit();
     return true;
 }
 
-void FingerprintModule::setLedDefault()
+void FingerprintModule::resetRingLed()
 {
-    finger.setLed(KoFIN_LedRingColor.value(Dpt(5, 10)), KoFIN_LedRingControl.value(Dpt(5, 10)), KoFIN_LedRingSpeed.value(Dpt(5, 10)), KoFIN_LedRingCount.value(Dpt(5, 10)));
+    finger->setLed(KoFIN_LedRingColor.value(Dpt(5, 10)), KoFIN_LedRingControl.value(Dpt(5, 10)), KoFIN_LedRingSpeed.value(Dpt(5, 10)), KoFIN_LedRingCount.value(Dpt(5, 10)));
+    logInfoP("LED ring: color=%u, control=%u, speed=%u, count=%u", (uint8_t)KoFIN_LedRingColor.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingControl.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingSpeed.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingCount.value(Dpt(5, 10)));
 }
 
 void FingerprintModule::processScanSuccess(uint16_t location, bool external)
@@ -258,10 +361,10 @@ void FingerprintModule::processScanSuccess(uint16_t location, bool external)
     bool actionExecuted = false;
     for (size_t i = 0; i < ParamFINACT_FingerActionCount; i++)
     {
-        uint16_t fingerId = knx.paramWord(FINACT_faFingerId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize);
+        uint16_t fingerId = knx.paramWord(FINACT_FaFingerId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize);
         if (fingerId == location)
         {
-            uint16_t actionId = knx.paramWord(FINACT_faActionId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize) - 1;
+            uint16_t actionId = knx.paramWord(FINACT_FaActionId + FINACT_ParamBlockOffset + i * FINACT_ParamBlockSize) - 1;
             if (actionId < FIN_VisibleActions)
                 actionExecuted |= _channels[actionId]->processScan(location);
             else
@@ -272,12 +375,12 @@ void FingerprintModule::processScanSuccess(uint16_t location, bool external)
     if (actionExecuted)
     {
         if (!external)
-            finger.setLed(Fingerprint::ScanMatch);
+            finger->setLed(Fingerprint::ScanMatch);
     }
     else
     {
         if (!external)
-            finger.setLed(Fingerprint::ScanMatchNoAction);
+            finger->setLed(Fingerprint::ScanMatchNoAction);
         
         KoFIN_TouchedNoAction.value(true, DPT_Switch);
     }
@@ -288,18 +391,22 @@ bool FingerprintModule::enrollFinger(uint16_t location)
     logInfoP("Enroll request:");
     logIndentUp();
 
-    bool success = finger.createTemplate();
+    bool success = switchFingerprintPower(true);
     if (success)
     {
-        success = finger.storeTemplate(location);
-        if (!success)
+        success = finger->createTemplate();
+        if (success)
         {
-            logInfoP("Storing template failed.");
+            success = finger->storeTemplate(location);
+            if (!success)
+            {
+                logInfoP("Storing template failed.");
+            }
         }
-    }
-    else
-    {
-        logInfoP("Creating template failed.");
+        else
+        {
+            logInfoP("Creating template failed.");
+        }
     }
 
     if (success)
@@ -315,12 +422,12 @@ bool FingerprintModule::enrollFinger(uint16_t location)
         KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
         KoFIN_EnrollSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
-        finger.setLed(Fingerprint::State::Success);
+        finger->setLed(Fingerprint::State::Success);
     }
     else
     {
         logInfoP("Enrolling template failed.");
-        KoFIN_EnrollSuccess.value(true, DPT_Switch);
+        KoFIN_EnrollSuccess.value(false, DPT_Switch);
         KoFIN_EnrollFailedId.value(location, Dpt(7, 1));
 
         KoFIN_EnrollSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
@@ -330,7 +437,7 @@ bool FingerprintModule::enrollFinger(uint16_t location)
         KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
         KoFIN_EnrollSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
-        finger.setLed(Fingerprint::State::Failed);
+        finger->setLed(Fingerprint::State::Failed);
     }
 
     logIndentDown();
@@ -344,7 +451,10 @@ bool FingerprintModule::deleteFinger(uint16_t location, bool sync)
     logInfoP("Delete request:");
     logIndentUp();
 
-    bool success = finger.deleteTemplate(location);
+    bool success = switchFingerprintPower(true);
+    if (success)
+        success = finger->deleteTemplate(location);
+
     if (success)
     {
         logInfoP("Template deleted from location %d.", location);
@@ -381,90 +491,124 @@ bool FingerprintModule::deleteFinger(uint16_t location, bool sync)
     return success;
 }
 
-void FingerprintModule::processInputKo(GroupObject& iKo)
+void FingerprintModule::processInputKo(GroupObject& ko)
 {
     uint16_t location;
 
-    uint16_t lAsap = iKo.asap();
-    switch (lAsap)
+    uint16_t asap = ko.asap();
+    switch (asap)
     {
         case FIN_KoLock:
-            KoFIN_LockStatus.value(KoFIN_Lock.value(DPT_Switch), DPT_Switch);
-            logInfoP("Locked: %d", KoFIN_Lock.value(DPT_Switch));
+            processInputKoLock(ko);
             break;
         case FIN_KoLedRingColor:
         case FIN_KoLedRingControl:
         case FIN_KoLedRingSpeed:
         case FIN_KoLedRingCount:
-            setLedDefault();
-            logInfoP("LED ring: color=%u, control=%u, speed=%u, count=%u", (uint8_t)KoFIN_LedRingColor.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingControl.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingSpeed.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingCount.value(Dpt(5, 10)));
+            resetRingLed();
             break;
+        case FIN_KoTouchPcbLedRed:
+        case FIN_KoTouchPcbLedGreen:
+            processInputKoTouchPcbLed(ko);
+            break;
+        case FIN_KoSync:
+            processSyncReceive(ko.valueRef());
+            break;
+    }
+
+    if (isLocked)
+        return;
+
+    switch (asap)
+    {
         case FIN_KoEnrollNext:
         case FIN_KoEnrollId:
         case FIN_KoEnrollData:
-            if (lAsap == FIN_KoEnrollNext)
-            {
-                location = finger.getNextFreeLocation();
-                logInfoP("Next availabe location: %d", location);
-            }
-            else if (lAsap == FIN_KoEnrollId)
-            {
-                location = iKo.value(Dpt(7, 1));
-                logInfoP("Location provided: %d", location);
-            }
-            else
-            {
-                location = iKo.value(Dpt(15, 1, 0));
-                logInfoP("Location provided: %d", location);
-            }
-
-            enrollRequestedTimer = delayTimerInit();
-            enrollRequestedLocation = location;
+            processInputKoEnroll(ko);
             break;
         case FIN_KoDeleteId:
         case FIN_KoDeleteData:
-            if (lAsap == FIN_KoDeleteId)
-            {
-                location = iKo.value(Dpt(7, 1));
-                logInfoP("Location provided: %d", location);
-            }
+            if (asap == FIN_KoDeleteId)
+                location = ko.value(Dpt(7, 1));
             else
-            {
-                location = iKo.value(Dpt(15, 1, 0));
-                logInfoP("Location provided: %d", location);
-            }
+                location = ko.value(Dpt(15, 1, 0));
 
+            logInfoP("Location provided: %d", location);
             deleteFinger(location);
             break;
         case FIN_KoExternFingerId:
-            location = iKo.value(Dpt(7, 1));
+            location = ko.value(Dpt(7, 1));
             logInfoP("FingerID received: %d", location);
 
             processScanSuccess(location, true);
             break;
-        case FIN_KoTouchPcbLedRed:
-            if (iKo.value(DPT_Switch))
-                digitalWrite(LED_RED_PIN, HIGH);
-            else
-                digitalWrite(LED_RED_PIN, LOW);
-            
-            break;
-        case FIN_KoTouchPcbLedGreen:
-            if (iKo.value(DPT_Switch))
-                digitalWrite(LED_GREEN_PIN, HIGH);
-            else
-                digitalWrite(LED_GREEN_PIN, LOW);
-            
-            break;
-        case FIN_KoSync:
-            processSyncReceive(iKo.valueRef());
-            break;
         default:
         {
             for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
-                _channels[i]->processInputKo(iKo);
+                _channels[i]->processInputKo(ko);
         }
     }
+}
+
+void FingerprintModule::processInputKoLock(GroupObject &ko)
+{
+    isLocked = ko.value(DPT_Switch);
+    KoFIN_LockStatus.value(isLocked, DPT_Switch);
+    logInfoP("Locked: %d", isLocked);
+
+    if (switchFingerprintPower(true))
+    {
+        if (isLocked)
+            finger->setLed(Fingerprint::State::Locked);
+        else
+            resetRingLed();
+    }
+}
+
+void FingerprintModule::processInputKoTouchPcbLed(GroupObject &ko)
+{
+    bool ledOn = ko.value(DPT_Switch);
+    uint16_t asap = ko.asap();
+    if (asap == FIN_KoTouchPcbLedRed)
+        digitalWrite(LED_RED_PIN, ledOn ? HIGH : LOW);
+    else if (asap == FIN_KoTouchPcbLedGreen)
+        digitalWrite(LED_GREEN_PIN, ledOn ? HIGH : LOW);
+}
+
+void FingerprintModule::processInputKoEnroll(GroupObject &ko)
+{
+    bool success;
+    uint16_t location;
+    uint16_t asap = ko.asap();
+    if (asap == FIN_KoEnrollNext)
+    {
+        success = switchFingerprintPower(true);
+        if (success)
+        {
+            location = finger->getNextFreeLocation();
+            logInfoP("Next availabe location: %d", location);
+        }
+        else
+            logErrorP("Failed getting next available location");
+    }
+    else if (asap == FIN_KoEnrollId)
+    {
+        success = true;
+        location = ko.value(Dpt(7, 1));
+        logInfoP("Location provided: %d", location);
+    }
+    else
+    {
+        success = true;
+        location = ko.value(Dpt(15, 1, 0));
+        logInfoP("Location provided: %d", location);
+    }
+
+    if (!success)
+        return;
+
+    enrollRequestedTimer = delayTimerInit();
+    enrollRequestedLocation = location;
 }
 
 void FingerprintModule::startSyncDelete(uint16_t fingerId)
@@ -502,12 +646,18 @@ void FingerprintModule::startSyncSend(uint16_t fingerId, bool loadModel)
 
     logInfoP("Sync-Send: started: fingerId=%u, loadModel=%u, syncDelay=%u", fingerId, loadModel, ParamFIN_SyncDelay);
 
-    finger.setLed(Fingerprint::State::Busy);
+    if (!switchFingerprintPower(true))
+    {
+        logErrorP("Sync-Send: powering scanner on failed");
+        return;
+    }
+
+    finger->setLed(Fingerprint::State::Busy);
 
     bool success;
     if (loadModel)
     {
-        success = finger.loadTemplate(fingerId);
+        success = finger->loadTemplate(fingerId);
         if (!success)
         {
             logErrorP("Sync-Send: loading template failed");
@@ -516,14 +666,14 @@ void FingerprintModule::startSyncSend(uint16_t fingerId, bool loadModel)
     }
 
     uint8_t syncSendBufferTemp[SYNC_BUFFER_SIZE];
-    success = finger.retrieveTemplate(syncSendBufferTemp);
+    success = finger->retrieveTemplate(syncSendBufferTemp);
     if (!success)
     {
         logErrorP("Sync-Send: retrieving template failed");
         return;
     }
 
-    setLedDefault();
+    resetRingLed();
 
     uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
     uint8_t personData[29] = {};
@@ -681,7 +831,13 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
 
     if (syncReceivePacketReceivedCount == syncReceivePacketCount)
     {
-        finger.setLed(Fingerprint::State::Busy);
+        if (!switchFingerprintPower(true))
+        {
+            logErrorP("Sync-Receive: powering scanner on failed");
+            return;
+        }
+
+        finger->setLed(Fingerprint::State::Busy);
 
         uint16_t checksum = crc16(syncReceiveBuffer, syncReceiveBufferLength);
         if (syncReceiveBufferChecksum == checksum)
@@ -689,7 +845,7 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
         else
         {
             logErrorP("Sync-Receive: finished failed (checksum expected=%u, calculated=%u)", syncReceiveBufferChecksum, checksum);
-            finger.setLed(Fingerprint::State::Failed);
+            finger->setLed(Fingerprint::State::Failed);
             resetLedsTimer = delayTimerInit();
             return;
         }
@@ -699,26 +855,26 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
         if (decompressedSize != SYNC_BUFFER_SIZE)
         {
             logErrorP("Sync-Receive: decompression failed (size expected=%u, received=%u)", SYNC_BUFFER_SIZE, decompressedSize);
-            finger.setLed(Fingerprint::State::Failed);
+            finger->setLed(Fingerprint::State::Failed);
             resetLedsTimer = delayTimerInit();
             return;
         }
 
         bool success;
-        success = finger.sendTemplate(syncSendBufferTemp);
+        success = finger->sendTemplate(syncSendBufferTemp);
         if (!success)
         {
             logErrorP("Sync-Receive: sending template failed");
-            finger.setLed(Fingerprint::State::Failed);
+            finger->setLed(Fingerprint::State::Failed);
             resetLedsTimer = delayTimerInit();
             return;
         }
 
-        success = finger.storeTemplate(syncReceiveFingerId);
+        success = finger->storeTemplate(syncReceiveFingerId);
         if (!success)
         {
             logErrorP("Sync-Receive: storing template failed");
-            finger.setLed(Fingerprint::State::Failed);
+            finger->setLed(Fingerprint::State::Failed);
             resetLedsTimer = delayTimerInit();
             return;
         }
@@ -727,7 +883,7 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
         _fingerprintStorage.write(storageOffset, syncSendBufferTemp + TEMPLATE_SIZE, 29);
         _fingerprintStorage.commit();
 
-        finger.setLed(Fingerprint::State::Success);
+        finger->setLed(Fingerprint::State::Success);
         resetLedsTimer = delayTimerInit();
         syncReceiving = false;
     }
@@ -811,12 +967,17 @@ void FingerprintModule::handleFunctionPropertySyncFinger(uint8_t *data, uint8_t 
     uint16_t fingerId = (data[1] << 8) | data[2];
     logDebugP("fingerId: %d", fingerId);
 
-    if (finger.hasLocation(fingerId))
+    if (switchFingerprintPower(true))
     {
-        syncRequestedFingerId = fingerId;
-        syncRequestedTimer = delayTimerInit();
+        if (finger->hasLocation(fingerId))
+        {
+            syncRequestedFingerId = fingerId;
+            syncRequestedTimer = delayTimerInit();
 
-        resultData[0] = 0;
+            resultData[0] = 0;
+        }
+        else
+            resultData[0] = 1;
     }
     else
         resultData[0] = 1;
@@ -855,36 +1016,41 @@ void FingerprintModule::handleFunctionPropertyChangeFinger(uint8_t *data, uint8_
     uint16_t fingerId = (data[1] << 8) | data[2];
     logDebugP("fingerId: %d", fingerId);
 
-    if (finger.hasLocation(fingerId))
+    if (switchFingerprintPower(true))
     {
-        uint8_t personFinger = data[3];
-        logDebugP("personFinger: %d", personFinger);
-
-        uint8_t personName[28] = {};
-        for (uint8_t i = 0; i < 28; i++)
+        if (finger->hasLocation(fingerId))
         {
-            memcpy(personName + i, data + 4 + i, 1);
-            if (personName[i] == 0) // null termination
-                break;
+            uint8_t personFinger = data[3];
+            logDebugP("personFinger: %d", personFinger);
+
+            uint8_t personName[28] = {};
+            for (uint8_t i = 0; i < 28; i++)
+            {
+                memcpy(personName + i, data + 4 + i, 1);
+                if (personName[i] == 0) // null termination
+                    break;
+            }
+            logDebugP("personName: %s", personName);
+
+            uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
+            logDebugP("storageOffset: %d", storageOffset);
+            _fingerprintStorage.writeByte(storageOffset, personFinger); // only 4 bits used
+            _fingerprintStorage.write(storageOffset + 1, personName, 28);
+            _fingerprintStorage.commit();
+
+            syncRequestedFingerId = fingerId;
+            syncRequestedTimer = delayTimerInit();
+
+            resultData[0] = 0;
         }
-        logDebugP("personName: %s", personName);
-
-        uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
-        logDebugP("storageOffset: %d", storageOffset);
-        _fingerprintStorage.writeByte(storageOffset, personFinger); // only 4 bits used
-        _fingerprintStorage.write(storageOffset + 1, personName, 28);
-        _fingerprintStorage.commit();
-
-        syncRequestedFingerId = fingerId;
-        syncRequestedTimer = delayTimerInit();
-
-        resultData[0] = 0;
+        else
+        {
+            logInfoP("Finger not found");
+            resultData[0] = 1;
+        }
     }
     else
-    {
-        logInfoP("Finger not found");
         resultData[0] = 1;
-    }
 
     resultLength = 1;
     logIndentDown();
@@ -895,16 +1061,20 @@ void FingerprintModule::handleFunctionPropertyResetScanner(uint8_t *data, uint8_
     logInfoP("Function property: Reset scanner");
     logIndentUp();
 
-    char personData[29] = {}; // empty
-    for (uint16_t i = 0; i < MAX_FINGERS; i++)
+    bool success = false;
+    if (switchFingerprintPower(true))
     {
-        uint32_t storageOffset = FIN_CaclStorageOffset(i);
-        _fingerprintStorage.write(storageOffset, *personData, 29);
-    }
-    _fingerprintStorage.commit();
+        char personData[29] = {}; // empty
+        for (uint16_t i = 0; i < MAX_FINGERS; i++)
+        {
+            uint32_t storageOffset = FIN_CaclStorageOffset(i);
+            _fingerprintStorage.write(storageOffset, *personData, 29);
+        }
+        _fingerprintStorage.commit();
 
-    bool success = finger.emptyDatabase();
-    resetLedsTimer = delayTimerInit();
+        success = finger->emptyDatabase();
+        resetLedsTimer = delayTimerInit();
+    }
 
     resultData[0] = success ? 0 : 1;
     resultLength = 1;
@@ -968,7 +1138,10 @@ void FingerprintModule::handleFunctionPropertySetPassword(uint8_t *data, uint8_t
 
         logInfoP("Setting new fingerprint scanner password.");
         logIndentUp();
-        success = finger.setPassword(newPasswordCrc);
+
+        if (switchFingerprintPower(true))
+            success = finger->setPassword(newPasswordCrc);
+        
         resetLedsTimer = delayTimerInit();
         logInfoP(success ? "Success." : "Failed.");
         logIndentDown();
@@ -979,9 +1152,9 @@ void FingerprintModule::handleFunctionPropertySetPassword(uint8_t *data, uint8_t
             _fingerprintStorage.writeInt(FLASH_SCANNER_PASSWORD_OFFSET, newPasswordCrc);
             _fingerprintStorage.commit();
 
-            finger.close();
+            finger->close();
             initFingerprintScanner();
-            finger.start();
+            finger->start();
         }
 
         resetLedsTimer = delayTimerInit();
@@ -1007,47 +1180,55 @@ void FingerprintModule::handleFunctionPropertySearchPersonByFingerId(uint8_t *da
     uint16_t fingerId = (data[1] << 8) | data[2];
     logDebugP("fingerId: %d", fingerId);
 
-    if (!finger.hasLocation(fingerId))
+    if (switchFingerprintPower(true))
     {
-        logDebugP("Unrecognized by scanner!");
-        resultData[0] = 1;
-        resultLength = 1;
-
-        logIndentDown();
-        return;
-    }
-
-    uint8_t personName[28] = {};
-
-    uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
-    logDebugP("storageOffset: %d", storageOffset);
-    uint8_t personFinger = _fingerprintStorage.readByte(storageOffset);
-    if (personFinger > 0)
-    {
-        _fingerprintStorage.read(storageOffset + 1, personName, 28);
-
-        logDebugP("Found:");
-        logIndentUp();
-        logDebugP("personFinger: %d", personFinger);
-        logDebugP("personName: %s", personName);
-        logIndentDown();
-
-        resultData[0] = 0;
-        resultData[1] = personFinger;
-        resultLength = 2;
-        for (uint8_t i = 0; i < 28; i++)
+        if (!finger->hasLocation(fingerId))
         {
-            memcpy(resultData + 2 + i, personName + i, 1);
-            resultLength++;
+            logDebugP("Unrecognized by scanner!");
+            resultData[0] = 1;
+            resultLength = 1;
 
-            if (personName[i] == 0) // null termination
-                break;
+            logIndentDown();
+            return;
+        }
+
+        uint8_t personName[28] = {};
+
+        uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
+        logDebugP("storageOffset: %d", storageOffset);
+        uint8_t personFinger = _fingerprintStorage.readByte(storageOffset);
+        if (personFinger > 0)
+        {
+            _fingerprintStorage.read(storageOffset + 1, personName, 28);
+
+            logDebugP("Found:");
+            logIndentUp();
+            logDebugP("personFinger: %d", personFinger);
+            logDebugP("personName: %s", personName);
+            logIndentDown();
+
+            resultData[0] = 0;
+            resultData[1] = personFinger;
+            resultLength = 2;
+            for (uint8_t i = 0; i < 28; i++)
+            {
+                memcpy(resultData + 2 + i, personName + i, 1);
+                resultLength++;
+
+                if (personName[i] == 0) // null termination
+                    break;
+            }
+        }
+        else
+        {
+            logDebugP("Not found.");
+
+            resultData[0] = 1;
+            resultLength = 1;
         }
     }
     else
     {
-        logDebugP("Not found.");
-
         resultData[0] = 1;
         resultLength = 1;
     }
@@ -1077,45 +1258,48 @@ void FingerprintModule::handleFunctionPropertySearchFingerIdByPerson(uint8_t *da
     logDebugP("searchPersonName: %s (length: %u)", searchPersonName, searchPersonNameLength);
     logDebugP("resultLength: %u", resultLength);
 
-    uint16_t* fingerIds = finger.getLocations();
-    uint16_t templateCount = finger.getTemplateCount();
-
-    uint32_t storageOffset = 0;
-    uint8_t personFinger = 0;
-    uint8_t personName[29] = {};
     uint8_t foundCount = 0;
     uint16_t foundTotalCount = 0;
-    for (uint16_t i = 0; i < templateCount; i++)
+    if (switchFingerprintPower(true))
     {
-        uint16_t fingerId = fingerIds[i];
-        storageOffset = FIN_CaclStorageOffset(fingerId);
-        personFinger = _fingerprintStorage.readByte(storageOffset);
-        if (searchPersonFinger > 0)
-            if (searchPersonFinger != personFinger)
-                continue;
+        uint16_t* fingerIds = finger->getLocations();
+        uint16_t templateCount = finger->getTemplateCount();
 
-        _fingerprintStorage.read(storageOffset + 1, personName, 28);
-        if (strcasestr((char *)personName, searchPersonName) != nullptr)
+        uint32_t storageOffset = 0;
+        uint8_t personFinger = 0;
+        uint8_t personName[29] = {};
+        for (uint16_t i = 0; i < templateCount; i++)
         {
-            // logDebugP("Found:");
-            // logIndentUp();
-            // logDebugP("fingerId: %d", fingerId);
-            // logDebugP("personFinger: %d", personFinger);
-            // logDebugP("personName: %s", personName);
-            // logIndentDown();
+            uint16_t fingerId = fingerIds[i];
+            storageOffset = FIN_CaclStorageOffset(fingerId);
+            personFinger = _fingerprintStorage.readByte(storageOffset);
+            if (searchPersonFinger > 0)
+                if (searchPersonFinger != personFinger)
+                    continue;
 
-            // we return max. 10 results
-            if (foundCount < 7)
+            _fingerprintStorage.read(storageOffset + 1, personName, 28);
+            if (strcasestr((char *)personName, searchPersonName) != nullptr)
             {
-                resultData[3 + foundCount * 31] = fingerId >> 8;
-                resultData[3 + foundCount * 31 + 1] = fingerId;
-                resultData[3 + foundCount * 31 + 2] = personFinger;
-                memcpy(resultData + 3 + foundCount * 31 + 3, personName, 28);
+                // logDebugP("Found:");
+                // logIndentUp();
+                // logDebugP("fingerId: %d", fingerId);
+                // logDebugP("personFinger: %d", personFinger);
+                // logDebugP("personName: %s", personName);
+                // logIndentDown();
 
-                foundCount++;
+                // we return max. 10 results
+                if (foundCount < 7)
+                {
+                    resultData[3 + foundCount * 31] = fingerId >> 8;
+                    resultData[3 + foundCount * 31 + 1] = fingerId;
+                    resultData[3 + foundCount * 31 + 2] = personFinger;
+                    memcpy(resultData + 3 + foundCount * 31 + 3, personName, 28);
+
+                    foundCount++;
+                }
+
+                foundTotalCount++;
             }
-
-            foundTotalCount++;
         }
     }
     
@@ -1157,6 +1341,108 @@ bool FingerprintModule::sendReadRequest(GroupObject &ko)
         return true;
     }
     return false;
+}
+
+void FingerprintModule::savePower()
+{
+    switchFingerprintPower(false);
+}
+
+bool FingerprintModule::restorePower()
+{
+    if (ParamFIN_ScanMode == 1)
+        switchFingerprintPower(true);
+
+    return true;
+}
+
+bool FingerprintModule::processCommand(const std::string cmd, bool diagnoseKo)
+{
+    bool result = false;
+
+    if (cmd.substr(0, 3) != "fin" || cmd.length() < 5)
+        return result;
+
+    if (cmd.length() == 5 && cmd.substr(4, 1) == "h")
+    {
+        openknx.console.writeDiagenoseKo("-> pwr on");
+        openknx.console.writeDiagenoseKo("");
+        openknx.console.writeDiagenoseKo("-> pwr off");
+        openknx.console.writeDiagenoseKo("");
+    }
+    else if (cmd.length() == 10 && cmd.substr(4, 6) == "pwr on")
+    {
+        digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_ON);
+        result = true;
+    }
+    else if (cmd.length() == 11 && cmd.substr(4, 7) == "pwr off")
+    {
+        digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_OFF);
+        result = true;
+    }
+    else if (cmd.length() == 13 && cmd.substr(4, 9) == "test mode")
+    {
+        runTestMode();
+        result = true;
+    }
+
+    return result;
+}
+
+void FingerprintModule::runTestMode()
+{
+    logInfoP("Starting test mode");
+    logIndentUp();
+
+    logInfoP("Testing scanner:");
+    logIndentUp();
+    pinMode(SCANNER_PWR_PIN, OUTPUT);
+    if (switchFingerprintPower(true, true))
+        finger->logSystemParameters();
+    finger->setLed(Fingerprint::State::Success);
+    logIndentDown();
+    delay(1000);
+    finger->setLed(Fingerprint::State::None);
+
+    logInfoP("Testing LEDs:");
+    logIndentUp();
+    logInfoP("Touch buttons red");
+    pinMode(LED_RED_PIN, OUTPUT);
+    digitalWrite(LED_RED_PIN, HIGH);
+    delay(1000);
+    digitalWrite(LED_RED_PIN, LOW);
+
+    logInfoP("Touch buttons green");
+    pinMode(LED_GREEN_PIN, OUTPUT);
+    digitalWrite(LED_GREEN_PIN, HIGH);
+    delay(1000);
+    digitalWrite(LED_GREEN_PIN, LOW);
+    logIndentDown();
+
+    logInfoP("Testing relay:");
+    logIndentUp();
+    logInfoP("Relay off");
+    pinMode(OPENKNX_SWA_SET_PINS, OUTPUT);
+    pinMode(OPENKNX_SWA_RESET_PINS, OUTPUT);
+    digitalWrite(OPENKNX_SWA_SET_PINS, OPENKNX_SWA_SET_ACTIVE_ON == HIGH ? LOW : HIGH);
+    digitalWrite(OPENKNX_SWA_RESET_PINS, OPENKNX_SWA_RESET_ACTIVE_ON == HIGH ? LOW : HIGH);
+    for (uint8_t i = 0; i < 2; i++)
+    {
+        logInfoP("Relay set");
+        digitalWrite(OPENKNX_SWA_SET_PINS, OPENKNX_SWA_SET_ACTIVE_ON == HIGH ? HIGH : LOW);
+        delay(OPENKNX_SWA_BISTABLE_IMPULSE_LENGTH);
+        digitalWrite(OPENKNX_SWA_SET_PINS, OPENKNX_SWA_SET_ACTIVE_ON == HIGH ? LOW : HIGH);
+        delay(1000);
+        logInfoP("Relay reset");
+        digitalWrite(OPENKNX_SWA_RESET_PINS, OPENKNX_SWA_RESET_ACTIVE_ON == HIGH ? HIGH : LOW);
+        delay(OPENKNX_SWA_BISTABLE_IMPULSE_LENGTH);
+        digitalWrite(OPENKNX_SWA_RESET_PINS, OPENKNX_SWA_RESET_ACTIVE_ON == HIGH ? LOW : HIGH);
+        delay(1000);
+    }
+    logIndentDown();
+
+    logInfoP("Testing finished.");
+    logIndentDown();
 }
 
 FingerprintModule openknxFingerprintModule;

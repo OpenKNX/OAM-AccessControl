@@ -1,13 +1,13 @@
 #include "Fingerprint.h"
 
 Fingerprint::Fingerprint(uint32_t overridePassword)
-    : _finger(Adafruit_Fingerprint(&mySerial, overridePassword))
+    : _finger(Adafruit_Fingerprint(&SCANNER_SERIAL, overridePassword))
 {
     _delayMs = _delayCallbackDefault;
 }
 
-Fingerprint::Fingerprint(fingerprint_delay_fptr_t delayCallback, uint32_t overridePassword)
-    : _finger(Adafruit_Fingerprint(&mySerial, overridePassword))
+Fingerprint::Fingerprint(DelayCalback delayCallback, uint32_t overridePassword)
+    : _finger(Adafruit_Fingerprint(&SCANNER_SERIAL, overridePassword))
 {
     _delayMs = delayCallback;
 }
@@ -16,30 +16,33 @@ bool Fingerprint::start()
 {
     scannerReady = false;
 
-#ifdef ESP32_S3_DEVKIT
-    _finger.begin(57600, 5, 4);
-#elif ESP32_POE_ISO
-    _finger.begin(57600, 36, 4);
-#elif ARDUINO_ARCH_RP2040
-    _finger.begin(57600, 5, 4);
-#else
-    _finger.begin(57600, 39, 33);
-#endif
+    _finger.begin(57600, SCANNER_SERIAL_RX_PIN, SCANNER_SERIAL_TX_PIN);
+
+    // uint32_t timeoutTimer = delayTimerInit();
+    // while(!delayCheck(timeoutTimer, 500) && _finger.verifyPassword() != FINGERPRINT_OK)
+    //     _delayMs(10);
 
     _delayMs(500);
 
-    if (_finger.verifyPassword())
+    switch (_finger.verifyPassword())
     {
-        logInfoP("Found fingerprint sensor!");
-    }
-    else
-    {
-        logInfoP("Did not find fingerprint sensor :(");
-        return false;
+        case FINGERPRINT_OK:
+            logInfoP("Found fingerprint sensor!");
+            break;
+        case FINGERPRINT_PASSFAIL:
+            logErrorP("Fingerprint password invalid!");
+            return false;
+        default:
+            logErrorP("Fingerprint scanner not found!");
+            return false;
     }
 
     scannerReady = true;
+    return true;
+}
 
+void Fingerprint::logSystemParameters()
+{
     logInfoP("System parameters:");
     logIndentUp();
     logInfoP("Status register: %d", _finger.status_reg);
@@ -54,13 +57,12 @@ bool Fingerprint::start()
     _listTemplates();
 #endif
     logIndentDown();
-
-    return true;
 }
 
 void Fingerprint::close()
 {
     _finger.close();
+    scannerReady = false;
 }
 
 std::string Fingerprint::logPrefix()
@@ -87,6 +89,7 @@ bool Fingerprint::setLed(State state)
             return _finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_YELLOW, 0) == FINGERPRINT_OK;
         case ScanNoMatch:
         case Failed:
+        case Locked:
             return _finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_RED, 0) == FINGERPRINT_OK;
         case WaitForFinger:
             return _finger.LEDcontrol(FINGERPRINT_LED_FLASHING, 20, FINGERPRINT_LED_BLUE, 0) == FINGERPRINT_OK;
@@ -129,7 +132,8 @@ uint16_t Fingerprint::getTemplateCount()
 
 bool Fingerprint::_listTemplates()
 {
-    if (_finger.getTemplateIndices() == FINGERPRINT_OK)
+    uint8_t p = _finger.getTemplateIndices();
+    if (p == FINGERPRINT_OK)
     {
         logDebugP("Stored template locations:");
         logIndentUp();
@@ -144,7 +148,7 @@ bool Fingerprint::_listTemplates()
     }
     else
     {
-        logErrorP("Error getting template locations.");
+        logErrorP("Error getting template locations (%u).", p);
     }
 
     return false;
@@ -242,6 +246,8 @@ Fingerprint::FindFingerResult Fingerprint::findFingerprint()
         return findFingerResult;
     }
 
+    _delayMs(10);
+
     logDebugP("Searching... ");
     p = _finger.fingerSearch();
     if (p == FINGERPRINT_OK)
@@ -313,7 +319,7 @@ bool Fingerprint::createTemplate()
         }
 
         logIndentUp();
-        ulong start = millis() == 0 ? 1 : millis();
+        ulong start = delayTimerInit();
         while (true)
         {
             p = _finger.getImage();
@@ -326,25 +332,28 @@ bool Fingerprint::createTemplate()
             switch (p)
             {
                 case FINGERPRINT_NOFINGER:
-                    if (millis() - start > 10000)
+                    if (delayCheck(start, 10000))
                     {
                         logDebugP("Cancel");
                         setLed(Failed);
-                        logIndent(0);
+                        logIndentDown();
+                        logIndentDown();
                         return false;
                     }
 
                     logDebugP("Waiting");
-                    continue;
+                    break;
                 case FINGERPRINT_IMAGEFAIL:
                     logDebugP("Imaging error");
                     setLed(Failed);
-                    logIndent(0);
+                    logIndentDown();
+                    logIndentDown();
                     return false;
                 default:
                     logDebugP("Other error");
                     setLed(Failed);
-                    logIndent(0);
+                    logIndentDown();
+                    logIndentDown();
                     return false;
             }
 
@@ -363,22 +372,26 @@ bool Fingerprint::createTemplate()
             case FINGERPRINT_IMAGEMESS:
                 logDebugP("Imaging too messy");
                 setLed(Failed);
-                logIndent(0);
+                logIndentDown();
+                logIndentDown();
                 return false;
             case FINGERPRINT_FEATUREFAIL:
                 logDebugP("Could not identify features");
                 setLed(Failed);
-                logIndent(0);
+                logIndentDown();
+                logIndentDown();
                 return false;
             case FINGERPRINT_INVALIDIMAGE:
                 logDebugP("Image invalid");
                 setLed(Failed);
-                logIndent(0);
+                logIndentDown();
+                logIndentDown();
                 return false;
             default:
                 logDebugP("Other error");
                 setLed(Failed);
-                logIndent(0);
+                logIndentDown();
+                logIndentDown();
                 return false;
         }
         logIndentDown();
@@ -412,8 +425,12 @@ bool Fingerprint::createTemplate()
             logDebugP("Prints did not match");
             setLed(Failed);
             break;
+        case FINGERPRINT_PACKETRECIEVEERR:
+            logDebugP("Packet receive error");
+            setLed(Failed);
+            break;
         default:
-            logDebugP("Other error");
+            logDebugP("Other error: %u", p);
             setLed(Failed);
             break;
     }
@@ -566,7 +583,7 @@ bool Fingerprint::setPassword(uint32_t newPasswort)
     return success;
 }
 
-bool Fingerprint::emptyDatabase(void)
+bool Fingerprint::emptyDatabase()
 {
     if (!scannerReady)
         return false;
@@ -591,7 +608,7 @@ bool Fingerprint::emptyDatabase(void)
     return success;
 }
 
-bool Fingerprint::checkSensor(void)
+bool Fingerprint::checkSensor()
 {
     if (!scannerReady)
         return false;

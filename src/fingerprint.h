@@ -11,16 +11,10 @@
 #include <string>
 #include <functional>
 
-#if defined ESP32_WESP32 || defined ARDUINO_ARCH_RP2040
-    #define mySerial Serial2
-#else
-    #define mySerial Serial1
-#endif
+typedef std::function<void(uint32_t)> DelayCalback;
 
 class Fingerprint
 {
-  using fingerprint_delay_fptr_t = void (*)(uint32_t);
-
   public:
     enum State
     {
@@ -35,6 +29,7 @@ class Fingerprint
         DeleteNotFound,
         Success,
         Failed,
+        Locked,
         Busy
     };
 
@@ -48,9 +43,10 @@ class Fingerprint
     bool scannerReady;
 
     Fingerprint(uint32_t overridePassword = 0);
-    Fingerprint(fingerprint_delay_fptr_t delayCallback, uint32_t overridePassword = 0);
+    Fingerprint(DelayCalback delayCallback, uint32_t overridePassword = 0);
 
     bool start();
+    void logSystemParameters();
     void close();
     std::string logPrefix();
     bool setLed(State state);
@@ -70,8 +66,8 @@ class Fingerprint
     bool storeTemplate(uint16_t location);
     bool deleteTemplate(uint16_t location);
     bool setPassword(uint32_t newPasswort);
-    bool emptyDatabase(void);
-    bool checkSensor(void);
+    bool emptyDatabase();
+    bool checkSensor();
 
   private:
     struct GetNotepadPageIndexResult
@@ -81,7 +77,7 @@ class Fingerprint
     };
 
     Adafruit_Fingerprint _finger;
-    fingerprint_delay_fptr_t _delayMs;
+    DelayCalback _delayMs;
 
     bool _listTemplates();
     GetNotepadPageIndexResult _getNotepadPageIndex(u_int16_t templateLocation);

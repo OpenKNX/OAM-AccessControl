@@ -14,6 +14,7 @@
 #endif
 
 #define FINGERPRINT_OK 0x00               //!< Command execution is complete
+#define FINGERPRINT_BOOTED 0x55
 #define FINGERPRINT_PACKETRECIEVEERR 0x01 //!< Error when receiving data package
 #define FINGERPRINT_NOFINGER 0x02         //!< No finger on the sensor
 #define FINGERPRINT_IMAGEFAIL 0x03        //!< Failed to enroll the finger
@@ -134,6 +135,7 @@
 //#define FINGERPRINT_DEBUG
 
 #define DEFAULTTIMEOUT 2000 //!< UART reading timeout in milliseconds
+#define TIMEOUT_CREATEMODEL 10000 //!< UART reading timeout in milliseconds
 
 ///! Helper class to craft UART packets
 struct Adafruit_Fingerprint_Packet {
@@ -184,7 +186,7 @@ public:
   void begin(uint32_t baud, int8_t rxPin = -1, int8_t txPin = -1);
   void close();
 
-  boolean verifyPassword(void);
+  uint8_t verifyPassword(void);
   uint8_t getParameters(void);
 
   uint8_t getImage(void);
@@ -218,6 +220,8 @@ public:
   void writeStructuredPacket(const Adafruit_Fingerprint_Packet &p);
   uint8_t getStructuredPacket(Adafruit_Fingerprint_Packet *p,
                               uint16_t timeout = DEFAULTTIMEOUT);
+
+  uint8_t checkScannerBooted(void);
 
   /// The matching location that is set by fingerFastSearch()
   uint16_t fingerID;

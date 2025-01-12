@@ -11,12 +11,13 @@ class ActionChannel : public OpenKNX::Channel
     inline static bool _authenticateActive = false;
 
   public:
-    ActionChannel(uint8_t index, Fingerprint finger);
+    ActionChannel(uint8_t index, Fingerprint *finger);
     const std::string name() override;
-    Fingerprint _finger;
+    Fingerprint *_finger = nullptr;
 
     void loop();
     void processInputKo(GroupObject &ko) override;
     bool processScan(uint16_t location);
     void processReadRequests();
+    void resetActionCall();
 };
