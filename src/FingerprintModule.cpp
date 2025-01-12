@@ -18,7 +18,9 @@ void FingerprintModule::setup()
 
     initFlash();
 
+#ifdef SCANNER_PWR_PIN
     pinMode(SCANNER_PWR_PIN, OUTPUT);
+#endif    
     if (switchFingerprintPower(true))
         finger->logSystemParameters();
 
@@ -84,7 +86,9 @@ bool FingerprintModule::switchFingerprintPower(bool on, bool testMode)
             return true;
         }
 
+#ifdef SCANNER_PWR_PIN
         digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_ON);
+#endif
         initFingerprintScanner(testMode);
 
         logInfoP("Fingerprint start");
@@ -106,7 +110,9 @@ bool FingerprintModule::switchFingerprintPower(bool on, bool testMode)
         finger->close();
         finger = nullptr;
 
+#ifdef SCANNER_PWR_PIN
         digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_OFF);
+#endif
         return true;
     }
 }
@@ -1370,6 +1376,7 @@ bool FingerprintModule::processCommand(const std::string cmd, bool diagnoseKo)
         openknx.console.writeDiagenoseKo("-> pwr off");
         openknx.console.writeDiagenoseKo("");
     }
+#ifdef SCANNER_PWR_PIN
     else if (cmd.length() == 10 && cmd.substr(4, 6) == "pwr on")
     {
         digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_ON);
@@ -1380,6 +1387,7 @@ bool FingerprintModule::processCommand(const std::string cmd, bool diagnoseKo)
         digitalWrite(SCANNER_PWR_PIN, FINGER_PWR_OFF);
         result = true;
     }
+#endif
     else if (cmd.length() == 13 && cmd.substr(4, 9) == "test mode")
     {
         runTestMode();
@@ -1396,7 +1404,9 @@ void FingerprintModule::runTestMode()
 
     logInfoP("Testing scanner:");
     logIndentUp();
+#ifdef SCANNER_PWR_PIN
     pinMode(SCANNER_PWR_PIN, OUTPUT);
+#endif
     if (switchFingerprintPower(true, true))
         finger->logSystemParameters();
     finger->setLed(Fingerprint::State::Success);
@@ -1419,6 +1429,7 @@ void FingerprintModule::runTestMode()
     digitalWrite(LED_GREEN_PIN, LOW);
     logIndentDown();
 
+#ifdef OPENKNX_SWA_SET_PINS
     logInfoP("Testing relay:");
     logIndentUp();
     logInfoP("Relay off");
@@ -1440,6 +1451,7 @@ void FingerprintModule::runTestMode()
         delay(1000);
     }
     logIndentDown();
+#endif
 
     logInfoP("Testing finished.");
     logIndentDown();
