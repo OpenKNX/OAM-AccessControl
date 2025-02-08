@@ -167,15 +167,27 @@ void FingerprintModule::interruptTouchRight()
 
 void FingerprintModule::loop()
 {
+    uint8_t uniqueIdLength;
+    const uint8_t* uniqueId;
+
     nci::run();
     tagStatus currentTagStatus = nci::getTagStatus();
     switch (currentTagStatus) {
         case tagStatus::foundNew:
-            logging::snprintf(logging::source::tagEvents, "New tag detected : ");
-            nci::tagData.dump();
+            logDebugP("New tag detected:");
+            logIndentUp();
+            
+            uniqueIdLength = nci::tagData.getUniqueIdLength();
+            uniqueId = nci::tagData.getUniqueId();
+
+            logDebugP("uniqueID (length=%d):", uniqueIdLength);
+            for (uint8_t index = 0; index < uniqueIdLength; index++)
+                logDebugP("0x%02X ", uniqueId[index]);
+
+            logIndentDown();
             break;
         case tagStatus::removed:
-            logging::snprintf(logging::source::tagEvents, "Tag removed\n");
+            logDebugP("Tag removed.");
             break;
         default:
             break;
@@ -691,7 +703,8 @@ void FingerprintModule::startSyncSend(uint16_t fingerId, bool loadModel)
 
     syncSendBufferLength = compressedDataSize;
     syncSendPacketCount = ceil(syncSendBufferLength / (float)SYNC_SEND_PACKET_DATA_LENGTH) + 1; // currently separated control packet
-    uint16_t checksum = crc16(syncSendBuffer, syncSendBufferLength);
+    uint16_t checksum = crc16.ccitt(syncSendBuffer, syncSendBufferLength);
+    
 
     logDebugP("Sync-Send (1/%u): control packet: bufferLength=%u, lengthPerPacket=%u, checksum=%u, fingerId=%u%", syncSendPacketCount, syncSendBufferLength, SYNC_SEND_PACKET_DATA_LENGTH, checksum, fingerId);
 
@@ -845,7 +858,7 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
 
         finger->setLed(Fingerprint::State::Busy);
 
-        uint16_t checksum = crc16(syncReceiveBuffer, syncReceiveBufferLength);
+        uint16_t checksum = crc16.ccitt(syncReceiveBuffer, syncReceiveBufferLength);
         if (syncReceiveBufferChecksum == checksum)
             logDebugP("Sync-Receive: finished (checksum=%u)", syncReceiveBufferChecksum);
         else

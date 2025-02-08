@@ -93,7 +93,8 @@
 			"xhash": "cpp",
 			"xstring": "cpp",
 			"xutility": "cpp",
-			"xlocale": "cpp"
+			"xlocale": "cpp",
+			"compare": "cpp"
 		}
 	}
 }

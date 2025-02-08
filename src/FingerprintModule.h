@@ -4,9 +4,11 @@
 #include "hardware.h"
 #include "Fingerprint.h"
 #include "ActionChannel.h"
+#include "FastCRC.h"
 #include "CRC32.h"
-#include "CRC16.h"
 #include "lz4.h"
+#include "pn7160interface/pn7160interface.hpp"
+#include "nci/nci.hpp"
 
 
 #define NFC_WIRE Wire
@@ -100,6 +102,9 @@ class FingerprintModule : public OpenKNX::Module
     void handleFunctionPropertySearchFingerIdByPerson(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     static void delayCallback(uint32_t period);
     void runTestMode();
+
+    FastCRC16 crc16;
+    FastCRC32 crc32;
 
     OpenKNX::Flash::Driver _fingerprintStorage;
     ActionChannel *_channels[FIN_ChannelCount];
