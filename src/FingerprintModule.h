@@ -5,7 +5,6 @@
 #include "Fingerprint.h"
 #include "ActionChannel.h"
 #include "FastCRC.h"
-#include "CRC32.h"
 #include "lz4.h"
 #include "pn7160interface/pn7160interface.hpp"
 #include "nci/nci.hpp"

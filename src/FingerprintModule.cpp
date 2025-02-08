@@ -1123,7 +1123,7 @@ void FingerprintModule::handleFunctionPropertySetPassword(uint8_t *data, uint8_t
     uint32_t newPasswordCrc = 0;
     if (newPassword[0] != 48 || // = "0": if user inputs only "0", we just use it as is without CRC
         newPassword[1] != 0)    // null termination
-        newPasswordCrc = CRC32::calculate(newPassword, 16);
+        newPasswordCrc = crc32.crc32((uint8_t *)newPassword, 16);
     logDebugP("newPassword: %s (crc: %u)", newPassword, newPasswordCrc);
 
     // change password
@@ -1142,7 +1142,7 @@ void FingerprintModule::handleFunctionPropertySetPassword(uint8_t *data, uint8_t
 
         if (oldPassword[0] != 48 || // = "0": if user inputs only "0", we just use it as is without CRC
             oldPassword[1] != 0)    // null termination
-            oldPasswordCrc = CRC32::calculate(oldPassword, 16);
+            oldPasswordCrc = crc32.crc32((uint8_t *)oldPassword, 16);
         logDebugP("oldPassword: %s (crc: %u)", oldPassword, oldPasswordCrc);
     }
 
