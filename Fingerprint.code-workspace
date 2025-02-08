@@ -25,6 +25,9 @@
 			"path": "../OFM-FileTransferModule"
 		},
 		{
+			"path": "../OFM-GPIOModule"
+		},
+		{
 			"path": "../knx"
 		}
 	],
