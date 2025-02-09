@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAIN_Version "aa4a127"
+#define MAIN_Version "e292d01"
 #define KNX_Version "2.1.2+764900e"
 #define MODULE_Common_Version "1.2.0+6f467fb"
 #define MODULE_Common_Version_Major 1
@@ -12,7 +12,7 @@
 #define MODULE_SwitchActuator_Version_Minor 1
 #define MODULE_SwitchActuator_Version_Revision 0
 #define MODULE_SwitchActuator_ETS 1
-#define MODULE_GPIOModule_Version "0.0.0+39b2592"
+#define MODULE_GPIOModule_Version "0.0.0+f6e148c"
 #define MODULE_GPIOModule_Version_Major 0
 #define MODULE_GPIOModule_Version_Minor 0
 #define MODULE_GPIOModule_Version_Revision 0

@@ -7,16 +7,17 @@
 #include "FastCRC.h"
 #include "lz4.h"
 #include "pn7160interface/pn7160interface.hpp"
+#include "logging/logging.hpp"
 #include "nci/nci.hpp"
 
 
 #define NFC_WIRE Wire
-#define NFC_ADDR 0x28
-#define NFC_SDA 20
-#define NFC_SCL 21
-#define NFC_IRQ 16
-#define NFC_VEN 17
-#define NFC_DWL_REQ 23
+#define NFC_PN7160_ADDR 0x28
+#define NFC_SDA_PIN 20
+#define NFC_SCL_PIN 21
+#define NFC_IRQ_PIN 16
+#define NFC_VEN_PIN 17
+#define NFC_DWL_REQ_PIN 23
 
 
 #define INIT_RESET_TIMEOUT 1000
@@ -79,6 +80,8 @@ class FingerprintModule : public OpenKNX::Module
     bool switchFingerprintPower(bool on, bool testMode = false);
     void initFingerprintScanner(bool testMode = false);
     void initFlash();
+    void initNci();
+    void loopNci();
     void processScanSuccess(uint16_t location, bool external = false);
     bool enrollFinger(uint16_t location);
     bool deleteFinger(uint16_t location, bool sync = true);

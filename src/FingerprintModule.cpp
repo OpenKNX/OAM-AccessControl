@@ -55,17 +55,33 @@ void FingerprintModule::setup()
 
     checkSensorTimer = delayTimerInit();
     initResetTimer = delayTimerInit();
+
+    initNci();
+
     logInfoP("Fingerprint module ready.");
     logIndentDown();
+}
 
+void FingerprintModule::initNci()
+{
+#ifdef NCI_DEBUG
+    logging::initialize();
+    logging::enable(logging::destination::destUart1);
 
+    delay(1000); // delay required to get debug serial ready
 
-    NFC_WIRE.setSDA(NFC_SDA);
-    NFC_WIRE.setSCL(NFC_SCL);
+    logging::enable(logging::source::criticalError);
+    logging::enable(logging::source::nciMessages);
+    logging::enable(logging::source::stateChanges);
+    logging::enable(logging::source::tagEvents);
+#endif
+
+    NFC_WIRE.setSDA(NFC_SDA_PIN);
+    NFC_WIRE.setSCL(NFC_SCL_PIN);
     NFC_WIRE.begin();
 
-    PN7160Interface::initialize(2, 3, 0x28);
-
+    PN7160Interface::initialize(NFC_IRQ_PIN, NFC_VEN_PIN, NFC_PN7160_ADDR);
+    logInfoP("Initialized PN7160.");
 }
 
 bool FingerprintModule::switchFingerprintPower(bool on, bool testMode)
@@ -167,35 +183,6 @@ void FingerprintModule::interruptTouchRight()
 
 void FingerprintModule::loop()
 {
-    uint8_t uniqueIdLength;
-    const uint8_t* uniqueId;
-
-    nci::run();
-    tagStatus currentTagStatus = nci::getTagStatus();
-    switch (currentTagStatus) {
-        case tagStatus::foundNew:
-            logDebugP("New tag detected:");
-            logIndentUp();
-            
-            uniqueIdLength = nci::tagData.getUniqueIdLength();
-            uniqueId = nci::tagData.getUniqueId();
-
-            logDebugP("uniqueID (length=%d):", uniqueIdLength);
-            for (uint8_t index = 0; index < uniqueIdLength; index++)
-                logDebugP("0x%02X ", uniqueId[index]);
-
-            logIndentDown();
-            break;
-        case tagStatus::removed:
-            logDebugP("Tag removed.");
-            break;
-        default:
-            break;
-    }
-
-    return;
-
-
     if (delayCallbackActive)
         return;
 
@@ -298,6 +285,43 @@ void FingerprintModule::loop()
     }
 
     processSyncSend();
+    loopNci();
+}
+
+void FingerprintModule::loopNci()
+{
+    uint8_t uniqueIdLength;
+    const uint8_t* uniqueId;
+
+    nci::run();
+    tagStatus currentTagStatus = nci::getTagStatus();
+    switch (currentTagStatus) {
+        case tagStatus::foundNew:
+            logDebugP("New tag detected:");
+            logIndentUp();
+            
+            uniqueIdLength = nci::tagData.getUniqueIdLength();
+            uniqueId = nci::tagData.getUniqueId();
+
+            logDebugP("uniqueID (length=%d):", uniqueIdLength);
+            for (uint8_t index = 0; index < uniqueIdLength; index++)
+                logDebugP("0x%02X ", uniqueId[index]);
+
+            openknx.console.writeDiagenoseKo((char*)uniqueId);
+
+            logIndentDown();
+            break;
+        case tagStatus::removed:
+            logDebugP("Tag removed.");
+            break;
+    }
+
+    nciState currentNciState = nci::getState();
+    if (currentNciState == nciState::error)
+    {
+        nci::reset();
+        logDebugP("NCI reset.");
+    }
 }
 
 bool FingerprintModule::searchForFinger()
