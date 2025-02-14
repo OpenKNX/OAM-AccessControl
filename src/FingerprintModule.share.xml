@@ -102,7 +102,7 @@
                 <TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="0" maxInclusive="1499" />
               </ParameterType>
               <ParameterType Id="%AID%_PT-NfcKey" Name="NfcKey">
-                <TypeText SizeInBit="64" />
+                <TypeText SizeInBit="160" />
               </ParameterType>
               <ParameterType Id="%AID%_PT-Action" Name="Action">
                 <TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="0" maxInclusive="%N%" />
@@ -131,12 +131,13 @@
               <Parameter Id="%AID%_P-%T%000005" Name="EnrollFingerIdR503" ParameterType="%AID%_PT-FingerIdR503" Text="Scanner Finger ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000006" Name="EnrollFingerIdR503S" ParameterType="%AID%_PT-FingerIdR503S" Text="Scanner Finger ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000007" Name="EnrollFingerId" ParameterType="%AID%_PT-FingerId" Text="Scanner Finger ID" Value="0" />
-              <Parameter Id="%AID%_P-%T%000030" Name="EnrollNfcId" ParameterType="%AID%_PT-NfcId" Text="Nfc-Tag ID" Value="0" />
-              <Parameter Id="%AID%_P-%T%000031" Name="EnrollNfcKey" ParameterType="%AID%_PT-NfcKey" Text="Nfc-Tag Schlüssel" Value="- neu -" />
+              <Parameter Id="%AID%_P-%T%000030" Name="EnrollNfcId" ParameterType="%AID%_PT-NfcId" Text="Tag ID" Value="0" />
+              <Parameter Id="%AID%_P-%T%000031" Name="EnrollNfcKey" ParameterType="%AID%_PT-NfcKey" Text="Tag Schlüssel (UID)" Value="" />
+              <Parameter Id="%AID%_P-%T%000032" Name="EnrollTagName" ParameterType="%AID%_PT-Text28Byte" Text="Tag Name" Value="" />
               <Parameter Id="%AID%_P-%T%000016" Name="DeleteFingerIdR503" ParameterType="%AID%_PT-FingerIdR503" Text="Scanner Finger ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000017" Name="DeleteFingerIdR503S" ParameterType="%AID%_PT-FingerIdR503S" Text="Scanner Finger ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000018" Name="DeleteFingerId" ParameterType="%AID%_PT-FingerId" Text="Scanner Finger ID" Value="0" />
-              <Parameter Id="%AID%_P-%T%000029" Name="DeleteNfcId" ParameterType="%AID%_PT-NfcId" Text="Nfc-Tag ID" Value="0" />
+              <Parameter Id="%AID%_P-%T%000029" Name="DeleteNfcId" ParameterType="%AID%_PT-NfcId" Text="Tag ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000015" Name="ResetScanner" ParameterType="%AID%_PT-OnOffYesNo" Text="Alle Finger löschen?" Value="0" />
               <Parameter Id="%AID%_P-%T%000020" Name="PasswordOption" ParameterType="%AID%_PT-PasswordOption" Text="Passwort" Value="0" />
               <Parameter Id="%AID%_P-%T%000021" Name="PasswordNew" ParameterType="%AID%_PT-Text16Byte" Text="Neues Passwort" Value="" />
@@ -145,6 +146,7 @@
               <Parameter Id="%AID%_P-%T%000024" Name="SyncFingerIdR503" ParameterType="%AID%_PT-FingerIdR503" Text="Finger ID synchronisieren" Value="0" />
               <Parameter Id="%AID%_P-%T%000025" Name="SyncFingerIdR503S" ParameterType="%AID%_PT-FingerIdR503S" Text="Finger ID synchronisieren" Value="0" />
               <Parameter Id="%AID%_P-%T%000026" Name="SyncFingerId" ParameterType="%AID%_PT-FingerId" Text="Finger ID synchronisieren" Value="0" />
+              <Parameter Id="%AID%_P-%T%000033" Name="SyncNfcId" ParameterType="%AID%_PT-NfcId" Text="Tag ID synchronisieren" Value="0" />
               <Union SizeInBit="48">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%T%000001" Name="VisibleActions" ParameterType="%AID%_PT-FINNumChannels" Offset="0" BitOffset="0" Text="Verfügbare Aktionen" Value="3" SuffixText=" von %N%" />
@@ -195,6 +197,8 @@
               <ParameterRef Id="%AID%_P-%T%000029_R-%T%00002901" RefId="%AID%_P-%T%000029" />
               <ParameterRef Id="%AID%_P-%T%000030_R-%T%00003001" RefId="%AID%_P-%T%000030" />
               <ParameterRef Id="%AID%_P-%T%000031_R-%T%00003101" RefId="%AID%_P-%T%000031" />
+              <ParameterRef Id="%AID%_P-%T%000032_R-%T%00003201" RefId="%AID%_P-%T%000032" />
+              <ParameterRef Id="%AID%_P-%T%000033_R-%T%00003301" RefId="%AID%_P-%T%000033" />
             </ParameterRefs>
             <ComObjectTable>
               <ComObject Id="%AID%_O-%T%000001" Name="Touched" Number="1" ObjectSize="1 Bit" Text="Berührung (sofort, immer)" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
@@ -313,24 +317,7 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000012_R-%T%00001201" IndentLevel="1" HelpContext="%DOC%" />
                 <choose ParamRefId="%AID%_UP-%T%000012_R-%T%00001201">
                   <when test="1">
-                    <ComObjectRefRef RefId="%AID%_O-%T%000046_R-%T%00004601" />
-
                     <ParameterRefRef RefId="%AID%_UP-%T%000027_R-%T%00002701" IndentLevel="2" HelpContext="%DOC%" />
-                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Nach jedem Anlernvorgang wird der neue Finger automatisch synchronisiert. Zusätzlich kann hier die Synchronisation eines bestimmten Fingers auch manuell angestoßen werden." UIHint="Information" />
-                    <choose ParamRefId="%AID%_UP-%T%000002_R-%T%00000201">
-                      <when test="0">
-                        <ParameterRefRef RefId="%AID%_P-%T%000024_R-%T%00002401" IndentLevel="2" HelpContext="%DOC%" />
-                        <Assign SourceParamRefRef="%AID%_P-%T%000024_R-%T%00002401" TargetParamRefRef="%AID%_P-%T%000026_R-%T%00002601" />
-                      </when>
-                      <when test="1">
-                        <ParameterRefRef RefId="%AID%_P-%T%000025_R-%T%00002501" IndentLevel="2" HelpContext="%DOC%" />
-                        <Assign SourceParamRefRef="%AID%_P-%T%000025_R-%T%00002501" TargetParamRefRef="%AID%_P-%T%000026_R-%T%00002601" />
-                      </when>
-                      <when test="2">
-                        <ParameterRefRef RefId="%AID%_P-%T%000026_R-%T%00002601" IndentLevel="2" HelpContext="%DOC%" />
-                      </when>
-                    </choose>
-                    <Button Id="%AID%_B-%T%000004" Text="Synchronisieren" Name="syncFinger" EventHandler="FIN_syncFinger" EventHandlerOnline="ConnectionOriented" />
                   </when>
                 </choose>
 

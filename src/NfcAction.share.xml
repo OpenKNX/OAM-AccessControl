@@ -17,8 +17,8 @@
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%T%920001" Name="NfcActionCount" ParameterType="%AID%_PT-FINACTNumChannels" Offset="0" BitOffset="0" Text="Verfügbare Zuordnungen" Value="1" SuffixText=" von %N%" />
               </Union>
-              <Parameter Id="%AID%_P-%T%920003" Name="PersonName" ParameterType="%AID%_PT-Text28Byte" Text="Name der Person" Value="" />
-              <Parameter Id="%AID%_P-%T%920005" Name="NfcId" ParameterType="%AID%_PT-NfcId" Text="Nfc-Tag ID" Value="0" />
+              <Parameter Id="%AID%_P-%T%920003" Name="NfcName" ParameterType="%AID%_PT-Text28Byte" Text="Tag Name" Value="" />
+              <Parameter Id="%AID%_P-%T%920005" Name="NfcId" ParameterType="%AID%_PT-NfcId" Text="Tag ID" Value="0" />
               <Parameter Id="%AID%_P-%T%920006" Name="NfcActionLine" ParameterType="%AID%_PT-FINACTNumChannels" Text="Zeile für Zuweisung" Value="1" />
               <Parameter Id="%AID%_P-%T%920007" Name="NumberSearchResults" ParameterType="%AID%_PT-ValueDpt5" Text="Anzahl Suchresultate" Value="0" Access="None" />
               <Parameter Id="%AID%_P-%T%920008" Name="NumberSearchResultsText" ParameterType="%AID%_PT-Text5Byte" Text="Anzahl Suchresultate (als Text)" Value="0" Access="None" />
@@ -56,8 +56,8 @@
                 <ParameterRefRef RefId="%AID%_P-%T%920008_R-%T%92000801" />
                 <ParameterRefRef RefId="%AID%_P-%T%920009_R-%T%92000901" />
 
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Nfc-Tag anlernen/ändern" UIHint="Headline" />
-                <ParameterRefRef RefId="%AID%_P-%T%000003_R-%T%00000301" IndentLevel="1" HelpContext="%DOC%" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag anlernen/ändern" UIHint="Headline" />
+                <ParameterRefRef RefId="%AID%_P-%T%000032_R-%T%00003201" IndentLevel="1" HelpContext="Empty" />
                 <ParameterRefRef RefId="%AID%_P-%T%000030_R-%T%00003001" IndentLevel="1" HelpContext="Empty" />
                 <ParameterRefRef RefId="%AID%_P-%T%000031_R-%T%00003101" IndentLevel="1" HelpContext="Empty" />
                 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
@@ -72,7 +72,7 @@
                   <Button Id="%AID%_B-%T%920001" Text="Anlernen" Cell="1,2" Name="enrollFinger" EventHandler="FIN_enrollFinger" EventHandlerOnline="ConnectionOriented" />
                   <Button Id="%AID%_B-%T%920002" Text="Ändern" Cell="1,3" Name="changeFinger" EventHandler="FIN_changeFinger" EventHandlerOnline="ConnectionOriented" />
                 </ParameterBlock>
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Nfc-Tag löschen" UIHint="Headline" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag löschen" UIHint="Headline" />
                 <ParameterRefRef RefId="%AID%_P-%T%000029_R-%T%00002901" IndentLevel="1" HelpContext="Empty" />
                 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
                   <Rows>
@@ -84,8 +84,19 @@
                   </Columns>
                   <Button Id="%AID%_B-%T%920003" Text="Löschen" Name="deleteFinger" Cell="1,2" EventHandler="FIN_deleteFinger" EventHandlerOnline="ConnectionOriented" />
                 </ParameterBlock>
+                <choose ParamRefId="%AID%_UP-%T%000012_R-%T%00001201">
+                  <when test="1">
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag synchronisieren" UIHint="Headline" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000046_R-%T%00004601" />
+
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Nach jedem Anlernvorgang wird der neue Tag automatisch synchronisiert. Zusätzlich kann hier die Synchronisation eines bestimmten Tags auch manuell angestoßen werden." UIHint="Information" />
+                    <ParameterRefRef RefId="%AID%_P-%T%000033_R-%T%00003301" IndentLevel="2" HelpContext="Empty" />
+                    <Button Id="%AID%_B-%T%930004" Text="Synchronisieren" Name="syncFinger" EventHandler="FIN_syncFinger" EventHandlerOnline="ConnectionOriented" />
+                  </when>
+                </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Personen und Nfc-Tag suche" UIHint="Headline" />
+
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Personen und NFC-Tag suchen" UIHint="Headline" />
                 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
                   <Rows>
                     <Row Id="%AID%_PB-nnn_R-1" />
@@ -96,12 +107,12 @@
                     <Column Id="%AID%_PB-nnn_C-2" Width="28%" />
                     <Column Id="%AID%_PB-nnn_C-3" Width="30%" />
                   </Columns>
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="  Person" Cell="1,1" />
+                  <ParameterSeparator Id="%AID%_PS-nnn" Text="  Tag Name" Cell="1,1" />
                   <ParameterRefRef RefId="%AID%_P-%T%920003_R-%T%92000301" Cell="1,2" />
-                  <Button Id="%AID%_B-%T%930001" Text="Nfc-ID suchen" EventHandler="FIN_searchFingerId" EventHandlerOnline="ConnectionOriented" Cell="1,3" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="  Nfc-ID" Cell="2,1" />
+                  <Button Id="%AID%_B-%T%930001" Text="ID suchen" EventHandler="FIN_searchFingerId" EventHandlerOnline="ConnectionOriented" Cell="1,3" />
+                  <ParameterSeparator Id="%AID%_PS-nnn" Text="  Tag ID" Cell="2,1" />
                   <ParameterRefRef RefId="%AID%_P-%T%920005_R-%T%92000501" Cell="2,2" />
-                  <Button Id="%AID%_B-%T%930002" Text="Person suchen" EventHandler="FIN_searchUser" EventHandlerOnline="ConnectionOriented" Cell="2,3" />
+                  <Button Id="%AID%_B-%T%930002" Text="Tag suchen" EventHandler="FIN_searchUser" EventHandlerOnline="ConnectionOriented" Cell="2,3" />
 
                   <!-- <Button Id="%AID%_B-%T%920003" Text="zuweisen" Cell="1,5" EventHandler="FIN_assignFingerId" /> -->
                 </ParameterBlock>
@@ -118,7 +129,7 @@
                     <Column Id="%AID%_PB-nnn_C-3" Width="45%" />
                   </Columns>
                   <ParameterSeparator Id="%AID%_PS-nnn" Text="Suchergebnis" UIHint="Headline" Cell="1,1" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Nfc-Tag" UIHint="Headline" Cell="1,2" />
+                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Tag" UIHint="Headline" Cell="1,2" />
                   <ParameterSeparator Id="%AID%_PS-nnn" Text="Name" UIHint="Headline" Cell="1,3" />
                   <choose ParamRefId="%AID%_P-%T%920009_R-%T%92000901">
                     <when test="0">
@@ -144,7 +155,7 @@
                 </ParameterBlock>
 
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Zuweisung von Nfc-Tags zu Aktionen" UIHint="Headline" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Zuweisung von NFC-Tags zu Aktionen" UIHint="Headline" />
                 <ParameterRefRef RefId="%AID%_UP-%T%920001_R-%T%92000101" />
                 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
                   <Rows>
@@ -159,7 +170,7 @@
                   </Columns>
                   <ParameterSeparator Id="%AID%_PS-nnn" Text="Nr." UIHint="Headline" Cell="1,1" />
                   <ParameterSeparator Id="%AID%_PS-nnn" Text="Aktion" UIHint="Headline" Cell="1,2" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Nfc-Tag" UIHint="Headline" Cell="1,3" />
+                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Tag" UIHint="Headline" Cell="1,3" />
                   <Button Id="%AID%_B-%T%920004" Text="Sortieren" Cell="1,4" EventHandler="FIN_sort" />
                   <ParameterSeparator Id="%AID%_PS-nnn" Text="Information" UIHint="Headline" Cell="1,5" />
                 </ParameterBlock>

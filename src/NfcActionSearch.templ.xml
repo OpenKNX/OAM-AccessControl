@@ -7,8 +7,8 @@
         <ApplicationProgram Id="%AID%" ApplicationNumber="200" ApplicationVersion="1" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" Name="FIN" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="de" DynamicTableManagement="false" Linkable="false" MinEtsVersion="4.0">
           <Static>
             <Parameters>
-              <Parameter Id="%AID%_P-%T%93%CC%00" Name="Person%C%Name" ParameterType="%AID%_PT-Text28Byte" Text="Name der Person %C%" Value="" Access="Read" />
-              <Parameter Id="%AID%_P-%T%93%CC%02" Name="Nfc%C%Id" ParameterType="%AID%_PT-NfcId" Text="Nfc-Tag ID %C%" Value="0" Access="Read" />
+              <Parameter Id="%AID%_P-%T%93%CC%00" Name="Nfc%C%Name" ParameterType="%AID%_PT-Text28Byte" Text="NFC Name %C%" Value="" Access="Read" />
+              <Parameter Id="%AID%_P-%T%93%CC%02" Name="Nfc%C%Id" ParameterType="%AID%_PT-NfcId" Text="NFC Tag ID %C%" Value="0" Access="Read" />
               <Parameter Id="%AID%_P-%T%93%CC%03" Name="Nfc%C%ActionLine" ParameterType="%AID%_PT-NFCACTNumChannels" Text="Zeile %C% für Zuweisung" Value="1" />
             </Parameters>
             <ParameterRefs>

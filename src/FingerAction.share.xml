@@ -116,9 +116,31 @@
                   </Columns>
                   <Button Id="%AID%_B-%T%900003" Text="Löschen" Name="deleteFinger" Cell="1,2" EventHandler="FIN_deleteFinger" EventHandlerOnline="ConnectionOriented" />
                 </ParameterBlock>
+                <choose ParamRefId="%AID%_UP-%T%000012_R-%T%00001201">
+                  <when test="1">
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Finger synchronisieren" UIHint="Headline" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000046_R-%T%00004601" />
+
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Nach jedem Anlernvorgang wird der neue Finger automatisch synchronisiert. Zusätzlich kann hier die Synchronisation eines bestimmten Fingers auch manuell angestoßen werden." UIHint="Information" />
+                    <choose ParamRefId="%AID%_UP-%T%000002_R-%T%00000201">
+                      <when test="0">
+                        <ParameterRefRef RefId="%AID%_P-%T%000024_R-%T%00002401" IndentLevel="2" HelpContext="%DOC%" />
+                        <Assign SourceParamRefRef="%AID%_P-%T%000024_R-%T%00002401" TargetParamRefRef="%AID%_P-%T%000026_R-%T%00002601" />
+                      </when>
+                      <when test="1">
+                        <ParameterRefRef RefId="%AID%_P-%T%000025_R-%T%00002501" IndentLevel="2" HelpContext="%DOC%" />
+                        <Assign SourceParamRefRef="%AID%_P-%T%000025_R-%T%00002501" TargetParamRefRef="%AID%_P-%T%000026_R-%T%00002601" />
+                      </when>
+                      <when test="2">
+                        <ParameterRefRef RefId="%AID%_P-%T%000026_R-%T%00002601" IndentLevel="2" HelpContext="%DOC%" />
+                      </when>
+                    </choose>
+                    <Button Id="%AID%_B-%T%000004" Text="Synchronisieren" Name="syncFinger" EventHandler="FIN_syncFinger" EventHandlerOnline="ConnectionOriented" />
+                  </when>
+                </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Personen und Finger suche" UIHint="Headline" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Personen und Finger suchen" UIHint="Headline" />
                 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
                   <Rows>
                     <Row Id="%AID%_PB-nnn_R-1" />
