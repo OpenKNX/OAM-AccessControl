@@ -98,6 +98,12 @@
               <ParameterType Id="%AID%_PT-FingerId" Name="FingerId">
                 <TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="0" maxInclusive="1499" />
               </ParameterType>
+              <ParameterType Id="%AID%_PT-NfcId" Name="NfcId">
+                <TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="0" maxInclusive="1499" />
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-NfcKey" Name="NfcKey">
+                <TypeText SizeInBit="64" />
+              </ParameterType>
               <ParameterType Id="%AID%_PT-Action" Name="Action">
                 <TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="0" maxInclusive="%N%" />
               </ParameterType>
@@ -125,9 +131,12 @@
               <Parameter Id="%AID%_P-%T%000005" Name="EnrollFingerIdR503" ParameterType="%AID%_PT-FingerIdR503" Text="Scanner Finger ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000006" Name="EnrollFingerIdR503S" ParameterType="%AID%_PT-FingerIdR503S" Text="Scanner Finger ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000007" Name="EnrollFingerId" ParameterType="%AID%_PT-FingerId" Text="Scanner Finger ID" Value="0" />
+              <Parameter Id="%AID%_P-%T%000030" Name="EnrollNfcId" ParameterType="%AID%_PT-NfcId" Text="Nfc-Tag ID" Value="0" />
+              <Parameter Id="%AID%_P-%T%000031" Name="EnrollNfcKey" ParameterType="%AID%_PT-NfcKey" Text="Nfc-Tag Schlüssel" Value="- neu -" />
               <Parameter Id="%AID%_P-%T%000016" Name="DeleteFingerIdR503" ParameterType="%AID%_PT-FingerIdR503" Text="Scanner Finger ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000017" Name="DeleteFingerIdR503S" ParameterType="%AID%_PT-FingerIdR503S" Text="Scanner Finger ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000018" Name="DeleteFingerId" ParameterType="%AID%_PT-FingerId" Text="Scanner Finger ID" Value="0" />
+              <Parameter Id="%AID%_P-%T%000029" Name="DeleteNfcId" ParameterType="%AID%_PT-NfcId" Text="Nfc-Tag ID" Value="0" />
               <Parameter Id="%AID%_P-%T%000015" Name="ResetScanner" ParameterType="%AID%_PT-OnOffYesNo" Text="Alle Finger löschen?" Value="0" />
               <Parameter Id="%AID%_P-%T%000020" Name="PasswordOption" ParameterType="%AID%_PT-PasswordOption" Text="Passwort" Value="0" />
               <Parameter Id="%AID%_P-%T%000021" Name="PasswordNew" ParameterType="%AID%_PT-Text16Byte" Text="Neues Passwort" Value="" />
@@ -183,6 +192,9 @@
               <ParameterRef Id="%AID%_P-%T%000026_R-%T%00002601" RefId="%AID%_P-%T%000026" />
               <ParameterRef Id="%AID%_UP-%T%000027_R-%T%00002701" RefId="%AID%_UP-%T%000027" SuffixText="ms" />
               <ParameterRef Id="%AID%_UP-%T%000028_R-%T%00002801" RefId="%AID%_UP-%T%000028" />
+              <ParameterRef Id="%AID%_P-%T%000029_R-%T%00002901" RefId="%AID%_P-%T%000029" />
+              <ParameterRef Id="%AID%_P-%T%000030_R-%T%00003001" RefId="%AID%_P-%T%000030" />
+              <ParameterRef Id="%AID%_P-%T%000031_R-%T%00003101" RefId="%AID%_P-%T%000031" />
             </ParameterRefs>
             <ComObjectTable>
               <ComObject Id="%AID%_O-%T%000001" Name="Touched" Number="1" ObjectSize="1 Bit" Text="Berührung (sofort, immer)" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
@@ -286,60 +298,6 @@
                   <ParameterRefRef RefId="%AID%_UP-%T%000008_R-%T%00000801" Cell="1,4" HelpContext="Empty" />
                 </ParameterBlock>
                 <ParameterRefRef RefId="%AID%_UP-%T%000010_R-%T%00001001" IndentLevel="1" />
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Finger anlernen/ändern" UIHint="Headline" />
-                <ParameterRefRef RefId="%AID%_P-%T%000003_R-%T%00000301" IndentLevel="1" HelpContext="%DOC%" />
-                <ParameterRefRef RefId="%AID%_P-%T%000004_R-%T%00000401" IndentLevel="1" HelpContext="%DOC%" />
-                <choose ParamRefId="%AID%_UP-%T%000002_R-%T%00000201">
-                  <when test="0">
-                    <ParameterRefRef RefId="%AID%_P-%T%000005_R-%T%00000501" IndentLevel="1" HelpContext="%DOC%" />
-                    <Assign SourceParamRefRef="%AID%_P-%T%000005_R-%T%00000501" TargetParamRefRef="%AID%_P-%T%000007_R-%T%00000701" />
-                  </when>
-                  <when test="1">
-                    <ParameterRefRef RefId="%AID%_P-%T%000006_R-%T%00000601" IndentLevel="1" HelpContext="%DOC%" />
-                    <Assign SourceParamRefRef="%AID%_P-%T%000006_R-%T%00000601" TargetParamRefRef="%AID%_P-%T%000007_R-%T%00000701" />
-                  </when>
-                  <when test="2">
-                    <ParameterRefRef RefId="%AID%_P-%T%000007_R-%T%00000701" IndentLevel="1" HelpContext="%DOC%" />
-                  </when>
-                </choose>
-                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
-                  <Rows>
-                    <Row Id="%AID%_PB-nnn_R-1" />
-                  </Rows>
-                  <Columns>
-                    <Column Id="%AID%_PB-nnn_C-1" Width="45%" />
-                    <Column Id="%AID%_PB-nnn_C-2" Width="27%" />
-                    <Column Id="%AID%_PB-nnn_C-3" Width="27%" />
-                  </Columns>
-                  <Button Id="%AID%_B-%T%000001" Text="Anlernen" Cell="1,2" Name="enrollFinger" EventHandler="FIN_enrollFinger" EventHandlerOnline="ConnectionOriented" />
-                  <Button Id="%AID%_B-%T%000002" Text="Ändern" Cell="1,3" Name="changeFinger" EventHandler="FIN_changeFinger" EventHandlerOnline="ConnectionOriented" />
-                </ParameterBlock>
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Finger löschen" UIHint="Headline" />
-                <choose ParamRefId="%AID%_UP-%T%000002_R-%T%00000201">
-                  <when test="0">
-                    <ParameterRefRef RefId="%AID%_P-%T%000016_R-%T%00001601" IndentLevel="1" HelpContext="%DOC%" />
-                    <Assign SourceParamRefRef="%AID%_P-%T%000016_R-%T%00001601" TargetParamRefRef="%AID%_P-%T%000018_R-%T%00001801" />
-                  </when>
-                  <when test="1">
-                    <ParameterRefRef RefId="%AID%_P-%T%000017_R-%T%00001701" IndentLevel="1" HelpContext="%DOC%" />
-                    <Assign SourceParamRefRef="%AID%_P-%T%000017_R-%T%00001701" TargetParamRefRef="%AID%_P-%T%000018_R-%T%00001801" />
-                  </when>
-                  <when test="2">
-                    <ParameterRefRef RefId="%AID%_P-%T%000018_R-%T%00001801" IndentLevel="1" HelpContext="%DOC%" />
-                  </when>
-                </choose>
-                  <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
-                  <Rows>
-                    <Row Id="%AID%_PB-nnn_R-1" />
-                  </Rows>
-                  <Columns>
-                    <Column Id="%AID%_PB-nnn_C-1" Width="45%" />
-                    <Column Id="%AID%_PB-nnn_C-2" Width="27%" />
-                  </Columns>
-                  <Button Id="%AID%_B-%T%000003" Text="Löschen" Name="deleteFinger" Cell="1,2" EventHandler="FIN_deleteFinger" EventHandlerOnline="ConnectionOriented" />
-                </ParameterBlock>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Zusatzfunktionen" UIHint="Headline" />
@@ -504,6 +462,7 @@
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="A**) Autorisierungsaktion, wird durch einen entsprechenden Finger freigeschaltet" />
               </ParameterBlock>
               <op:include href="FingerAction.share.xml" xpath="//Dynamic/ChannelIndependentBlock/*" prefix="FINACT" />
+              <op:include href="NfcAction.share.xml" xpath="//Dynamic/ChannelIndependentBlock/*" prefix="NFCACT" />
             </Channel>
           </Dynamic>
         </ApplicationProgram>

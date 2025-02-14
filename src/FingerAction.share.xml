@@ -64,6 +64,60 @@
                 <ParameterRefRef RefId="%AID%_P-%T%900007_R-%T%90000701" />
                 <ParameterRefRef RefId="%AID%_P-%T%900008_R-%T%90000801" />
                 <ParameterRefRef RefId="%AID%_P-%T%900009_R-%T%90000901" />
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Finger anlernen/ändern" UIHint="Headline" />
+                <ParameterRefRef RefId="%AID%_P-%T%000003_R-%T%00000301" IndentLevel="1" HelpContext="%DOC%" />
+                <ParameterRefRef RefId="%AID%_P-%T%000004_R-%T%00000401" IndentLevel="1" HelpContext="%DOC%" />
+                <choose ParamRefId="%AID%_UP-%T%000002_R-%T%00000201">
+                  <when test="0">
+                    <ParameterRefRef RefId="%AID%_P-%T%000005_R-%T%00000501" IndentLevel="1" HelpContext="%DOC%" />
+                    <Assign SourceParamRefRef="%AID%_P-%T%000005_R-%T%00000501" TargetParamRefRef="%AID%_P-%T%000007_R-%T%00000701" />
+                  </when>
+                  <when test="1">
+                    <ParameterRefRef RefId="%AID%_P-%T%000006_R-%T%00000601" IndentLevel="1" HelpContext="%DOC%" />
+                    <Assign SourceParamRefRef="%AID%_P-%T%000006_R-%T%00000601" TargetParamRefRef="%AID%_P-%T%000007_R-%T%00000701" />
+                  </when>
+                  <when test="2">
+                    <ParameterRefRef RefId="%AID%_P-%T%000007_R-%T%00000701" IndentLevel="1" HelpContext="%DOC%" />
+                  </when>
+                </choose>
+                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                  <Rows>
+                    <Row Id="%AID%_PB-nnn_R-1" />
+                  </Rows>
+                  <Columns>
+                    <Column Id="%AID%_PB-nnn_C-1" Width="45%" />
+                    <Column Id="%AID%_PB-nnn_C-2" Width="27%" />
+                    <Column Id="%AID%_PB-nnn_C-3" Width="27%" />
+                  </Columns>
+                  <Button Id="%AID%_B-%T%900001" Text="Anlernen" Cell="1,2" Name="enrollFinger" EventHandler="FIN_enrollFinger" EventHandlerOnline="ConnectionOriented" />
+                  <Button Id="%AID%_B-%T%900002" Text="Ändern" Cell="1,3" Name="changeFinger" EventHandler="FIN_changeFinger" EventHandlerOnline="ConnectionOriented" />
+                </ParameterBlock>
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Finger löschen" UIHint="Headline" />
+                <choose ParamRefId="%AID%_UP-%T%000002_R-%T%00000201">
+                  <when test="0">
+                    <ParameterRefRef RefId="%AID%_P-%T%000016_R-%T%00001601" IndentLevel="1" HelpContext="%DOC%" />
+                    <Assign SourceParamRefRef="%AID%_P-%T%000016_R-%T%00001601" TargetParamRefRef="%AID%_P-%T%000018_R-%T%00001801" />
+                  </when>
+                  <when test="1">
+                    <ParameterRefRef RefId="%AID%_P-%T%000017_R-%T%00001701" IndentLevel="1" HelpContext="%DOC%" />
+                    <Assign SourceParamRefRef="%AID%_P-%T%000017_R-%T%00001701" TargetParamRefRef="%AID%_P-%T%000018_R-%T%00001801" />
+                  </when>
+                  <when test="2">
+                    <ParameterRefRef RefId="%AID%_P-%T%000018_R-%T%00001801" IndentLevel="1" HelpContext="%DOC%" />
+                  </when>
+                </choose>
+                  <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                  <Rows>
+                    <Row Id="%AID%_PB-nnn_R-1" />
+                  </Rows>
+                  <Columns>
+                    <Column Id="%AID%_PB-nnn_C-1" Width="45%" />
+                    <Column Id="%AID%_PB-nnn_C-2" Width="27%" />
+                  </Columns>
+                  <Button Id="%AID%_B-%T%900003" Text="Löschen" Name="deleteFinger" Cell="1,2" EventHandler="FIN_deleteFinger" EventHandlerOnline="ConnectionOriented" />
+                </ParameterBlock>
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
+
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Personen und Finger suche" UIHint="Headline" />
                 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
                   <Rows>
@@ -79,10 +133,10 @@
                   <ParameterSeparator Id="%AID%_PS-nnn" Text="  Finger/Suchwort" Cell="1,1" />
                   <ParameterRefRef RefId="%AID%_P-%T%900004_R-%T%90000401" Cell="1,2" />
                   <ParameterRefRef RefId="%AID%_P-%T%900003_R-%T%90000301" Cell="1,3" />
-                  <Button Id="%AID%_B-%T%900001" Text="Finger-ID suchen" EventHandler="FIN_searchFingerId" EventHandlerOnline="ConnectionOriented" Cell="1,4" />
+                  <Button Id="%AID%_B-%T%910001" Text="Finger-ID suchen" EventHandler="FIN_searchFingerId" EventHandlerOnline="ConnectionOriented" Cell="1,4" />
                   <ParameterSeparator Id="%AID%_PS-nnn" Text="  Finger-ID" Cell="2,1" />
                   <ParameterRefRef RefId="%AID%_P-%T%900005_R-%T%90000501" Cell="2,2" />
-                  <Button Id="%AID%_B-%T%900002" Text="Person suchen" EventHandler="FIN_searchUser" EventHandlerOnline="ConnectionOriented" Cell="2,4" />
+                  <Button Id="%AID%_B-%T%910002" Text="Person suchen" EventHandler="FIN_searchUser" EventHandlerOnline="ConnectionOriented" Cell="2,4" />
 
                   <!-- <Button Id="%AID%_B-%T%900003" Text="zuweisen" Cell="1,5" EventHandler="FIN_assignFingerId" /> -->
                 </ParameterBlock>

@@ -9,7 +9,7 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="6.1"
+    ApplicationVersion="6.5"
     ReplacesVersions="6.0 5.2 5.1 5.0 4.15 4.14 4.13 4.12 4.11 4.10 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
     ApplicationRevision="0"
     ProductName="Fingerabdruckleser"
@@ -57,6 +57,21 @@
     noConfigTransfer="true"
     prefixDoc="FIN"
     template="FingerActionSearch.templ.xml"
+    ModuleType="2"
+    NumChannels="7" />
+
+    <op:define prefix="NFCACT"
+    prefixDoc="FIN"
+    configTransferName="Fingerprint (NFC)"
+    share="NfcAction.share.xml"
+    template="NfcAction.templ.xml"
+    ModuleType="2"
+    NumChannels="99" />
+
+    <op:define prefix="NFCACTSER"
+    noConfigTransfer="true"
+    prefixDoc="FIN"
+    template="NfcActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />
 
