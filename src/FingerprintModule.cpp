@@ -704,7 +704,7 @@ bool FingerprintModule::deleteFinger(uint16_t location, bool sync)
     else
     {
         logInfoP("Deleting template failed.");
-        KoFIN_DeleteSuccess.value(true, DPT_Switch);
+        KoFIN_DeleteSuccess.value(false, DPT_Switch);
         KoFIN_DeleteFailedId.value(location, Dpt(7, 1));
 
         KoFIN_DeleteSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
