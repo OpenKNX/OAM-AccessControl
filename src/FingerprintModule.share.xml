@@ -406,19 +406,19 @@
                   </when>
                   <when test="1">
                     <ParameterRefRef RefId="%AID%_P-%T%000021_R-%T%00002101" IndentLevel="1" HelpContext="%DOC%" />
-                    <Button Id="%AID%_B-%T%00005" Text="Jetzt Passwort festsetzen" Name="setPassword" EventHandler="FIN_setPassword" EventHandlerOnline="ConnectionOriented" />
+                    <Button Id="%AID%_B-%T%00005" Text="Jetzt Passwort festsetzen" Name="setPassword" EventHandler="FIN_setFingerPassword" EventHandlerOnline="ConnectionOriented" />
                   </when>
                   <when test="2">
                     <ParameterRefRef RefId="%AID%_P-%T%000022_R-%T%00002201" IndentLevel="1" HelpContext="%DOC%" />
                     <ParameterRefRef RefId="%AID%_P-%T%000021_R-%T%00002101" IndentLevel="1" HelpContext="%DOC%" />
-                    <Button Id="%AID%_B-%T%00006" Text="Jetzt Passwort ändern" Name="setPassword" EventHandler="FIN_setPassword" EventHandlerOnline="ConnectionOriented" />
+                    <Button Id="%AID%_B-%T%00006" Text="Jetzt Passwort ändern" Name="setPassword" EventHandler="FIN_setFingerPassword" EventHandlerOnline="ConnectionOriented" />
                   </when>
                 </choose>
                 <ParameterRefRef RefId="%AID%_P-%T%000015_R-%T%00001501" IndentLevel="1" HelpContext="%DOC%" />
                 <choose ParamRefId="%AID%_P-%T%000015_R-%T%00001501">
                   <when test="1">
                     <ParameterSeparator Id="%AID%_PS-nnn" Text="Wenn Sie diese Funktion ausführen, werden alle gespeicherten Finger gelöscht und müssen neu angelernt werden." UIHint="Error" />
-                    <Button Id="%AID%_B-%T%00007" Text="Jetzt löschen" Name="resetScanner" EventHandler="FIN_resetScanner" EventHandlerOnline="ConnectionOriented" />
+                    <Button Id="%AID%_B-%T%00007" Text="Jetzt löschen" Name="resetScanner" EventHandler="FIN_resetFingerScanner" EventHandlerOnline="ConnectionOriented" />
                   </when>
                 </choose>
               </ParameterBlock>

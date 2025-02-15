@@ -261,7 +261,7 @@ function FIN_searchFingerId(device, online, progress, context) {
     }
 }    
 
-function FIN_searchUser(device, online, progress, context) {
+function FIN_searchFingerName(device, online, progress, context) {
     var parPersonName = device.getParameterByName("FINACT_PersonName");
     var parPersonFinger = device.getParameterByName("FINACT_PersonFinger");
     var parFingerId = device.getParameterByName("FINACT_FingerId");
@@ -421,7 +421,7 @@ function FIN_deleteFinger(device, online, progress, context) {
     progress.setText("Fingerprint: Finger ID " + parFingerId.value + " gelöscht.");
 }
 
-function FIN_resetScanner(device, online, progress, context) {
+function FIN_resetFingerScanner(device, online, progress, context) {
     progress.setText("Fingerprint: Alle Finger löschen...");
     online.connect();
 
@@ -433,10 +433,10 @@ function FIN_resetScanner(device, online, progress, context) {
     }
 
     online.disconnect();
-    progress.setText("Fingerprint: Alle finger gelöscht.");
+    progress.setText("Fingerprint: Alle Finger gelöscht.");
 }
 
-function FIN_setPassword(device, online, progress, context) {
+function FIN_setFingerPassword(device, online, progress, context) {
     var parPasswordOption = device.getParameterByName("FIN_PasswordOption");
     var parPasswordNew = device.getParameterByName("FIN_PasswordNew");
     var parPasswordOld = device.getParameterByName("FIN_PasswordOld");
@@ -480,4 +480,263 @@ function FIN_setPassword(device, online, progress, context) {
 
     online.disconnect();
     progress.setText("Fingerprint: " + parPasswordOption.value == 1 ? "Passwort festgesetzt." : "Passwort geändert.");
+}
+
+function FIN_searchNfcId(device, online, progress, context) {
+    var parNfcName = device.getParameterByName("NFCACT_NfcName");
+    //var parNfcTagUid = device.getParameterByName("NFCACT_NfcTagUid");
+    var parNfcId = device.getParameterByName("NFCACT_NfcId");
+    var parNumberSearchResults = device.getParameterByName("NFCACT_NumberSearchResults");
+    var parNumberSearchResultsText = device.getParameterByName("NFCACT_NumberSearchResultsText");
+    var parNumberSearchResultsToDisplay = device.getParameterByName("NFCACT_NumberSearchResultsToDisplay");
+
+    parNumberSearchResults.value = 0;
+    parNumberSearchResultsToDisplay.value = 0;
+
+    progress.setText("Fingerprint: NFC ID zu Person " + parNfcName.value + " suchen...");
+    online.connect();
+
+    var data = [112]; // internal function ID
+
+    // NFC tag UID (10 bytes, currently always empty)
+    for (var i = 0; i < 10; ++i) {
+        data = data.concat(0);
+    }
+
+    // NFC name
+    for (var i = 0; i < parNfcName.value.length; ++i) {
+        var code = parNfcName.value.charCodeAt(i);
+        data = data.concat([code]);
+    }
+    data = data.concat(0); // null-terminated string
+
+    var resp = online.invokeFunctionProperty(160, 3, data);
+    if (resp[0] != 0) {
+        if (resp[0] == 1) {
+            progress.setText("Fingerprint: NFC ID zu Person " + parNfcName.value + " nicht gefunden.");
+            online.disconnect();
+            return;
+        } else {
+            throw new Error("Fingerprint: Es ist ein unbekannter Fehler aufgetreten!");
+        }
+    }
+
+    online.disconnect();
+
+    var numRes = (resp.length - 3) / 40;
+    var totalMatches = resp[1] << 8 | resp[2];
+    // info("totalMatches " + totalMatches);
+    progress.setText("Fingerprint: " + totalMatches + " NFC ID(s) zu Person " + parNfcName.value + " gefunden.");
+
+    // following up to 10 results in total
+    // always 2 bytes fingerId, 1 byte personFinger and 28 bytes nfcName
+    // info("Bevor: " + parNumberSearchResults.value);
+    parNumberSearchResultsText.value = totalMatches;
+    parNumberSearchResultsToDisplay.value = numRes;
+    if (totalMatches > numRes) {
+        parNumberSearchResults.value = 1;
+    }
+
+    // info("Danach: " + parNumberSearchResults.value);
+    for (var row = 1; row <= numRes; row++) {
+        // info("NFCACT_Person" + row + "Name");
+        parNfcName = device.getParameterByName("NFCACTSER_Nfc" + row + "Name");
+        parNfcId = device.getParameterByName("NFCACTSER_Nfc" + row + "Id");
+
+        var res = (row - 1) * 31 + 3;
+        // info("res " + row + ": " + res);
+        var fingerId = resp[res + 0] << 8 | resp[res + 1];
+        // info("fingerid: " + fingerId);
+        
+        // NFC tag UID, 10 bytes, currently ignored
+
+        var nfcName = "";
+        for (var i = res + 12; i < res + 40; ++i) {
+            if (resp[i] == 0)
+                break; // null-termination
+
+            nfcName += String.fromCharCode(resp[i]);
+        }
+        // info("nfcName: " + nfcName);
+
+        parNfcName.value = nfcName;
+        parNfcId.value = fingerId;
+    }
+}
+
+function FIN_searchNfcName(device, online, progress, context) {
+    var parNfcName = device.getParameterByName("NFCACT_NfcName");
+    //var parNfcTagUid = device.getParameterByName("NFCACT_NfcTagUid");
+    var parNfcId = device.getParameterByName("NFCACT_NfcId");
+    var parNumberSearchResults = device.getParameterByName("NFCACT_NumberSearchResults");
+
+    parNumberSearchResults.value = 0;
+    var fingerId = parNfcId.value;
+
+    progress.setText("Fingerprint: NFC-Tag zu Finger ID " + fingerId + " suchen...");
+    online.connect();
+
+    var data = [111]; // internal function ID
+    data = data.concat((fingerId & 0x0000ff00) >> 8, (fingerId & 0x000000ff));
+
+    var resp = online.invokeFunctionProperty(160, 3, data);
+    if (resp[0] != 0) {
+        if (resp[0] == 1) {
+            progress.setText("Fingerprint: NFC-Tag zu Finger ID " + fingerId + " nicht gefunden.");
+            online.disconnect();
+            return;
+        } else {
+            throw new Error("Fingerprint: Es ist ein unbekannter Fehler aufgetreten!");
+        }
+    }
+
+    online.disconnect();
+    progress.setText("Fingerprint: NFC-Tag zu Finger ID " + fingerId + " gefunden.");
+
+    // NFC tag UID, 10 bytes, currently ignored
+
+    var nfcName = "";
+    for (var i = 11; i < resp.length; ++i) {
+        if (resp[i] == 0)
+            break; // null-termination
+      
+        nfcName += String.fromCharCode(resp[i]);
+    }
+
+    parNumberSearchResults.value = 1;
+
+    parNfcName = device.getParameterByName("NFCACTSER_Nfc1Name");
+    parNfcId = device.getParameterByName("NFCACTSER_Nfc1Id");
+    parNfcName.value = nfcName;
+    parPersonFinger.value = personFinger;
+    parNfcId.value = fingerId;
+}
+
+function FIN_enrollNfc(device, online, progress, context) {
+    var parNfcId = device.getParameterByName("FIN_EnrollNfcId");
+    var parTagName = device.getParameterByName("FIN_EnrollTagName");
+
+    progress.setText("Fingerprint: NFC ID " + parNfcId.value + " anlernen...");
+    online.connect();
+
+    var data = [101]; // internal function ID
+
+    // NFC ID
+    data = data.concat((parNfcId.value & 0x0000ff00) >> 8, (parNfcId.value & 0x000000ff));
+
+    // tag name
+    for (var i = 0; i < parTagName.value.length; ++i) {
+        var code = parTagName.value.charCodeAt(i);
+        data = data.concat([code]);
+    }
+    data = data.concat(0); // null-terminated string
+
+    var resp = online.invokeFunctionProperty(160, 3, data);
+    if (resp[0] != 0) {
+        throw new Error("Fingerprint: Es ist ein unbekannter Fehler aufgetreten!");
+    }
+
+    online.disconnect();
+    progress.setText("Fingerprint: NFC ID " + parNfcId.value + " anlernen gestartet.");
+}
+
+function FIN_changeNfc(device, online, progress, context) {
+    var parNfcId = device.getParameterByName("FIN_EnrollNfcId");
+    var parTagUid = device.getParameterByName("FIN_EnrollNfcKey");
+    var parTagName = device.getParameterByName("FIN_EnrollTagName");
+
+    progress.setText("Fingerprint: NFC ID " + parNfcId.value + " ändern...");
+    online.connect();
+
+    var data = [104]; // internal function ID
+
+    // finger ID
+    data = data.concat((parNfcId.value & 0x0000ff00) >> 8, (parNfcId.value & 0x000000ff));
+
+    // tag UID
+    var tarUidByteCount = parTagUid.value.length / 2;
+    for (var i = 0; i < tarUidByteCount; ++i) {
+        data = data.concat(parseInt(parTagUid.value.substr(i * 2, 2), 16));
+    }
+    for (var i = tarUidByteCount; i < 10; ++i) {
+        data = data.concat(0); // fill up with zeros if < 10 bytes
+    }
+
+    // person name
+    for (var i = 0; i < parTagName.value.length; ++i) {
+        var code = parTagName.value.charCodeAt(i);
+        data = data.concat([code]);
+    }
+    data = data.concat(0); // null-terminated string
+
+    var resp = online.invokeFunctionProperty(160, 3, data);
+    if (resp[0] != 0) {
+        if (resp[0] == 1) {
+            throw new Error("Fingerprint: NFC ID " + parNfcId.value + " nicht gefunden!");
+        } else {
+            throw new Error("Fingerprint: Es ist ein unbekannter Fehler aufgetreten!");
+        }
+    }
+
+    online.disconnect();
+    progress.setText("Fingerprint: NFC ID " + parNfcId.value + " geändert.");
+}
+
+function FIN_syncNfc(device, online, progress, context) {
+    var parNfcId = device.getParameterByName("FIN_SyncNfcId");
+
+    progress.setText("Fingerprint: NFC ID " + parNfcId.value + " synchronisieren...");
+    online.connect();
+
+    var data = [102]; // internal function ID
+    data = data.concat((parNfcId.value & 0x0000ff00) >> 8, (parNfcId.value & 0x000000ff));
+
+    var resp = online.invokeFunctionProperty(160, 3, data);
+    if (resp[0] != 0) {
+        if (resp[0] == 1) {
+            throw new Error("Fingerprint: NFC ID " + parNfcId.value + " nicht gefunden!");
+        } else {
+            throw new Error("Fingerprint: Es ist ein unbekannter Fehler aufgetreten!");
+        }
+    }
+
+    online.disconnect();
+    progress.setText("Fingerprint: NFC ID " + parNfcId.value + " Synchronisierung gestartet.");
+}
+
+function FIN_deleteNfc(device, online, progress, context) {
+    var parNfcId = device.getParameterByName("FIN_DeleteNfcId");
+
+    progress.setText("Fingerprint: NFC ID " + parNfcId.value + " löschen...");
+    online.connect();
+
+    var data = [103]; // internal function ID
+    data = data.concat((parNfcId.value & 0x0000ff00) >> 8, (parNfcId.value & 0x000000ff));
+
+    var resp = online.invokeFunctionProperty(160, 3, data);
+    if (resp[0] != 0) {
+        if (resp[0] == 1) {
+            throw new Error("Fingerprint: NFC ID " + parNfcId.value + " nicht gefunden!");
+        } else {
+            throw new Error("Fingerprint: Es ist ein unbekannter Fehler aufgetreten!");
+        }
+    }
+
+    online.disconnect();
+    progress.setText("Fingerprint: NFC ID " + parNfcId.value + " gelöscht.");
+}
+
+function FIN_resetNfcScanner(device, online, progress, context) {
+    progress.setText("Fingerprint: Alle NFC-Tags löschen...");
+    online.connect();
+
+    var data = [106]; // internal function ID
+
+    var resp = online.invokeFunctionProperty(160, 3, data);
+    if (resp[0] != 0) {
+        throw new Error("Fingerprint: Es ist ein unbekannter Fehler aufgetreten!");
+    }
+
+    online.disconnect();
+    progress.setText("Fingerprint: Alle NFC-Tags gelöscht.");
 }

@@ -135,7 +135,7 @@ bool FingerprintModule::switchFingerprintPower(bool on, bool testMode)
 
 void FingerprintModule::initFingerprintScanner(bool testMode)
 {
-    uint32_t scannerPassword = testMode ? 0 : _fingerprintStorage.readInt(FLASH_SCANNER_PASSWORD_OFFSET);
+    uint32_t scannerPassword = testMode ? 0 : _fingerprintStorage.readInt(FLASH_FINGER_SCANNER_PASSWORD_OFFSET);
     logDebugP("Initialize scanner with password: %u", scannerPassword);
     finger = new Fingerprint(FingerprintModule::delayCallback, scannerPassword);
 }
@@ -144,7 +144,7 @@ void FingerprintModule::initFlash()
 {
     _fingerprintStorage.init("fingerprint", FINGERPRINT_FLASH_OFFSET, FINGERPRINT_FLASH_SIZE);
     uint32_t magicWord = _fingerprintStorage.readInt(0);
-    if (magicWord != FLASH_MAGIC_WORD)
+    if (magicWord != OPENKNX_FIN_FLASH_FINGER_MAGIC_WORD)
     {
         logInfoP("Flash contents invalid:");
         logDebugP("Indentification code read: %u", magicWord);
@@ -156,7 +156,7 @@ void FingerprintModule::initFlash()
         _fingerprintStorage.commit();
         logDebugP("Flash cleared.");
 
-        _fingerprintStorage.writeInt(0, FLASH_MAGIC_WORD);
+        _fingerprintStorage.writeInt(0, OPENKNX_FIN_FLASH_FINGER_MAGIC_WORD);
         _fingerprintStorage.commit();
         logDebugP("Indentification code written.");
 
@@ -229,7 +229,7 @@ void FingerprintModule::loop()
             if (success)
             {
                 syncRequestedFingerId = enrollRequestedLocation;
-                syncRequestedTimer = delayTimerInit();
+                syncRequestedFingerTimer = delayTimerInit();
             }
 
             enrollRequestedTimer = 0;
@@ -276,11 +276,11 @@ void FingerprintModule::loop()
             _channels[i]->loop();
     }
 
-    if (syncRequestedTimer > 0 && delayCheck(syncRequestedTimer, SYNC_AFTER_ENROLL_DELAY))
+    if (syncRequestedFingerTimer > 0 && delayCheck(syncRequestedFingerTimer, SYNC_AFTER_ENROLL_DELAY))
     {
         startSyncSend(syncRequestedFingerId);
 
-        syncRequestedTimer = 0;
+        syncRequestedFingerTimer = 0;
         syncRequestedFingerId = 0;
     }
 
@@ -717,7 +717,7 @@ void FingerprintModule::startSyncSend(uint16_t fingerId, bool loadModel)
 
     resetRingLed();
 
-    uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
+    uint32_t storageOffset = FIN_CalcFingerStorageOffset(fingerId);
     uint8_t personData[29] = {};
     _fingerprintStorage.read(storageOffset, personData, 29);
     memcpy(syncSendBufferTemp + TEMPLATE_SIZE, personData, 29);
@@ -922,7 +922,7 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
             return;
         }
 
-        uint32_t storageOffset = FIN_CaclStorageOffset(syncReceiveFingerId);
+        uint32_t storageOffset = FIN_CalcFingerStorageOffset(syncReceiveFingerId);
         _fingerprintStorage.write(storageOffset, syncSendBufferTemp + TEMPLATE_SIZE, 29);
         _fingerprintStorage.commit();
 
@@ -952,7 +952,7 @@ bool FingerprintModule::processFunctionProperty(uint8_t objectIndex, uint8_t pro
             handleFunctionPropertyChangeFinger(data, resultData, resultLength);
             return true;
         case 6:
-            handleFunctionPropertyResetScanner(data, resultData, resultLength);
+            handleFunctionPropertyResetFingerScanner(data, resultData, resultLength);
             return true;
         case 11:
             handleFunctionPropertySearchPersonByFingerId(data, resultData, resultLength);
@@ -961,7 +961,28 @@ bool FingerprintModule::processFunctionProperty(uint8_t objectIndex, uint8_t pro
             handleFunctionPropertySearchFingerIdByPerson(data, resultData, resultLength);
             return true;
         case 21:
-            handleFunctionPropertySetPassword(data, resultData, resultLength);
+            handleFunctionPropertySetFingerPassword(data, resultData, resultLength);
+            return true;
+        case 101:
+            handleFunctionPropertyEnrollNfc(data, resultData, resultLength);
+            return true;
+        case 102:
+            handleFunctionPropertySyncNfc(data, resultData, resultLength);
+            return true;
+        case 103:
+            handleFunctionPropertyDeleteNfc(data, resultData, resultLength);
+            return true;
+        case 104:
+            handleFunctionPropertyChangeNfc(data, resultData, resultLength);
+            return true;
+        case 106:
+            handleFunctionPropertyResetNfcScanner(data, resultData, resultLength);
+            return true;
+        case 111:
+            handleFunctionPropertySearchTagByNfcId(data, resultData, resultLength);
+            return true;
+        case 112:
+            handleFunctionPropertySearchNfcIdByTag(data, resultData, resultLength);
             return true;
     }
 
@@ -970,7 +991,7 @@ bool FingerprintModule::processFunctionProperty(uint8_t objectIndex, uint8_t pro
 
 void FingerprintModule::handleFunctionPropertyEnrollFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    logInfoP("Function property: Enroll request");
+    logInfoP("Function property finger: Enroll request");
     logIndentUp();
 
     uint16_t fingerId = (data[1] << 8) | data[2];
@@ -988,7 +1009,7 @@ void FingerprintModule::handleFunctionPropertyEnrollFinger(uint8_t *data, uint8_
     }
     logDebugP("personName: %s", personName);
 
-    uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
+    uint32_t storageOffset = FIN_CalcFingerStorageOffset(fingerId);
     logDebugP("storageOffset: %d", storageOffset);
     _fingerprintStorage.writeByte(storageOffset, personFinger); // only 4 bits used
     _fingerprintStorage.write(storageOffset + 1, personName, 28);
@@ -1002,58 +1023,9 @@ void FingerprintModule::handleFunctionPropertyEnrollFinger(uint8_t *data, uint8_
     logIndentDown();
 }
 
-void FingerprintModule::handleFunctionPropertySyncFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
-{
-    logInfoP("Function property: Sync request");
-    logIndentUp();
-
-    uint16_t fingerId = (data[1] << 8) | data[2];
-    logDebugP("fingerId: %d", fingerId);
-
-    if (switchFingerprintPower(true))
-    {
-        if (finger->hasLocation(fingerId))
-        {
-            syncRequestedFingerId = fingerId;
-            syncRequestedTimer = delayTimerInit();
-
-            resultData[0] = 0;
-        }
-        else
-            resultData[0] = 1;
-    }
-    else
-        resultData[0] = 1;
-
-    resultLength = 1;
-    logIndentDown();
-}
-
-void FingerprintModule::handleFunctionPropertyDeleteFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
-{
-    logInfoP("Function property: Delete request");
-    logIndentUp();
-
-    uint16_t fingerId = (data[1] << 8) | data[2];
-    logDebugP("fingerId: %d", fingerId);
-
-    char personName[28] = {}; // empty
-
-    uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
-    _fingerprintStorage.writeByte(storageOffset, 0); // "0" for not set
-    _fingerprintStorage.write(storageOffset + 1, *personName, 28);
-    _fingerprintStorage.commit();
-
-    bool success = deleteFinger(fingerId);
-    
-    resultData[0] = success ? 0 : 1;
-    resultLength = 1;
-    logIndentDown();
-}
-
 void FingerprintModule::handleFunctionPropertyChangeFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    logInfoP("Function property: Change request");
+    logInfoP("Function property finger: Change request");
     logIndentUp();
 
     uint16_t fingerId = (data[1] << 8) | data[2];
@@ -1075,14 +1047,14 @@ void FingerprintModule::handleFunctionPropertyChangeFinger(uint8_t *data, uint8_
             }
             logDebugP("personName: %s", personName);
 
-            uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
+            uint32_t storageOffset = FIN_CalcFingerStorageOffset(fingerId);
             logDebugP("storageOffset: %d", storageOffset);
             _fingerprintStorage.writeByte(storageOffset, personFinger); // only 4 bits used
             _fingerprintStorage.write(storageOffset + 1, personName, 28);
             _fingerprintStorage.commit();
 
             syncRequestedFingerId = fingerId;
-            syncRequestedTimer = delayTimerInit();
+            syncRequestedFingerTimer = delayTimerInit();
 
             resultData[0] = 0;
         }
@@ -1099,19 +1071,68 @@ void FingerprintModule::handleFunctionPropertyChangeFinger(uint8_t *data, uint8_
     logIndentDown();
 }
 
-void FingerprintModule::handleFunctionPropertyResetScanner(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+void FingerprintModule::handleFunctionPropertySyncFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    logInfoP("Function property: Reset scanner");
+    logInfoP("Function property finger: Sync request");
+    logIndentUp();
+
+    uint16_t fingerId = (data[1] << 8) | data[2];
+    logDebugP("fingerId: %d", fingerId);
+
+    if (switchFingerprintPower(true))
+    {
+        if (finger->hasLocation(fingerId))
+        {
+            syncRequestedFingerId = fingerId;
+            syncRequestedFingerTimer = delayTimerInit();
+
+            resultData[0] = 0;
+        }
+        else
+            resultData[0] = 1;
+    }
+    else
+        resultData[0] = 1;
+
+    resultLength = 1;
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertyDeleteFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property finger: Delete request");
+    logIndentUp();
+
+    uint16_t fingerId = (data[1] << 8) | data[2];
+    logDebugP("fingerId: %d", fingerId);
+
+    char personName[28] = {}; // empty
+
+    uint32_t storageOffset = FIN_CalcFingerStorageOffset(fingerId);
+    _fingerprintStorage.writeByte(storageOffset, 0); // "0" for not set
+    _fingerprintStorage.write(storageOffset + 1, *personName, 28);
+    _fingerprintStorage.commit();
+
+    bool success = deleteFinger(fingerId);
+    
+    resultData[0] = success ? 0 : 1;
+    resultLength = 1;
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertyResetFingerScanner(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property finger: Reset scanner");
     logIndentUp();
 
     bool success = false;
     if (switchFingerprintPower(true))
     {
-        char personData[29] = {}; // empty
+        char fingerData[OPENKNX_FIN_FLASH_FINGER_DATA_SIZE] = {}; // empty
         for (uint16_t i = 0; i < MAX_FINGERS; i++)
         {
-            uint32_t storageOffset = FIN_CaclStorageOffset(i);
-            _fingerprintStorage.write(storageOffset, *personData, 29);
+            uint32_t storageOffset = FIN_CalcFingerStorageOffset(i);
+            _fingerprintStorage.write(storageOffset, *fingerData, OPENKNX_FIN_FLASH_FINGER_DATA_SIZE);
         }
         _fingerprintStorage.commit();
 
@@ -1124,100 +1145,9 @@ void FingerprintModule::handleFunctionPropertyResetScanner(uint8_t *data, uint8_
     logIndentDown();
 }
 
-void FingerprintModule::handleFunctionPropertySetPassword(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
-{
-    logInfoP("Function property: Set password");
-    logIndentUp();
-
-    uint8_t passwordOption = data[1];
-    logDebugP("passwordOption: %d", passwordOption);
-
-    uint8_t dataOffset = 1;
-
-    char newPassword[16] = {};
-    for (size_t i = 0; i < 16; i++)
-    {
-        dataOffset++;
-        memcpy(newPassword + i, data + dataOffset, 1);
-
-        if (newPassword[i] == 0) // null termination
-            break;
-    }
-
-    uint32_t newPasswordCrc = 0;
-    if (newPassword[0] != 48 || // = "0": if user inputs only "0", we just use it as is without CRC
-        newPassword[1] != 0)    // null termination
-        newPasswordCrc = crc32.crc32((uint8_t *)newPassword, 16);
-    logDebugP("newPassword: %s (crc: %u)", newPassword, newPasswordCrc);
-
-    // change password
-    uint32_t oldPasswordCrc = 0;
-    if (passwordOption == 2)
-    {
-        char oldPassword[16] = {};
-        for (uint8_t i = 0; i < 16; i++)
-        {
-            dataOffset++;
-            memcpy(oldPassword + i, data + dataOffset, 1);
-
-            if (oldPassword[i] == 0) // null termination
-                break;
-        }
-
-        if (oldPassword[0] != 48 || // = "0": if user inputs only "0", we just use it as is without CRC
-            oldPassword[1] != 0)    // null termination
-            oldPasswordCrc = crc32.crc32((uint8_t *)oldPassword, 16);
-        logDebugP("oldPassword: %s (crc: %u)", oldPassword, oldPasswordCrc);
-    }
-
-    uint32_t currentCrc = _fingerprintStorage.readInt(FLASH_SCANNER_PASSWORD_OFFSET);
-    logDebugP("currentCrc: %u", currentCrc);
-
-    bool success = false;
-    if (currentCrc == oldPasswordCrc)
-    {
-        logDebugP("Current matches old CRC.");
-        logIndentUp();
-
-        logInfoP("Setting new fingerprint scanner password.");
-        logIndentUp();
-
-        if (switchFingerprintPower(true))
-            success = finger->setPassword(newPasswordCrc);
-        
-        resetLedsTimer = delayTimerInit();
-        logInfoP(success ? "Success." : "Failed.");
-        logIndentDown();
-        
-        if (success)
-        {
-            logDebugP("Saving new password in flash.");
-            _fingerprintStorage.writeInt(FLASH_SCANNER_PASSWORD_OFFSET, newPasswordCrc);
-            _fingerprintStorage.commit();
-
-            finger->close();
-            initFingerprintScanner();
-            finger->start();
-        }
-
-        resetLedsTimer = delayTimerInit();
-        logIndentDown();
-
-        resultData[0] = success ? 0 : 2;
-    }
-    else
-    {
-        logDebugP("Invalid old password provided.");
-        resultData[0] = 1;
-    }
-    
-    resultLength = 1;
-    logIndentDown();
-}
-
 void FingerprintModule::handleFunctionPropertySearchPersonByFingerId(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    logInfoP("Function property: Search person by FingerId");
+    logInfoP("Function property finger: Search person by FingerId");
     logIndentUp();
 
     uint16_t fingerId = (data[1] << 8) | data[2];
@@ -1237,7 +1167,7 @@ void FingerprintModule::handleFunctionPropertySearchPersonByFingerId(uint8_t *da
 
         uint8_t personName[28] = {};
 
-        uint32_t storageOffset = FIN_CaclStorageOffset(fingerId);
+        uint32_t storageOffset = FIN_CalcFingerStorageOffset(fingerId);
         logDebugP("storageOffset: %d", storageOffset);
         uint8_t personFinger = _fingerprintStorage.readByte(storageOffset);
         if (personFinger > 0)
@@ -1281,7 +1211,7 @@ void FingerprintModule::handleFunctionPropertySearchPersonByFingerId(uint8_t *da
 
 void FingerprintModule::handleFunctionPropertySearchFingerIdByPerson(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    logInfoP("Function property: Search FingerId(s) by person");
+    logInfoP("Function property finger: Search FingerId(s) by person");
     logIndentUp();
 
     uint8_t searchPersonFinger = data[1];
@@ -1301,6 +1231,7 @@ void FingerprintModule::handleFunctionPropertySearchFingerIdByPerson(uint8_t *da
     logDebugP("searchPersonName: %s (length: %u)", searchPersonName, searchPersonNameLength);
     logDebugP("resultLength: %u", resultLength);
 
+    uint8_t recordLength = OPENKNX_FIN_FLASH_FINGER_DATA_SIZE + 2;
     uint8_t foundCount = 0;
     uint16_t foundTotalCount = 0;
     if (switchFingerprintPower(true))
@@ -1310,11 +1241,11 @@ void FingerprintModule::handleFunctionPropertySearchFingerIdByPerson(uint8_t *da
 
         uint32_t storageOffset = 0;
         uint8_t personFinger = 0;
-        uint8_t personName[29] = {};
+        uint8_t personName[28] = {};
         for (uint16_t i = 0; i < templateCount; i++)
         {
             uint16_t fingerId = fingerIds[i];
-            storageOffset = FIN_CaclStorageOffset(fingerId);
+            storageOffset = FIN_CalcFingerStorageOffset(fingerId);
             personFinger = _fingerprintStorage.readByte(storageOffset);
             if (searchPersonFinger > 0)
                 if (searchPersonFinger != personFinger)
@@ -1333,10 +1264,10 @@ void FingerprintModule::handleFunctionPropertySearchFingerIdByPerson(uint8_t *da
                 // we return max. 10 results
                 if (foundCount < 7)
                 {
-                    resultData[3 + foundCount * 31] = fingerId >> 8;
-                    resultData[3 + foundCount * 31 + 1] = fingerId;
-                    resultData[3 + foundCount * 31 + 2] = personFinger;
-                    memcpy(resultData + 3 + foundCount * 31 + 3, personName, 28);
+                    resultData[3 + foundCount * recordLength] = fingerId >> 8;
+                    resultData[3 + foundCount * recordLength + 1] = fingerId;
+                    resultData[3 + foundCount * recordLength + 2] = personFinger;
+                    memcpy(resultData + 3 + foundCount * recordLength + 3, personName, 28);
 
                     foundCount++;
                 }
@@ -1349,7 +1280,365 @@ void FingerprintModule::handleFunctionPropertySearchFingerIdByPerson(uint8_t *da
     resultData[0] = foundCount > 0 ? 0 : 1;
     resultData[1] = foundTotalCount >> 8;
     resultData[2] = foundTotalCount;
-    resultLength = 3 + foundCount * 31;
+    resultLength = 3 + foundCount * recordLength;
+
+    logDebugP("foundTotalCount: %u", foundTotalCount);
+    logDebugP("returned resultLength: %u", resultLength);
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertySetFingerPassword(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property finger: Set password");
+    logIndentUp();
+
+    uint8_t passwordOption = data[1];
+    logDebugP("passwordOption: %d", passwordOption);
+
+    uint8_t dataOffset = 1;
+
+    char newPassword[16] = {};
+    for (size_t i = 0; i < 16; i++)
+    {
+        dataOffset++;
+        memcpy(newPassword + i, data + dataOffset, 1);
+
+        if (newPassword[i] == 0) // null termination
+            break;
+    }
+
+    uint32_t newPasswordCrc = 0;
+    if (newPassword[0] != 48 || // = "0": if user inputs only "0", we just use it as is without CRC
+        newPassword[1] != 0)    // null termination
+        newPasswordCrc = crc32.crc32((uint8_t *)newPassword, 16);
+    logDebugP("newPassword: %s (crc: %u)", newPassword, newPasswordCrc);
+
+    // change password
+    uint32_t oldPasswordCrc = 0;
+    if (passwordOption == 2)
+    {
+        char oldPassword[16] = {};
+        for (uint8_t i = 0; i < 16; i++)
+        {
+            dataOffset++;
+            memcpy(oldPassword + i, data + dataOffset, 1);
+
+            if (oldPassword[i] == 0) // null termination
+                break;
+        }
+
+        if (oldPassword[0] != 48 || // = "0": if user inputs only "0", we just use it as is without CRC
+            oldPassword[1] != 0)    // null termination
+            oldPasswordCrc = crc32.crc32((uint8_t *)oldPassword, 16);
+        logDebugP("oldPassword: %s (crc: %u)", oldPassword, oldPasswordCrc);
+    }
+
+    uint32_t currentCrc = _fingerprintStorage.readInt(FLASH_FINGER_SCANNER_PASSWORD_OFFSET);
+    logDebugP("currentCrc: %u", currentCrc);
+
+    bool success = false;
+    if (currentCrc == oldPasswordCrc)
+    {
+        logDebugP("Current matches old CRC.");
+        logIndentUp();
+
+        logInfoP("Setting new fingerprint scanner password.");
+        logIndentUp();
+
+        if (switchFingerprintPower(true))
+            success = finger->setPassword(newPasswordCrc);
+        
+        resetLedsTimer = delayTimerInit();
+        logInfoP(success ? "Success." : "Failed.");
+        logIndentDown();
+        
+        if (success)
+        {
+            logDebugP("Saving new password in flash.");
+            _fingerprintStorage.writeInt(FLASH_FINGER_SCANNER_PASSWORD_OFFSET, newPasswordCrc);
+            _fingerprintStorage.commit();
+
+            finger->close();
+            initFingerprintScanner();
+            finger->start();
+        }
+
+        resetLedsTimer = delayTimerInit();
+        logIndentDown();
+
+        resultData[0] = success ? 0 : 2;
+    }
+    else
+    {
+        logDebugP("Invalid old password provided.");
+        resultData[0] = 1;
+    }
+    
+    resultLength = 1;
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertyEnrollNfc(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property NFC: Enroll request");
+    logIndentUp();
+
+    uint16_t nfcId = (data[1] << 8) | data[2];
+    logDebugP("nfcId: %d", nfcId);
+
+    uint8_t tagName[28] = {};
+    for (uint8_t i = 0; i < 28; i++)
+    {
+        memcpy(tagName + i, data + 3 + i, 1);
+        if (tagName[i] == 0) // null termination
+            break;
+    }
+    logDebugP("tagName: %s", tagName);
+
+    uint8_t tagUid[10] = {}; // empty
+
+    uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+    logDebugP("storageOffset: %d", storageOffset);
+    _fingerprintStorage.write(storageOffset, *tagUid, 10);
+    _fingerprintStorage.write(storageOffset + 10, tagName, 28);
+    _fingerprintStorage.commit();
+
+    enrollRequestedTimer = delayTimerInit();
+    enrollRequestedLocation = nfcId;
+    
+    resultData[0] = 0;
+    resultLength = 1;
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertyChangeNfc(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property NFC: Change request");
+    logIndentUp();
+
+    uint16_t nfcId = (data[1] << 8) | data[2];
+    logDebugP("nfcId: %d", nfcId);
+
+    uint8_t tagUid[10] = {};
+    memcpy(tagUid, data + 3, 10);
+    logDebugP("tagUid:");
+    //logHexDebugP(tagUid);
+
+    uint8_t tagName[28] = {};
+    for (uint8_t i = 0; i < 28; i++)
+    {
+        memcpy(tagName + i, data + 13 + i, 1);
+        if (tagName[i] == 0) // null termination
+            break;
+    }
+    logDebugP("tagName: %s", tagName);
+
+    uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+    logDebugP("storageOffset: %d", storageOffset);
+    _fingerprintStorage.write(storageOffset, tagUid, 10);
+    _fingerprintStorage.write(storageOffset + 10, tagName, 28);
+    _fingerprintStorage.commit();
+
+    syncRequestedNfcId = nfcId;
+    syncRequestedNfcTimer = delayTimerInit();
+
+    resultData[0] = 0;
+    resultLength = 1;
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertySyncNfc(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property NFC: Sync request");
+    logIndentUp();
+
+    uint16_t nfcId = (data[1] << 8) | data[2];
+    logDebugP("nfcId: %d", nfcId);
+
+    syncRequestedNfcId = nfcId;
+    syncRequestedNfcTimer = delayTimerInit();
+
+    resultData[0] = 0;
+    resultLength = 1;
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertyDeleteNfc(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property NFC: Delete request");
+    logIndentUp();
+
+    uint16_t nfcId = (data[1] << 8) | data[2];
+    logDebugP("nfcId: %d", nfcId);
+
+    uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+    logDebugP("storageOffset: %d", storageOffset);
+
+    uint8_t emptyTest[10] = {};
+    uint8_t tagUid[10] = {};
+    _fingerprintStorage.read(storageOffset, tagUid, 10);
+    if (memcmp(emptyTest, tagUid, 10)) // if tag UID empty, no tag with this ID defined
+    {
+        char personName[28] = {}; // empty
+
+        uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+        _fingerprintStorage.write(storageOffset, *emptyTest, 10);
+        _fingerprintStorage.write(storageOffset + 10, *personName, 28);
+        _fingerprintStorage.commit();
+
+        resultData[0] = 0;
+    }
+    else
+    {
+        logDebugP("Not found.");
+        resultData[0] = 1;
+    }
+    
+    resultLength = 1;
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertyResetNfcScanner(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property NFC: Reset scanner");
+    logIndentUp();
+
+    char nfcData[OPENKNX_FIN_FLASH_NFC_DATA_SIZE] = {}; // empty
+    for (uint16_t i = 0; i < MAX_NFCS; i++)
+    {
+        uint32_t storageOffset = FIN_CalcNfcStorageOffset(i);
+        _fingerprintStorage.write(storageOffset, *nfcData, OPENKNX_FIN_FLASH_NFC_DATA_SIZE);
+    }
+    _fingerprintStorage.commit();
+
+    resultData[0] = 0;
+    resultLength = 1;
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertySearchTagByNfcId(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property NFC: Search person by NfcId");
+    logIndentUp();
+
+    uint16_t nfcId = (data[1] << 8) | data[2];
+    logDebugP("nfcId: %d", nfcId);
+
+    uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+    logDebugP("storageOffset: %d", storageOffset);
+
+    uint8_t emptyTest[10] = {};
+    uint8_t tagUid[10] = {};
+    _fingerprintStorage.read(storageOffset, tagUid, 10);
+    if (memcmp(emptyTest, tagUid, 10))
+    {
+        uint8_t tagName[28] = {};
+        _fingerprintStorage.read(storageOffset + 10, tagName, 28);
+
+        logDebugP("Found:");
+        logIndentUp();
+        logDebugP("tagUid:");
+        //logHexDebugP(tagUid);
+        logDebugP("tagName: %s", tagName);
+        logIndentDown();
+
+        resultData[0] = 0;
+        memcpy(resultData + 2, tagUid, 10);
+        resultLength = 11;
+        for (uint8_t i = 0; i < 28; i++)
+        {
+            memcpy(resultData + 2 + i, tagName + i, 1);
+            resultLength++;
+
+            if (tagName[i] == 0) // null termination
+                break;
+        }
+    }
+    else
+    {
+        logDebugP("Not found.");
+
+        resultData[0] = 1;
+        resultLength = 1;
+    }
+
+    logIndentDown();
+}
+
+void FingerprintModule::handleFunctionPropertySearchNfcIdByTag(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    logInfoP("Function property NFC: Search NfcId(s) by person");
+    logIndentUp();
+
+    uint8_t searchTagUid[10] = {};
+    memcpy(searchTagUid, data + 1, 10);
+    logDebugP("searchTagUid:");
+    //logHexDebugP(searchTagUid);
+
+    uint8_t emptyTest[10] = {};
+    bool searchTagUidEmpty = !memcmp(emptyTest, searchTagUid, 10);
+
+    char searchTagName[28] = {};
+    uint8_t searchTagNameLength = 28;
+    for (size_t i = 0; i < 28; i++)
+    {
+        memcpy(searchTagName + i, data + 11 + i, 1);
+        if (searchTagName[i] == 0) // null termination
+        {
+            searchTagNameLength = i;
+            break;
+        }
+    }
+    logDebugP("searchTagName: %s (length: %u)", searchTagName, searchTagNameLength);
+    logDebugP("resultLength: %u", resultLength);
+
+    uint8_t recordLength = OPENKNX_FIN_FLASH_NFC_DATA_SIZE + 2;
+    uint8_t foundCount = 0;
+    uint16_t foundTotalCount = 0;
+
+    uint32_t storageOffset = 0;
+    uint8_t tagUid[10] = {};
+    uint8_t tagName[28] = {};
+    for (uint16_t nfcId = 0; nfcId < MAX_NFCS; nfcId++)
+    {
+        storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+        _fingerprintStorage.read(storageOffset, tagUid, 10);
+        if (!searchTagUidEmpty)
+        {
+            if (memcmp(tagUid, searchTagUid, 10))
+                continue;
+        }
+
+        _fingerprintStorage.read(storageOffset + 10, tagName, 28);
+        if (strcasestr((char *)tagName, searchTagName) != nullptr)
+        {
+            logDebugP("Found:");
+            logIndentUp();
+            logDebugP("nfcId: %d", nfcId);
+            logDebugP("tagUid");
+            //logHexDebugP(tagUid);
+            logDebugP("tagName: %s", tagName);
+            logIndentDown();
+
+            // we return max. 10 results
+            if (foundCount < 7)
+            {
+                resultData[3 + foundCount * recordLength] = nfcId >> 8;
+                resultData[3 + foundCount * recordLength + 1] = nfcId;
+                memcpy(resultData + 3 + foundCount * recordLength + 2, tagUid, 10);
+                memcpy(resultData + 3 + foundCount * recordLength + 12, tagName, 28);
+
+                foundCount++;
+            }
+
+            foundTotalCount++;
+        }
+    }
+    
+    resultData[0] = foundCount > 0 ? 0 : 1;
+    resultData[1] = foundTotalCount >> 8;
+    resultData[2] = foundTotalCount;
+    resultLength = 3 + foundCount * recordLength;
 
     logDebugP("foundTotalCount: %u", foundTotalCount);
     logDebugP("returned resultLength: %u", resultLength);

@@ -158,7 +158,7 @@
                   <Button Id="%AID%_B-%T%910001" Text="Finger-ID suchen" EventHandler="FIN_searchFingerId" EventHandlerOnline="ConnectionOriented" Cell="1,4" />
                   <ParameterSeparator Id="%AID%_PS-nnn" Text="  Finger-ID" Cell="2,1" />
                   <ParameterRefRef RefId="%AID%_P-%T%900005_R-%T%90000501" Cell="2,2" />
-                  <Button Id="%AID%_B-%T%910002" Text="Person suchen" EventHandler="FIN_searchUser" EventHandlerOnline="ConnectionOriented" Cell="2,4" />
+                  <Button Id="%AID%_B-%T%910002" Text="Person suchen" EventHandler="FIN_searchFingerName" EventHandlerOnline="ConnectionOriented" Cell="2,4" />
 
                   <!-- <Button Id="%AID%_B-%T%900003" Text="zuweisen" Cell="1,5" EventHandler="FIN_assignFingerId" /> -->
                 </ParameterBlock>

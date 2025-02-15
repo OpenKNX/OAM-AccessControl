@@ -29,14 +29,17 @@
 #define SHUTDOWN_SENSOR_DELAY 3000
 
 #define MAX_FINGERS 1500
+#define OPENKNX_FIN_FLASH_FINGER_MAGIC_WORD 2912744758
+#define OPENKNX_FIN_FLASH_FINGER_DATA_SIZE 29 // 1 byte: which finger, 28 bytes: person name
+#define FIN_CalcFingerStorageOffset(fingerId) fingerId * OPENKNX_FIN_FLASH_FINGER_DATA_SIZE + 4096 + 1 // first byte free for finger info storage format version
+#define FLASH_FINGER_SCANNER_PASSWORD_OFFSET 5
 
-#define FLASH_MAGIC_WORD 2912744758
-#define FINGER_DATA_SIZE 29
-#define FIN_CaclStorageOffset(fingerId) fingerId * FINGER_DATA_SIZE + 4096 + 1 // first byte free for finger info storage format version
+#define MAX_NFCS 1500
+#define OPENKNX_FIN_FLASH_NFC_MAGIC_WORD 1983749238
+#define OPENKNX_FIN_FLASH_NFC_DATA_SIZE 38 // 10 byte: NFC tag UID, 28 bytes: person name
+#define FIN_CalcNfcStorageOffset(nfcId) nfcId * OPENKNX_FIN_FLASH_NFC_DATA_SIZE + 4096 + 1 // first byte free for NFC info storage format version
 
-#define FLASH_SCANNER_PASSWORD_OFFSET 5
-
-#define SYNC_BUFFER_SIZE TEMPLATE_SIZE + FINGER_DATA_SIZE
+#define SYNC_BUFFER_SIZE TEMPLATE_SIZE + OPENKNX_FIN_FLASH_FINGER_DATA_SIZE
 #define SYNC_SEND_PACKET_DATA_LENGTH 13
 #define SYNC_AFTER_ENROLL_DELAY 500
 #define SYNC_IGNORE_DELAY 500
@@ -95,13 +98,20 @@ class FingerprintModule : public OpenKNX::Module
     void processInputKoTouchPcbLed(GroupObject &ko);
     void processInputKoEnroll(GroupObject &ko);
     void handleFunctionPropertyEnrollFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertyChangeFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertySyncFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertyDeleteFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
-    void handleFunctionPropertyChangeFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
-    void handleFunctionPropertyResetScanner(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
-    void handleFunctionPropertySetPassword(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertyResetFingerScanner(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertySearchPersonByFingerId(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertySearchFingerIdByPerson(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertySetFingerPassword(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertyEnrollNfc(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertyChangeNfc(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertySyncNfc(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertyDeleteNfc(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertyResetNfcScanner(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertySearchTagByNfcId(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+    void handleFunctionPropertySearchNfcIdByTag(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     static void delayCallback(uint32_t period);
     void runTestMode();
 
@@ -134,8 +144,11 @@ class FingerprintModule : public OpenKNX::Module
     uint16_t syncSendBufferLength = 0;
     uint8_t syncSendPacketCount = 0;
     uint8_t syncSendPacketSentCount = 0;
-    uint32_t syncRequestedTimer = 0;
+    uint32_t syncRequestedFingerTimer = 0;
     uint16_t syncRequestedFingerId = 0;
+
+    uint32_t syncRequestedNfcTimer = 0;
+    uint16_t syncRequestedNfcId = 0;
 
     bool syncReceiving = false;
     uint16_t syncReceiveFingerId = 0;
