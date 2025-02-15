@@ -49,10 +49,10 @@ void FingerprintModule::setup()
 
     finger->setLed(Fingerprint::State::Success);
 
-    KoFIN_LedRingColor.valueNoSend((uint8_t)0, Dpt(5, 10));
-    KoFIN_LedRingControl.valueNoSend((uint8_t)FINGERPRINT_LED_OFF, Dpt(5, 10));
-    KoFIN_LedRingSpeed.valueNoSend((uint8_t)0, Dpt(5, 10));
-    KoFIN_LedRingCount.valueNoSend((uint8_t)0, Dpt(5, 10));
+    KoFIN_FingerLedRingColor.valueNoSend((uint8_t)0, Dpt(5, 10));
+    KoFIN_FingerLedRingControl.valueNoSend((uint8_t)FINGERPRINT_LED_OFF, Dpt(5, 10));
+    KoFIN_FingerLedRingSpeed.valueNoSend((uint8_t)0, Dpt(5, 10));
+    KoFIN_FingerLedRingCount.valueNoSend((uint8_t)0, Dpt(5, 10));
 
     checkSensorTimer = delayTimerInit();
     initResetTimer = delayTimerInit();
@@ -112,7 +112,7 @@ bool FingerprintModule::switchFingerprintPower(bool on, bool testMode)
         bool success = finger->start();
 
         if (!testMode)
-            KoFIN_ScannerStatus.value(success, DPT_Switch);
+            KoFIN_FingerScannerStatus.value(success, DPT_Switch);
         
         return success;
     }
@@ -220,7 +220,7 @@ void FingerprintModule::loop()
             if (touched)
             {
                 logInfoP("Touched");
-                KoFIN_Touched.value(true, DPT_Switch);
+                KoFIN_FingerTouched.value(true, DPT_Switch);
 
                 if (switchFingerprintPower(true))
                 {
@@ -236,10 +236,10 @@ void FingerprintModule::loop()
             }
             else
             {
-                if (KoFIN_Touched.value(DPT_Switch) &&
+                if (KoFIN_FingerTouched.value(DPT_Switch) &&
                     !finger->hasFinger())
                 {
-                    KoFIN_Touched.value(false, DPT_Switch);
+                    KoFIN_FingerTouched.value(false, DPT_Switch);
                     shutdownSensorTimer = delayTimerInit();
                 }
             }
@@ -265,11 +265,11 @@ void FingerprintModule::loop()
 
         if (checkSensorTimer > 0 && delayCheck(checkSensorTimer, CHECK_SENSOR_DELAY))
         {
-            bool currentStatus = KoFIN_ScannerStatus.value(DPT_Switch);
+            bool currentStatus = KoFIN_FingerScannerStatus.value(DPT_Switch);
             bool success = finger->checkSensor();
             if (currentStatus != success)
             {
-                KoFIN_ScannerStatus.value(success, DPT_Switch);
+                KoFIN_FingerScannerStatus.value(success, DPT_Switch);
                 logInfoP("Check scanner status: %u", success);
             }
 
@@ -344,15 +344,15 @@ void FingerprintModule::loopNfc()
         if (delayCheck(enrollNfcStarted, NFC_ENROLL_TIMEOUT))
         {
             logInfoP("Enrolling NFC tag failed.");
-            KoFIN_EnrollSuccess.value(false, DPT_Switch);
-            KoFIN_EnrollFailedId.value(enrollNfcId, Dpt(7, 1));
+            KoFIN_FingerEnrollSuccess.value(false, DPT_Switch);
+            KoFIN_FingerEnrollFailedId.value(enrollNfcId, Dpt(7, 1));
     
-            KoFIN_EnrollSuccessData.valueNoSend(enrollNfcId, Dpt(15, 1, 0)); // access identification code
-            KoFIN_EnrollSuccessData.valueNoSend(true, Dpt(15, 1, 1));     // detection error
-            KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 2));    // permission accepted
-            KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
-            KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
-            KoFIN_EnrollSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+            KoFIN_FingerEnrollSuccessData.valueNoSend(enrollNfcId, Dpt(15, 1, 0)); // access identification code
+            KoFIN_FingerEnrollSuccessData.valueNoSend(true, Dpt(15, 1, 1));     // detection error
+            KoFIN_FingerEnrollSuccessData.valueNoSend(false, Dpt(15, 1, 2));    // permission accepted
+            KoFIN_FingerEnrollSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+            KoFIN_FingerEnrollSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+            KoFIN_FingerEnrollSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
             digitalWrite(LED_RED_PIN, HIGH);
             resetTouchPcbLedTimer = delayTimerInit();
@@ -395,15 +395,15 @@ void FingerprintModule::loopNfc()
                 _nfcStorage.commit();
 
                 logInfoP("Enrolled to nfcID %u.", enrollNfcId);
-                KoFIN_EnrollSuccess.value(true, DPT_Switch);
-                KoFIN_EnrollSuccessId.value(enrollNfcId, Dpt(7, 1));
+                KoFIN_FingerEnrollSuccess.value(true, DPT_Switch);
+                KoFIN_FingerEnrollSuccessId.value(enrollNfcId, Dpt(7, 1));
         
-                KoFIN_EnrollSuccess.valueNoSend(enrollNfcId, Dpt(15, 1, 0)); // access identification code
-                KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 1));    // detection error
-                KoFIN_EnrollSuccess.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
-                KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
-                KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
-                KoFIN_EnrollSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+                KoFIN_FingerEnrollSuccess.valueNoSend(enrollNfcId, Dpt(15, 1, 0)); // access identification code
+                KoFIN_FingerEnrollSuccess.valueNoSend(false, Dpt(15, 1, 1));    // detection error
+                KoFIN_FingerEnrollSuccess.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
+                KoFIN_FingerEnrollSuccess.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+                KoFIN_FingerEnrollSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+                KoFIN_FingerEnrollSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
                 
                 digitalWrite(LED_GREEN_PIN, HIGH);
                 resetFingerLedTimer = delayTimerInit();
@@ -517,16 +517,16 @@ bool FingerprintModule::searchForFinger()
     if (!finger->hasFinger())
     {
         if (ParamFIN_ScanMode == 1 &&
-            KoFIN_Touched.value(DPT_Switch))
-            KoFIN_Touched.value(false, DPT_Switch);
+            KoFIN_FingerTouched.value(DPT_Switch))
+            KoFIN_FingerTouched.value(false, DPT_Switch);
 
         hasLastFoundLocation = false;
         return false;
     }
 
     if (ParamFIN_ScanMode == 1 &&
-        !KoFIN_Touched.value(DPT_Switch))
-        KoFIN_Touched.value(true, DPT_Switch);
+        !KoFIN_FingerTouched.value(DPT_Switch))
+        KoFIN_FingerTouched.value(true, DPT_Switch);
     
     Fingerprint::FindFingerResult findFingerResult = finger->findFingerprint();
 
@@ -552,14 +552,14 @@ bool FingerprintModule::searchForFinger()
         finger->setLed(Fingerprint::ScanNoMatch);
 
         logInfoP("Finger not found");
-        KoFIN_ScanSuccess.value(false, DPT_Switch);
+        KoFIN_FingerScanSuccess.value(false, DPT_Switch);
 
-        KoFIN_ScanSuccessData.valueNoSend((uint32_t)0, Dpt(15, 1, 0)); // access identification code (unknown)
-        KoFIN_ScanSuccessData.valueNoSend(true, Dpt(15, 1, 1));        // detection error
-        KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 2));       // permission accepted
-        KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));       // read direction (not used)
-        KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));       // encryption (not used for now)
-        KoFIN_ScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));        // index of access identification code (not used)
+        KoFIN_FingerScanSuccessData.valueNoSend((uint32_t)0, Dpt(15, 1, 0)); // access identification code (unknown)
+        KoFIN_FingerScanSuccessData.valueNoSend(true, Dpt(15, 1, 1));        // detection error
+        KoFIN_FingerScanSuccessData.valueNoSend(false, Dpt(15, 1, 2));       // permission accepted
+        KoFIN_FingerScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));       // read direction (not used)
+        KoFIN_FingerScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));       // encryption (not used for now)
+        KoFIN_FingerScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));        // index of access identification code (not used)
 
         // if finger present, but scan failed, reset all authentication action calls
         for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
@@ -572,21 +572,21 @@ bool FingerprintModule::searchForFinger()
 
 void FingerprintModule::resetRingLed()
 {
-    finger->setLed(KoFIN_LedRingColor.value(Dpt(5, 10)), KoFIN_LedRingControl.value(Dpt(5, 10)), KoFIN_LedRingSpeed.value(Dpt(5, 10)), KoFIN_LedRingCount.value(Dpt(5, 10)));
-    logInfoP("LED ring: color=%u, control=%u, speed=%u, count=%u", (uint8_t)KoFIN_LedRingColor.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingControl.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingSpeed.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingCount.value(Dpt(5, 10)));
+    finger->setLed(KoFIN_FingerLedRingColor.value(Dpt(5, 10)), KoFIN_FingerLedRingControl.value(Dpt(5, 10)), KoFIN_FingerLedRingSpeed.value(Dpt(5, 10)), KoFIN_FingerLedRingCount.value(Dpt(5, 10)));
+    logInfoP("LED ring: color=%u, control=%u, speed=%u, count=%u", (uint8_t)KoFIN_FingerLedRingColor.value(Dpt(5, 10)), (uint8_t)KoFIN_FingerLedRingControl.value(Dpt(5, 10)), (uint8_t)KoFIN_FingerLedRingSpeed.value(Dpt(5, 10)), (uint8_t)KoFIN_FingerLedRingCount.value(Dpt(5, 10)));
 }
 
 void FingerprintModule::processFingerScanSuccess(uint16_t location, bool external)
 {
-    KoFIN_ScanSuccess.value(true, DPT_Switch);
-    KoFIN_ScanSuccessId.value(location, Dpt(7, 1));
+    KoFIN_FingerScanSuccess.value(true, DPT_Switch);
+    KoFIN_FingerScanSuccessId.value(location, Dpt(7, 1));
 
-    KoFIN_ScanSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
-    KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 1));    // detection error
-    KoFIN_ScanSuccessData.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
-    KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
-    KoFIN_ScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
-    KoFIN_ScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+    KoFIN_FingerScanSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
+    KoFIN_FingerScanSuccessData.valueNoSend(false, Dpt(15, 1, 1));    // detection error
+    KoFIN_FingerScanSuccessData.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
+    KoFIN_FingerScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+    KoFIN_FingerScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+    KoFIN_FingerScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
     bool actionExecuted = false;
     for (size_t i = 0; i < ParamFINACT_FingerActionCount; i++)
@@ -612,7 +612,7 @@ void FingerprintModule::processFingerScanSuccess(uint16_t location, bool externa
         if (!external)
             finger->setLed(Fingerprint::ScanMatchNoAction);
         
-        KoFIN_TouchedNoAction.value(true, DPT_Switch);
+        KoFIN_FingerTouchedNoAction.value(true, DPT_Switch);
     }
 }
 
@@ -642,30 +642,30 @@ bool FingerprintModule::enrollFinger(uint16_t location)
     if (success)
     {
         logInfoP("Enrolled to location %d.", location);
-        KoFIN_EnrollSuccess.value(true, DPT_Switch);
-        KoFIN_EnrollSuccessId.value(location, Dpt(7, 1));
+        KoFIN_FingerEnrollSuccess.value(true, DPT_Switch);
+        KoFIN_FingerEnrollSuccessId.value(location, Dpt(7, 1));
 
-        KoFIN_EnrollSuccess.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
-        KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 1));    // detection error
-        KoFIN_EnrollSuccess.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
-        KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
-        KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
-        KoFIN_EnrollSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+        KoFIN_FingerEnrollSuccess.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
+        KoFIN_FingerEnrollSuccess.valueNoSend(false, Dpt(15, 1, 1));    // detection error
+        KoFIN_FingerEnrollSuccess.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
+        KoFIN_FingerEnrollSuccess.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+        KoFIN_FingerEnrollSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+        KoFIN_FingerEnrollSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
         finger->setLed(Fingerprint::State::Success);
     }
     else
     {
         logInfoP("Enrolling template failed.");
-        KoFIN_EnrollSuccess.value(false, DPT_Switch);
-        KoFIN_EnrollFailedId.value(location, Dpt(7, 1));
+        KoFIN_FingerEnrollSuccess.value(false, DPT_Switch);
+        KoFIN_FingerEnrollFailedId.value(location, Dpt(7, 1));
 
-        KoFIN_EnrollSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
-        KoFIN_EnrollSuccessData.valueNoSend(true, Dpt(15, 1, 1));     // detection error
-        KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 2));    // permission accepted
-        KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
-        KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
-        KoFIN_EnrollSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+        KoFIN_FingerEnrollSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
+        KoFIN_FingerEnrollSuccessData.valueNoSend(true, Dpt(15, 1, 1));     // detection error
+        KoFIN_FingerEnrollSuccessData.valueNoSend(false, Dpt(15, 1, 2));    // permission accepted
+        KoFIN_FingerEnrollSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+        KoFIN_FingerEnrollSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+        KoFIN_FingerEnrollSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
         finger->setLed(Fingerprint::State::Failed);
     }
@@ -688,15 +688,15 @@ bool FingerprintModule::deleteFinger(uint16_t location, bool sync)
     if (success)
     {
         logInfoP("Template deleted from location %d.", location);
-        KoFIN_DeleteSuccess.value(true, DPT_Switch);
-        KoFIN_DeleteSuccessId.value(location, Dpt(7, 1));
+        KoFIN_FingerDeleteSuccess.value(true, DPT_Switch);
+        KoFIN_FingerDeleteSuccessId.value(location, Dpt(7, 1));
 
-        KoFIN_DeleteSuccess.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
-        KoFIN_DeleteSuccess.valueNoSend(false, Dpt(15, 1, 1));    // detection error
-        KoFIN_DeleteSuccess.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
-        KoFIN_DeleteSuccess.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
-        KoFIN_DeleteSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
-        KoFIN_DeleteSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+        KoFIN_FingerDeleteSuccess.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
+        KoFIN_FingerDeleteSuccess.valueNoSend(false, Dpt(15, 1, 1));    // detection error
+        KoFIN_FingerDeleteSuccess.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
+        KoFIN_FingerDeleteSuccess.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+        KoFIN_FingerDeleteSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+        KoFIN_FingerDeleteSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
         if (sync)
             startSyncDelete(SyncType::FINGER, location);
@@ -704,15 +704,15 @@ bool FingerprintModule::deleteFinger(uint16_t location, bool sync)
     else
     {
         logInfoP("Deleting template failed.");
-        KoFIN_DeleteSuccess.value(false, DPT_Switch);
-        KoFIN_DeleteFailedId.value(location, Dpt(7, 1));
+        KoFIN_FingerDeleteSuccess.value(false, DPT_Switch);
+        KoFIN_FingerDeleteFailedId.value(location, Dpt(7, 1));
 
-        KoFIN_DeleteSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
-        KoFIN_DeleteSuccessData.valueNoSend(true, Dpt(15, 1, 1));     // detection error
-        KoFIN_DeleteSuccessData.valueNoSend(false, Dpt(15, 1, 2));    // permission accepted
-        KoFIN_DeleteSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
-        KoFIN_DeleteSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
-        KoFIN_DeleteSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+        KoFIN_FingerDeleteSuccessData.valueNoSend(location, Dpt(15, 1, 0)); // access identification code
+        KoFIN_FingerDeleteSuccessData.valueNoSend(true, Dpt(15, 1, 1));     // detection error
+        KoFIN_FingerDeleteSuccessData.valueNoSend(false, Dpt(15, 1, 2));    // permission accepted
+        KoFIN_FingerDeleteSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+        KoFIN_FingerDeleteSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+        KoFIN_FingerDeleteSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
     }
 
     logIndentDown();
@@ -790,10 +790,10 @@ void FingerprintModule::processInputKo(GroupObject& ko)
         case FIN_KoLock:
             processInputKoLock(ko);
             break;
-        case FIN_KoLedRingColor:
-        case FIN_KoLedRingControl:
-        case FIN_KoLedRingSpeed:
-        case FIN_KoLedRingCount:
+        case FIN_KoFingerLedRingColor:
+        case FIN_KoFingerLedRingControl:
+        case FIN_KoFingerLedRingSpeed:
+        case FIN_KoFingerLedRingCount:
             resetRingLed();
             break;
         case FIN_KoTouchPcbLedRed:
@@ -810,9 +810,9 @@ void FingerprintModule::processInputKo(GroupObject& ko)
 
     switch (asap)
     {
-        case FIN_KoEnrollNext:
-        case FIN_KoEnrollId:
-        case FIN_KoEnrollData:
+        case FIN_KoFingerEnrollNext:
+        case FIN_KoFingerEnrollId:
+        case FIN_KoFingerEnrollData:
             processInputKoEnrollFinger(ko);
             break;
         case FIN_KoNfcEnrollNext:
@@ -820,9 +820,9 @@ void FingerprintModule::processInputKo(GroupObject& ko)
         case FIN_KoNfcEnrollData:
             processInputKoEnrollNfc(ko);
             break;
-        case FIN_KoDeleteId:
-        case FIN_KoDeleteData:
-            if (asap == FIN_KoDeleteId)
+        case FIN_KoFingerDeleteId:
+        case FIN_KoFingerDeleteData:
+            if (asap == FIN_KoFingerDeleteId)
                 idReceived = ko.value(Dpt(7, 1));
             else
                 idReceived = ko.value(Dpt(15, 1, 0));
@@ -840,7 +840,7 @@ void FingerprintModule::processInputKo(GroupObject& ko)
             logInfoP("ID provided: %d", idReceived);
             deleteNfc(idReceived);
             break;
-        case FIN_KoExternFingerId:
+        case FIN_KoFingerExternId:
             idReceived = ko.value(Dpt(7, 1));
             logInfoP("FingerID received: %d", idReceived);
 
@@ -890,7 +890,7 @@ void FingerprintModule::processInputKoEnrollFinger(GroupObject &ko)
     bool success;
     uint16_t location;
     uint16_t asap = ko.asap();
-    if (asap == FIN_KoEnrollNext)
+    if (asap == FIN_KoFingerEnrollNext)
     {
         success = switchFingerprintPower(true);
         if (success)
@@ -901,7 +901,7 @@ void FingerprintModule::processInputKoEnrollFinger(GroupObject &ko)
         else
             logErrorP("Failed getting next available location");
     }
-    else if (asap == FIN_KoEnrollId)
+    else if (asap == FIN_KoFingerEnrollId)
     {
         success = true;
         location = ko.value(Dpt(7, 1));
@@ -924,7 +924,7 @@ void FingerprintModule::processInputKoEnrollFinger(GroupObject &ko)
 void FingerprintModule::processInputKoEnrollNfc(GroupObject &ko)
 {
     bool success;
-    uint16_t nfcId;
+    uint16_t nfcId = 0;
     uint16_t asap = ko.asap();
     if (asap == FIN_KoNfcEnrollNext)
     {

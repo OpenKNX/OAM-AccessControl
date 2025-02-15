@@ -209,42 +209,42 @@
 // Verzögerung zwischen Sync-Telegrammen
 #define ParamFIN_SyncDelay                           (knx.paramByte(FIN_SyncDelay))
 
-#define FIN_KoTouched 21
-#define FIN_KoTouchedNoAction 22
-#define FIN_KoScannerStatus 25
+#define FIN_KoFingerTouched 21
+#define FIN_KoFingerTouchedNoAction 22
+#define FIN_KoFingerScannerStatus 25
 #define FIN_KoLock 26
 #define FIN_KoLockStatus 27
-#define FIN_KoScanSuccess 31
-#define FIN_KoScanSuccessId 32
-#define FIN_KoScanSuccessData 33
-#define FIN_KoLedRingColor 36
-#define FIN_KoLedRingControl 37
-#define FIN_KoLedRingSpeed 38
-#define FIN_KoLedRingCount 39
-#define FIN_KoEnrollNext 41
-#define FIN_KoEnrollId 42
-#define FIN_KoEnrollData 43
-#define FIN_KoEnrollSuccess 44
-#define FIN_KoEnrollSuccessId 45
-#define FIN_KoEnrollSuccessData 46
-#define FIN_KoEnrollFailedId 47
-#define FIN_KoDeleteId 51
-#define FIN_KoDeleteData 52
-#define FIN_KoDeleteSuccess 53
-#define FIN_KoDeleteSuccessId 54
-#define FIN_KoDeleteSuccessData 55
-#define FIN_KoDeleteFailedId 56
-#define FIN_KoExternFingerId 61
-#define FIN_KoActionAddFingerId 62
-#define FIN_KoActionRemoveFingerId 63
+#define FIN_KoFingerScanSuccess 31
+#define FIN_KoFingerScanSuccessId 32
+#define FIN_KoFingerScanSuccessData 33
+#define FIN_KoFingerLedRingColor 36
+#define FIN_KoFingerLedRingControl 37
+#define FIN_KoFingerLedRingSpeed 38
+#define FIN_KoFingerLedRingCount 39
+#define FIN_KoFingerEnrollNext 41
+#define FIN_KoFingerEnrollId 42
+#define FIN_KoFingerEnrollData 43
+#define FIN_KoFingerEnrollSuccess 44
+#define FIN_KoFingerEnrollSuccessId 45
+#define FIN_KoFingerEnrollSuccessData 46
+#define FIN_KoFingerEnrollFailedId 47
+#define FIN_KoFingerDeleteId 51
+#define FIN_KoFingerDeleteData 52
+#define FIN_KoFingerDeleteSuccess 53
+#define FIN_KoFingerDeleteSuccessId 54
+#define FIN_KoFingerDeleteSuccessData 55
+#define FIN_KoFingerDeleteFailedId 56
+#define FIN_KoFingerExternId 61
+#define FIN_KoFingerActionAddId 62
+#define FIN_KoFingerActionRemoveId 63
 #define FIN_KoSync 66
 #define FIN_KoTouchPcbButtonLeft 71
 #define FIN_KoTouchPcbButtonRight 72
 #define FIN_KoTouchPcbLedRed 73
 #define FIN_KoTouchPcbLedGreen 74
 #define FIN_KoNfcExternId 4020
-#define FIN_KoNfcActionAddFingerId 4420
-#define FIN_KoNfcActionRemoveFingerId 4520
+#define FIN_KoNfcActionAddId 4420
+#define FIN_KoNfcActionRemoveId 4520
 #define FIN_KoNfcScanSuccess 6120
 #define FIN_KoNfcScanSuccessId 6220
 #define FIN_KoNfcScanSuccessData 6320
@@ -263,61 +263,61 @@
 #define FIN_KoNfcDeleteFailedId 7620
 
 // Berührung (sofort, immer)
-#define KoFIN_Touched                             (knx.getGroupObject(FIN_KoTouched))
+#define KoFIN_FingerTouched                       (knx.getGroupObject(FIN_KoFingerTouched))
 // Berührung (verzögert, wenn keine Aktion zugeordnet)
-#define KoFIN_TouchedNoAction                     (knx.getGroupObject(FIN_KoTouchedNoAction))
+#define KoFIN_FingerTouchedNoAction               (knx.getGroupObject(FIN_KoFingerTouchedNoAction))
 // Status des Scanners
-#define KoFIN_ScannerStatus                       (knx.getGroupObject(FIN_KoScannerStatus))
+#define KoFIN_FingerScannerStatus                 (knx.getGroupObject(FIN_KoFingerScannerStatus))
 // Sperre
 #define KoFIN_Lock                                (knx.getGroupObject(FIN_KoLock))
 // Status der Sperre
 #define KoFIN_LockStatus                          (knx.getGroupObject(FIN_KoLockStatus))
 // Scan: Erfolg
-#define KoFIN_ScanSuccess                         (knx.getGroupObject(FIN_KoScanSuccess))
+#define KoFIN_FingerScanSuccess                   (knx.getGroupObject(FIN_KoFingerScanSuccess))
 // Scan: ID
-#define KoFIN_ScanSuccessId                       (knx.getGroupObject(FIN_KoScanSuccessId))
+#define KoFIN_FingerScanSuccessId                 (knx.getGroupObject(FIN_KoFingerScanSuccessId))
 // Scan: Zutrittsdaten
-#define KoFIN_ScanSuccessData                     (knx.getGroupObject(FIN_KoScanSuccessData))
+#define KoFIN_FingerScanSuccessData               (knx.getGroupObject(FIN_KoFingerScanSuccessData))
 // LED-Ring: Farbe (1: Rot, 2: Blau, 3: Violett, 4: Grün, 5: Gelb, 6: Cyan, 7: Weiß)
-#define KoFIN_LedRingColor                        (knx.getGroupObject(FIN_KoLedRingColor))
+#define KoFIN_FingerLedRingColor                  (knx.getGroupObject(FIN_KoFingerLedRingColor))
 // LED-Ring: Steuerung (1: Atmen, 2: Blinken, 3: Konstant an, 4: Konstant aus, 5: Langsam an, 6: Langsam aus)
-#define KoFIN_LedRingControl                      (knx.getGroupObject(FIN_KoLedRingControl))
+#define KoFIN_FingerLedRingControl                (knx.getGroupObject(FIN_KoFingerLedRingControl))
 // LED-Ring: Geschwindigkeit (wird bei konstant an/aus ignoriert)
-#define KoFIN_LedRingSpeed                        (knx.getGroupObject(FIN_KoLedRingSpeed))
+#define KoFIN_FingerLedRingSpeed                  (knx.getGroupObject(FIN_KoFingerLedRingSpeed))
 // LED-Ring: Anzahl der Zyklen (0: unendlich, nur relevant für atmen und blinken)
-#define KoFIN_LedRingCount                        (knx.getGroupObject(FIN_KoLedRingCount))
+#define KoFIN_FingerLedRingCount                  (knx.getGroupObject(FIN_KoFingerLedRingCount))
 // Lerne an: Nächste freie ID
-#define KoFIN_EnrollNext                          (knx.getGroupObject(FIN_KoEnrollNext))
+#define KoFIN_FingerEnrollNext                    (knx.getGroupObject(FIN_KoFingerEnrollNext))
 // Lerne an: ID (verfügbare Slots: R503S: 0-149, R503: 0-199, R503Pro: 0-1499)
-#define KoFIN_EnrollId                            (knx.getGroupObject(FIN_KoEnrollId))
+#define KoFIN_FingerEnrollId                      (knx.getGroupObject(FIN_KoFingerEnrollId))
 // Lerne an: Zutrittsdaten (verfügbare Slots: R503S: 0-149, R503: 0-199, R503Pro: 0-1499)
-#define KoFIN_EnrollData                          (knx.getGroupObject(FIN_KoEnrollData))
+#define KoFIN_FingerEnrollData                    (knx.getGroupObject(FIN_KoFingerEnrollData))
 // Anlernen: Erfolg
-#define KoFIN_EnrollSuccess                       (knx.getGroupObject(FIN_KoEnrollSuccess))
+#define KoFIN_FingerEnrollSuccess                 (knx.getGroupObject(FIN_KoFingerEnrollSuccess))
 // Anlernen: Erfolg ID
-#define KoFIN_EnrollSuccessId                     (knx.getGroupObject(FIN_KoEnrollSuccessId))
+#define KoFIN_FingerEnrollSuccessId               (knx.getGroupObject(FIN_KoFingerEnrollSuccessId))
 // Anlernen: Zutrittsdaten
-#define KoFIN_EnrollSuccessData                   (knx.getGroupObject(FIN_KoEnrollSuccessData))
+#define KoFIN_FingerEnrollSuccessData             (knx.getGroupObject(FIN_KoFingerEnrollSuccessData))
 // Anlernen: Fehlgeschlagen ID
-#define KoFIN_EnrollFailedId                      (knx.getGroupObject(FIN_KoEnrollFailedId))
+#define KoFIN_FingerEnrollFailedId                (knx.getGroupObject(FIN_KoFingerEnrollFailedId))
 // Lösche: ID
-#define KoFIN_DeleteId                            (knx.getGroupObject(FIN_KoDeleteId))
+#define KoFIN_FingerDeleteId                      (knx.getGroupObject(FIN_KoFingerDeleteId))
 // Lösche: Zutrittsdaten
-#define KoFIN_DeleteData                          (knx.getGroupObject(FIN_KoDeleteData))
+#define KoFIN_FingerDeleteData                    (knx.getGroupObject(FIN_KoFingerDeleteData))
 // Löschen: Erfolg
-#define KoFIN_DeleteSuccess                       (knx.getGroupObject(FIN_KoDeleteSuccess))
+#define KoFIN_FingerDeleteSuccess                 (knx.getGroupObject(FIN_KoFingerDeleteSuccess))
 // Löschen: Erfolg ID
-#define KoFIN_DeleteSuccessId                     (knx.getGroupObject(FIN_KoDeleteSuccessId))
+#define KoFIN_FingerDeleteSuccessId               (knx.getGroupObject(FIN_KoFingerDeleteSuccessId))
 // Löschen: Zutrittsdaten
-#define KoFIN_DeleteSuccessData                   (knx.getGroupObject(FIN_KoDeleteSuccessData))
+#define KoFIN_FingerDeleteSuccessData             (knx.getGroupObject(FIN_KoFingerDeleteSuccessData))
 // Löschen: Fehlgeschlagen ID
-#define KoFIN_DeleteFailedId                      (knx.getGroupObject(FIN_KoDeleteFailedId))
+#define KoFIN_FingerDeleteFailedId                (knx.getGroupObject(FIN_KoFingerDeleteFailedId))
 // Externe Finger ID
-#define KoFIN_ExternFingerId                      (knx.getGroupObject(FIN_KoExternFingerId))
+#define KoFIN_FingerExternId                      (knx.getGroupObject(FIN_KoFingerExternId))
 // Finger ID zu Aktion hinzufügen
-#define KoFIN_ActionAddFingerId                   (knx.getGroupObject(FIN_KoActionAddFingerId))
+#define KoFIN_FingerActionAddId                   (knx.getGroupObject(FIN_KoFingerActionAddId))
 // Finger ID von Aktion entfernen
-#define KoFIN_ActionRemoveFingerId                (knx.getGroupObject(FIN_KoActionRemoveFingerId))
+#define KoFIN_FingerActionRemoveId                (knx.getGroupObject(FIN_KoFingerActionRemoveId))
 // Datenaustausch zwischen Fingerprints
 #define KoFIN_Sync                                (knx.getGroupObject(FIN_KoSync))
 // Touch-Front: Taste links
@@ -331,9 +331,9 @@
 // NFC: Externe Tag ID
 #define KoFIN_NfcExternId                         (knx.getGroupObject(FIN_KoNfcExternId))
 // NFC: Tag ID zu Aktion hinzufügen
-#define KoFIN_NfcActionAddFingerId                (knx.getGroupObject(FIN_KoNfcActionAddFingerId))
+#define KoFIN_NfcActionAddId                      (knx.getGroupObject(FIN_KoNfcActionAddId))
 // NFC: Tag ID von Aktion entfernen
-#define KoFIN_NfcActionRemoveFingerId             (knx.getGroupObject(FIN_KoNfcActionRemoveFingerId))
+#define KoFIN_NfcActionRemoveId                   (knx.getGroupObject(FIN_KoNfcActionRemoveId))
 // NFC: Scan: Erfolg
 #define KoFIN_NfcScanSuccess                      (knx.getGroupObject(FIN_KoNfcScanSuccess))
 // NFC: Scan: ID
