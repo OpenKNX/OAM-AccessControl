@@ -234,6 +234,26 @@
               <ComObject Id="%AID%_O-%T%000052" Name="TouchPcbButtonRight"  Number="52" ObjectSize="1 Bit"    Text="Touch-Front: Taste rechts" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
               <ComObject Id="%AID%_O-%T%000053" Name="TouchPcbLedRed"       Number="53" ObjectSize="1 Bit"    Text="Touch-Front: LED rot" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
               <ComObject Id="%AID%_O-%T%000054" Name="TouchPcbLedGreen"     Number="54" ObjectSize="1 Bit"    Text="Touch-Front: LED grün" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              
+              <ComObject Id="%AID%_O-%T%000040" Name="NfcExternId" Number="4000" ObjectSize="2 Bytes" Text="NFC: Externe Tag ID" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
+              <ComObject Id="%AID%_O-%T%000044" Name="NfcActionAddFingerId" Number="4400" ObjectSize="4 Bytes" Text="NFC: Tag ID zu Aktion hinzufügen" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPT-12" />
+              <ComObject Id="%AID%_O-%T%000045" Name="NfcActionRemoveFingerId" Number="4500" ObjectSize="4 Bytes" Text="NFC: Tag ID von Aktion entfernen" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPT-12" />
+              <ComObject Id="%AID%_O-%T%000061" Name="NfcScanSuccess" Number="6100" ObjectSize="1 Bit" Text="NFC: Scan: Erfolg" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%000062" Name="NfcScanSuccessId" Number="6200" ObjectSize="2 Bytes" Text="NFC: Scan: ID" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
+              <ComObject Id="%AID%_O-%T%000063" Name="NfcScanSuccessData" Number="6300" ObjectSize="4 Bytes" Text="NFC: Scan: Zutrittsdaten" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-15-0" />
+              <ComObject Id="%AID%_O-%T%000064" Name="NfcEnrollNext" Number="6400" ObjectSize="1 Bit" Text="NFC: Lerne an: Nächste freie ID" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%000065" Name="NfcEnrollId" Number="6500" ObjectSize="2 Bytes" Text="NFC: Lerne an: ID (0-1499)" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
+              <ComObject Id="%AID%_O-%T%000066" Name="NfcEnrollData" Number="6600" ObjectSize="4 Bytes" Text="NFC: Lerne an: Zutrittsdaten (0-1499)" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-15-0" />
+              <ComObject Id="%AID%_O-%T%000067" Name="NfcEnrollSuccess" Number="6700" ObjectSize="1 Bit" Text="NFC: Anlernen: Erfolg" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%000068" Name="NfcEnrollSuccessId" Number="6800" ObjectSize="2 Bytes" Text="NFC: Anlernen: Erfolg ID" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
+              <ComObject Id="%AID%_O-%T%000069" Name="NfcEnrollSuccessData" Number="6900" ObjectSize="4 Bytes" Text="NFC: Anlernen: Zutrittsdaten" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-15-0" />
+              <ComObject Id="%AID%_O-%T%000070" Name="NfcEnrollFailedId" Number="7000" ObjectSize="2 Bytes" Text="NFC: Anlernen: Fehlgeschlagen ID" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
+              <ComObject Id="%AID%_O-%T%000071" Name="NfcDeleteId" Number="7100" ObjectSize="2 Bytes" Text="NFC: Lösche: ID" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
+              <ComObject Id="%AID%_O-%T%000072" Name="NfcDeleteData" Number="7200" ObjectSize="4 Bytes" Text="NFC: Lösche: Zutrittsdaten" FunctionText="Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-15-0" />
+              <ComObject Id="%AID%_O-%T%000073" Name="NfcDeleteSuccess" Number="7300" ObjectSize="1 Bit" Text="NFC: Löschen: Erfolg" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%000074" Name="NfcDeleteSuccessId" Number="7400" ObjectSize="2 Bytes" Text="NFC: Löschen: Erfolg ID" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
+              <ComObject Id="%AID%_O-%T%000075" Name="NfcDeleteSuccessData" Number="7500" ObjectSize="4 Bytes" Text="NFC: Löschen: Zutrittsdaten" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-15-0" />
+              <ComObject Id="%AID%_O-%T%000076" Name="NfcDeleteFailedId" Number="7600" ObjectSize="2 Bytes" Text="NFC: Löschen: Fehlgeschlagen ID" FunctionText="Status" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <ComObjectRef Id="%AID%_O-%T%000001_R-%T%00000101" RefId="%AID%_O-%T%000001" />
@@ -269,6 +289,26 @@
               <ComObjectRef Id="%AID%_O-%T%000052_R-%T%00005201" RefId="%AID%_O-%T%000052" />
               <ComObjectRef Id="%AID%_O-%T%000053_R-%T%00005301" RefId="%AID%_O-%T%000053" />
               <ComObjectRef Id="%AID%_O-%T%000054_R-%T%00005401" RefId="%AID%_O-%T%000054" />
+
+              <ComObjectRef Id="%AID%_O-%T%000040_R-%T%00004001" RefId="%AID%_O-%T%000040" />
+              <ComObjectRef Id="%AID%_O-%T%000044_R-%T%00004401" RefId="%AID%_O-%T%000044" />
+              <ComObjectRef Id="%AID%_O-%T%000045_R-%T%00004501" RefId="%AID%_O-%T%000045" />
+              <ComObjectRef Id="%AID%_O-%T%000061_R-%T%00006101" RefId="%AID%_O-%T%000061" />
+              <ComObjectRef Id="%AID%_O-%T%000062_R-%T%00006201" RefId="%AID%_O-%T%000062" />
+              <ComObjectRef Id="%AID%_O-%T%000063_R-%T%00006301" RefId="%AID%_O-%T%000063" />
+              <ComObjectRef Id="%AID%_O-%T%000064_R-%T%00006401" RefId="%AID%_O-%T%000064" />
+              <ComObjectRef Id="%AID%_O-%T%000065_R-%T%00006501" RefId="%AID%_O-%T%000065" />
+              <ComObjectRef Id="%AID%_O-%T%000066_R-%T%00006601" RefId="%AID%_O-%T%000066" />
+              <ComObjectRef Id="%AID%_O-%T%000067_R-%T%00006701" RefId="%AID%_O-%T%000067" />
+              <ComObjectRef Id="%AID%_O-%T%000068_R-%T%00006801" RefId="%AID%_O-%T%000068" />
+              <ComObjectRef Id="%AID%_O-%T%000069_R-%T%00006901" RefId="%AID%_O-%T%000069" />
+              <ComObjectRef Id="%AID%_O-%T%000070_R-%T%00007001" RefId="%AID%_O-%T%000070" />
+              <ComObjectRef Id="%AID%_O-%T%000071_R-%T%00007101" RefId="%AID%_O-%T%000071" />
+              <ComObjectRef Id="%AID%_O-%T%000072_R-%T%00007201" RefId="%AID%_O-%T%000072" />
+              <ComObjectRef Id="%AID%_O-%T%000073_R-%T%00007301" RefId="%AID%_O-%T%000073" />
+              <ComObjectRef Id="%AID%_O-%T%000074_R-%T%00007401" RefId="%AID%_O-%T%000074" />
+              <ComObjectRef Id="%AID%_O-%T%000075_R-%T%00007501" RefId="%AID%_O-%T%000075" />
+              <ComObjectRef Id="%AID%_O-%T%000076_R-%T%00007601" RefId="%AID%_O-%T%000076" />
             </ComObjectRefs>
             <Script>
               <op:include href="FingerprintModule.script.js" type="script" />
@@ -332,11 +372,21 @@
                     <ComObjectRefRef RefId="%AID%_O-%T%000042_R-%T%00004201" />
                     <ComObjectRefRef RefId="%AID%_O-%T%000043_R-%T%00004301" />
 
+                    <ComObjectRefRef RefId="%AID%_O-%T%000064_R-%T%00006401" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000065_R-%T%00006501" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000071_R-%T%00007101" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000040_R-%T%00004001" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000044_R-%T%00004401" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000045_R-%T%00004501" />
+
                     <!-- access data -->
                     <choose ParamRefId="%AID%_UP-%T%000014_R-%T%00001401">
                       <when test="1">
                         <ComObjectRefRef RefId="%AID%_O-%T%000023_R-%T%00002301" />
                         <ComObjectRefRef RefId="%AID%_O-%T%000032_R-%T%00003201" />
+
+                        <ComObjectRefRef RefId="%AID%_O-%T%000066_R-%T%00006601" />
+                        <ComObjectRefRef RefId="%AID%_O-%T%000072_R-%T%00007201" />
                       </when>
                     </choose>
                   </when>
@@ -371,6 +421,15 @@
                     <ComObjectRefRef RefId="%AID%_O-%T%000034_R-%T%00003401" />
                     <ComObjectRefRef RefId="%AID%_O-%T%000036_R-%T%00003601" />
 
+                    <ComObjectRefRef RefId="%AID%_O-%T%000061_R-%T%00006101" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000062_R-%T%00006201" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000067_R-%T%00006701" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000068_R-%T%00006801" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000070_R-%T%00007001" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000073_R-%T%00007301" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000074_R-%T%00007401" />
+                    <ComObjectRefRef RefId="%AID%_O-%T%000076_R-%T%00007601" />
+
                     <!-- LED ring -->
                     <ComObjectRefRef RefId="%AID%_O-%T%000016_R-%T%00001601" />
                     <ComObjectRefRef RefId="%AID%_O-%T%000017_R-%T%00001701" />
@@ -383,6 +442,10 @@
                         <ComObjectRefRef RefId="%AID%_O-%T%000013_R-%T%00001301" />
                         <ComObjectRefRef RefId="%AID%_O-%T%000026_R-%T%00002601" />
                         <ComObjectRefRef RefId="%AID%_O-%T%000035_R-%T%00003501" />
+
+                        <ComObjectRefRef RefId="%AID%_O-%T%000063_R-%T%00006301" />
+                        <ComObjectRefRef RefId="%AID%_O-%T%000069_R-%T%00006901" />
+                        <ComObjectRefRef RefId="%AID%_O-%T%000075_R-%T%00007501" />
                       </when>
                     </choose>
                   </when>

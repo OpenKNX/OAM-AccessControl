@@ -16,7 +16,8 @@ void FingerprintModule::setup()
     logInfoP("Setup fingerprint module");
     logIndentUp();
 
-    initFlash();
+    initFlashFingerprint();
+    initFlashNfc();
 
 #ifdef SCANNER_PWR_PIN
     pinMode(SCANNER_PWR_PIN, OUTPUT);
@@ -56,13 +57,13 @@ void FingerprintModule::setup()
     checkSensorTimer = delayTimerInit();
     initResetTimer = delayTimerInit();
 
-    initNci();
+    initNfc();
 
     logInfoP("Fingerprint module ready.");
     logIndentDown();
 }
 
-void FingerprintModule::initNci()
+void FingerprintModule::initNfc()
 {
 #ifdef NCI_DEBUG
     logging::initialize();
@@ -140,15 +141,15 @@ void FingerprintModule::initFingerprintScanner(bool testMode)
     finger = new Fingerprint(FingerprintModule::delayCallback, scannerPassword);
 }
 
-void FingerprintModule::initFlash()
+void FingerprintModule::initFlashFingerprint()
 {
     _fingerprintStorage.init("fingerprint", FINGERPRINT_FLASH_OFFSET, FINGERPRINT_FLASH_SIZE);
     uint32_t magicWord = _fingerprintStorage.readInt(0);
     if (magicWord != OPENKNX_FIN_FLASH_FINGER_MAGIC_WORD)
     {
-        logInfoP("Flash contents invalid:");
-        logDebugP("Indentification code read: %u", magicWord);
+        logInfoP("Fingerprint flash contents invalid:");
         logIndentUp();
+        logDebugP("Indentification code read: %u", magicWord);
 
         uint8_t clearBuffer[FLASH_SECTOR_SIZE] = {};
         for (size_t i = 0; i < FINGERPRINT_FLASH_SIZE / FLASH_SECTOR_SIZE; i++)
@@ -163,7 +164,33 @@ void FingerprintModule::initFlash()
         logIndentDown();
     }
     else
-        logInfoP("Flash contents valid.");
+        logInfoP("Fingerprint flash contents valid.");
+}
+
+void FingerprintModule::initFlashNfc()
+{
+    _nfcStorage.init("nfc", NFC_FLASH_OFFSET, NFC_FLASH_SIZE);
+    uint32_t magicWord = _nfcStorage.readInt(0);
+    if (magicWord != OPENKNX_FIN_FLASH_NFC_MAGIC_WORD)
+    {
+        logInfoP("NFC flash contents invalid:");
+        logIndentUp();
+        logDebugP("Indentification code read: %u", magicWord);
+
+        uint8_t clearBuffer[FLASH_SECTOR_SIZE] = {};
+        for (size_t i = 0; i < NFC_FLASH_SIZE / FLASH_SECTOR_SIZE; i++)
+            _nfcStorage.write(FLASH_SECTOR_SIZE * i, clearBuffer, FLASH_SECTOR_SIZE);
+        _nfcStorage.commit();
+        logDebugP("Flash cleared.");
+
+        _nfcStorage.writeInt(0, OPENKNX_FIN_FLASH_NFC_MAGIC_WORD);
+        _nfcStorage.commit();
+        logDebugP("Indentification code written.");
+
+        logIndentDown();
+    }
+    else
+        logInfoP("NFC flash contents valid.");
 }
 
 void FingerprintModule::interruptDisplayTouched()
@@ -223,17 +250,17 @@ void FingerprintModule::loop()
             searchForFingerDelayTimer = delayTimerInit();
         }
 
-        if (enrollRequestedTimer > 0 and delayCheck(enrollRequestedTimer, ENROLL_REQUEST_DELAY))
+        if (enrollRequestedFingerTimer > 0 and delayCheck(enrollRequestedFingerTimer, ENROLL_REQUEST_DELAY))
         {
-            bool success = enrollFinger(enrollRequestedLocation);
+            bool success = enrollFinger(enrollRequestedFingerLocation);
             if (success)
             {
-                syncRequestedFingerId = enrollRequestedLocation;
+                syncRequestedFingerId = enrollRequestedFingerLocation;
                 syncRequestedFingerTimer = delayTimerInit();
             }
 
-            enrollRequestedTimer = 0;
-            enrollRequestedLocation = 0;
+            enrollRequestedFingerTimer = 0;
+            enrollRequestedFingerLocation = 0;
         }
 
         if (checkSensorTimer > 0 && delayCheck(checkSensorTimer, CHECK_SENSOR_DELAY))
@@ -266,10 +293,24 @@ void FingerprintModule::loop()
             initResetTimer = 0;
         }
 
-        if (resetLedsTimer > 0 && delayCheck(resetLedsTimer, LED_RESET_TIMEOUT))
+        if (resetFingerLedTimer > 0 && delayCheck(resetFingerLedTimer, LED_RESET_TIMEOUT))
         {
             resetRingLed();
-            resetLedsTimer = 0;
+            resetFingerLedTimer = 0;
+        }
+
+        if (resetTouchPcbLedTimer > 0 && delayCheck(resetTouchPcbLedTimer, LED_RESET_TIMEOUT))
+        {
+            digitalWrite(LED_GREEN_PIN, LOW);
+            digitalWrite(LED_RED_PIN, LOW);
+            resetTouchPcbLedTimer = 0;
+        }
+
+        if (resetTouchPcbLedTimerFast > 0 && delayCheck(resetTouchPcbLedTimerFast, LED_RESET_FAST_TIMEOUT))
+        {
+            digitalWrite(LED_GREEN_PIN, LOW);
+            digitalWrite(LED_RED_PIN, LOW);
+            resetTouchPcbLedTimerFast = 0;
         }
 
         for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
@@ -278,22 +319,61 @@ void FingerprintModule::loop()
 
     if (syncRequestedFingerTimer > 0 && delayCheck(syncRequestedFingerTimer, SYNC_AFTER_ENROLL_DELAY))
     {
-        startSyncSend(syncRequestedFingerId);
+        startSyncSend(SyncType::FINGER, syncRequestedFingerId);
 
         syncRequestedFingerTimer = 0;
         syncRequestedFingerId = 0;
     }
 
+    if (syncRequestedNfcTimer > 0 && delayCheck(syncRequestedNfcTimer, SYNC_AFTER_ENROLL_DELAY))
+    {
+        startSyncSend(SyncType::NFC, syncRequestedNfcId);
+
+        syncRequestedNfcTimer = 0;
+        syncRequestedNfcId = 0;
+    }
+
     processSyncSend();
-    loopNci();
+    loopNfc();
 }
 
-void FingerprintModule::loopNci()
+void FingerprintModule::loopNfc()
 {
-    uint8_t uniqueIdLength;
-    const uint8_t* uniqueId;
+    if (enrollNfcStarted > 0)
+    {
+        if (delayCheck(enrollNfcStarted, NFC_ENROLL_TIMEOUT))
+        {
+            logInfoP("Enrolling NFC tag failed.");
+            KoFIN_EnrollSuccess.value(false, DPT_Switch);
+            KoFIN_EnrollFailedId.value(enrollNfcId, Dpt(7, 1));
+    
+            KoFIN_EnrollSuccessData.valueNoSend(enrollNfcId, Dpt(15, 1, 0)); // access identification code
+            KoFIN_EnrollSuccessData.valueNoSend(true, Dpt(15, 1, 1));     // detection error
+            KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 2));    // permission accepted
+            KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+            KoFIN_EnrollSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+            KoFIN_EnrollSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+
+            digitalWrite(LED_RED_PIN, HIGH);
+            resetTouchPcbLedTimer = delayTimerInit();
+
+            enrollNfcStarted = 0;
+            enrollNfcId = 0;
+        }
+
+        if (delayCheck(enrollNfcLedLastChanged, NFC_ENROLL_LED_BLINK_INTERVAL))
+        {
+            enrollNfcLedOn = !enrollNfcLedOn;
+            digitalWrite(LED_GREEN_PIN, enrollNfcLedOn ? HIGH : LOW);
+
+            enrollNfcLedLastChanged = delayTimerInit();
+        }
+    }
 
     nci::run();
+
+    uint8_t uniqueIdLength;
+    const uint8_t* uniqueId;
     tagStatus currentTagStatus = nci::getTagStatus();
     switch (currentTagStatus) {
         case tagStatus::foundNew:
@@ -307,7 +387,71 @@ void FingerprintModule::loopNci()
             for (uint8_t index = 0; index < uniqueIdLength; index++)
                 logDebugP("0x%02X ", uniqueId[index]);
 
-            openknx.console.writeDiagenoseKo((char*)uniqueId);
+            if (enrollNfcStarted > 0)
+            {
+                uint32_t storageOffset = FIN_CalcNfcStorageOffset(enrollNfcId);
+                logDebugP("storageOffset: %d", storageOffset);
+                _nfcStorage.write(storageOffset, *uniqueId, uniqueIdLength);
+                _nfcStorage.commit();
+
+                logInfoP("Enrolled to nfcID %u.", enrollNfcId);
+                KoFIN_EnrollSuccess.value(true, DPT_Switch);
+                KoFIN_EnrollSuccessId.value(enrollNfcId, Dpt(7, 1));
+        
+                KoFIN_EnrollSuccess.valueNoSend(enrollNfcId, Dpt(15, 1, 0)); // access identification code
+                KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 1));    // detection error
+                KoFIN_EnrollSuccess.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
+                KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+                KoFIN_EnrollSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+                KoFIN_EnrollSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+                
+                digitalWrite(LED_GREEN_PIN, HIGH);
+                resetFingerLedTimer = delayTimerInit();
+                enrollNfcStarted = 0;
+            }
+            else
+            {
+                uint32_t storageOffset = 0;
+                uint8_t tagUid[10] = {};
+                bool found = false;
+                uint16_t foundId = 0;
+                for (uint16_t nfcId = 0; nfcId < MAX_NFCS; nfcId++)
+                {
+                    storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+                    _nfcStorage.read(storageOffset, tagUid, 10);
+                    if (!memcmp(tagUid, uniqueId, uniqueIdLength))
+                    {
+                        found = true;
+                        foundId = nfcId;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    logDebugP("Tag found (id=%u)", foundId);
+                    processNfcScanSuccess(foundId);
+                }
+                else
+                {
+                    logInfoP("Tag not found");
+                    KoFIN_NfcScanSuccess.value(false, DPT_Switch);
+            
+                    KoFIN_NfcScanSuccessData.valueNoSend((uint32_t)0, Dpt(15, 1, 0)); // access identification code (unknown)
+                    KoFIN_NfcScanSuccessData.valueNoSend(true, Dpt(15, 1, 1));        // detection error
+                    KoFIN_NfcScanSuccessData.valueNoSend(false, Dpt(15, 1, 2));       // permission accepted
+                    KoFIN_NfcScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));       // read direction (not used)
+                    KoFIN_NfcScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));       // encryption (not used for now)
+                    KoFIN_NfcScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));        // index of access identification code (not used)
+            
+                    // if NFC tag present, but scan failed, reset all authentication action calls
+                    for (uint16_t i = 0; i < ParamFIN_VisibleActions; i++)
+                        _channels[i]->resetActionCall();
+
+                    digitalWrite(LED_RED_PIN, HIGH);
+                    resetTouchPcbLedTimer = delayTimerInit();
+                }
+            }
 
             logIndentDown();
             break;
@@ -321,6 +465,50 @@ void FingerprintModule::loopNci()
     {
         nci::reset();
         logDebugP("NCI reset.");
+    }
+}
+
+void FingerprintModule::processNfcScanSuccess(uint16_t foundId, bool external)
+{
+    KoFIN_NfcScanSuccess.value(true, DPT_Switch);
+    KoFIN_NfcScanSuccessId.value(foundId, Dpt(7, 1));
+
+    KoFIN_NfcScanSuccessData.valueNoSend(foundId, Dpt(15, 1, 0)); // access identification code
+    KoFIN_NfcScanSuccessData.valueNoSend(false, Dpt(15, 1, 1));    // detection error
+    KoFIN_NfcScanSuccessData.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
+    KoFIN_NfcScanSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+    KoFIN_NfcScanSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+    KoFIN_NfcScanSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+
+    bool actionExecuted = false;
+    for (size_t i = 0; i < ParamNFCACT_NfcActionCount; i++)
+    {
+        uint16_t nfcId = knx.paramWord(NFCACT_FaNfcId + NFCACT_ParamBlockOffset + i * NFCACT_ParamBlockSize);
+        if (nfcId == foundId)
+        {
+            uint16_t actionId = knx.paramWord(NFCACT_FaActionId + NFCACT_ParamBlockOffset + i * NFCACT_ParamBlockSize) - 1;
+            if (actionId < FIN_VisibleActions)
+                actionExecuted |= _channels[actionId]->processScan(foundId);
+            else
+                logInfoP("Invalid ActionId: %d", actionId);
+        }
+    }
+
+    if (actionExecuted)
+    {
+        if (!external)
+        {
+            digitalWrite(LED_GREEN_PIN, HIGH);
+            resetTouchPcbLedTimer = delayTimerInit();
+        }
+    }
+    else
+    {
+        if (!external)
+        {
+            digitalWrite(LED_GREEN_PIN, HIGH);
+            resetTouchPcbLedTimerFast = delayTimerInit();
+        }
     }
 }
 
@@ -348,12 +536,12 @@ bool FingerprintModule::searchForFinger()
             hasLastFoundLocation && lastFoundLocation == findFingerResult.location)
         {
             logDebugP("Same finger found in location %d and ignored", findFingerResult.location);
-            resetLedsTimer = delayTimerInit();
+            resetFingerLedTimer = delayTimerInit();
             return true;
         }
 
         logInfoP("Finger found in location %d", findFingerResult.location);
-        processScanSuccess(findFingerResult.location);
+        processFingerScanSuccess(findFingerResult.location);
 
         hasLastFoundLocation = true;
         lastFoundLocation = findFingerResult.location;
@@ -378,7 +566,7 @@ bool FingerprintModule::searchForFinger()
             _channels[i]->resetActionCall();
     }
 
-    resetLedsTimer = delayTimerInit();
+    resetFingerLedTimer = delayTimerInit();
     return true;
 }
 
@@ -388,7 +576,7 @@ void FingerprintModule::resetRingLed()
     logInfoP("LED ring: color=%u, control=%u, speed=%u, count=%u", (uint8_t)KoFIN_LedRingColor.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingControl.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingSpeed.value(Dpt(5, 10)), (uint8_t)KoFIN_LedRingCount.value(Dpt(5, 10)));
 }
 
-void FingerprintModule::processScanSuccess(uint16_t location, bool external)
+void FingerprintModule::processFingerScanSuccess(uint16_t location, bool external)
 {
     KoFIN_ScanSuccess.value(true, DPT_Switch);
     KoFIN_ScanSuccessId.value(location, Dpt(7, 1));
@@ -483,7 +671,7 @@ bool FingerprintModule::enrollFinger(uint16_t location)
     }
 
     logIndentDown();
-    resetLedsTimer = delayTimerInit();
+    resetFingerLedTimer = delayTimerInit();
 
     return success;
 }
@@ -511,7 +699,7 @@ bool FingerprintModule::deleteFinger(uint16_t location, bool sync)
         KoFIN_DeleteSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
 
         if (sync)
-            startSyncDelete(location);
+            startSyncDelete(SyncType::FINGER, location);
     }
     else
     {
@@ -528,14 +716,73 @@ bool FingerprintModule::deleteFinger(uint16_t location, bool sync)
     }
 
     logIndentDown();
-    resetLedsTimer = delayTimerInit();
+    resetFingerLedTimer = delayTimerInit();
 
+    return success;
+}
+
+bool FingerprintModule::deleteNfc(uint16_t nfcId, bool sync)
+{
+    logInfoP("Delete request:");
+    logIndentUp();
+
+    uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+    logDebugP("storageOffset: %d", storageOffset);
+
+    uint8_t emptyTest[10] = {};
+    uint8_t tagUid[10] = {};
+    _nfcStorage.read(storageOffset, tagUid, 10);
+    
+    // if tag UID empty, no tag with this ID defined
+    bool success = memcmp(emptyTest, tagUid, 10);
+    if (success)
+    {
+        char personName[28] = {}; // empty
+
+        uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
+        _nfcStorage.write(storageOffset, *emptyTest, 10);
+        _nfcStorage.write(storageOffset + 10, *personName, 28);
+        _nfcStorage.commit();
+
+        if (sync)
+            startSyncDelete(SyncType::NFC, nfcId);
+        
+        KoFIN_NfcDeleteSuccess.value(true, DPT_Switch);
+        KoFIN_NfcDeleteSuccessId.value(nfcId, Dpt(7, 1));
+
+        KoFIN_NfcDeleteSuccess.valueNoSend(nfcId, Dpt(15, 1, 0)); // access identification code
+        KoFIN_NfcDeleteSuccess.valueNoSend(false, Dpt(15, 1, 1));    // detection error
+        KoFIN_NfcDeleteSuccess.valueNoSend(true, Dpt(15, 1, 2));     // permission accepted
+        KoFIN_NfcDeleteSuccess.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+        KoFIN_NfcDeleteSuccess.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+        KoFIN_NfcDeleteSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+    
+        digitalWrite(LED_GREEN_PIN, HIGH);
+        logInfoP("NFC tag with ID %d deleted.", nfcId);
+    }
+    else
+    {
+        KoFIN_NfcDeleteSuccess.value(false, DPT_Switch);
+        KoFIN_NfcDeleteFailedId.value(nfcId, Dpt(7, 1));
+
+        KoFIN_NfcDeleteSuccessData.valueNoSend(nfcId, Dpt(15, 1, 0)); // access identification code
+        KoFIN_NfcDeleteSuccessData.valueNoSend(true, Dpt(15, 1, 1));     // detection error
+        KoFIN_NfcDeleteSuccessData.valueNoSend(false, Dpt(15, 1, 2));    // permission accepted
+        KoFIN_NfcDeleteSuccessData.valueNoSend(false, Dpt(15, 1, 3));    // read direction (not used)
+        KoFIN_NfcDeleteSuccessData.valueNoSend(false, Dpt(15, 1, 4));    // encryption (not used for now)
+        KoFIN_NfcDeleteSuccessData.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
+
+        digitalWrite(LED_RED_PIN, HIGH);
+        logInfoP("NFC tag with ID %d not found.");
+    }
+
+    resetTouchPcbLedTimer = delayTimerInit();
     return success;
 }
 
 void FingerprintModule::processInputKo(GroupObject& ko)
 {
-    uint16_t location;
+    uint16_t idReceived;
 
     uint16_t asap = ko.asap();
     switch (asap)
@@ -566,23 +813,44 @@ void FingerprintModule::processInputKo(GroupObject& ko)
         case FIN_KoEnrollNext:
         case FIN_KoEnrollId:
         case FIN_KoEnrollData:
-            processInputKoEnroll(ko);
+            processInputKoEnrollFinger(ko);
+            break;
+        case FIN_KoNfcEnrollNext:
+        case FIN_KoNfcEnrollId:
+        case FIN_KoNfcEnrollData:
+            processInputKoEnrollNfc(ko);
             break;
         case FIN_KoDeleteId:
         case FIN_KoDeleteData:
             if (asap == FIN_KoDeleteId)
-                location = ko.value(Dpt(7, 1));
+                idReceived = ko.value(Dpt(7, 1));
             else
-                location = ko.value(Dpt(15, 1, 0));
+                idReceived = ko.value(Dpt(15, 1, 0));
 
-            logInfoP("Location provided: %d", location);
-            deleteFinger(location);
+            logInfoP("Location provided: %d", idReceived);
+            deleteFinger(idReceived);
+            break;
+        case FIN_KoNfcDeleteId:
+        case FIN_KoNfcDeleteData:
+            if (asap == FIN_KoNfcDeleteId)
+                idReceived = ko.value(Dpt(7, 1));
+            else
+                idReceived = ko.value(Dpt(15, 1, 0));
+
+            logInfoP("ID provided: %d", idReceived);
+            deleteNfc(idReceived);
             break;
         case FIN_KoExternFingerId:
-            location = ko.value(Dpt(7, 1));
-            logInfoP("FingerID received: %d", location);
+            idReceived = ko.value(Dpt(7, 1));
+            logInfoP("FingerID received: %d", idReceived);
 
-            processScanSuccess(location, true);
+            processFingerScanSuccess(idReceived, true);
+            break;
+        case FIN_KoNfcExternId:
+            idReceived = ko.value(Dpt(7, 1));
+            logInfoP("NfcID received: %d", idReceived);
+
+            processNfcScanSuccess(idReceived, true);
             break;
         default:
         {
@@ -617,7 +885,7 @@ void FingerprintModule::processInputKoTouchPcbLed(GroupObject &ko)
         digitalWrite(LED_GREEN_PIN, ledOn ? HIGH : LOW);
 }
 
-void FingerprintModule::processInputKoEnroll(GroupObject &ko)
+void FingerprintModule::processInputKoEnrollFinger(GroupObject &ko)
 {
     bool success;
     uint16_t location;
@@ -649,78 +917,157 @@ void FingerprintModule::processInputKoEnroll(GroupObject &ko)
     if (!success)
         return;
 
-    enrollRequestedTimer = delayTimerInit();
-    enrollRequestedLocation = location;
+    enrollRequestedFingerTimer = delayTimerInit();
+    enrollRequestedFingerLocation = location;
 }
 
-void FingerprintModule::startSyncDelete(uint16_t fingerId)
+void FingerprintModule::processInputKoEnrollNfc(GroupObject &ko)
+{
+    bool success;
+    uint16_t nfcId;
+    uint16_t asap = ko.asap();
+    if (asap == FIN_KoNfcEnrollNext)
+    {
+        uint32_t storageOffset = 0;
+        uint8_t tagUid[10] = {};
+        uint8_t emptyTest[10] = {};
+        
+        for (uint16_t existentId = 0; existentId < MAX_NFCS; existentId++)
+        {
+            storageOffset = FIN_CalcNfcStorageOffset(existentId);
+            _nfcStorage.read(storageOffset, tagUid, 10);
+            if (!memcmp(tagUid, emptyTest, 10))
+            {
+                success = true;
+                nfcId = existentId;
+                break;
+            }
+        }
+
+        if (success)
+            logInfoP("Next ID: %u", nfcId);
+    }
+    else if (asap == FIN_KoNfcEnrollId)
+    {
+        success = true;
+        nfcId = ko.value(Dpt(7, 1));
+        logInfoP("ID provided: %u", nfcId);
+    }
+    else
+    {
+        success = true;
+        nfcId = ko.value(Dpt(15, 1, 0));
+        logInfoP("ID provided: %u", nfcId);
+    }
+
+    if (!success)
+        return;
+
+    enrollNfcStarted = delayTimerInit();
+    enrollNfcId = nfcId;
+}
+
+void FingerprintModule::startSyncDelete(SyncType syncType, uint16_t deleteId)
 {
     if (!ParamFIN_EnableSync ||
         syncReceiving)
         return;
 
-    logInfoP("Sync-Send: delete: fingerId=%u", fingerId);
+    logInfoP("Sync-Send (syncType=%u): delete: deleteId=%u", syncType, deleteId);
 
     /*
     Sync Delete Packet Layout:
     -   0: 1 byte : sequence number (0: control packet)
-    -   1: 1 byte : sync type (0: new finger, 1: delete finger)
+    -   1: 1 byte : sync type (0: new finger, 1: delete finger, 10: new NFC, 11: delete NFC)
     -   2: 1 byte : sync data format version (currently always 0)
     - 3-4: 2 bytes: finger ID
     */
 
+    uint8_t syncTypeCode = 0;
+    switch (syncType)
+    {
+        case SyncType::FINGER:
+            syncTypeCode = 1;
+            break;
+        case SyncType::NFC:
+            syncTypeCode = 11;
+            break;
+        default:
+            logErrorP("Sync-Send (syncType=%u): delete: Unsupported sync type", syncType);
+            return;
+    }
+
     uint8_t *data = KoFIN_Sync.valueRef();
     data[0] = 0;
-    data[1] = 1;
+    data[1] = syncTypeCode;
     data[2] = 0;
-    data[3] = fingerId >> 8;
-    data[4] = fingerId;
+    data[3] = deleteId >> 8;
+    data[4] = deleteId;
     KoFIN_Sync.objectWritten();
 
     syncIgnoreTimer = delayTimerInit();
 }
 
-void FingerprintModule::startSyncSend(uint16_t fingerId, bool loadModel)
+void FingerprintModule::startSyncSend(SyncType syncType, uint16_t syncId, bool loadModel)
 {
     if (!ParamFIN_EnableSync ||
         syncReceiving)
         return;
 
-    logInfoP("Sync-Send: started: fingerId=%u, loadModel=%u, syncDelay=%u", fingerId, loadModel, ParamFIN_SyncDelay);
+    logInfoP("Sync-Send (syncType=%u): started: syncId=%u, loadModel=%u, syncDelay=%u", syncId, loadModel, ParamFIN_SyncDelay);
 
-    if (!switchFingerprintPower(true))
-    {
-        logErrorP("Sync-Send: powering scanner on failed");
-        return;
-    }
-
-    finger->setLed(Fingerprint::State::Busy);
-
-    bool success;
-    if (loadModel)
-    {
-        success = finger->loadTemplate(fingerId);
-        if (!success)
-        {
-            logErrorP("Sync-Send: loading template failed");
-            return;
-        }
-    }
-
+    uint8_t syncTypeCode = 0;
     uint8_t syncSendBufferTemp[SYNC_BUFFER_SIZE];
-    success = finger->retrieveTemplate(syncSendBufferTemp);
-    if (!success)
+    uint32_t storageOffset = 0;
+    uint8_t syncData[max(OPENKNX_FIN_FLASH_FINGER_DATA_SIZE, OPENKNX_FIN_FLASH_NFC_DATA_SIZE)] = {};
+    switch (syncType)
     {
-        logErrorP("Sync-Send: retrieving template failed");
-        return;
+        case SyncType::FINGER:
+            syncTypeCode = 0;
+
+            if (!switchFingerprintPower(true))
+            {
+                logErrorP("Sync-Send (syncType=%u): powering scanner on failed", syncType);
+                return;
+            }
+    
+            finger->setLed(Fingerprint::State::Busy);
+    
+            bool success;
+            if (loadModel)
+            {
+                success = finger->loadTemplate(syncId);
+                if (!success)
+                {
+                    logErrorP("Sync-Send (syncType=%u): loading template failed", syncType);
+                    return;
+                }
+            }
+    
+            success = finger->retrieveTemplate(syncSendBufferTemp);
+            if (!success)
+            {
+                logErrorP("Sync-Send (syncType=%u): retrieving template failed", syncType);
+                return;
+            }
+    
+            resetRingLed();
+
+            storageOffset = FIN_CalcFingerStorageOffset(syncId);
+            _fingerprintStorage.read(storageOffset, syncData, OPENKNX_FIN_FLASH_FINGER_DATA_SIZE);
+            memcpy(syncSendBufferTemp + TEMPLATE_SIZE, syncData, OPENKNX_FIN_FLASH_FINGER_DATA_SIZE);        
+            break;
+        case SyncType::NFC:
+            syncTypeCode = 10;
+
+            storageOffset = FIN_CalcNfcStorageOffset(syncId);
+            _nfcStorage.read(storageOffset, syncData, OPENKNX_FIN_FLASH_NFC_DATA_SIZE);
+            memcpy(syncSendBufferTemp, syncData, OPENKNX_FIN_FLASH_NFC_DATA_SIZE);        
+            break;
+        default:
+            logErrorP("Sync-Send (syncType=%u): delete: Unsupported sync type", syncType);
+            return;
     }
-
-    resetRingLed();
-
-    uint32_t storageOffset = FIN_CalcFingerStorageOffset(fingerId);
-    uint8_t personData[29] = {};
-    _fingerprintStorage.read(storageOffset, personData, 29);
-    memcpy(syncSendBufferTemp + TEMPLATE_SIZE, personData, 29);
 
     const int maxDstSize = LZ4_compressBound(SYNC_BUFFER_SIZE);
     const int compressedDataSize = LZ4_compress_default((char*)syncSendBufferTemp, (char*)syncSendBuffer, SYNC_BUFFER_SIZE, maxDstSize);
@@ -728,14 +1075,13 @@ void FingerprintModule::startSyncSend(uint16_t fingerId, bool loadModel)
     syncSendBufferLength = compressedDataSize;
     syncSendPacketCount = ceil(syncSendBufferLength / (float)SYNC_SEND_PACKET_DATA_LENGTH) + 1; // currently separated control packet
     uint16_t checksum = crc16.ccitt(syncSendBuffer, syncSendBufferLength);
-    
 
-    logDebugP("Sync-Send (1/%u): control packet: bufferLength=%u, lengthPerPacket=%u, checksum=%u, fingerId=%u%", syncSendPacketCount, syncSendBufferLength, SYNC_SEND_PACKET_DATA_LENGTH, checksum, fingerId);
+    logDebugP("Sync-Send (syncType=%u, 1/%u): control packet: bufferLength=%u, lengthPerPacket=%u, checksum=%u, fingerId=%u%", syncType, syncSendPacketCount, syncSendBufferLength, SYNC_SEND_PACKET_DATA_LENGTH, checksum, syncId);
 
     /*
     Sync Control Packet Layout:
     -    0: 1 byte : sequence number (0: control packet)
-    -    1: 1 byte : sync type (0: new finger, 1: delete finger)
+    -    1: 1 byte : sync type (0: new finger, 1: delete finger, 10: new NFC, 11: delete NFC)
     -    2: 1 byte : sync data format version (currently always 0)
     -  3-4: 2 bytes: total data content size
     -    5: 1 byte : max. payload data length per data packet
@@ -746,7 +1092,7 @@ void FingerprintModule::startSyncSend(uint16_t fingerId, bool loadModel)
 
     uint8_t *data = KoFIN_Sync.valueRef();
     data[0] = 0;
-    data[1] = 0;
+    data[1] = syncTypeCode;
     data[2] = 0;
     data[3] = syncSendBufferLength >> 8;
     data[4] = syncSendBufferLength;
@@ -754,8 +1100,8 @@ void FingerprintModule::startSyncSend(uint16_t fingerId, bool loadModel)
     data[6] = syncSendPacketCount;
     data[7] = checksum >> 8;
     data[8] = checksum;
-    data[9] = fingerId >> 8;
-    data[10] = fingerId;
+    data[9] = syncId >> 8;
+    data[10] = syncId;
     KoFIN_Sync.objectWritten();
 
     syncSendTimer = delayTimerInit();
@@ -807,12 +1153,15 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
     if (data[0] == 0) // sequence number
     {
         uint16_t syncDeleteFingerId;
+        uint16_t syncDeleteNfcId;
         switch (data[1]) // sync type
         {
             case 0: // new finger
+            case 10: // new NFC
+                syncReceiveType = data[1] == 0 ? SyncType::FINGER : SyncType::NFC;
                 if (data[2] != 0)
                 {
-                    logInfoP("Sync-Receive: Unsupported sync version: %u", data[2]);
+                    logInfoP("Sync-Receive (syncType=%u): Unsupported sync version: %u", syncReceiveType, data[2]);
                     return;
                 }
 
@@ -820,9 +1169,9 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
                 syncReceiveLengthPerPacket = data[5];
                 syncReceivePacketCount = data[6];
                 syncReceiveBufferChecksum = (data[7] << 8) | data[8];
-                syncReceiveFingerId = (data[9] << 8) | data[10];
+                syncReceiveSyncId = (data[9] << 8) | data[10];
 
-                logDebugP("Sync-Receive (1/%u): control packet: bufferLength=%u, lengthPerPacket=%u, checksum=%u, fingerId=%u", syncReceivePacketCount, syncReceiveBufferLength, syncReceiveLengthPerPacket, syncReceiveBufferChecksum, syncReceiveFingerId);
+                logDebugP("Sync-Receive (syncType=%u, 1/%u): control packet: bufferLength=%u, lengthPerPacket=%u, checksum=%u, syncId=%u", syncReceiveType, syncReceivePacketCount, syncReceiveBufferLength, syncReceiveLengthPerPacket, syncReceiveBufferChecksum, syncReceiveSyncId);
 
                 memset(syncReceivePacketReceived, 0, sizeof(syncReceivePacketReceived));
                 syncReceivePacketReceived[0] = true;
@@ -842,6 +1191,21 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
 
                 deleteFinger(syncDeleteFingerId, false);
 
+                syncReceiving = false;
+                return;
+            case 11: // delete NFC
+                if (data[2] != 0)
+                {
+                    logInfoP("Sync-Receive (delete NFC): Unsupported sync version: %u", data[2]);
+                    return;
+                }
+
+                syncDeleteNfcId = (data[3] << 8) | data[4];
+                logDebugP("Sync-Receive (delete NFC): fingerId=%u", syncDeleteNfcId);
+
+                deleteNfc(syncDeleteNfcId, false);
+
+                syncReceiving = false;
                 return;
             default:
                 logInfoP("Sync-Receive: Unsupported sync type: %u", data[1]);
@@ -852,14 +1216,14 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
 
     if (!syncReceiving)
     {
-        logInfoP("Sync-Receive: data packet without control packet");
+        logInfoP("Sync-Receive (syncType=%u): data packet without control packet", syncReceiveType);
         return;
     }
 
     uint8_t sequenceNo = data[0];
     if (syncReceivePacketReceived[sequenceNo])
     {
-        logInfoP("Sync-Receive: same packet already received");
+        logInfoP("Sync-Receive (syncType=%u): same packet already received", syncReceiveType);
         return;
     }
 
@@ -870,26 +1234,34 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
     memcpy(syncReceiveBuffer + dataOffset, data + 1, dataLength);
 
     syncReceivePacketReceivedCount++;
-    logDebugP("Sync-Receive (%u/%u): data packet: dataPacketNo=%u, dataOffset=%u, dataLength=%u", syncReceivePacketReceivedCount, syncReceivePacketCount, dataPacketNo, dataOffset, dataLength);
+    logDebugP("Sync-Receive (syncType=%u, %u/%u): data packet: dataPacketNo=%u, dataOffset=%u, dataLength=%u", syncReceiveType, syncReceivePacketReceivedCount, syncReceivePacketCount, dataPacketNo, dataOffset, dataLength);
 
     if (syncReceivePacketReceivedCount == syncReceivePacketCount)
     {
-        if (!switchFingerprintPower(true))
+        if (syncReceiveType == SyncType::FINGER)
         {
-            logErrorP("Sync-Receive: powering scanner on failed");
-            return;
-        }
+            if (!switchFingerprintPower(true))
+            {
+                logErrorP("Sync-Receive (syncType=%u): powering scanner on failed", syncReceiveType);
+                return;
+            }
 
-        finger->setLed(Fingerprint::State::Busy);
+            finger->setLed(Fingerprint::State::Busy);
+        }
 
         uint16_t checksum = crc16.ccitt(syncReceiveBuffer, syncReceiveBufferLength);
         if (syncReceiveBufferChecksum == checksum)
-            logDebugP("Sync-Receive: finished (checksum=%u)", syncReceiveBufferChecksum);
+            logDebugP("Sync-Receive (syncType=%u): finished (checksum=%u)", syncReceiveType, syncReceiveBufferChecksum);
         else
         {
-            logErrorP("Sync-Receive: finished failed (checksum expected=%u, calculated=%u)", syncReceiveBufferChecksum, checksum);
-            finger->setLed(Fingerprint::State::Failed);
-            resetLedsTimer = delayTimerInit();
+            logErrorP("Sync-Receive (syncType=%u): finished failed (checksum expected=%u, calculated=%u)", syncReceiveType, syncReceiveBufferChecksum, checksum);
+
+            if (syncReceiveType == SyncType::FINGER)
+            {
+                finger->setLed(Fingerprint::State::Failed);
+                resetFingerLedTimer = delayTimerInit();
+            }
+
             return;
         }
 
@@ -897,37 +1269,52 @@ void FingerprintModule::processSyncReceive(uint8_t* data)
         const int decompressedSize = LZ4_decompress_safe((char*)syncReceiveBuffer, (char*)syncSendBufferTemp, syncReceiveBufferLength, SYNC_BUFFER_SIZE);
         if (decompressedSize != SYNC_BUFFER_SIZE)
         {
-            logErrorP("Sync-Receive: decompression failed (size expected=%u, received=%u)", SYNC_BUFFER_SIZE, decompressedSize);
-            finger->setLed(Fingerprint::State::Failed);
-            resetLedsTimer = delayTimerInit();
+            logErrorP("Sync-Receive (syncType=%u): decompression failed (size expected=%u, received=%u)", syncReceiveType, SYNC_BUFFER_SIZE, decompressedSize);
+
+            if (syncReceiveType == SyncType::FINGER)
+            {
+                finger->setLed(Fingerprint::State::Failed);
+                resetFingerLedTimer = delayTimerInit();
+            }
+
             return;
         }
 
-        bool success;
-        success = finger->sendTemplate(syncSendBufferTemp);
-        if (!success)
+        uint32_t storageOffset = 0;
+        switch (syncReceiveType)
         {
-            logErrorP("Sync-Receive: sending template failed");
-            finger->setLed(Fingerprint::State::Failed);
-            resetLedsTimer = delayTimerInit();
-            return;
+            case SyncType::FINGER:
+                if (!finger->sendTemplate(syncSendBufferTemp))
+                {
+                    logErrorP("Sync-Receive (syncType=%u): sending finger template failed", syncReceiveType);
+                    finger->setLed(Fingerprint::State::Failed);
+                    resetFingerLedTimer = delayTimerInit();
+                    return;
+                }
+
+                if (!finger->storeTemplate(syncReceiveSyncId))
+                {
+                    logErrorP("Sync-Receive (syncType=%u): storing finger template failed", syncReceiveType);
+                    finger->setLed(Fingerprint::State::Failed);
+                    resetFingerLedTimer = delayTimerInit();
+                    return;
+                }
+
+                storageOffset = FIN_CalcFingerStorageOffset(syncReceiveSyncId);
+                _fingerprintStorage.write(storageOffset, syncSendBufferTemp + TEMPLATE_SIZE, OPENKNX_FIN_FLASH_FINGER_DATA_SIZE);
+                _fingerprintStorage.commit();
+
+                finger->setLed(Fingerprint::State::Success);
+                resetFingerLedTimer = delayTimerInit();
+                break;
+            case SyncType::NFC:
+                storageOffset = FIN_CalcNfcStorageOffset(syncReceiveSyncId);
+                _nfcStorage.write(storageOffset, syncSendBufferTemp, OPENKNX_FIN_FLASH_NFC_DATA_SIZE);
+                _nfcStorage.commit();
+                break;
         }
 
-        success = finger->storeTemplate(syncReceiveFingerId);
-        if (!success)
-        {
-            logErrorP("Sync-Receive: storing template failed");
-            finger->setLed(Fingerprint::State::Failed);
-            resetLedsTimer = delayTimerInit();
-            return;
-        }
-
-        uint32_t storageOffset = FIN_CalcFingerStorageOffset(syncReceiveFingerId);
-        _fingerprintStorage.write(storageOffset, syncSendBufferTemp + TEMPLATE_SIZE, 29);
-        _fingerprintStorage.commit();
-
-        finger->setLed(Fingerprint::State::Success);
-        resetLedsTimer = delayTimerInit();
+        logInfoP("Sync-Receive (syncType=%u): data stored", syncReceiveType);
         syncReceiving = false;
     }
 }
@@ -1015,8 +1402,8 @@ void FingerprintModule::handleFunctionPropertyEnrollFinger(uint8_t *data, uint8_
     _fingerprintStorage.write(storageOffset + 1, personName, 28);
     _fingerprintStorage.commit();
 
-    enrollRequestedTimer = delayTimerInit();
-    enrollRequestedLocation = fingerId;
+    enrollRequestedFingerTimer = delayTimerInit();
+    enrollRequestedFingerLocation = fingerId;
     
     resultData[0] = 0;
     resultLength = 1;
@@ -1137,7 +1524,7 @@ void FingerprintModule::handleFunctionPropertyResetFingerScanner(uint8_t *data, 
         _fingerprintStorage.commit();
 
         success = finger->emptyDatabase();
-        resetLedsTimer = delayTimerInit();
+        resetFingerLedTimer = delayTimerInit();
     }
 
     resultData[0] = success ? 0 : 1;
@@ -1348,7 +1735,7 @@ void FingerprintModule::handleFunctionPropertySetFingerPassword(uint8_t *data, u
         if (switchFingerprintPower(true))
             success = finger->setPassword(newPasswordCrc);
         
-        resetLedsTimer = delayTimerInit();
+        resetFingerLedTimer = delayTimerInit();
         logInfoP(success ? "Success." : "Failed.");
         logIndentDown();
         
@@ -1363,7 +1750,7 @@ void FingerprintModule::handleFunctionPropertySetFingerPassword(uint8_t *data, u
             finger->start();
         }
 
-        resetLedsTimer = delayTimerInit();
+        resetFingerLedTimer = delayTimerInit();
         logIndentDown();
 
         resultData[0] = success ? 0 : 2;
@@ -1399,12 +1786,12 @@ void FingerprintModule::handleFunctionPropertyEnrollNfc(uint8_t *data, uint8_t *
 
     uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
     logDebugP("storageOffset: %d", storageOffset);
-    _fingerprintStorage.write(storageOffset, *tagUid, 10);
-    _fingerprintStorage.write(storageOffset + 10, tagName, 28);
-    _fingerprintStorage.commit();
+    _nfcStorage.write(storageOffset, *tagUid, 10);
+    _nfcStorage.write(storageOffset + 10, tagName, 28);
+    _nfcStorage.commit();
 
-    enrollRequestedTimer = delayTimerInit();
-    enrollRequestedLocation = nfcId;
+    enrollNfcStarted = delayTimerInit();
+    enrollNfcId = nfcId;
     
     resultData[0] = 0;
     resultLength = 1;
@@ -1422,7 +1809,7 @@ void FingerprintModule::handleFunctionPropertyChangeNfc(uint8_t *data, uint8_t *
     uint8_t tagUid[10] = {};
     memcpy(tagUid, data + 3, 10);
     logDebugP("tagUid:");
-    //logHexDebugP(tagUid);
+    logHexDebugP(tagUid, 10);
 
     uint8_t tagName[28] = {};
     for (uint8_t i = 0; i < 28; i++)
@@ -1435,9 +1822,9 @@ void FingerprintModule::handleFunctionPropertyChangeNfc(uint8_t *data, uint8_t *
 
     uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
     logDebugP("storageOffset: %d", storageOffset);
-    _fingerprintStorage.write(storageOffset, tagUid, 10);
-    _fingerprintStorage.write(storageOffset + 10, tagName, 28);
-    _fingerprintStorage.commit();
+    _nfcStorage.write(storageOffset, tagUid, 10);
+    _nfcStorage.write(storageOffset + 10, tagName, 28);
+    _nfcStorage.commit();
 
     syncRequestedNfcId = nfcId;
     syncRequestedNfcTimer = delayTimerInit();
@@ -1471,29 +1858,9 @@ void FingerprintModule::handleFunctionPropertyDeleteNfc(uint8_t *data, uint8_t *
     uint16_t nfcId = (data[1] << 8) | data[2];
     logDebugP("nfcId: %d", nfcId);
 
-    uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
-    logDebugP("storageOffset: %d", storageOffset);
-
-    uint8_t emptyTest[10] = {};
-    uint8_t tagUid[10] = {};
-    _fingerprintStorage.read(storageOffset, tagUid, 10);
-    if (memcmp(emptyTest, tagUid, 10)) // if tag UID empty, no tag with this ID defined
-    {
-        char personName[28] = {}; // empty
-
-        uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
-        _fingerprintStorage.write(storageOffset, *emptyTest, 10);
-        _fingerprintStorage.write(storageOffset + 10, *personName, 28);
-        _fingerprintStorage.commit();
-
-        resultData[0] = 0;
-    }
-    else
-    {
-        logDebugP("Not found.");
-        resultData[0] = 1;
-    }
+    bool success = deleteNfc(nfcId);
     
+    resultData[0] = success ? 0 : 1;    
     resultLength = 1;
     logIndentDown();
 }
@@ -1507,9 +1874,12 @@ void FingerprintModule::handleFunctionPropertyResetNfcScanner(uint8_t *data, uin
     for (uint16_t i = 0; i < MAX_NFCS; i++)
     {
         uint32_t storageOffset = FIN_CalcNfcStorageOffset(i);
-        _fingerprintStorage.write(storageOffset, *nfcData, OPENKNX_FIN_FLASH_NFC_DATA_SIZE);
+        _nfcStorage.write(storageOffset, *nfcData, OPENKNX_FIN_FLASH_NFC_DATA_SIZE);
     }
-    _fingerprintStorage.commit();
+    _nfcStorage.commit();
+
+    digitalWrite(LED_GREEN_PIN, HIGH);
+    resetTouchPcbLedTimer = delayTimerInit();
 
     resultData[0] = 0;
     resultLength = 1;
@@ -1529,16 +1899,16 @@ void FingerprintModule::handleFunctionPropertySearchTagByNfcId(uint8_t *data, ui
 
     uint8_t emptyTest[10] = {};
     uint8_t tagUid[10] = {};
-    _fingerprintStorage.read(storageOffset, tagUid, 10);
+    _nfcStorage.read(storageOffset, tagUid, 10);
     if (memcmp(emptyTest, tagUid, 10))
     {
         uint8_t tagName[28] = {};
-        _fingerprintStorage.read(storageOffset + 10, tagName, 28);
+        _nfcStorage.read(storageOffset + 10, tagName, 28);
 
         logDebugP("Found:");
         logIndentUp();
         logDebugP("tagUid:");
-        //logHexDebugP(tagUid);
+        logHexDebugP(tagUid, 10);
         logDebugP("tagName: %s", tagName);
         logIndentDown();
 
@@ -1573,7 +1943,7 @@ void FingerprintModule::handleFunctionPropertySearchNfcIdByTag(uint8_t *data, ui
     uint8_t searchTagUid[10] = {};
     memcpy(searchTagUid, data + 1, 10);
     logDebugP("searchTagUid:");
-    //logHexDebugP(searchTagUid);
+    logHexDebugP(searchTagUid, 10);
 
     uint8_t emptyTest[10] = {};
     bool searchTagUidEmpty = !memcmp(emptyTest, searchTagUid, 10);
@@ -1602,21 +1972,21 @@ void FingerprintModule::handleFunctionPropertySearchNfcIdByTag(uint8_t *data, ui
     for (uint16_t nfcId = 0; nfcId < MAX_NFCS; nfcId++)
     {
         storageOffset = FIN_CalcNfcStorageOffset(nfcId);
-        _fingerprintStorage.read(storageOffset, tagUid, 10);
+        _nfcStorage.read(storageOffset, tagUid, 10);
         if (!searchTagUidEmpty)
         {
             if (memcmp(tagUid, searchTagUid, 10))
                 continue;
         }
 
-        _fingerprintStorage.read(storageOffset + 10, tagName, 28);
+        _nfcStorage.read(storageOffset + 10, tagName, 28);
         if (strcasestr((char *)tagName, searchTagName) != nullptr)
         {
             logDebugP("Found:");
             logIndentUp();
             logDebugP("nfcId: %d", nfcId);
             logDebugP("tagUid");
-            //logHexDebugP(tagUid);
+            logHexDebugP(tagUid, 10);
             logDebugP("tagName: %s", tagName);
             logIndentDown();
 

@@ -242,6 +242,25 @@
 #define FIN_KoTouchPcbButtonRight 72
 #define FIN_KoTouchPcbLedRed 73
 #define FIN_KoTouchPcbLedGreen 74
+#define FIN_KoNfcExternId 4020
+#define FIN_KoNfcActionAddFingerId 4420
+#define FIN_KoNfcActionRemoveFingerId 4520
+#define FIN_KoNfcScanSuccess 6120
+#define FIN_KoNfcScanSuccessId 6220
+#define FIN_KoNfcScanSuccessData 6320
+#define FIN_KoNfcEnrollNext 6420
+#define FIN_KoNfcEnrollId 6520
+#define FIN_KoNfcEnrollData 6620
+#define FIN_KoNfcEnrollSuccess 6720
+#define FIN_KoNfcEnrollSuccessId 6820
+#define FIN_KoNfcEnrollSuccessData 6920
+#define FIN_KoNfcEnrollFailedId 7020
+#define FIN_KoNfcDeleteId 7120
+#define FIN_KoNfcDeleteData 7220
+#define FIN_KoNfcDeleteSuccess 7320
+#define FIN_KoNfcDeleteSuccessId 7420
+#define FIN_KoNfcDeleteSuccessData 7520
+#define FIN_KoNfcDeleteFailedId 7620
 
 // Berührung (sofort, immer)
 #define KoFIN_Touched                             (knx.getGroupObject(FIN_KoTouched))
@@ -309,6 +328,44 @@
 #define KoFIN_TouchPcbLedRed                      (knx.getGroupObject(FIN_KoTouchPcbLedRed))
 // Touch-Front: LED grün
 #define KoFIN_TouchPcbLedGreen                    (knx.getGroupObject(FIN_KoTouchPcbLedGreen))
+// NFC: Externe Tag ID
+#define KoFIN_NfcExternId                         (knx.getGroupObject(FIN_KoNfcExternId))
+// NFC: Tag ID zu Aktion hinzufügen
+#define KoFIN_NfcActionAddFingerId                (knx.getGroupObject(FIN_KoNfcActionAddFingerId))
+// NFC: Tag ID von Aktion entfernen
+#define KoFIN_NfcActionRemoveFingerId             (knx.getGroupObject(FIN_KoNfcActionRemoveFingerId))
+// NFC: Scan: Erfolg
+#define KoFIN_NfcScanSuccess                      (knx.getGroupObject(FIN_KoNfcScanSuccess))
+// NFC: Scan: ID
+#define KoFIN_NfcScanSuccessId                    (knx.getGroupObject(FIN_KoNfcScanSuccessId))
+// NFC: Scan: Zutrittsdaten
+#define KoFIN_NfcScanSuccessData                  (knx.getGroupObject(FIN_KoNfcScanSuccessData))
+// NFC: Lerne an: Nächste freie ID
+#define KoFIN_NfcEnrollNext                       (knx.getGroupObject(FIN_KoNfcEnrollNext))
+// NFC: Lerne an: ID (0-1499)
+#define KoFIN_NfcEnrollId                         (knx.getGroupObject(FIN_KoNfcEnrollId))
+// NFC: Lerne an: Zutrittsdaten (0-1499)
+#define KoFIN_NfcEnrollData                       (knx.getGroupObject(FIN_KoNfcEnrollData))
+// NFC: Anlernen: Erfolg
+#define KoFIN_NfcEnrollSuccess                    (knx.getGroupObject(FIN_KoNfcEnrollSuccess))
+// NFC: Anlernen: Erfolg ID
+#define KoFIN_NfcEnrollSuccessId                  (knx.getGroupObject(FIN_KoNfcEnrollSuccessId))
+// NFC: Anlernen: Zutrittsdaten
+#define KoFIN_NfcEnrollSuccessData                (knx.getGroupObject(FIN_KoNfcEnrollSuccessData))
+// NFC: Anlernen: Fehlgeschlagen ID
+#define KoFIN_NfcEnrollFailedId                   (knx.getGroupObject(FIN_KoNfcEnrollFailedId))
+// NFC: Lösche: ID
+#define KoFIN_NfcDeleteId                         (knx.getGroupObject(FIN_KoNfcDeleteId))
+// NFC: Lösche: Zutrittsdaten
+#define KoFIN_NfcDeleteData                       (knx.getGroupObject(FIN_KoNfcDeleteData))
+// NFC: Löschen: Erfolg
+#define KoFIN_NfcDeleteSuccess                    (knx.getGroupObject(FIN_KoNfcDeleteSuccess))
+// NFC: Löschen: Erfolg ID
+#define KoFIN_NfcDeleteSuccessId                  (knx.getGroupObject(FIN_KoNfcDeleteSuccessId))
+// NFC: Löschen: Zutrittsdaten
+#define KoFIN_NfcDeleteSuccessData                (knx.getGroupObject(FIN_KoNfcDeleteSuccessData))
+// NFC: Löschen: Fehlgeschlagen ID
+#define KoFIN_NfcDeleteFailedId                   (knx.getGroupObject(FIN_KoNfcDeleteFailedId))
 
 #define FIN_ChannelCount 99
 

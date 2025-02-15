@@ -22,6 +22,7 @@
 
 #define INIT_RESET_TIMEOUT 1000
 #define LED_RESET_TIMEOUT 1000
+#define LED_RESET_FAST_TIMEOUT 250
 #define ENROLL_REQUEST_DELAY 100
 #define CAPTURE_RETRIES_TOUCH_TIMEOUT 500
 #define CAPTURE_RETRIES_LOCK_TIMEOUT 3000
@@ -38,6 +39,8 @@
 #define OPENKNX_FIN_FLASH_NFC_MAGIC_WORD 1983749238
 #define OPENKNX_FIN_FLASH_NFC_DATA_SIZE 38 // 10 byte: NFC tag UID, 28 bytes: person name
 #define FIN_CalcNfcStorageOffset(nfcId) nfcId * OPENKNX_FIN_FLASH_NFC_DATA_SIZE + 4096 + 1 // first byte free for NFC info storage format version
+#define NFC_ENROLL_TIMEOUT 10000
+#define NFC_ENROLL_LED_BLINK_INTERVAL 250
 
 #define SYNC_BUFFER_SIZE TEMPLATE_SIZE + OPENKNX_FIN_FLASH_FINGER_DATA_SIZE
 #define SYNC_SEND_PACKET_DATA_LENGTH 13
@@ -77,26 +80,36 @@ class FingerprintModule : public OpenKNX::Module
     // uint16_t flashSize() override;
 
   private:
+    enum SyncType : uint8_t
+    {
+        FINGER,
+        NFC
+    };
+
     static void interruptDisplayTouched();
     static void interruptTouchLeft();
     static void interruptTouchRight();
     bool switchFingerprintPower(bool on, bool testMode = false);
     void initFingerprintScanner(bool testMode = false);
-    void initFlash();
-    void initNci();
-    void loopNci();
-    void processScanSuccess(uint16_t location, bool external = false);
+    void initFlashFingerprint();
+    void initFlashNfc();
+    void initNfc();
+    void loopNfc();
+    void processFingerScanSuccess(uint16_t location, bool external = false);
+    void processNfcScanSuccess(uint16_t nfcId, bool external = false);
     bool enrollFinger(uint16_t location);
     bool deleteFinger(uint16_t location, bool sync = true);
+    bool deleteNfc(uint16_t nfcId, bool sync = true);
     bool searchForFinger();
     void resetRingLed();
-    void startSyncDelete(uint16_t fingerId);
-    void startSyncSend(uint16_t fingerId, bool loadModel = true);
+    void startSyncDelete(SyncType syncType, uint16_t deleteId);
+    void startSyncSend(SyncType syncType, uint16_t syncId, bool loadModel = true);
     void processSyncSend();
     void processSyncReceive(uint8_t* data);
     void processInputKoLock(GroupObject &ko);
     void processInputKoTouchPcbLed(GroupObject &ko);
-    void processInputKoEnroll(GroupObject &ko);
+    void processInputKoEnrollFinger(GroupObject &ko);
+    void processInputKoEnrollNfc(GroupObject &ko);
     void handleFunctionPropertyEnrollFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertyChangeFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
     void handleFunctionPropertySyncFinger(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
@@ -119,15 +132,22 @@ class FingerprintModule : public OpenKNX::Module
     FastCRC32 crc32;
 
     OpenKNX::Flash::Driver _fingerprintStorage;
+    OpenKNX::Flash::Driver _nfcStorage;
     ActionChannel *_channels[FIN_ChannelCount];
 
     Fingerprint *finger = nullptr;
     bool hasLastFoundLocation = false;
     uint16_t lastFoundLocation = 0;
     uint32_t initResetTimer = 0;
-    uint32_t resetLedsTimer = 0;
-    uint32_t enrollRequestedTimer = 0;
-    uint16_t enrollRequestedLocation = 0;
+    uint32_t resetFingerLedTimer = 0;
+    uint32_t resetTouchPcbLedTimer = 0;
+    uint32_t resetTouchPcbLedTimerFast = 0;
+    uint32_t enrollRequestedFingerTimer = 0;
+    uint16_t enrollRequestedFingerLocation = 0;
+    uint32_t enrollNfcStarted = 0;
+    uint16_t enrollNfcId = 0;
+    bool enrollNfcLedOn = false;
+    uint32_t enrollNfcLedLastChanged = 0;
     uint32_t checkSensorTimer = 0;
     uint32_t searchForFingerDelayTimer = 0;
     uint32_t shutdownSensorTimer = 0;
@@ -151,7 +171,8 @@ class FingerprintModule : public OpenKNX::Module
     uint16_t syncRequestedNfcId = 0;
 
     bool syncReceiving = false;
-    uint16_t syncReceiveFingerId = 0;
+    SyncType syncReceiveType;
+    uint16_t syncReceiveSyncId = 0;
     uint8_t syncReceiveBuffer[SYNC_BUFFER_SIZE];
     uint16_t syncReceiveBufferLength = 0;
     uint16_t syncReceiveBufferChecksum = 0;
