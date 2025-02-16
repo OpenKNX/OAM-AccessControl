@@ -10,8 +10,8 @@
                                              
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 107
-#define MAIN_ParameterSize 14875
+#define MAIN_ApplicationVersion 111
+#define MAIN_ParameterSize 6715
 #define MAIN_MaxKoNumber 796
 #define MAIN_OrderNumber "OpenKnxFingerprint"
 #define BASE_ModuleVersion 18
@@ -242,25 +242,25 @@
 #define FIN_KoTouchPcbButtonRight 72
 #define FIN_KoTouchPcbLedRed 73
 #define FIN_KoTouchPcbLedGreen 74
-#define FIN_KoNfcExternId 4020
-#define FIN_KoNfcActionAddId 4420
-#define FIN_KoNfcActionRemoveId 4520
-#define FIN_KoNfcScanSuccess 6120
-#define FIN_KoNfcScanSuccessId 6220
-#define FIN_KoNfcScanSuccessData 6320
-#define FIN_KoNfcEnrollNext 6420
-#define FIN_KoNfcEnrollId 6520
-#define FIN_KoNfcEnrollData 6620
-#define FIN_KoNfcEnrollSuccess 6720
-#define FIN_KoNfcEnrollSuccessId 6820
-#define FIN_KoNfcEnrollSuccessData 6920
-#define FIN_KoNfcEnrollFailedId 7020
-#define FIN_KoNfcDeleteId 7120
-#define FIN_KoNfcDeleteData 7220
-#define FIN_KoNfcDeleteSuccess 7320
-#define FIN_KoNfcDeleteSuccessId 7420
-#define FIN_KoNfcDeleteSuccessData 7520
-#define FIN_KoNfcDeleteFailedId 7620
+#define FIN_KoNfcExternId 60
+#define FIN_KoNfcActionAddId 64
+#define FIN_KoNfcActionRemoveId 65
+#define FIN_KoNfcScanSuccess 181
+#define FIN_KoNfcScanSuccessId 182
+#define FIN_KoNfcScanSuccessData 183
+#define FIN_KoNfcEnrollNext 184
+#define FIN_KoNfcEnrollId 185
+#define FIN_KoNfcEnrollData 186
+#define FIN_KoNfcEnrollSuccess 187
+#define FIN_KoNfcEnrollSuccessId 188
+#define FIN_KoNfcEnrollSuccessData 189
+#define FIN_KoNfcEnrollFailedId 190
+#define FIN_KoNfcDeleteId 191
+#define FIN_KoNfcDeleteData 192
+#define FIN_KoNfcDeleteSuccess 193
+#define FIN_KoNfcDeleteSuccessId 194
+#define FIN_KoNfcDeleteSuccessData 195
+#define FIN_KoNfcDeleteFailedId 196
 
 // Berührung (sofort, immer)
 #define KoFIN_FingerTouched                       (knx.getGroupObject(FIN_KoFingerTouched))
@@ -1253,7 +1253,7 @@
 // Buzzer sperren
 #define KoLOG_BuzzerLock                          (knx.getGroupObject(LOG_KoBuzzerLock))
 
-#define LOG_ChannelCount 99
+#define LOG_ChannelCount 3
 
 // Parameter per channel
 #define LOG_ParamBlockOffset 6016
@@ -2993,10 +2993,10 @@
 // Ausgang
 #define KoLOG_KOfO                                (knx.getGroupObject(LOG_KoCalcNumber(LOG_KoKOfO)))
 
-#define BTN_ReactionTimeMultiClick              14431      // 8 Bits, Bit 7-0
-#define BTN_ReactionTimeLong                    14432      // 8 Bits, Bit 7-0
-#define BTN_ReactionTimeExtraLong               14433      // 8 Bits, Bit 7-0
-#define BTN_VisibleChannels                     14434      // uint8_t
+#define BTN_ReactionTimeMultiClick              6271      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeLong                    6272      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeExtraLong               6273      // 8 Bits, Bit 7-0
+#define BTN_VisibleChannels                     6274      // uint8_t
 
 // Mehrfach-Klick
 #define ParamBTN_ReactionTimeMultiClick              (knx.paramByte(BTN_ReactionTimeMultiClick))
@@ -3010,7 +3010,7 @@
 #define BTN_ChannelCount 8
 
 // Parameter per channel
-#define BTN_ParamBlockOffset 14435
+#define BTN_ParamBlockOffset 6275
 #define BTN_ParamBlockSize 53
 #define BTN_ParamCalcIndex(index) (index + BTN_ParamBlockOffset + _channelIndex * BTN_ParamBlockSize)
 
@@ -3531,7 +3531,7 @@
 #define BI_ChannelCount 4
 
 // Parameter per channel
-#define BI_ParamBlockOffset 14859
+#define BI_ParamBlockOffset 6699
 #define BI_ParamBlockSize 4
 #define BI_ParamCalcIndex(index) (index + BI_ParamBlockOffset + _channelIndex * BI_ParamBlockSize)
 
@@ -3596,7 +3596,7 @@
 #define BASE_KommentarModuleModuleParamSize 0
 #define BASE_KommentarModuleSubmodulesParamSize 0
 #define BASE_KommentarModuleParamSize 0
-#define BASE_KommentarModuleParamOffset 14875
+#define BASE_KommentarModuleParamOffset 6715
 #define BASE_KommentarModuleCalcIndex(index, m1) (index + BASE_KommentarModuleParamOffset + _channelIndex * BASE_KommentarModuleCount * BASE_KommentarModuleParamSize + m1 * BASE_KommentarModuleParamSize)
 
 

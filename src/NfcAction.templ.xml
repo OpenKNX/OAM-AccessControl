@@ -40,7 +40,7 @@
                     <choose ParamRefId="%AID%_UP-%T%%CCCC+4500%01_R-%T%%CCCC+4500%0101">
                       <when test="!=0">
                         <ParameterRefRef RefId="%AID%_UP-%T%%CCCC+4500%02_R-%T%%CCCC+4500%0201" Cell="1,3" />
-                        <Button Id="%AID%_B-%T%%CCCC+4500%02" Text="Info holen" Cell="1,4" EventHandler="FIN_checkFingerAction" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
+                        <Button Id="%AID%_B-%T%%CCCC+4500%02" Text="Info holen" Cell="1,4" EventHandler="FIN_checkNfcAction" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
                         <ParameterRefRef RefId="%AID%_P-%T%%CCCC+4500%03_R-%T%%CCCC+4500%0301" Cell="1,5" />
                       </when>
                     </choose>

@@ -391,7 +391,7 @@ void FingerprintModule::loopNfc()
             {
                 uint32_t storageOffset = FIN_CalcNfcStorageOffset(enrollNfcId);
                 logDebugP("storageOffset: %d", storageOffset);
-                _nfcStorage.write(storageOffset, *uniqueId, uniqueIdLength);
+                _nfcStorage.write(storageOffset, const_cast<uint8_t*>(uniqueId), uniqueIdLength);
                 _nfcStorage.commit();
 
                 logInfoP("Enrolled to nfcID %u.", enrollNfcId);
@@ -406,7 +406,7 @@ void FingerprintModule::loopNfc()
                 KoFIN_FingerEnrollSuccess.value((uint8_t)0, Dpt(15, 1, 5));     // index of access identification code (not used)
                 
                 digitalWrite(LED_GREEN_PIN, HIGH);
-                resetFingerLedTimer = delayTimerInit();
+                resetTouchPcbLedTimer = delayTimerInit();
                 enrollNfcStarted = 0;
             }
             else
