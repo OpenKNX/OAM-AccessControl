@@ -170,9 +170,9 @@ Bei Aktivierung werden entsprechende Kommunikationsobjekte freigeschaltet.
 Werden die speziellen Kommunikationsobjekte für Zutrittsdaten benötigt (DPT 15), können diese hier aktiviert werden.
 
 <!-- DOC -->
-#### **Synchronisation mehrerer Scanner**
+#### **Synchronisation mehrerer Geräte**
 
-Sind mehrere Fingerprint-Scanner vorhanden und sollen die Fingerdaten unter diesen Scanner synchronisiert werden, sollte diese Option aktiviert werden.
+Sind mehrere OpenKNX-Fingerprint-Geräte vorhanden und sollen die Fingerprint- und NFC-Daten unter diesen Geräten synchronisiert werden, sollte diese Option aktiviert werden.
 
 Es stehen daraufhin zusätzliche Kommunikationsobjekte zur Synchronisation zur Verfügung.
 
@@ -215,7 +215,7 @@ Das neue, zu setzende Passwort.
 <!-- DOC -->
 #### **Alle Finger löschen?**
 
-Mit dieser Funktion werden sämtliche gespeicherte Fingerdaten inklusive Personenzuordnung unwiderruflich gelöscht.
+Mit dieser Funktion werden sämtliche gespeicherten Fingerdaten inklusive Personenzuordnung unwiderruflich gelöscht.
 
 ## Aktionen
 
@@ -227,6 +227,14 @@ Mit dieser Funktion werden sämtliche gespeicherte Fingerdaten inklusive Persone
 Die ETS ist auch schneller in der Anzeige, wenn sie weniger (leere) Aktionen darstellen muss. Insofern macht es Sinn, nur so viele Aktionen anzuzeigen, wie man wirklich braucht.
 
 --ToDo--
+
+
+<!-- DOC -->
+#### **Alle NFC-Tags löschen?**
+
+Mit dieser Funktion werden sämtliche gespeicherten NFC-Tags inklusive Personenzuordnung unwiderruflich gelöscht.
+
+
 
 
 

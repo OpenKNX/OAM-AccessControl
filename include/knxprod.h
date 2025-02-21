@@ -10,7 +10,7 @@
                                              
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 111
+#define MAIN_ApplicationVersion 114
 #define MAIN_ParameterSize 6715
 #define MAIN_MaxKoNumber 796
 #define MAIN_OrderNumber "OpenKnxFingerprint"
@@ -165,6 +165,9 @@
 #define FIN_ScanMode                            50      // 1 Bit, Bit 3
 #define     FIN_ScanModeMask 0x08
 #define     FIN_ScanModeShift 3
+#define FIN_NfcScanner                          50      // 1 Bit, Bit 2
+#define     FIN_NfcScannerMask 0x04
+#define     FIN_NfcScannerShift 2
 #define FIN_EnableRawData                       50      // 1 Bit, Bit 7
 #define     FIN_EnableRawDataMask 0x80
 #define     FIN_EnableRawDataShift 7
@@ -196,9 +199,11 @@
 #define ParamFIN_FingerprintColor                    ((knx.paramByte(FIN_FingerprintColor) & FIN_FingerprintColorMask) >> FIN_FingerprintColorShift)
 // Fingerabfrage
 #define ParamFIN_ScanMode                            ((bool)(knx.paramByte(FIN_ScanMode) & FIN_ScanModeMask))
+// NFC Scanner
+#define ParamFIN_NfcScanner                          ((bool)(knx.paramByte(FIN_NfcScanner) & FIN_NfcScannerMask))
 // Rohdaten auf den Bus senden
 #define ParamFIN_EnableRawData                       ((bool)(knx.paramByte(FIN_EnableRawData) & FIN_EnableRawDataMask))
-// Synchronisation mehrerer Scanner
+// Synchronisation mehrerer Geräte
 #define ParamFIN_EnableSync                          ((bool)(knx.paramByte(FIN_EnableSync) & FIN_EnableSyncMask))
 // Externe Kontrolle ermöglichen
 #define ParamFIN_EnableExternalControl               ((bool)(knx.paramByte(FIN_EnableExternalControl) & FIN_EnableExternalControlMask))
@@ -639,7 +644,7 @@
 
 // Kanalaktivität
 #define ParamSWA_ChActive                            ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChActive)) & SWA_ChActiveMask) >> SWA_ChActiveShift)
-// Synchron schalten
+// 
 #define ParamSWA_ChSyncSwitch                        ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSyncSwitch)) & SWA_ChSyncSwitchMask))
 // Betriebsmodus
 #define ParamSWA_ChOperationMode                     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChOperationMode)) & SWA_ChOperationModeMask))
@@ -897,6 +902,9 @@
 #define LOG_Totensonntag                        3007      // 1 Bit, Bit 6
 #define     LOG_TotensonntagMask 0x40
 #define     LOG_TotensonntagShift 6
+#define LOG_Weltkindertag                       3007      // 1 Bit, Bit 5
+#define     LOG_WeltkindertagMask 0x20
+#define     LOG_WeltkindertagShift 5
 #define LOG_BuzzerSilent                        3008      // uint16_t
 #define LOG_BuzzerNormal                        3010      // uint16_t
 #define LOG_BuzzerLoud                          3012      // uint16_t
@@ -1105,6 +1113,8 @@
 #define ParamLOG_NationalfeiertagSchweiz             ((bool)(knx.paramByte(LOG_NationalfeiertagSchweiz) & LOG_NationalfeiertagSchweizMask))
 // 34. Totensonntag
 #define ParamLOG_Totensonntag                        ((bool)(knx.paramByte(LOG_Totensonntag) & LOG_TotensonntagMask))
+// 35. Weltkindertag
+#define ParamLOG_Weltkindertag                       ((bool)(knx.paramByte(LOG_Weltkindertag) & LOG_WeltkindertagMask))
 // Frequenz für Buzzer (leise)
 #define ParamLOG_BuzzerSilent                        (knx.paramWord(LOG_BuzzerSilent))
 // Frequenz für Buzzer (normal)

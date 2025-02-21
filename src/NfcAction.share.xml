@@ -56,46 +56,6 @@
                 <ParameterRefRef RefId="%AID%_P-%T%920008_R-%T%92000801" />
                 <ParameterRefRef RefId="%AID%_P-%T%920009_R-%T%92000901" />
 
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag anlernen/ändern" UIHint="Headline" />
-                <ParameterRefRef RefId="%AID%_P-%T%000032_R-%T%00003201" IndentLevel="1" HelpContext="Empty" />
-                <ParameterRefRef RefId="%AID%_P-%T%000030_R-%T%00003001" IndentLevel="1" HelpContext="Empty" />
-                <ParameterRefRef RefId="%AID%_P-%T%000031_R-%T%00003101" IndentLevel="1" HelpContext="Empty" />
-                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
-                  <Rows>
-                    <Row Id="%AID%_PB-nnn_R-1" />
-                  </Rows>
-                  <Columns>
-                    <Column Id="%AID%_PB-nnn_C-1" Width="45%" />
-                    <Column Id="%AID%_PB-nnn_C-2" Width="27%" />
-                    <Column Id="%AID%_PB-nnn_C-3" Width="27%" />
-                  </Columns>
-                  <Button Id="%AID%_B-%T%920001" Text="Anlernen" Cell="1,2" Name="enrollFinger" EventHandler="FIN_enrollNfc" EventHandlerOnline="ConnectionOriented" />
-                  <Button Id="%AID%_B-%T%920002" Text="Ändern" Cell="1,3" Name="changeFinger" EventHandler="FIN_changeNfc" EventHandlerOnline="ConnectionOriented" />
-                </ParameterBlock>
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag löschen" UIHint="Headline" />
-                <ParameterRefRef RefId="%AID%_P-%T%000029_R-%T%00002901" IndentLevel="1" HelpContext="Empty" />
-                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
-                  <Rows>
-                    <Row Id="%AID%_PB-nnn_R-1" />
-                  </Rows>
-                  <Columns>
-                    <Column Id="%AID%_PB-nnn_C-1" Width="45%" />
-                    <Column Id="%AID%_PB-nnn_C-2" Width="27%" />
-                  </Columns>
-                  <Button Id="%AID%_B-%T%920003" Text="Löschen" Name="deleteFinger" Cell="1,2" EventHandler="FIN_deleteNfc" EventHandlerOnline="ConnectionOriented" />
-                </ParameterBlock>
-                <choose ParamRefId="%AID%_UP-%T%000012_R-%T%00001201">
-                  <when test="1">
-                    <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag synchronisieren" UIHint="Headline" />
-                    <ComObjectRefRef RefId="%AID%_O-%T%000046_R-%T%00004601" />
-
-                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Nach jedem Anlernvorgang wird der neue Tag automatisch synchronisiert. Zusätzlich kann hier die Synchronisation eines bestimmten Tags auch manuell angestoßen werden." UIHint="Information" />
-                    <ParameterRefRef RefId="%AID%_P-%T%000033_R-%T%00003301" IndentLevel="2" HelpContext="Empty" />
-                    <Button Id="%AID%_B-%T%930004" Text="Synchronisieren" Name="syncFinger" EventHandler="FIN_syncNfc" EventHandlerOnline="ConnectionOriented" />
-                  </when>
-                </choose>
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Personen und NFC-Tag suchen" UIHint="Headline" />
                 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
                   <Rows>
