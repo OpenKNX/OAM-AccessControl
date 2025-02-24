@@ -43,12 +43,13 @@
             <ComObjectTable>
               <ComObject Id="%AID%_O-%T%%CCCC%01" Name="Act%C%Switch" Number="%K0%" ObjectSize="1 Bit" Text="Ausgang" FunctionText="Aktion %C%, Schalten" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
               <ComObject Id="%AID%_O-%T%%CCCC%02" Name="Act%C%State" Number="%K1%" ObjectSize="1 Bit" Text="Eingang" FunctionText="Aktion %C%, Status" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%T%%CCCC%03" Name="Act%C%Call" Number="%K2%" ObjectSize="1 Bit" Text="Eingang" FunctionText="Aktion %C%, Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%%CCCC%03" Name="Act%C%CallLock" Number="%K2%" ObjectSize="1 Bit" Text="Eingang" FunctionText="Aktion %C%, Trigger" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <ComObjectRef Id="%AID%_O-%T%%CCCC%01_R-%T%%CCCC%0101" RefId="%AID%_O-%T%%CCCC%01" Text="{{0:Aktion %C%}}: Ausgang" TextParameterRefId="%AID%_P-%T%%CCCC%00_R-%T%%CCCC%0001" />
               <ComObjectRef Id="%AID%_O-%T%%CCCC%02_R-%T%%CCCC%0201" RefId="%AID%_O-%T%%CCCC%02" Text="{{0:Aktion %C%}}: Eingang" TextParameterRefId="%AID%_P-%T%%CCCC%00_R-%T%%CCCC%0001" />
               <ComObjectRef Id="%AID%_O-%T%%CCCC%03_R-%T%%CCCC%0301" RefId="%AID%_O-%T%%CCCC%03" Text="{{0:Aktion %C%}}: Aufrufen" TextParameterRefId="%AID%_P-%T%%CCCC%00_R-%T%%CCCC%0001" />
+              <ComObjectRef Id="%AID%_O-%T%%CCCC%03_R-%T%%CCCC%0302" RefId="%AID%_O-%T%%CCCC%03" Text="{{0:Aktion %C%}}: Sperren" FunctionText="Aktion %C%, Schalten" TextParameterRefId="%AID%_P-%T%%CCCC%00_R-%T%%CCCC%0001" ReadFlag="Enabled" UpdateFlag="Enabled" />
             </ComObjectRefs>
           </Static>
           <Dynamic>
@@ -62,8 +63,8 @@
                     <Columns>
                       <Column Id="%AID%_PB-nnn_C-1" Width="7%" />
                       <Column Id="%AID%_PB-nnn_C-2" Width="38%" />
-                      <Column Id="%AID%_PB-nnn_C-3" Width="5%" />
-                      <Column Id="%AID%_PB-nnn_C-4" Width="5%" />
+                      <Column Id="%AID%_PB-nnn_C-3" Width="6%" />
+                      <Column Id="%AID%_PB-nnn_C-4" Width="6%" />
                       <Column Id="%AID%_PB-nnn_C-5" Width="25%" />
                       <Column Id="%AID%_PB-nnn_C-6" Width="35%" />
                     </Columns>
@@ -97,10 +98,15 @@
                           <ParameterRefRef RefId="%AID%_UP-%T%%CCCC%04_R-%T%%CCCC%0401" Cell="1,2" />
                         </ParameterBlock>
                       </when>
-                    </choose>
-                    <choose ParamRefId="%AID%_UP-%T%%CCCC%07_R-%T%%CCCC%0701">
-                      <when test="1">
-                        <ComObjectRefRef RefId="%AID%_O-%T%%CCCC%03_R-%T%%CCCC%0301" />
+                      <when test="!=0">
+                        <choose ParamRefId="%AID%_UP-%T%%CCCC%07_R-%T%%CCCC%0701">
+                          <when test="0">
+                            <ComObjectRefRef RefId="%AID%_O-%T%%CCCC%03_R-%T%%CCCC%0302" />
+                          </when>
+                          <when test="1">
+                            <ComObjectRefRef RefId="%AID%_O-%T%%CCCC%03_R-%T%%CCCC%0301" />
+                          </when>
+                        </choose>
                       </when>
                     </choose>
                   </ParameterBlock>

@@ -50,92 +50,96 @@
           </Static>
           <Dynamic>
             <ChannelIndependentBlock>
-              <ParameterBlock Id="%AID%_PB-nnn" Name="NfcAction" Text="NFC" Icon="nfc-variant" HelpContext="Empty">
-                <!-- invisible, but necessary -->
-                <ParameterRefRef RefId="%AID%_P-%T%920007_R-%T%92000701" />
-                <ParameterRefRef RefId="%AID%_P-%T%920008_R-%T%92000801" />
-                <ParameterRefRef RefId="%AID%_P-%T%920009_R-%T%92000901" />
+              <choose ParamRefId="%AID%_UP-%T%000034_R-%T%00003401">
+                <when test="1">
+                  <ParameterBlock Id="%AID%_PB-nnn" Name="NfcAction" Text="NFC" Icon="nfc-variant" HelpContext="Empty">
+                    <!-- invisible, but necessary -->
+                    <ParameterRefRef RefId="%AID%_P-%T%920007_R-%T%92000701" />
+                    <ParameterRefRef RefId="%AID%_P-%T%920008_R-%T%92000801" />
+                    <ParameterRefRef RefId="%AID%_P-%T%920009_R-%T%92000901" />
 
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Personen und NFC-Tag suchen" UIHint="Headline" />
-                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
-                  <Rows>
-                    <Row Id="%AID%_PB-nnn_R-1" />
-                    <Row Id="%AID%_PB-nnn_R-2" />
-                  </Rows>
-                  <Columns>
-                    <Column Id="%AID%_PB-nnn_C-1" Width="20%" />
-                    <Column Id="%AID%_PB-nnn_C-2" Width="28%" />
-                    <Column Id="%AID%_PB-nnn_C-3" Width="30%" />
-                  </Columns>
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="  Tag Name" Cell="1,1" />
-                  <ParameterRefRef RefId="%AID%_P-%T%920003_R-%T%92000301" Cell="1,2" />
-                  <Button Id="%AID%_B-%T%930001" Text="ID suchen" EventHandler="FIN_searchNfcId" EventHandlerOnline="ConnectionOriented" Cell="1,3" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="  Tag ID" Cell="2,1" />
-                  <ParameterRefRef RefId="%AID%_P-%T%920005_R-%T%92000501" Cell="2,2" />
-                  <Button Id="%AID%_B-%T%930002" Text="Tag suchen" EventHandler="FIN_searchNfcName" EventHandlerOnline="ConnectionOriented" Cell="2,3" />
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Personen und NFC-Tag suchen" UIHint="Headline" />
+                    <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                      <Rows>
+                        <Row Id="%AID%_PB-nnn_R-1" />
+                        <Row Id="%AID%_PB-nnn_R-2" />
+                      </Rows>
+                      <Columns>
+                        <Column Id="%AID%_PB-nnn_C-1" Width="20%" />
+                        <Column Id="%AID%_PB-nnn_C-2" Width="28%" />
+                        <Column Id="%AID%_PB-nnn_C-3" Width="30%" />
+                      </Columns>
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="  Tag Name" Cell="1,1" />
+                      <ParameterRefRef RefId="%AID%_P-%T%920003_R-%T%92000301" Cell="1,2" />
+                      <Button Id="%AID%_B-%T%930001" Text="ID suchen" EventHandler="FIN_searchNfcId" EventHandlerOnline="ConnectionOriented" Cell="1,3" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="  Tag ID" Cell="2,1" />
+                      <ParameterRefRef RefId="%AID%_P-%T%920005_R-%T%92000501" Cell="2,2" />
+                      <Button Id="%AID%_B-%T%930002" Text="Tag suchen" EventHandler="FIN_searchNfcName" EventHandlerOnline="ConnectionOriented" Cell="2,3" />
 
-                  <!-- <Button Id="%AID%_B-%T%920003" Text="zuweisen" Cell="1,5" EventHandler="FIN_assignFingerId" /> -->
-                </ParameterBlock>
+                      <!-- <Button Id="%AID%_B-%T%920003" Text="zuweisen" Cell="1,5" EventHandler="FIN_assignFingerId" /> -->
+                    </ParameterBlock>
 
-                <!-- No search results available -->
-                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
-                  <Rows>
-                    <Row Id="%AID%_PB-nnn_R-1" />
-                    <Row Id="%AID%_PB-nnn_R-2" CollapseIfEmpty="true" />
-                  </Rows>
-                  <Columns>
-                    <Column Id="%AID%_PB-nnn_C-1" Width="20%" />
-                    <Column Id="%AID%_PB-nnn_C-2" Width="13%" />
-                    <Column Id="%AID%_PB-nnn_C-3" Width="45%" />
-                  </Columns>
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Suchergebnis" UIHint="Headline" Cell="1,1" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Tag" UIHint="Headline" Cell="1,2" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Name" UIHint="Headline" Cell="1,3" />
-                  <choose ParamRefId="%AID%_P-%T%920009_R-%T%92000901">
-                    <when test="0">
-                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Keine Suchergebnisse vorhanden" Cell="2,3" />
-                    </when>
-                  </choose>
-                </ParameterBlock>
-                <op:include href="NfcActionSearch.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="NFCACTSER" IsInner="true" />
-                <!-- More search results available -->
-                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
-                  <Rows>
-                    <Row Id="%AID%_PB-nnn_R-1" CollapseIfEmpty="true" />
-                  </Rows>
-                  <Columns>
-                    <Column Id="%AID%_PB-nnn_C-1" Width="20%" />
-                    <Column Id="%AID%_PB-nnn_C-2" Width="58%" />
-                  </Columns>
-                  <choose ParamRefId="%AID%_P-%T%920007_R-%T%92000701">
-                    <when test="&gt;0">
-                      <ParameterSeparator Id="%AID%_PS-nnn" Text="{{0:Weitere}} Ergebnisse gefunden, Suche weiter eingrenzen" TextParameterRefId="%AID%_P-%T%920008_R-%T%92000801" Cell="1,2" />
-                    </when>
-                  </choose>
-                </ParameterBlock>
+                    <!-- No search results available -->
+                    <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                      <Rows>
+                        <Row Id="%AID%_PB-nnn_R-1" />
+                        <Row Id="%AID%_PB-nnn_R-2" CollapseIfEmpty="true" />
+                      </Rows>
+                      <Columns>
+                        <Column Id="%AID%_PB-nnn_C-1" Width="20%" />
+                        <Column Id="%AID%_PB-nnn_C-2" Width="13%" />
+                        <Column Id="%AID%_PB-nnn_C-3" Width="45%" />
+                      </Columns>
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Suchergebnis" UIHint="Headline" Cell="1,1" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Tag" UIHint="Headline" Cell="1,2" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Name" UIHint="Headline" Cell="1,3" />
+                      <choose ParamRefId="%AID%_P-%T%920009_R-%T%92000901">
+                        <when test="0">
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Keine Suchergebnisse vorhanden" Cell="2,3" />
+                        </when>
+                      </choose>
+                    </ParameterBlock>
+                    <op:include href="NfcActionSearch.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="NFCACTSER" IsInner="true" />
+                    <!-- More search results available -->
+                    <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                      <Rows>
+                        <Row Id="%AID%_PB-nnn_R-1" CollapseIfEmpty="true" />
+                      </Rows>
+                      <Columns>
+                        <Column Id="%AID%_PB-nnn_C-1" Width="20%" />
+                        <Column Id="%AID%_PB-nnn_C-2" Width="58%" />
+                      </Columns>
+                      <choose ParamRefId="%AID%_P-%T%920007_R-%T%92000701">
+                        <when test="&gt;0">
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="{{0:Weitere}} Ergebnisse gefunden, Suche weiter eingrenzen" TextParameterRefId="%AID%_P-%T%920008_R-%T%92000801" Cell="1,2" />
+                        </when>
+                      </choose>
+                    </ParameterBlock>
 
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Zuweisung von NFC-Tags zu Aktionen" UIHint="Headline" />
-                <ParameterRefRef RefId="%AID%_UP-%T%920001_R-%T%92000101" />
-                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
-                  <Rows>
-                    <Row Id="%AID%_PB-nnn_R-1" />
-                  </Rows>
-                  <Columns>
-                    <Column Id="%AID%_PB-nnn_C-1" Width="8%" />
-                    <Column Id="%AID%_PB-nnn_C-2" Width="12%" />
-                    <Column Id="%AID%_PB-nnn_C-3" Width="13%" />
-                    <Column Id="%AID%_PB-nnn_C-4" Width="23%" />
-                    <Column Id="%AID%_PB-nnn_C-5" Width="80%" />
-                  </Columns>
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Nr." UIHint="Headline" Cell="1,1" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Aktion" UIHint="Headline" Cell="1,2" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Tag" UIHint="Headline" Cell="1,3" />
-                  <Button Id="%AID%_B-%T%920004" Text="Sortieren" Cell="1,4" EventHandler="FIN_sort" />
-                  <ParameterSeparator Id="%AID%_PS-nnn" Text="Information" UIHint="Headline" Cell="1,5" />
-                </ParameterBlock>
-                <op:include href="NfcAction.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="NFCACT" IsInner="true" />
-              </ParameterBlock>
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Zuweisung von NFC-Tags zu Aktionen" UIHint="Headline" />
+                    <ParameterRefRef RefId="%AID%_UP-%T%920001_R-%T%92000101" />
+                    <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                      <Rows>
+                        <Row Id="%AID%_PB-nnn_R-1" />
+                      </Rows>
+                      <Columns>
+                        <Column Id="%AID%_PB-nnn_C-1" Width="8%" />
+                        <Column Id="%AID%_PB-nnn_C-2" Width="12%" />
+                        <Column Id="%AID%_PB-nnn_C-3" Width="13%" />
+                        <Column Id="%AID%_PB-nnn_C-4" Width="23%" />
+                        <Column Id="%AID%_PB-nnn_C-5" Width="80%" />
+                      </Columns>
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Nr." UIHint="Headline" Cell="1,1" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Aktion" UIHint="Headline" Cell="1,2" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Tag" UIHint="Headline" Cell="1,3" />
+                      <Button Id="%AID%_B-%T%920004" Text="Sortieren" Cell="1,4" EventHandler="FIN_sort" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Information" UIHint="Headline" Cell="1,5" />
+                    </ParameterBlock>
+                    <op:include href="NfcAction.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="NFCACT" IsInner="true" />
+                  </ParameterBlock>
+                </when>
+              </choose>
             </ChannelIndependentBlock>
           </Dynamic>
         </ApplicationProgram>

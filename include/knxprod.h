@@ -10,7 +10,7 @@
                                              
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 114
+#define MAIN_ApplicationVersion 115
 #define MAIN_ParameterSize 6715
 #define MAIN_MaxKoNumber 796
 #define MAIN_OrderNumber "OpenKnxFingerprint"
@@ -165,9 +165,9 @@
 #define FIN_ScanMode                            50      // 1 Bit, Bit 3
 #define     FIN_ScanModeMask 0x08
 #define     FIN_ScanModeShift 3
-#define FIN_NfcScanner                          50      // 1 Bit, Bit 2
-#define     FIN_NfcScannerMask 0x04
-#define     FIN_NfcScannerShift 2
+#define FIN_NfcScanner                          50      // 2 Bits, Bit 2-1
+#define     FIN_NfcScannerMask 0x06
+#define     FIN_NfcScannerShift 1
 #define FIN_EnableRawData                       50      // 1 Bit, Bit 7
 #define     FIN_EnableRawDataMask 0x80
 #define     FIN_EnableRawDataShift 7
@@ -200,7 +200,7 @@
 // Fingerabfrage
 #define ParamFIN_ScanMode                            ((bool)(knx.paramByte(FIN_ScanMode) & FIN_ScanModeMask))
 // NFC Scanner
-#define ParamFIN_NfcScanner                          ((bool)(knx.paramByte(FIN_NfcScanner) & FIN_NfcScannerMask))
+#define ParamFIN_NfcScanner                          ((knx.paramByte(FIN_NfcScanner) & FIN_NfcScannerMask) >> FIN_NfcScannerShift)
 // Rohdaten auf den Bus senden
 #define ParamFIN_EnableRawData                       ((bool)(knx.paramByte(FIN_EnableRawData) & FIN_EnableRawDataMask))
 // Synchronisation mehrerer Geräte
@@ -426,14 +426,14 @@
 
 #define FIN_KoActSwitch 0
 #define FIN_KoActState 1
-#define FIN_KoActCall 2
+#define FIN_KoActCallLock 2
 
 // Ausgang
 #define KoFIN_ActSwitch                           (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActSwitch)))
 // Eingang
 #define KoFIN_ActState                            (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActState)))
 // Eingang
-#define KoFIN_ActCall                             (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActCall)))
+#define KoFIN_ActCallLock                         (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActCallLock)))
 
 #define FINACT_FingerActionCount                   2131      // uint16_t
 

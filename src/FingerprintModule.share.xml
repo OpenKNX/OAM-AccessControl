@@ -68,17 +68,17 @@
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-NfcScanner" Name="NfcScanner">
-                <TypeRestriction Base="Value" SizeInBit="1" UIHint="DropDown">
+                <TypeRestriction Base="Value" SizeInBit="2" UIHint="DropDown">
                   <Enumeration Text="Kein NFC" Value="0" Id="%ENID%" />
-                  <Enumeration Text="NFC xyz" Value="1" Id="%ENID%" />
+                  <Enumeration Text="NFC auf der Touch-Frontplatine" Value="1" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-FingerprintScanner" Name="FingerprintScanner">
                 <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="Kein Fingerprint" Value="3" Id="%ENID%" />
                   <Enumeration Text="R503" Value="0" Id="%ENID%" />
                   <Enumeration Text="R503S" Value="1" Id="%ENID%" />
                   <Enumeration Text="R503Pro" Value="2" Id="%ENID%" />
-                  <Enumeration Text="Kein Fingerprint" Value="3" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-Finger" Name="Finger">
@@ -181,7 +181,7 @@
                 <Parameter Id="%AID%_UP-%T%000010" Name="FingerprintColor" ParameterType="%AID%_PT-FingerprintColor" Offset="4" BitOffset="2" Text="Blinkfarbe während der Autorisierung" Value="2" Access="None" />
                 <Parameter Id="%AID%_UP-%T%000028" Name="ScanMode" ParameterType="%AID%_PT-ScanMode" Offset="4" BitOffset="4" Text="Fingerabfrage" Value="0" />
                 <Parameter Id="%AID%_UP-%T%000034" Name="NfcScanner" ParameterType="%AID%_PT-NfcScanner" Offset="4" BitOffset="5" Text="NFC Scanner" Value="0" />
-                <!-- 2 bits free -->
+                <!-- 1 bits free -->
                 <Parameter Id="%AID%_UP-%T%000011" Name="EnableRawData" Offset="4" BitOffset="0" ParameterType="%AID%_PT-OnOffYesNo" Text="Rohdaten auf den Bus senden" Value="0" />
                 <Parameter Id="%AID%_UP-%T%000012" Name="EnableSync" Offset="4" BitOffset="1" ParameterType="%AID%_PT-OnOffYesNo" Text="Synchronisation mehrerer Geräte" Value="0" />
                 <Parameter Id="%AID%_UP-%T%000013" Name="EnableExternalControl" Offset="4" BitOffset="2" ParameterType="%AID%_PT-OnOffYesNo" Text="Externe Kontrolle ermöglichen" Value="0" />
@@ -357,7 +357,11 @@
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hardware" UIHint="Headline" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000002_R-%T%00000201" IndentLevel="1" HelpContext="%DOC%" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000034_R-%T%00003401" IndentLevel="1" HelpContext="Empty" />
-                <ParameterRefRef RefId="%AID%_UP-%T%000019_R-%T%00001901" IndentLevel="1" HelpContext="%DOC%" />
+                <choose ParamRefId="%AID%_UP-%T%000034_R-%T%00003401">
+                  <when test="0">
+                    <ParameterRefRef RefId="%AID%_UP-%T%000019_R-%T%00001901" IndentLevel="1" HelpContext="%DOC%" />
+                  </when>
+                </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Detaileinstellungen zur entsprechenden Hardware können auf den entsprechenden Unterseiten vorgenommen werden" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 
@@ -692,8 +696,8 @@
                   <Columns>
                     <Column Id="%AID%_PB-nnn_C-1" Width="7%" />
                     <Column Id="%AID%_PB-nnn_C-2" Width="38%" />
-                    <Column Id="%AID%_PB-nnn_C-3" Width="5%" />
-                    <Column Id="%AID%_PB-nnn_C-4" Width="5%" />
+                    <Column Id="%AID%_PB-nnn_C-3" Width="6%" />
+                    <Column Id="%AID%_PB-nnn_C-4" Width="6%" />
                     <Column Id="%AID%_PB-nnn_C-5" Width="25%" />
                     <Column Id="%AID%_PB-nnn_C-6" Width="35%" />
                   </Columns>
