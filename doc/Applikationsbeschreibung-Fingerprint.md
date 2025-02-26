@@ -8,15 +8,21 @@ cSpell:words Triggersignal expample runterladen Wiregateway updatefähige Update
 cSpell:words mgeramb ambiente Ambientenbeleuchtung
 -->
 
-# Applikationsbeschreibung Fingerprint
+# Applikationsbeschreibung Zugangskontrolle
 
-Die Applikation Fingerprint erlaubt eine Parametrisierung einer Zutrittskontrolle per Fingerabdruck mit der ETS.
+Die Applikation Fingerprint erlaubt eine Parametrisierung einer Zutrittskontrolle per Fingerabdruck oder NFC-Tag mit der ETS.
 
-Es gibt eine kleinere Applikationsversion mit bis zu 200 Aktionen/Fingerzuordnungen und eine größere mit bis zu 1500 Aktionen/Fingerzuordnungen. Während die größere hauptsächlich für das "großen" Lesegerät R503Pro angeboten wird, kann sie bei Bedarf an mehr als 200 Fingerzuordnungen auch für das "kleinere" Lesegerät R503 verwendet werden.
+Es gibt eine kleinere Applikationsversion mit bis zu 200 Aktionen/Fingerzuordnungen/NFC-Tags und eine größere mit bis zu 1500 Aktionen/Fingerzuordnungen/NFC-Tags. Während die größere hauptsächlich für das "großen" Lesegerät R503Pro angeboten wird, kann sie bei Bedarf an mehr als 200 Fingerzuordnungen auch für das "kleinere" Lesegerät R503 verwendet werden.
 
 ## Änderungshistorie
 
 Im folgenden werden Änderungen an dem Dokument erfasst, damit man nicht immer das Gesamtdokument lesen muss, um Neuerungen zu erfahren.
+
+
+26.02.2025: Firmware 0.7, Applikation 0.7
+
+* NEU: Die Applikation wurde in "Zugangskontrolle" umbenannt.
+* NEU: Die Abfrage von NFC-Tags wird jetzt unterstützt.
 
 10.07.2024: Firmware 0.3, Applikation 0.3
 
@@ -44,7 +50,7 @@ Im folgenden werden Änderungen an dem Dokument erfasst, damit man nicht immer d
 
 ## **Verwendete Module**
 
-Der Fingerprint verwendet weitere OpenKNX-Module, die alle ihre eigene Dokumentation besitzen. Im folgenden werden die Module und die Verweise auf deren Dokumentation aufgelistet.
+Die Zugangskontrolle verwendet weitere OpenKNX-Module, die alle ihre eigene Dokumentation besitzen. Im folgenden werden die Module und die Verweise auf deren Dokumentation aufgelistet.
 
 ### **OpenKNX**
 
@@ -69,43 +75,114 @@ Die Funktionen vom Konfigurationstranfer-Modul sind unter [Applikationsbeschreib
 
 ### **Logiken**
 
-Wie die meisten OpenKNX-Applikationen enthält auch die Fingerprint-Applikation ein Logikmodul.
+Wie die meisten OpenKNX-Applikationen enthält auch diese Applikation ein Logikmodul.
 
 Die Funktionen des Logikmoduls sind unter [Applikationsbeschreibung-Logik](https://github.com/OpenKNX/OFM-LogicModule/blob/v1/doc/Applikationsbeschreibung-Logik.md) beschrieben.
 
 ### **Virtuelle Taster**
 
-Es werden auch virtuelle Taster von der Fingerprint-Applikation angeboten. Mit der Nutzung der Binäreingänge oder der Touch-Platine (als Erweiterung) - können es auch echte Taster werden.
+Es werden auch virtuelle Taster von der Applikation angeboten. Mit der Nutzung der Binäreingänge oder der Touch-Platine (als Erweiterung) - können es auch echte Taster werden.
 
 Die Funktionen des Tastermoduls sind unter [Applikationsbeschreibung-Taster](https://github.com/OpenKNX/OFM-VirtualButton/blob/v1/doc/Applikationsbeschreibung-Taster.md) beschrieben.
 
 ### **Binäreingänge**
 
-Die Fingerprint-Applikation unterstützt auch Binäreingänge.
+Diese Applikation unterstützt auch Binäreingänge.
 
 Die Funktionen der Binäreingänge sind unter [Applikationsbeschreibung-Binäreingang](https://github.com/OpenKNX/OFM-BinaryInput/blob/v1/doc/Applikationsbeschreibung-Binaereingang.md) beschrieben.
 
 
 
-## **Fingerabdruckleser**
+# **Zugangskontrolle**
 
 <!-- DOC HelpContext="Dokumentation" -->
-Mit diesem Modul können Finger im Lesegerät angelernt, gelöscht, Aktion verknüpft und Finger den Aktionen zugeordnet werden.
+Mit diesem Modul können Finger und NFC-Tags im Lesegerät angelernt, gelöscht, Aktionen verknüpft und Finger bzw. NFC-Tags den Aktionen zugeordnet werden.
+
+<!-- DOCCONTENT 
+https://github.com/OpenKNX/OAM-AccessControl/blob/main/doc/Applikationsbeschreibung-AccessControl.md
+DOCCONTENT -->
+
+## **Allgemein**
+
+In der Titelzeile wird der Modulname und dessen Version ausgegeben. Diese Information ist für Support-Anfragen im OpenKNX-Forum relevant.
 
 ### **Hardware**
 
-Hier erfolgen Einstellungen, die den Hardware-Scanner für Fingerabdrücke betreffen.
+In diesem Bereich erfolgen Einstellungen, die die Hardware-Scanner für Zugangskontrolle betreffen.
+
+Detaileinstellungen erfolgen dann auf passenden Unterseiten, benannt nach der jeweiligen Hardware.
 
 <!-- DOC -->
 #### **Fingerprint Scanner**
 
-Hier kann die angeschlossene Fingerprint-Scanner-Hardware ausgewählt werden.
+Auswahl der angeschlossenen Fingerprint-Scanner-Hardware. Es wird die folgendes angeboten:
 
-Aktuell werden folgende Scanner unterstützt:
+* **Kein Fingerprint**: Wenn keine Fingerprint-Hardware angeschlossen ist
+* **R503** (Standard): Speicherplatz für 200 Finger
+* **R503S**: Speicherplatz für 150 Finger
+* **R503Pro**: Speicherplatz für 1500 Finger
 
-* R503 (Standard): Speicherplatz für 200 Finger
-* R503S: Speicherplatz für 150 Finger
-* R503Pro: Speicherplatz für 1500 Finger
+<!-- DOC -->
+#### **NFC Scanner**
+
+Auswahl der angeschlossenen NFC-Scanner-Hardware. Es wird die folgendes angeboten:
+
+* **Kein NFC** (Standard): Wenn keine NFC-Scanner-Hardware angeschlossen ist
+* **NFC auf der Touch-Frontplatine**: Die Touch-Frontplatine ist mit der NFC-Scanner-Hardware ausgerüstet, zu erkennen an der NFC-Antenne
+
+<!-- DOC -->
+#### **Touch-Frontplatine vorhanden**
+
+<!-- DOC Skip="1" -->
+Erscheint nur, wenn bei "NFC Scanner" der Wert "Kein NFC" gewählt wurde.
+
+Mit der Touch-Frontplatine werden 2 Touch-Sensortasten in der Applikation verfügbar gemacht.
+
+### Zusatzfunktionen
+
+<!-- DOC -->
+#### **Rohdaten auf den Bus senden**
+
+Die Hardware-Scanner können ihre Daten direkt auf den Bus senden, ohne jegliche Aktionszuordnungen "dazwischen".
+
+Bei Aktivierung werden entsprechende Kommunikationsobjekte freigeschaltet.
+
+<!-- DOC -->
+#### **Zutrittsdaten-KOs aktivieren**
+
+<!-- DOC Skip="1" -->
+Erscheint nur, wenn bei "Rohdaten auf den Bus senden" ein "Ja" gewählt wurde.
+
+Werden die speziellen Kommunikationsobjekte für Zutrittsdaten benötigt (DPT 15), können diese hier aktiviert werden.
+
+<!-- DOC -->
+#### **Synchronisation mehrerer Geräte**
+
+Sind mehrere OpenKNX-Zugangskontroll-Geräte vorhanden und sollen die Fingerprint- und NFC-Daten unter diesen Geräten synchronisiert werden, muss diese Option aktiviert werden.
+
+Es stehen daraufhin zusätzliche Kommunikationsobjekte zur Synchronisation zur Verfügung.
+
+<!-- DOC -->
+#### **Verzögerung zwischen Sync-Telegrammen**
+
+<!-- DOC Skip="1" -->
+Erscheint nur, wenn bei "Synchronisation mehrerer Geräte" ein "Ja" gewählt wurde.
+
+Um eine zu hohe Busbelastung zu vermeiden, wird hier die Verzögerung zwischen Sync-Telegrammen in Millisekunden festgelegt.
+
+<!-- DOC -->
+#### **Externe Kontrolle ermöglichen**
+
+Bei Aktivierung werden entsprechende Kommunikationsobjekte freigeschaltet, die dazu verwendet werden können den Scanner extern zu steuern (um z.B. einen Anlernvorgang extern anzustoßen).
+
+## **Fingerprint-Scanner**
+
+Erscheint nur, wenn bei Fingerprint-Scanner eine entscprechende Hardware ausgewählt wurde.
+Erscheint als Unterseite der Seite "Allgemein".
+
+### **Hardware-Einstellungen**
+
+Hier werden Detaileinstellungen zur Fingerprint-Scanner-Hardware vorgenommen.
 
 <!-- DOC -->
 #### **Fingerabfrage**
@@ -114,26 +191,34 @@ Normalerweise wird die Fingerabfrage "Bei Berührung" des Fingerprints gestartet
 
 Die Einstellung "Fortlaufend" kann zur Folge haben, dass Logiken, die auf dem Fingerprint definiert sind, nicht mehr zuverlässig bzw. stark verzögert laufen. Sie sollte nur gewählt werden, wenn die normale Erkennung "Bei Berührung" nicht funktioniert.
 
-### Autorisierung
+
+### **Finger bearbeiten**
+
+Dieser Bereich stellt einen Finger-Editor dar, mit dem man in der ETS einzelne Finger anlernen, ändern oder löschen kann.
+
+Dieser Bereich kann erst funktionieren, wenn das Gerät das erste Mal programmiert worden ist, also eine PA und eine Applikation hat. Solange die entsprechenden Buttons ausgegraut sind, sind diese Voraussetzungen nicht erfüllt.
 
 <!-- DOC -->
-#### **Warten auf Autorisierung**
+#### **Finger**
 
-Ist eine Autorisierung für eine Aktion angefordert, wird die hier angegebene Zeit auf das Auflegen eines Fingers auf den Scanner gewartet, bis die Aktion abgebrochen wird.
+Dieses Auswahlfeld wählt die gewünschte Editierfunktion aus:
 
-### Neuen Finger anlernen
+* **anlernen**: Zu einer neuen Finger-ID soll ein Finger einer Person angelernt werden
+* **ändern**: Zu einer bestimmten Finger-ID soll der Finger oder die Person geändert werden
+* **löschen**: Eine bestimmte Finger-ID und die damit verbundenen Finger- und Personendaten werden gelöscht.
 
-<!-- DOC -->
+### **Finger anlernen**
+
+Zum Anlernen muss eine neue Finger-ID gewählt werden, dann der Name und der Finger der Person eingegeben werden und anschließend der Button "Anlernen" gedrückt werden.
+
 #### **Name der Person**
 
 Der Name der Person, welcher zusammen mit den neu angelernten Fingerdaten gespeichert werden soll.
 
-<!-- DOC -->
 #### **Finger der Person**
 
 Der Finger der Person, welcher zusammen mit den neu angelernten Fingerdaten gespeichert werden soll.
 
-<!-- DOC -->
 #### **Scanner Finger ID**
 
 Die ID des Fingers (= der Speicherplatz), auf welche die neu angelernten Fingerdaten gespeichert werden soll.
@@ -141,59 +226,62 @@ Die ID des Fingers (= der Speicherplatz), auf welche die neu angelernten Fingerd
 Dabei sind die verfügbaren SPeicherplätze abhängig von der ausgewählten Hardware des Fingerprint-Scanners:
 Sie werden dabei von 0 beginnend durchnummeriert. Hat der Scanner also beispielsweise 200 Speicherplätze, stehen die IDs 0-199 zur Verfügung.
 
-### Finger löschen
+### **Finger ändern**
 
-<!-- DOC -->
+Zum Ändern muss eine existierende Finger-ID gewählt werden, dann der neue Name und der neue Finger der Person eingegeben werden und anschließend der Button "Ändern" gedrückt werden.
+
+#### **Name der Person**
+
+Der Name der Person, welche neu den existierenden Fingerdaten zugeordnet werden soll.
+
+#### **Finger der Person**
+
+Der Finger der Person, welcher neu den existierenden Fingerdaten zugeordnet werden soll.
+
+#### **Scanner Finger ID**
+
+Die existierende ID des Fingers (= der Speicherplatz), dem die neue Persond und/oder der neue Finger zugeordnet werden soll.
+
+### **Finger löschen**
+
+Zum Löschen muss eine existierende (vorher angelernte) Finger-ID eingegeben werden. Die Person, der Finger und die angelernten Fingerdaten werden gelöscht, sobald der Button "Löschen" gedrückt wurde.
+
 #### **Scanner Finger ID**
 
 Die ID des Fingers (= der Speicherplatz), die gelöscht werden soll.
 
-### Zusatzfunktionen
+<!-- DOC HelpContext="Name der Person" -->
+<!-- DOCCONTENT
+Der Name der Person, die einer bestimmten Finger-ID zugeordnet ist.
+DOCCONTENT -->
 
-<!-- DOC -->
-#### **Touch-Frontplatine vorhanden**
+<!-- DOC HelpContext="Finger der Person" -->
+<!-- DOCCONTENT
+Der Finger der Person, der einer bestimmten Finger-ID zugeordnet ist.
+DOCCONTENT -->
 
-Optional kann die Basisplatine auf eine Touch-Frontplatine aufgesteckt werden.
+<!-- DOC HelpContext="Scanner Finger ID" -->
+<!-- DOCCONTENT
+Die ID des Fingers (= der Speicherplatz), auf welche die Fingerdaten gespeichert sind.
 
-Ist diese vorhanden und wurde die Option hier aktiviert, stehen einige zusätzliche Kommunikationsobjekte zur Verfügung. 
+Dabei sind die verfügbaren Speicherplätze abhängig von der ausgewählten Hardware des Fingerprint-Scanners. 
+Sie werden dabei von 0 beginnend durchnummeriert. Hat der Scanner also beispielsweise 200 Speicherplätze, stehen die IDs 0-199 zur Verfügung.
+DOCCONTENT -->
 
-<!-- DOC -->
-#### **Rohdaten auf den Bus senden**
+### **Finger synchronisieren**
 
-Der Fingerprint-Scanner kann seine Daten direkt auf den Bus senden, ohne jegliche Aktionszuordnungen "dazwischen".
+Nach jedem Anlernvorgang wird der neue Finger mit den anderen Geräten automatisch synchronisiert. Da dieser Vorgang komplett asynchron passiert, gibt es keine Garantie und keine Rückmeldung, ob die Synchronisation funktioniert hat. 
 
-Bei Aktivierung werden entsprechende Kommunikationsobjekte freigeschaltet.
-
-<!-- DOC -->
-##### **Zutrittsdaten-KOs aktivieren**
-
-Werden die speziellen Kommunikationsobjekte für Zutrittsdaten benötigt (DPT 15), können diese hier aktiviert werden.
-
-<!-- DOC -->
-#### **Synchronisation mehrerer Geräte**
-
-Sind mehrere OpenKNX-Fingerprint-Geräte vorhanden und sollen die Fingerprint- und NFC-Daten unter diesen Geräten synchronisiert werden, sollte diese Option aktiviert werden.
-
-Es stehen daraufhin zusätzliche Kommunikationsobjekte zur Synchronisation zur Verfügung.
-
-<!-- DOC -->
-#### **Verzögerung zwischen Sync-Telegrammen**
-
-Um eine zu hohe Busbelastung zu vermeiden, wird hier die Verzögerung zwischen Sync-Telegrammen in Millisekunden festgelegt.
+Falls auf irgendeinem Gerät eine Finger ID fehlt oder nicht aktuell ist, kann man hier diese Finger ID erneut synchronisieren lassen.
 
 <!-- DOC -->
 #### **Finger ID synchronisieren**
 
-Grundsätzlich erfolgt die Synchronisation nach einem Anlernvorgang automatisch.
-
-Zusätzlich kann hier die Synchronisation eines bestimmten Fingers auch manuell angestoßen werden.
-
-<!-- DOC -->
-#### **Externe Kontrolle ermöglichen**
-
-Bei Aktivierung werden entsprechende Kommunikationsobjekte freigeschaltet, die dazu verwendet werden können den Scanner extern zu steuern (wie ein Anlernvorgang extern anzustoßen).
+Durch die Eingabe einer Finger ID und das Drücken des Buttons "Synchronisieren" kann hier die Synchronisation eines bestimmten Fingers manuell angestoßen werden.
 
 ### **Gefährliche Funktionen**
+
+Die Funktionen in diesem Bereich können zum Datenverlust führen, der nicht behebbar ist. Bitte mit Vorsicht nutzen.
 
 <!-- DOC -->
 #### **Passwort**
@@ -217,22 +305,147 @@ Das neue, zu setzende Passwort.
 
 Mit dieser Funktion werden sämtliche gespeicherten Fingerdaten inklusive Personenzuordnung unwiderruflich gelöscht.
 
-## Aktionen
+
+
+
+
+## **NFC-Scanner**
+
+Erscheint nur, wenn bei NFC-Scanner eine entscprechende Hardware ausgewählt wurde.
+Erscheint als Unterseite der Seite "Allgemein".
+
+
+### **NFC-Tag bearbeiten**
+
+Dieser Bereich stellt einen NFC-Tag-Editor dar, mit dem man in der ETS einzelne NFC-Tags anlernen, anlegen, ändern oder löschen kann.
+
+Dieser Bereich kann erst funktionieren, wenn das Gerät das erste Mal programmiert worden ist, also eine PA und eine Applikation hat. Solange die entsprechenden Buttons ausgegraut sind, sind diese Voraussetzungen nicht erfüllt.
 
 <!-- DOC -->
-### **Verfügbare Aktionen**
+#### **NFC-Tag**
 
---ToDo--
+Dieses Auswahlfeld wählt die gewünschte Editierfunktion aus:
 
-Die ETS ist auch schneller in der Anzeige, wenn sie weniger (leere) Aktionen darstellen muss. Insofern macht es Sinn, nur so viele Aktionen anzuzeigen, wie man wirklich braucht.
+* **anlernen**: Zu einer neuen Tag ID soll ein neuer NFC-Tag angelernt werden
+* **anlegen**: Zu einer neuen Tag ID soll ein neuer NFC-Tag angelegt werden, dessen Tag Schlüssel (UID) man kennt.
+* **ändern**: Zu einer bestimmten Tag ID soll der NFC-Tag geändert werden
+* **löschen**: Eine bestimmte Tag ID und die damit verbundenen Tagdaten werden gelöscht.
 
---ToDo--
+### **NFC-Tag anlernen**
 
+Zum Anlernen muss eine neue Tag ID gewählt werden, dann der Name des Tags eingegeben werden und anschließend der Button "Anlernen" gedrückt werden.
+
+#### **Tag Name**
+
+Der Name des NFC-Tags, der angelernt werden soll.
+
+#### **Tag ID**
+
+Die ID des NFC-Tags (= der Speicherplatz), auf welchen die neuen Daten gespeichert werden sollen.
+
+#### **Tag Schlüssel (UID)**
+
+In diesem Feld erscheint der Tag Schlüssel (auch bekannt als UID) nach einem erfolgreichen Anlernvorgang.
+
+### **NFC-Tag anlegen**
+
+Zum Anlegen muss eine neue Tag ID gewählt werden, dann der Name des Tags eingegeben werden und der Tag Schlüssel (UID). Anschließend der Button "Anlegen" gedrückt werden.
+
+#### **Tag Name**
+
+Der Name des NFC-Tags, der angelegt werden soll.
+
+#### **Tag ID**
+
+Die ID des NFC-Tags (= der Speicherplatz), auf welchen die neuen Daten gespeichert werden sollen.
+
+#### **Tag Schlüssel (UID)**
+
+Der Tag Schlüssel (auch bekannt als UID) des neuen NFC-Tags.
+
+
+### **NFC-Tag ändern**
+
+Zum Ändern muss eine existierende Tag ID gewählt werden, dann der neue Name des NFC-Tags und/oder der Tag Schlüssel eingegeben werden und anschließend der Button "Ändern" gedrückt werden.
+
+#### **Tag Name**
+
+Der Name des NFC-Tags, der geändert werden soll.
+
+#### **Tag ID**
+
+Die ID des NFC-Tags (= der Speicherplatz), auf welchem die geänderten Daten gespeichert werden sollen.
+
+#### **Tag Schlüssel (UID)**
+
+Der Tag Schlüssel (auch bekannt als UID) des NFC-Tags.
+
+
+### **NFC-Tag löschen**
+
+Zum löschen muss eine existierende (vorher angelernte) Tag ID eingegeben werden. Der NFC-Tag und der Tag Schlüssel werden gelöscht, sobald der Button "löschen" gedrückt wurde.
+
+<!-- DOC HelpContext="Tag Name" -->
+<!-- DOCCONTENT
+Der Name des NFC-Tags, der einer bestimmten Tag ID zugeordnet ist.
+DOCCONTENT -->
+
+<!-- DOC HelpContext="Tag ID" -->
+<!-- DOCCONTENT
+Die ID des Tags (= der Speicherplatz), auf welchem die NFC Tag Daten gespeichert sind.
+DOCCONTENT -->
+
+<!-- DOC HelpContext="Tag Schlüssel (UID)" -->
+<!-- DOCCONTENT
+Der Schlüssel des NFC-Tags, auch bekannt als UID, der einer bestimmten Tag ID zugeordnet ist.
+DOCCONTENT -->
+
+
+### **NFC-Tag synchronisieren**
+
+Nach jedem Anlernvorgang wird der neue NFC-Tag mit den anderen Geräten automatisch synchronisiert. Da dieser Vorgang komplett asynchron passiert, gibt es keine Garantie und keine Rückmeldung, ob die Synchronisation funktioniert hat. 
+
+Falls auf irgendeinem Gerät eine Tag ID fehlt oder nicht aktuell ist, kann man hier diese Tag ID erneut synchronisieren lassen.
+
+<!-- DOC -->
+#### **Tag ID synchronisieren**
+
+Durch die Eingabe einer Tag ID und das Drücken des Buttons "Synchronisieren" kann hier die Synchronisation eines bestimmten NFC-Tags manuell angestoßen werden.
+
+### **Gefährliche Funktionen**
+
+Die Funktionen in diesem Bereich können zum Datenverlust führen, der nicht behebbar ist. Bitte mit Vorsicht nutzen.
 
 <!-- DOC -->
 #### **Alle NFC-Tags löschen?**
 
-Mit dieser Funktion werden sämtliche gespeicherten NFC-Tags inklusive Personenzuordnung unwiderruflich gelöscht.
+Mit dieser Funktion werden sämtliche gespeicherten NFC-Tags inklusive aller Tag Namen und Tag Schlüssel unwiderruflich gelöscht.
+
+
+
+<!-- DOC -->
+## Aktionen
+
+Aktioen sind die Objekte, die beim Zugangssystem etwas machen. Aktionen können benannt werden und definieren das Ausgangs-KO und dessen verhalten, wenn diese Aktion ausgelöst wird.
+
+<!-- DOC -->
+### **Verfügbare Aktionen**
+
+Hier kann hier ausgewählt werden, wie viele Aktionen sichtbar und editierbar sind. 
+
+Die ETS ist auch schneller in der Anzeige, wenn sie weniger (leere) Aktionen darstellen muss. Insofern macht es Sinn, nur so viele Aktionen anzuzeigen, wie man wirklich braucht.
+
+### Autorisierung
+
+Autorisierungsaktionen werden nicht direkt vom Zugangssystem aufgerufen. Sie werden durch ein KO aufgerufen und durch das Zugangssystem autorisiert. Hier wird also das Zutrittssystem nicht dazu genutzt, die Aktion auszulösen sondern zu bestätigen, dass die Person diese Aktion ausführen darf, dafür also autorisiert ist. 
+
+Auf diese Weise können mit einem Finger oder einem NFC-Tag viele Aktionen autorisiert werden.
+
+<!-- DOC -->
+#### **Warten auf Autorisierung**
+
+Ist eine Autorisierung für eine Aktion angefordert, wird die hier angegebene Zeit auf das Auflegen eines Fingers oder das Vorhalten eines NFC-Tags am Scanner gewartet. Falls die Zeit ohne Autorisierung verstreicht, wird die Aktion abgebrochen.
+
 
 
 

@@ -1,6 +1,4 @@
 ﻿### Finger ID synchronisieren
 
-Grundsätzlich erfolgt die Synchronisation nach einem Anlernvorgang automatisch.
-
-Zusätzlich kann hier die Synchronisation eines bestimmten Fingers auch manuell angestoßen werden.
+Durch die Eingabe einer Finger ID und das Drücken des Buttons "Synchronisieren" kann hier die Synchronisation eines bestimmten Fingers manuell angestoßen werden.
 

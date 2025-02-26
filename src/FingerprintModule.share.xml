@@ -356,7 +356,7 @@
 
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hardware" UIHint="Headline" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000002_R-%T%00000201" IndentLevel="1" HelpContext="%DOC%" />
-                <ParameterRefRef RefId="%AID%_UP-%T%000034_R-%T%00003401" IndentLevel="1" HelpContext="Empty" />
+                <ParameterRefRef RefId="%AID%_UP-%T%000034_R-%T%00003401" IndentLevel="1" HelpContext="%DOC%" />
                 <choose ParamRefId="%AID%_UP-%T%000034_R-%T%00003401">
                   <when test="0">
                     <ParameterRefRef RefId="%AID%_UP-%T%000019_R-%T%00001901" IndentLevel="1" HelpContext="%DOC%" />
@@ -480,7 +480,7 @@
 
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Finger bearbeiten" UIHint="Headline" />
                       <!-- Edit mode -->
-                      <ParameterRefRef RefId="%AID%_P-%T%000036_R-%T%00003601" IndentLevel="1" HelpContext="Empty" />
+                      <ParameterRefRef RefId="%AID%_P-%T%000036_R-%T%00003601" IndentLevel="1" HelpContext="%DOC%" />
                       <choose ParamRefId="%AID%_P-%T%000036_R-%T%00003601">
                         <when test="0 1">
                           <!-- learn / change -->
@@ -542,6 +542,7 @@
                       </ParameterBlock>
                       <choose ParamRefId="%AID%_UP-%T%000012_R-%T%00001201">
                         <when test="1">
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="Finger synchronisieren" UIHint="Headline" />
                           <ComObjectRefRef RefId="%AID%_O-%T%000046_R-%T%00004601" />
 
@@ -563,6 +564,7 @@
                         </when>
                       </choose>
 
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Gefährliche Funktionen" UIHint="Headline" />
                       <ParameterRefRef RefId="%AID%_P-%T%000020_R-%T%00002001" IndentLevel="1" HelpContext="%DOC%" />
                       <ParameterRefRef RefId="%AID%_P-%T%000023_R-%T%00002301" IndentLevel="1" />
@@ -603,20 +605,20 @@
                     <ParameterBlock Id="%AID%_PB-nnn" Icon="nfc-variant" Text="NFC-Scanner">  
 
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag bearbeiten" UIHint="Headline" />
-                      <ParameterRefRef RefId="%AID%_P-%T%000037_R-%T%00003701" IndentLevel="1" HelpContext="Empty" />
+                      <ParameterRefRef RefId="%AID%_P-%T%000037_R-%T%00003701" IndentLevel="1" HelpContext="%DOC%" />
                       <choose ParamRefId="%AID%_P-%T%000037_R-%T%00003701">
                         <when test="0">
-                          <ParameterRefRef RefId="%AID%_P-%T%000032_R-%T%00003201" IndentLevel="2" HelpContext="Empty" />
-                          <ParameterRefRef RefId="%AID%_P-%T%000030_R-%T%00003001" IndentLevel="2" HelpContext="Empty" />
-                          <ParameterRefRef RefId="%AID%_P-%T%000031_R-%T%00003102" IndentLevel="2" HelpContext="Empty" />
+                          <ParameterRefRef RefId="%AID%_P-%T%000032_R-%T%00003201" IndentLevel="2" HelpContext="%DOC%" />
+                          <ParameterRefRef RefId="%AID%_P-%T%000030_R-%T%00003001" IndentLevel="2" HelpContext="%DOC%" />
+                          <ParameterRefRef RefId="%AID%_P-%T%000031_R-%T%00003102" IndentLevel="2" HelpContext="%DOC%" />
                         </when>
                         <when test="1 3">
-                          <ParameterRefRef RefId="%AID%_P-%T%000032_R-%T%00003201" IndentLevel="2" HelpContext="Empty" />
-                          <ParameterRefRef RefId="%AID%_P-%T%000030_R-%T%00003001" IndentLevel="2" HelpContext="Empty" />
-                          <ParameterRefRef RefId="%AID%_P-%T%000031_R-%T%00003101" IndentLevel="2" HelpContext="Empty" />
+                          <ParameterRefRef RefId="%AID%_P-%T%000032_R-%T%00003201" IndentLevel="2" HelpContext="%DOC%" />
+                          <ParameterRefRef RefId="%AID%_P-%T%000030_R-%T%00003001" IndentLevel="2" HelpContext="%DOC%" />
+                          <ParameterRefRef RefId="%AID%_P-%T%000031_R-%T%00003101" IndentLevel="2" HelpContext="%DOC%" />
                         </when>
                         <when test="2">
-                          <ParameterRefRef RefId="%AID%_P-%T%000029_R-%T%00002901" IndentLevel="2" HelpContext="Empty" />
+                          <ParameterRefRef RefId="%AID%_P-%T%000029_R-%T%00002901" IndentLevel="2" HelpContext="%DOC%" />
                         </when>
                       </choose>
                       <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
@@ -646,15 +648,17 @@
 
                       <choose ParamRefId="%AID%_UP-%T%000012_R-%T%00001201">
                         <when test="1">
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag synchronisieren" UIHint="Headline" />
                           <ComObjectRefRef RefId="%AID%_O-%T%000046_R-%T%00004601" />
 
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="Nach jedem Anlernvorgang wird der neue Tag automatisch synchronisiert. Zusätzlich kann hier die Synchronisation eines bestimmten Tags auch manuell angestoßen werden." UIHint="Information" />
-                          <ParameterRefRef RefId="%AID%_P-%T%000033_R-%T%00003301" IndentLevel="2" HelpContext="Empty" />
+                          <ParameterRefRef RefId="%AID%_P-%T%000033_R-%T%00003301" IndentLevel="2" HelpContext="%DOC%" />
                           <Button Id="%AID%_B-%T%930004" Text="Synchronisieren" Name="syncNfc" EventHandler="FIN_syncNfc" EventHandlerOnline="ConnectionOriented" />
                         </when>
                       </choose>
 
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Gefährliche Funktionen" UIHint="Headline" />
                       <ParameterRefRef RefId="%AID%_P-%T%000035_R-%T%00003501" IndentLevel="1" HelpContext="%DOC%" />
                       <choose ParamRefId="%AID%_P-%T%000035_R-%T%00003501">
@@ -667,7 +671,7 @@
                   </when>
                 </choose>
               </ParameterBlock>
-              <ParameterBlock Id="%AID%_PB-nnn" Name="Actions" Text="Aktionen" Icon="dots-hexagon" HelpContext="Empty" ShowInComObjectTree="true">
+              <ParameterBlock Id="%AID%_PB-nnn" Name="Actions" Text="Aktionen" Icon="dots-hexagon" HelpContext="FIN-Aktionen" ShowInComObjectTree="true">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Aktionen" UIHint="Headline" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000001_R-%T%00000101" HelpContext="BASE-Verfuegbare-Kanaele" IndentLevel="1" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Autorisierung" UIHint="Headline" />
@@ -686,7 +690,6 @@
                   <ParameterRefRef RefId="%AID%_UP-%T%000008_R-%T%00000801" Cell="1,4" HelpContext="Empty" />
                 </ParameterBlock>
                 <ParameterRefRef RefId="%AID%_UP-%T%000010_R-%T%00001001" IndentLevel="1" />
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 
                 <ParameterSeparator Id="%AID%_PS-52" Text="" UIHint="HorizontalRuler" />
                 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">

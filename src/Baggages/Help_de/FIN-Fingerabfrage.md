@@ -4,3 +4,4 @@ Normalerweise wird die Fingerabfrage "Bei Berührung" des Fingerprints gestartet
 
 Die Einstellung "Fortlaufend" kann zur Folge haben, dass Logiken, die auf dem Fingerprint definiert sind, nicht mehr zuverlässig bzw. stark verzögert laufen. Sie sollte nur gewählt werden, wenn die normale Erkennung "Bei Berührung" nicht funktioniert.
 
+

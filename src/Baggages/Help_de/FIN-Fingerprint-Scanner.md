@@ -1,10 +1,9 @@
 ﻿### Fingerprint Scanner
 
-Hier kann die angeschlossene Fingerprint-Scanner-Hardware ausgewählt werden.
+Auswahl der angeschlossenen Fingerprint-Scanner-Hardware. Es wird die folgendes angeboten:
 
-Aktuell werden folgende Scanner unterstützt:
-
-* R503 (Standard): Speicherplatz für 200 Finger
-* R503S: Speicherplatz für 150 Finger
-* R503Pro: Speicherplatz für 1500 Finger
+* **Kein Fingerprint**: Wenn keine Fingerprint-Hardware angeschlossen ist
+* **R503** (Standard): Speicherplatz für 200 Finger
+* **R503S**: Speicherplatz für 150 Finger
+* **R503Pro**: Speicherplatz für 1500 Finger
 

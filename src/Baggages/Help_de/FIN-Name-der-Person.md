@@ -1,4 +1,4 @@
 ﻿### Name der Person
 
-Der Name der Person, welcher zusammen mit den neu angelernten Fingerdaten gespeichert werden soll.
+Der Name der Person, die einer bestimmten Finger-ID zugeordnet ist.
 
