@@ -28,8 +28,8 @@ void ActionChannel::processInputKo(GroupObject &ko)
 {
     switch (FIN_KoCalcIndex(ko.asap()))
     {
-        case FIN_KoActCall:
-            if (ko.value(DPT_Switch))
+        case FIN_KoActCallLock:
+            if (ParamFIN_ActAuthenticate && ko.value(DPT_Switch))
             {
                 _authenticateActive = true;
                 _actionCallResetTime = delayTimerInit();
@@ -41,13 +41,15 @@ void ActionChannel::processInputKo(GroupObject &ko)
 
 bool ActionChannel::processScan(uint16_t location)
 {
-    // here are 2 cases relevant:
+    // here are 3 cases relevant:
     // authentication is active and the action is without auth-flag => skip processing
-    // authentication is inaction and the action has te auth-flag => skip processing
-    if (_authenticateActive != ParamFIN_ActAuthenticate)
+    // authentication is inaction and the action has the auth-flag => skip processing
+    // authentication is inaction and the action is locked
+    if (_authenticateActive != ParamFIN_ActAuthenticate ||
+        !ParamFIN_ActAuthenticate && FIN_KoActCallLock)
         return false;
 
-    if (!ParamFIN_ActAuthenticate || KoFIN_ActCall.value(DPT_Switch))
+    if (!ParamFIN_ActAuthenticate || KoFIN_ActCallLock.value(DPT_Switch))
     {
         switch (ParamFIN_ActActionType)
         {
@@ -66,9 +68,9 @@ bool ActionChannel::processScan(uint16_t location)
                 break;
         }
 
-        if (KoFIN_ActCall.value(DPT_Switch))
+        if (KoFIN_ActCallLock.value(DPT_Switch))
         {
-            KoFIN_ActCall.value(false, DPT_Switch);
+            KoFIN_ActCallLock.value(false, DPT_Switch);
             _actionCallResetTime = 0;
             _authenticateActive = false;
         }
@@ -97,7 +99,7 @@ void ActionChannel::resetActionCall()
     if (!_authenticateActive)
         return;
 
-    KoFIN_ActCall.value(false, DPT_Switch);
+    KoFIN_ActCallLock.value(false, DPT_Switch);
     _finger->setLed(Fingerprint::State::None);
     _authenticateActive = false;
 }
