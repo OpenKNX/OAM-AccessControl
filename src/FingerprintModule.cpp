@@ -1426,18 +1426,23 @@ void FingerprintModule::handleFunctionPropertyChangeFinger(uint8_t *data, uint8_
             logDebugP("personFinger: %d", personFinger);
 
             uint8_t personName[28] = {};
+            bool personNameEmpty = false;
             for (uint8_t i = 0; i < 28; i++)
             {
                 memcpy(personName + i, data + 4 + i, 1);
                 if (personName[i] == 0) // null termination
+                {
+                    personNameEmpty = i == 0;
                     break;
+                }
             }
             logDebugP("personName: %s", personName);
 
             uint32_t storageOffset = FIN_CalcFingerStorageOffset(fingerId);
             logDebugP("storageOffset: %d", storageOffset);
             _fingerprintStorage.writeByte(storageOffset, personFinger); // only 4 bits used
-            _fingerprintStorage.write(storageOffset + 1, personName, 28);
+            if (!personNameEmpty)
+                _fingerprintStorage.write(storageOffset + 1, personName, 28);
             _fingerprintStorage.commit();
 
             syncRequestedFingerId = fingerId;
@@ -1808,22 +1813,39 @@ void FingerprintModule::handleFunctionPropertyChangeNfc(uint8_t *data, uint8_t *
 
     uint8_t tagUid[10] = {};
     memcpy(tagUid, data + 3, 10);
-    logDebugP("tagUid:");
+
+    bool tagUidEmpty = true;
+    for (uint8_t i = 0; i < 10; i++)
+    {
+        if (tagUid[i] != 0)
+        {
+            tagUidEmpty = false;
+            break;
+        }
+    }
+
+    logDebugP("tagUid (empty=%u):", tagUidEmpty);
     logHexDebugP(tagUid, 10);
 
     uint8_t tagName[28] = {};
+    bool tagNameEmpty = false;
     for (uint8_t i = 0; i < 28; i++)
     {
         memcpy(tagName + i, data + 13 + i, 1);
         if (tagName[i] == 0) // null termination
+        {
+            tagUidEmpty = i == 0;
             break;
+        }
     }
     logDebugP("tagName: %s", tagName);
 
     uint32_t storageOffset = FIN_CalcNfcStorageOffset(nfcId);
     logDebugP("storageOffset: %d", storageOffset);
-    _nfcStorage.write(storageOffset, tagUid, 10);
-    _nfcStorage.write(storageOffset + 10, tagName, 28);
+    if (!tagUidEmpty)
+        _nfcStorage.write(storageOffset, tagUid, 10);
+    if (!tagNameEmpty)
+        _nfcStorage.write(storageOffset + 10, tagName, 28);
     _nfcStorage.commit();
 
     syncRequestedNfcId = nfcId;
