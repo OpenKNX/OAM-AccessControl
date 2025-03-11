@@ -10,23 +10,7 @@
                 "--Debug",
                 "-h",
                 "include/knxprod.h",
-                "src/FingerprintModule"
-            ],
-            "problemMatcher": [],
-            "group": "test"
-        },
-        {
-            "label": "OpenKNXproducer Documentation",
-            "type": "shell",
-            "command": "~/bin/OpenKNXproducer.exe",
-            "args": [
-                "baggages",
-                "--DocFileName",
-                "doc/Applikationsbeschreibung-Fingerprint.md",
-                "--BaggagesDir",
-                "src/Baggages/Help_de",
-                "--Prefix",
-                "FIN"
+                "src/AccessControl"
             ],
             "problemMatcher": [],
             "group": "test"
@@ -66,7 +50,7 @@
             "type": "shell",
             "command": "scripts/OpenKNX-Build.ps1",
             "args": [
-                "develop_RP2040_JLINK",
+                "upload_JLINK_RP2040",
                 "upload"
             ],
             "group": "build",
@@ -110,16 +94,6 @@
             "command": "scripts/Build-Release.ps1",
             "args": [
                 "ReleaseR503"
-            ],
-            "problemMatcher": [],
-            "group": "test"
-        },
-        {
-            "label": "Build-Release R503-WP",
-            "type": "shell",
-            "command": "scripts/Build-Release.ps1",
-            "args": [
-                "ReleaseR503-WP"
             ],
             "problemMatcher": [],
             "group": "test"

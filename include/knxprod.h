@@ -9,14 +9,14 @@
                                          (time & 0x3FFF) * 3600000 ) : 0 )
                                              
 #define MAIN_OpenKnxId 0xA6
-#define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 116
-#define MAIN_ParameterSize 6715
-#define MAIN_MaxKoNumber 796
-#define MAIN_OrderNumber "OpenKnxFingerprint"
+#define MAIN_ApplicationNumber 0
+#define MAIN_ApplicationVersion 7
+#define MAIN_ParameterSize 18436
+#define MAIN_MaxKoNumber 1239
+#define MAIN_OrderNumber "OpenKnxAccessControl"
 #define BASE_ModuleVersion 18
 #define UCT_ModuleVersion 2
-#define FIN_ModuleVersion 6
+#define ACC_ModuleVersion 7
 #define SWA_ModuleVersion 1
 #define LOG_ModuleVersion 53
 #define BTN_ModuleVersion 5
@@ -149,301 +149,301 @@
 
 
 
-#define FIN_VisibleActions                      46      // uint16_t
-#define FIN_AuthDelayBase                       48      // 2 Bits, Bit 7-6
-#define     FIN_AuthDelayBaseMask 0xC0
-#define     FIN_AuthDelayBaseShift 6
-#define FIN_AuthDelayTime                       48      // 14 Bits, Bit 13-0
-#define     FIN_AuthDelayTimeMask 0x3FFF
-#define     FIN_AuthDelayTimeShift 0
-#define FIN_FingerprintScanner                  50      // 2 Bits, Bit 7-6
-#define     FIN_FingerprintScannerMask 0xC0
-#define     FIN_FingerprintScannerShift 6
-#define FIN_FingerprintColor                    50      // 3 Bits, Bit 5-3
-#define     FIN_FingerprintColorMask 0x38
-#define     FIN_FingerprintColorShift 3
-#define FIN_ScanMode                            50      // 1 Bit, Bit 3
-#define     FIN_ScanModeMask 0x08
-#define     FIN_ScanModeShift 3
-#define FIN_NfcScanner                          50      // 2 Bits, Bit 2-1
-#define     FIN_NfcScannerMask 0x06
-#define     FIN_NfcScannerShift 1
-#define FIN_EnableRawData                       50      // 1 Bit, Bit 7
-#define     FIN_EnableRawDataMask 0x80
-#define     FIN_EnableRawDataShift 7
-#define FIN_EnableSync                          50      // 1 Bit, Bit 6
-#define     FIN_EnableSyncMask 0x40
-#define     FIN_EnableSyncShift 6
-#define FIN_EnableExternalControl               50      // 1 Bit, Bit 5
-#define     FIN_EnableExternalControlMask 0x20
-#define     FIN_EnableExternalControlShift 5
-#define FIN_EnableAccessData                    50      // 1 Bit, Bit 4
-#define     FIN_EnableAccessDataMask 0x10
-#define     FIN_EnableAccessDataShift 4
-#define FIN_EnableTouchPcb                      50      // 1 Bit, Bit 3
-#define     FIN_EnableTouchPcbMask 0x08
-#define     FIN_EnableTouchPcbShift 3
-#define FIN_SyncDelay                           51      // uint8_t
+#define ACC_VisibleActions                      46      // uint16_t
+#define ACC_AuthDelayBase                       48      // 2 Bits, Bit 7-6
+#define     ACC_AuthDelayBaseMask 0xC0
+#define     ACC_AuthDelayBaseShift 6
+#define ACC_AuthDelayTime                       48      // 14 Bits, Bit 13-0
+#define     ACC_AuthDelayTimeMask 0x3FFF
+#define     ACC_AuthDelayTimeShift 0
+#define ACC_FingerprintScanner                  50      // 2 Bits, Bit 7-6
+#define     ACC_FingerprintScannerMask 0xC0
+#define     ACC_FingerprintScannerShift 6
+#define ACC_FingerprintColor                    50      // 3 Bits, Bit 5-3
+#define     ACC_FingerprintColorMask 0x38
+#define     ACC_FingerprintColorShift 3
+#define ACC_ScanMode                            50      // 1 Bit, Bit 3
+#define     ACC_ScanModeMask 0x08
+#define     ACC_ScanModeShift 3
+#define ACC_NfcScanner                          50      // 2 Bits, Bit 2-1
+#define     ACC_NfcScannerMask 0x06
+#define     ACC_NfcScannerShift 1
+#define ACC_EnableRawData                       50      // 1 Bit, Bit 7
+#define     ACC_EnableRawDataMask 0x80
+#define     ACC_EnableRawDataShift 7
+#define ACC_EnableSync                          50      // 1 Bit, Bit 6
+#define     ACC_EnableSyncMask 0x40
+#define     ACC_EnableSyncShift 6
+#define ACC_EnableExternalControl               50      // 1 Bit, Bit 5
+#define     ACC_EnableExternalControlMask 0x20
+#define     ACC_EnableExternalControlShift 5
+#define ACC_EnableAccessData                    50      // 1 Bit, Bit 4
+#define     ACC_EnableAccessDataMask 0x10
+#define     ACC_EnableAccessDataShift 4
+#define ACC_EnableTouchPcb                      50      // 1 Bit, Bit 3
+#define     ACC_EnableTouchPcbMask 0x08
+#define     ACC_EnableTouchPcbShift 3
+#define ACC_SyncDelay                           51      // uint8_t
 
 // Verfügbare Aktionen
-#define ParamFIN_VisibleActions                      (knx.paramWord(FIN_VisibleActions))
+#define ParamACC_VisibleActions                      (knx.paramWord(ACC_VisibleActions))
 // Zeitbasis
-#define ParamFIN_AuthDelayBase                       ((knx.paramByte(FIN_AuthDelayBase) & FIN_AuthDelayBaseMask) >> FIN_AuthDelayBaseShift)
+#define ParamACC_AuthDelayBase                       ((knx.paramByte(ACC_AuthDelayBase) & ACC_AuthDelayBaseMask) >> ACC_AuthDelayBaseShift)
 // Zeit
-#define ParamFIN_AuthDelayTime                       (knx.paramWord(FIN_AuthDelayTime) & FIN_AuthDelayTimeMask)
+#define ParamACC_AuthDelayTime                       (knx.paramWord(ACC_AuthDelayTime) & ACC_AuthDelayTimeMask)
 // Zeit (in Millisekunden)
-#define ParamFIN_AuthDelayTimeMS                     (paramDelay(knx.paramWord(FIN_AuthDelayTime)))
+#define ParamACC_AuthDelayTimeMS                     (paramDelay(knx.paramWord(ACC_AuthDelayTime)))
 // Fingerprint Scanner
-#define ParamFIN_FingerprintScanner                  ((knx.paramByte(FIN_FingerprintScanner) & FIN_FingerprintScannerMask) >> FIN_FingerprintScannerShift)
+#define ParamACC_FingerprintScanner                  ((knx.paramByte(ACC_FingerprintScanner) & ACC_FingerprintScannerMask) >> ACC_FingerprintScannerShift)
 // Blinkfarbe während der Autorisierung
-#define ParamFIN_FingerprintColor                    ((knx.paramByte(FIN_FingerprintColor) & FIN_FingerprintColorMask) >> FIN_FingerprintColorShift)
+#define ParamACC_FingerprintColor                    ((knx.paramByte(ACC_FingerprintColor) & ACC_FingerprintColorMask) >> ACC_FingerprintColorShift)
 // Fingerabfrage
-#define ParamFIN_ScanMode                            ((bool)(knx.paramByte(FIN_ScanMode) & FIN_ScanModeMask))
+#define ParamACC_ScanMode                            ((bool)(knx.paramByte(ACC_ScanMode) & ACC_ScanModeMask))
 // NFC Scanner
-#define ParamFIN_NfcScanner                          ((knx.paramByte(FIN_NfcScanner) & FIN_NfcScannerMask) >> FIN_NfcScannerShift)
+#define ParamACC_NfcScanner                          ((knx.paramByte(ACC_NfcScanner) & ACC_NfcScannerMask) >> ACC_NfcScannerShift)
 // Rohdaten auf den Bus senden
-#define ParamFIN_EnableRawData                       ((bool)(knx.paramByte(FIN_EnableRawData) & FIN_EnableRawDataMask))
+#define ParamACC_EnableRawData                       ((bool)(knx.paramByte(ACC_EnableRawData) & ACC_EnableRawDataMask))
 // Synchronisation mehrerer Geräte
-#define ParamFIN_EnableSync                          ((bool)(knx.paramByte(FIN_EnableSync) & FIN_EnableSyncMask))
+#define ParamACC_EnableSync                          ((bool)(knx.paramByte(ACC_EnableSync) & ACC_EnableSyncMask))
 // Externe Kontrolle ermöglichen
-#define ParamFIN_EnableExternalControl               ((bool)(knx.paramByte(FIN_EnableExternalControl) & FIN_EnableExternalControlMask))
+#define ParamACC_EnableExternalControl               ((bool)(knx.paramByte(ACC_EnableExternalControl) & ACC_EnableExternalControlMask))
 // Zutrittsdaten-KOs aktivieren
-#define ParamFIN_EnableAccessData                    ((bool)(knx.paramByte(FIN_EnableAccessData) & FIN_EnableAccessDataMask))
+#define ParamACC_EnableAccessData                    ((bool)(knx.paramByte(ACC_EnableAccessData) & ACC_EnableAccessDataMask))
 // Touch-Frontplatine vorhanden
-#define ParamFIN_EnableTouchPcb                      ((bool)(knx.paramByte(FIN_EnableTouchPcb) & FIN_EnableTouchPcbMask))
+#define ParamACC_EnableTouchPcb                      ((bool)(knx.paramByte(ACC_EnableTouchPcb) & ACC_EnableTouchPcbMask))
 // Verzögerung zwischen Sync-Telegrammen
-#define ParamFIN_SyncDelay                           (knx.paramByte(FIN_SyncDelay))
+#define ParamACC_SyncDelay                           (knx.paramByte(ACC_SyncDelay))
 
-#define FIN_KoFingerTouched 21
-#define FIN_KoFingerTouchedNoAction 22
-#define FIN_KoFingerScannerStatus 25
-#define FIN_KoLock 26
-#define FIN_KoLockStatus 27
-#define FIN_KoFingerScanSuccess 31
-#define FIN_KoFingerScanSuccessId 32
-#define FIN_KoFingerScanSuccessData 33
-#define FIN_KoFingerLedRingColor 36
-#define FIN_KoFingerLedRingControl 37
-#define FIN_KoFingerLedRingSpeed 38
-#define FIN_KoFingerLedRingCount 39
-#define FIN_KoFingerEnrollNext 41
-#define FIN_KoFingerEnrollId 42
-#define FIN_KoFingerEnrollData 43
-#define FIN_KoFingerEnrollSuccess 44
-#define FIN_KoFingerEnrollSuccessId 45
-#define FIN_KoFingerEnrollSuccessData 46
-#define FIN_KoFingerEnrollFailedId 47
-#define FIN_KoFingerDeleteId 51
-#define FIN_KoFingerDeleteData 52
-#define FIN_KoFingerDeleteSuccess 53
-#define FIN_KoFingerDeleteSuccessId 54
-#define FIN_KoFingerDeleteSuccessData 55
-#define FIN_KoFingerDeleteFailedId 56
-#define FIN_KoFingerExternId 61
-#define FIN_KoFingerActionAddId 62
-#define FIN_KoFingerActionRemoveId 63
-#define FIN_KoSync 66
-#define FIN_KoTouchPcbButtonLeft 71
-#define FIN_KoTouchPcbButtonRight 72
-#define FIN_KoTouchPcbLedRed 73
-#define FIN_KoTouchPcbLedGreen 74
-#define FIN_KoNfcExternId 60
-#define FIN_KoNfcActionAddId 64
-#define FIN_KoNfcActionRemoveId 65
-#define FIN_KoNfcScanSuccess 181
-#define FIN_KoNfcScanSuccessId 182
-#define FIN_KoNfcScanSuccessData 183
-#define FIN_KoNfcEnrollNext 184
-#define FIN_KoNfcEnrollId 185
-#define FIN_KoNfcEnrollData 186
-#define FIN_KoNfcEnrollSuccess 187
-#define FIN_KoNfcEnrollSuccessId 188
-#define FIN_KoNfcEnrollSuccessData 189
-#define FIN_KoNfcEnrollFailedId 190
-#define FIN_KoNfcDeleteId 191
-#define FIN_KoNfcDeleteData 192
-#define FIN_KoNfcDeleteSuccess 193
-#define FIN_KoNfcDeleteSuccessId 194
-#define FIN_KoNfcDeleteSuccessData 195
-#define FIN_KoNfcDeleteFailedId 196
+#define ACC_KoFingerTouched 21
+#define ACC_KoFingerTouchedNoAction 22
+#define ACC_KoFingerScannerStatus 25
+#define ACC_KoLock 26
+#define ACC_KoLockStatus 27
+#define ACC_KoFingerScanSuccess 31
+#define ACC_KoFingerScanSuccessId 32
+#define ACC_KoFingerScanSuccessData 33
+#define ACC_KoFingerLedRingColor 36
+#define ACC_KoFingerLedRingControl 37
+#define ACC_KoFingerLedRingSpeed 38
+#define ACC_KoFingerLedRingCount 39
+#define ACC_KoFingerEnrollNext 41
+#define ACC_KoFingerEnrollId 42
+#define ACC_KoFingerEnrollData 43
+#define ACC_KoFingerEnrollSuccess 44
+#define ACC_KoFingerEnrollSuccessId 45
+#define ACC_KoFingerEnrollSuccessData 46
+#define ACC_KoFingerEnrollFailedId 47
+#define ACC_KoFingerDeleteId 51
+#define ACC_KoFingerDeleteData 52
+#define ACC_KoFingerDeleteSuccess 53
+#define ACC_KoFingerDeleteSuccessId 54
+#define ACC_KoFingerDeleteSuccessData 55
+#define ACC_KoFingerDeleteFailedId 56
+#define ACC_KoFingerExternId 61
+#define ACC_KoFingerActionAddId 62
+#define ACC_KoFingerActionRemoveId 63
+#define ACC_KoSync 66
+#define ACC_KoTouchPcbButtonLeft 71
+#define ACC_KoTouchPcbButtonRight 72
+#define ACC_KoTouchPcbLedRed 73
+#define ACC_KoTouchPcbLedGreen 74
+#define ACC_KoNfcExternId 60
+#define ACC_KoNfcActionAddId 64
+#define ACC_KoNfcActionRemoveId 65
+#define ACC_KoNfcScanSuccess 181
+#define ACC_KoNfcScanSuccessId 182
+#define ACC_KoNfcScanSuccessData 183
+#define ACC_KoNfcEnrollNext 184
+#define ACC_KoNfcEnrollId 185
+#define ACC_KoNfcEnrollData 186
+#define ACC_KoNfcEnrollSuccess 187
+#define ACC_KoNfcEnrollSuccessId 188
+#define ACC_KoNfcEnrollSuccessData 189
+#define ACC_KoNfcEnrollFailedId 190
+#define ACC_KoNfcDeleteId 191
+#define ACC_KoNfcDeleteData 192
+#define ACC_KoNfcDeleteSuccess 193
+#define ACC_KoNfcDeleteSuccessId 194
+#define ACC_KoNfcDeleteSuccessData 195
+#define ACC_KoNfcDeleteFailedId 196
 
 // Berührung (sofort, immer)
-#define KoFIN_FingerTouched                       (knx.getGroupObject(FIN_KoFingerTouched))
+#define KoACC_FingerTouched                       (knx.getGroupObject(ACC_KoFingerTouched))
 // Berührung (verzögert, wenn keine Aktion zugeordnet)
-#define KoFIN_FingerTouchedNoAction               (knx.getGroupObject(FIN_KoFingerTouchedNoAction))
+#define KoACC_FingerTouchedNoAction               (knx.getGroupObject(ACC_KoFingerTouchedNoAction))
 // Status des Scanners
-#define KoFIN_FingerScannerStatus                 (knx.getGroupObject(FIN_KoFingerScannerStatus))
+#define KoACC_FingerScannerStatus                 (knx.getGroupObject(ACC_KoFingerScannerStatus))
 // Sperre
-#define KoFIN_Lock                                (knx.getGroupObject(FIN_KoLock))
+#define KoACC_Lock                                (knx.getGroupObject(ACC_KoLock))
 // Status der Sperre
-#define KoFIN_LockStatus                          (knx.getGroupObject(FIN_KoLockStatus))
+#define KoACC_LockStatus                          (knx.getGroupObject(ACC_KoLockStatus))
 // Scan: Erfolg
-#define KoFIN_FingerScanSuccess                   (knx.getGroupObject(FIN_KoFingerScanSuccess))
+#define KoACC_FingerScanSuccess                   (knx.getGroupObject(ACC_KoFingerScanSuccess))
 // Scan: ID
-#define KoFIN_FingerScanSuccessId                 (knx.getGroupObject(FIN_KoFingerScanSuccessId))
+#define KoACC_FingerScanSuccessId                 (knx.getGroupObject(ACC_KoFingerScanSuccessId))
 // Scan: Zutrittsdaten
-#define KoFIN_FingerScanSuccessData               (knx.getGroupObject(FIN_KoFingerScanSuccessData))
+#define KoACC_FingerScanSuccessData               (knx.getGroupObject(ACC_KoFingerScanSuccessData))
 // LED-Ring: Farbe (1: Rot, 2: Blau, 3: Violett, 4: Grün, 5: Gelb, 6: Cyan, 7: Weiß)
-#define KoFIN_FingerLedRingColor                  (knx.getGroupObject(FIN_KoFingerLedRingColor))
+#define KoACC_FingerLedRingColor                  (knx.getGroupObject(ACC_KoFingerLedRingColor))
 // LED-Ring: Steuerung (1: Atmen, 2: Blinken, 3: Konstant an, 4: Konstant aus, 5: Langsam an, 6: Langsam aus)
-#define KoFIN_FingerLedRingControl                (knx.getGroupObject(FIN_KoFingerLedRingControl))
+#define KoACC_FingerLedRingControl                (knx.getGroupObject(ACC_KoFingerLedRingControl))
 // LED-Ring: Geschwindigkeit (wird bei konstant an/aus ignoriert)
-#define KoFIN_FingerLedRingSpeed                  (knx.getGroupObject(FIN_KoFingerLedRingSpeed))
+#define KoACC_FingerLedRingSpeed                  (knx.getGroupObject(ACC_KoFingerLedRingSpeed))
 // LED-Ring: Anzahl der Zyklen (0: unendlich, nur relevant für atmen und blinken)
-#define KoFIN_FingerLedRingCount                  (knx.getGroupObject(FIN_KoFingerLedRingCount))
+#define KoACC_FingerLedRingCount                  (knx.getGroupObject(ACC_KoFingerLedRingCount))
 // Lerne an: Nächste freie ID
-#define KoFIN_FingerEnrollNext                    (knx.getGroupObject(FIN_KoFingerEnrollNext))
+#define KoACC_FingerEnrollNext                    (knx.getGroupObject(ACC_KoFingerEnrollNext))
 // Lerne an: ID (verfügbare Slots: R503S: 0-149, R503: 0-199, R503Pro: 0-1499)
-#define KoFIN_FingerEnrollId                      (knx.getGroupObject(FIN_KoFingerEnrollId))
+#define KoACC_FingerEnrollId                      (knx.getGroupObject(ACC_KoFingerEnrollId))
 // Lerne an: Zutrittsdaten (verfügbare Slots: R503S: 0-149, R503: 0-199, R503Pro: 0-1499)
-#define KoFIN_FingerEnrollData                    (knx.getGroupObject(FIN_KoFingerEnrollData))
+#define KoACC_FingerEnrollData                    (knx.getGroupObject(ACC_KoFingerEnrollData))
 // Anlernen: Erfolg
-#define KoFIN_FingerEnrollSuccess                 (knx.getGroupObject(FIN_KoFingerEnrollSuccess))
+#define KoACC_FingerEnrollSuccess                 (knx.getGroupObject(ACC_KoFingerEnrollSuccess))
 // Anlernen: Erfolg ID
-#define KoFIN_FingerEnrollSuccessId               (knx.getGroupObject(FIN_KoFingerEnrollSuccessId))
+#define KoACC_FingerEnrollSuccessId               (knx.getGroupObject(ACC_KoFingerEnrollSuccessId))
 // Anlernen: Zutrittsdaten
-#define KoFIN_FingerEnrollSuccessData             (knx.getGroupObject(FIN_KoFingerEnrollSuccessData))
+#define KoACC_FingerEnrollSuccessData             (knx.getGroupObject(ACC_KoFingerEnrollSuccessData))
 // Anlernen: Fehlgeschlagen ID
-#define KoFIN_FingerEnrollFailedId                (knx.getGroupObject(FIN_KoFingerEnrollFailedId))
+#define KoACC_FingerEnrollFailedId                (knx.getGroupObject(ACC_KoFingerEnrollFailedId))
 // Lösche: ID
-#define KoFIN_FingerDeleteId                      (knx.getGroupObject(FIN_KoFingerDeleteId))
+#define KoACC_FingerDeleteId                      (knx.getGroupObject(ACC_KoFingerDeleteId))
 // Lösche: Zutrittsdaten
-#define KoFIN_FingerDeleteData                    (knx.getGroupObject(FIN_KoFingerDeleteData))
+#define KoACC_FingerDeleteData                    (knx.getGroupObject(ACC_KoFingerDeleteData))
 // Löschen: Erfolg
-#define KoFIN_FingerDeleteSuccess                 (knx.getGroupObject(FIN_KoFingerDeleteSuccess))
+#define KoACC_FingerDeleteSuccess                 (knx.getGroupObject(ACC_KoFingerDeleteSuccess))
 // Löschen: Erfolg ID
-#define KoFIN_FingerDeleteSuccessId               (knx.getGroupObject(FIN_KoFingerDeleteSuccessId))
+#define KoACC_FingerDeleteSuccessId               (knx.getGroupObject(ACC_KoFingerDeleteSuccessId))
 // Löschen: Zutrittsdaten
-#define KoFIN_FingerDeleteSuccessData             (knx.getGroupObject(FIN_KoFingerDeleteSuccessData))
+#define KoACC_FingerDeleteSuccessData             (knx.getGroupObject(ACC_KoFingerDeleteSuccessData))
 // Löschen: Fehlgeschlagen ID
-#define KoFIN_FingerDeleteFailedId                (knx.getGroupObject(FIN_KoFingerDeleteFailedId))
+#define KoACC_FingerDeleteFailedId                (knx.getGroupObject(ACC_KoFingerDeleteFailedId))
 // Externe Finger ID
-#define KoFIN_FingerExternId                      (knx.getGroupObject(FIN_KoFingerExternId))
+#define KoACC_FingerExternId                      (knx.getGroupObject(ACC_KoFingerExternId))
 // Finger ID zu Aktion hinzufügen
-#define KoFIN_FingerActionAddId                   (knx.getGroupObject(FIN_KoFingerActionAddId))
+#define KoACC_FingerActionAddId                   (knx.getGroupObject(ACC_KoFingerActionAddId))
 // Finger ID von Aktion entfernen
-#define KoFIN_FingerActionRemoveId                (knx.getGroupObject(FIN_KoFingerActionRemoveId))
+#define KoACC_FingerActionRemoveId                (knx.getGroupObject(ACC_KoFingerActionRemoveId))
 // Datenaustausch zwischen Fingerprints
-#define KoFIN_Sync                                (knx.getGroupObject(FIN_KoSync))
+#define KoACC_Sync                                (knx.getGroupObject(ACC_KoSync))
 // Touch-Front: Taste links
-#define KoFIN_TouchPcbButtonLeft                  (knx.getGroupObject(FIN_KoTouchPcbButtonLeft))
+#define KoACC_TouchPcbButtonLeft                  (knx.getGroupObject(ACC_KoTouchPcbButtonLeft))
 // Touch-Front: Taste rechts
-#define KoFIN_TouchPcbButtonRight                 (knx.getGroupObject(FIN_KoTouchPcbButtonRight))
+#define KoACC_TouchPcbButtonRight                 (knx.getGroupObject(ACC_KoTouchPcbButtonRight))
 // Touch-Front: LED rot
-#define KoFIN_TouchPcbLedRed                      (knx.getGroupObject(FIN_KoTouchPcbLedRed))
+#define KoACC_TouchPcbLedRed                      (knx.getGroupObject(ACC_KoTouchPcbLedRed))
 // Touch-Front: LED grün
-#define KoFIN_TouchPcbLedGreen                    (knx.getGroupObject(FIN_KoTouchPcbLedGreen))
+#define KoACC_TouchPcbLedGreen                    (knx.getGroupObject(ACC_KoTouchPcbLedGreen))
 // NFC: Externe Tag ID
-#define KoFIN_NfcExternId                         (knx.getGroupObject(FIN_KoNfcExternId))
+#define KoACC_NfcExternId                         (knx.getGroupObject(ACC_KoNfcExternId))
 // NFC: Tag ID zu Aktion hinzufügen
-#define KoFIN_NfcActionAddId                      (knx.getGroupObject(FIN_KoNfcActionAddId))
+#define KoACC_NfcActionAddId                      (knx.getGroupObject(ACC_KoNfcActionAddId))
 // NFC: Tag ID von Aktion entfernen
-#define KoFIN_NfcActionRemoveId                   (knx.getGroupObject(FIN_KoNfcActionRemoveId))
+#define KoACC_NfcActionRemoveId                   (knx.getGroupObject(ACC_KoNfcActionRemoveId))
 // NFC: Scan: Erfolg
-#define KoFIN_NfcScanSuccess                      (knx.getGroupObject(FIN_KoNfcScanSuccess))
+#define KoACC_NfcScanSuccess                      (knx.getGroupObject(ACC_KoNfcScanSuccess))
 // NFC: Scan: ID
-#define KoFIN_NfcScanSuccessId                    (knx.getGroupObject(FIN_KoNfcScanSuccessId))
+#define KoACC_NfcScanSuccessId                    (knx.getGroupObject(ACC_KoNfcScanSuccessId))
 // NFC: Scan: Zutrittsdaten
-#define KoFIN_NfcScanSuccessData                  (knx.getGroupObject(FIN_KoNfcScanSuccessData))
+#define KoACC_NfcScanSuccessData                  (knx.getGroupObject(ACC_KoNfcScanSuccessData))
 // NFC: Lerne an: Nächste freie ID
-#define KoFIN_NfcEnrollNext                       (knx.getGroupObject(FIN_KoNfcEnrollNext))
+#define KoACC_NfcEnrollNext                       (knx.getGroupObject(ACC_KoNfcEnrollNext))
 // NFC: Lerne an: ID (0-1499)
-#define KoFIN_NfcEnrollId                         (knx.getGroupObject(FIN_KoNfcEnrollId))
+#define KoACC_NfcEnrollId                         (knx.getGroupObject(ACC_KoNfcEnrollId))
 // NFC: Lerne an: Zutrittsdaten (0-1499)
-#define KoFIN_NfcEnrollData                       (knx.getGroupObject(FIN_KoNfcEnrollData))
+#define KoACC_NfcEnrollData                       (knx.getGroupObject(ACC_KoNfcEnrollData))
 // NFC: Anlernen: Erfolg
-#define KoFIN_NfcEnrollSuccess                    (knx.getGroupObject(FIN_KoNfcEnrollSuccess))
+#define KoACC_NfcEnrollSuccess                    (knx.getGroupObject(ACC_KoNfcEnrollSuccess))
 // NFC: Anlernen: Erfolg ID
-#define KoFIN_NfcEnrollSuccessId                  (knx.getGroupObject(FIN_KoNfcEnrollSuccessId))
+#define KoACC_NfcEnrollSuccessId                  (knx.getGroupObject(ACC_KoNfcEnrollSuccessId))
 // NFC: Anlernen: Zutrittsdaten
-#define KoFIN_NfcEnrollSuccessData                (knx.getGroupObject(FIN_KoNfcEnrollSuccessData))
+#define KoACC_NfcEnrollSuccessData                (knx.getGroupObject(ACC_KoNfcEnrollSuccessData))
 // NFC: Anlernen: Fehlgeschlagen ID
-#define KoFIN_NfcEnrollFailedId                   (knx.getGroupObject(FIN_KoNfcEnrollFailedId))
+#define KoACC_NfcEnrollFailedId                   (knx.getGroupObject(ACC_KoNfcEnrollFailedId))
 // NFC: Lösche: ID
-#define KoFIN_NfcDeleteId                         (knx.getGroupObject(FIN_KoNfcDeleteId))
+#define KoACC_NfcDeleteId                         (knx.getGroupObject(ACC_KoNfcDeleteId))
 // NFC: Lösche: Zutrittsdaten
-#define KoFIN_NfcDeleteData                       (knx.getGroupObject(FIN_KoNfcDeleteData))
+#define KoACC_NfcDeleteData                       (knx.getGroupObject(ACC_KoNfcDeleteData))
 // NFC: Löschen: Erfolg
-#define KoFIN_NfcDeleteSuccess                    (knx.getGroupObject(FIN_KoNfcDeleteSuccess))
+#define KoACC_NfcDeleteSuccess                    (knx.getGroupObject(ACC_KoNfcDeleteSuccess))
 // NFC: Löschen: Erfolg ID
-#define KoFIN_NfcDeleteSuccessId                  (knx.getGroupObject(FIN_KoNfcDeleteSuccessId))
+#define KoACC_NfcDeleteSuccessId                  (knx.getGroupObject(ACC_KoNfcDeleteSuccessId))
 // NFC: Löschen: Zutrittsdaten
-#define KoFIN_NfcDeleteSuccessData                (knx.getGroupObject(FIN_KoNfcDeleteSuccessData))
+#define KoACC_NfcDeleteSuccessData                (knx.getGroupObject(ACC_KoNfcDeleteSuccessData))
 // NFC: Löschen: Fehlgeschlagen ID
-#define KoFIN_NfcDeleteFailedId                   (knx.getGroupObject(FIN_KoNfcDeleteFailedId))
+#define KoACC_NfcDeleteFailedId                   (knx.getGroupObject(ACC_KoNfcDeleteFailedId))
 
-#define FIN_ChannelCount 99
+#define ACC_ChannelCount 200
 
 // Parameter per channel
-#define FIN_ParamBlockOffset 52
-#define FIN_ParamBlockSize 21
-#define FIN_ParamCalcIndex(index) (index + FIN_ParamBlockOffset + _channelIndex * FIN_ParamBlockSize)
+#define ACC_ParamBlockOffset 52
+#define ACC_ParamBlockSize 21
+#define ACC_ParamCalcIndex(index) (index + ACC_ParamBlockOffset + _channelIndex * ACC_ParamBlockSize)
 
-#define FIN_ActInactive                          0      // 1 Bit, Bit 7
-#define     FIN_ActInactiveMask 0x80
-#define     FIN_ActInactiveShift 7
-#define FIN_ActAuthenticate                      0      // 1 Bit, Bit 6
-#define     FIN_ActAuthenticateMask 0x40
-#define     FIN_ActAuthenticateShift 6
-#define FIN_ActActionType                        0      // 2 Bits, Bit 5-4
-#define     FIN_ActActionTypeMask 0x30
-#define     FIN_ActActionTypeShift 4
-#define FIN_ActDelayBase                         1      // 2 Bits, Bit 7-6
-#define     FIN_ActDelayBaseMask 0xC0
-#define     FIN_ActDelayBaseShift 6
-#define FIN_ActDelayTime                         1      // 14 Bits, Bit 13-0
-#define     FIN_ActDelayTimeMask 0x3FFF
-#define     FIN_ActDelayTimeShift 0
-#define FIN_ActOnOff                             1      // 1 Bit, Bit 7
-#define     FIN_ActOnOffMask 0x80
-#define     FIN_ActOnOffShift 7
+#define ACC_ActInactive                          0      // 1 Bit, Bit 7
+#define     ACC_ActInactiveMask 0x80
+#define     ACC_ActInactiveShift 7
+#define ACC_ActAuthenticate                      0      // 1 Bit, Bit 6
+#define     ACC_ActAuthenticateMask 0x40
+#define     ACC_ActAuthenticateShift 6
+#define ACC_ActActionType                        0      // 2 Bits, Bit 5-4
+#define     ACC_ActActionTypeMask 0x30
+#define     ACC_ActActionTypeShift 4
+#define ACC_ActDelayBase                         1      // 2 Bits, Bit 7-6
+#define     ACC_ActDelayBaseMask 0xC0
+#define     ACC_ActDelayBaseShift 6
+#define ACC_ActDelayTime                         1      // 14 Bits, Bit 13-0
+#define     ACC_ActDelayTimeMask 0x3FFF
+#define     ACC_ActDelayTimeShift 0
+#define ACC_ActOnOff                             1      // 1 Bit, Bit 7
+#define     ACC_ActOnOffMask 0x80
+#define     ACC_ActOnOffShift 7
 
 // deaktivieren
-#define ParamFIN_ActInactive                         ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_ActInactive)) & FIN_ActInactiveMask))
+#define ParamACC_ActInactive                         ((bool)(knx.paramByte(ACC_ParamCalcIndex(ACC_ActInactive)) & ACC_ActInactiveMask))
 // Authentifizierungs-Aktion
-#define ParamFIN_ActAuthenticate                     ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_ActAuthenticate)) & FIN_ActAuthenticateMask))
+#define ParamACC_ActAuthenticate                     ((bool)(knx.paramByte(ACC_ParamCalcIndex(ACC_ActAuthenticate)) & ACC_ActAuthenticateMask))
 // Aktionstyp
-#define ParamFIN_ActActionType                       ((knx.paramByte(FIN_ParamCalcIndex(FIN_ActActionType)) & FIN_ActActionTypeMask) >> FIN_ActActionTypeShift)
+#define ParamACC_ActActionType                       ((knx.paramByte(ACC_ParamCalcIndex(ACC_ActActionType)) & ACC_ActActionTypeMask) >> ACC_ActActionTypeShift)
 // Zeitbasis
-#define ParamFIN_ActDelayBase                        ((knx.paramByte(FIN_ParamCalcIndex(FIN_ActDelayBase)) & FIN_ActDelayBaseMask) >> FIN_ActDelayBaseShift)
+#define ParamACC_ActDelayBase                        ((knx.paramByte(ACC_ParamCalcIndex(ACC_ActDelayBase)) & ACC_ActDelayBaseMask) >> ACC_ActDelayBaseShift)
 // Zeit
-#define ParamFIN_ActDelayTime                        (knx.paramWord(FIN_ParamCalcIndex(FIN_ActDelayTime)) & FIN_ActDelayTimeMask)
+#define ParamACC_ActDelayTime                        (knx.paramWord(ACC_ParamCalcIndex(ACC_ActDelayTime)) & ACC_ActDelayTimeMask)
 // Zeit (in Millisekunden)
-#define ParamFIN_ActDelayTimeMS                      (paramDelay(knx.paramWord(FIN_ParamCalcIndex(FIN_ActDelayTime))))
+#define ParamACC_ActDelayTimeMS                      (paramDelay(knx.paramWord(ACC_ParamCalcIndex(ACC_ActDelayTime))))
 // Schaltwert
-#define ParamFIN_ActOnOff                            ((bool)(knx.paramByte(FIN_ParamCalcIndex(FIN_ActOnOff)) & FIN_ActOnOffMask))
+#define ParamACC_ActOnOff                            ((bool)(knx.paramByte(ACC_ParamCalcIndex(ACC_ActOnOff)) & ACC_ActOnOffMask))
 
 // deprecated
-#define FIN_KoOffset 500
+#define ACC_KoOffset 100
 
 // Communication objects per channel (multiple occurrence)
-#define FIN_KoBlockOffset 500
-#define FIN_KoBlockSize 3
+#define ACC_KoBlockOffset 100
+#define ACC_KoBlockSize 3
 
-#define FIN_KoCalcNumber(index) (index + FIN_KoBlockOffset + _channelIndex * FIN_KoBlockSize)
-#define FIN_KoCalcIndex(number) ((number >= FIN_KoCalcNumber(0) && number < FIN_KoCalcNumber(FIN_KoBlockSize)) ? (number - FIN_KoBlockOffset) % FIN_KoBlockSize : -1)
-#define FIN_KoCalcChannel(number) ((number >= FIN_KoBlockOffset && number < FIN_KoBlockOffset + FIN_ChannelCount * FIN_KoBlockSize) ? (number - FIN_KoBlockOffset) / FIN_KoBlockSize : -1)
+#define ACC_KoCalcNumber(index) (index + ACC_KoBlockOffset + _channelIndex * ACC_KoBlockSize)
+#define ACC_KoCalcIndex(number) ((number >= ACC_KoCalcNumber(0) && number < ACC_KoCalcNumber(ACC_KoBlockSize)) ? (number - ACC_KoBlockOffset) % ACC_KoBlockSize : -1)
+#define ACC_KoCalcChannel(number) ((number >= ACC_KoBlockOffset && number < ACC_KoBlockOffset + ACC_ChannelCount * ACC_KoBlockSize) ? (number - ACC_KoBlockOffset) / ACC_KoBlockSize : -1)
 
-#define FIN_KoActSwitch 0
-#define FIN_KoActState 1
-#define FIN_KoActCallLock 2
+#define ACC_KoActSwitch 0
+#define ACC_KoActState 1
+#define ACC_KoActCallLock 2
 
 // Ausgang
-#define KoFIN_ActSwitch                           (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActSwitch)))
+#define KoACC_ActSwitch                           (knx.getGroupObject(ACC_KoCalcNumber(ACC_KoActSwitch)))
 // Eingang
-#define KoFIN_ActState                            (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActState)))
+#define KoACC_ActState                            (knx.getGroupObject(ACC_KoCalcNumber(ACC_KoActState)))
 // Eingang
-#define KoFIN_ActCallLock                         (knx.getGroupObject(FIN_KoCalcNumber(FIN_KoActCallLock)))
+#define KoACC_ActCallLock                         (knx.getGroupObject(ACC_KoCalcNumber(ACC_KoActCallLock)))
 
-#define FINACT_FingerActionCount                   2131      // uint16_t
+#define FINACT_FingerActionCount                   4252      // uint16_t
 
 // Verfügbare Zuordnungen
 #define ParamFINACT_FingerActionCount                   (knx.paramWord(FINACT_FingerActionCount))
 
-#define FINACT_ChannelCount 99
+#define FINACT_ChannelCount 300
 
 // Parameter per channel
-#define FINACT_ParamBlockOffset 2133
+#define FINACT_ParamBlockOffset 4254
 #define FINACT_ParamBlockSize 4
 #define FINACT_ParamCalcIndex(index) (index + FINACT_ParamBlockOffset + _channelIndex * FINACT_ParamBlockSize)
 
@@ -464,7 +464,7 @@
 
 
 
-#define NFCACT_NfcActionCount                      2529      // uint16_t
+#define NFCACT_NfcActionCount                      5454      // uint16_t
 
 // Verfügbare Zuordnungen
 #define ParamNFCACT_NfcActionCount                      (knx.paramWord(NFCACT_NfcActionCount))
@@ -472,7 +472,7 @@
 #define NFCACT_ChannelCount 99
 
 // Parameter per channel
-#define NFCACT_ParamBlockOffset 2531
+#define NFCACT_ParamBlockOffset 5456
 #define NFCACT_ParamBlockSize 4
 #define NFCACT_ParamCalcIndex(index) (index + NFCACT_ParamBlockOffset + _channelIndex * NFCACT_ParamBlockSize)
 
@@ -493,7 +493,7 @@
 
 
 
-#define SWA_VisibleChannels                     2927      // uint8_t
+#define SWA_VisibleChannels                     5852      // uint8_t
 
 // Verfügbare Kanäle
 #define ParamSWA_VisibleChannels                     (knx.paramByte(SWA_VisibleChannels))
@@ -506,7 +506,7 @@
 #define SWA_ChannelCount 1
 
 // Parameter per channel
-#define SWA_ParamBlockOffset 2928
+#define SWA_ParamBlockOffset 5853
 #define SWA_ParamBlockSize 74
 #define SWA_ParamCalcIndex(index) (index + SWA_ParamBlockOffset + _channelIndex * SWA_ParamBlockSize)
 
@@ -782,254 +782,251 @@
 // 
 #define KoSWA_ChScene                             (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChScene)))
 
-#define LOG_BuzzerInstalled                     3002      // 1 Bit, Bit 7
+#define LOG_BuzzerInstalled                     5927      // 1 Bit, Bit 7
 #define     LOG_BuzzerInstalledMask 0x80
 #define     LOG_BuzzerInstalledShift 7
-#define LOG_LedInstalled                        3002      // 1 Bit, Bit 6
+#define LOG_LedInstalled                        5927      // 1 Bit, Bit 6
 #define     LOG_LedInstalledMask 0x40
 #define     LOG_LedInstalledShift 6
-#define LOG_VacationKo                          3002      // 1 Bit, Bit 5
+#define LOG_VacationKo                          5927      // 1 Bit, Bit 5
 #define     LOG_VacationKoMask 0x20
 #define     LOG_VacationKoShift 5
-#define LOG_HolidayKo                           3002      // 1 Bit, Bit 4
+#define LOG_HolidayKo                           5927      // 1 Bit, Bit 4
 #define     LOG_HolidayKoMask 0x10
 #define     LOG_HolidayKoShift 4
-#define LOG_VacationRead                        3002      // 1 Bit, Bit 3
+#define LOG_VacationRead                        5927      // 1 Bit, Bit 3
 #define     LOG_VacationReadMask 0x08
 #define     LOG_VacationReadShift 3
-#define LOG_HolidaySend                         3002      // 1 Bit, Bit 2
+#define LOG_HolidaySend                         5927      // 1 Bit, Bit 2
 #define     LOG_HolidaySendMask 0x04
 #define     LOG_HolidaySendShift 2
-#define LOG_Neujahr                             3003      // 1 Bit, Bit 7
+#define LOG_Neujahr                             5928      // 1 Bit, Bit 7
 #define     LOG_NeujahrMask 0x80
 #define     LOG_NeujahrShift 7
-#define LOG_DreiKoenige                         3003      // 1 Bit, Bit 6
+#define LOG_DreiKoenige                         5928      // 1 Bit, Bit 6
 #define     LOG_DreiKoenigeMask 0x40
 #define     LOG_DreiKoenigeShift 6
-#define LOG_Weiberfastnacht                     3003      // 1 Bit, Bit 5
+#define LOG_Weiberfastnacht                     5928      // 1 Bit, Bit 5
 #define     LOG_WeiberfastnachtMask 0x20
 #define     LOG_WeiberfastnachtShift 5
-#define LOG_Rosenmontag                         3003      // 1 Bit, Bit 4
+#define LOG_Rosenmontag                         5928      // 1 Bit, Bit 4
 #define     LOG_RosenmontagMask 0x10
 #define     LOG_RosenmontagShift 4
-#define LOG_Fastnachtsdienstag                  3003      // 1 Bit, Bit 3
+#define LOG_Fastnachtsdienstag                  5928      // 1 Bit, Bit 3
 #define     LOG_FastnachtsdienstagMask 0x08
 #define     LOG_FastnachtsdienstagShift 3
-#define LOG_Aschermittwoch                      3003      // 1 Bit, Bit 2
+#define LOG_Aschermittwoch                      5928      // 1 Bit, Bit 2
 #define     LOG_AschermittwochMask 0x04
 #define     LOG_AschermittwochShift 2
-#define LOG_Frauentag                           3003      // 1 Bit, Bit 1
+#define LOG_Frauentag                           5928      // 1 Bit, Bit 1
 #define     LOG_FrauentagMask 0x02
 #define     LOG_FrauentagShift 1
-#define LOG_Gruendonnerstag                     3003      // 1 Bit, Bit 0
+#define LOG_Gruendonnerstag                     5928      // 1 Bit, Bit 0
 #define     LOG_GruendonnerstagMask 0x01
 #define     LOG_GruendonnerstagShift 0
-#define LOG_Karfreitag                          3004      // 1 Bit, Bit 7
+#define LOG_Karfreitag                          5929      // 1 Bit, Bit 7
 #define     LOG_KarfreitagMask 0x80
 #define     LOG_KarfreitagShift 7
-#define LOG_Ostersonntag                        3004      // 1 Bit, Bit 6
+#define LOG_Ostersonntag                        5929      // 1 Bit, Bit 6
 #define     LOG_OstersonntagMask 0x40
 #define     LOG_OstersonntagShift 6
-#define LOG_Ostermontag                         3004      // 1 Bit, Bit 5
+#define LOG_Ostermontag                         5929      // 1 Bit, Bit 5
 #define     LOG_OstermontagMask 0x20
 #define     LOG_OstermontagShift 5
-#define LOG_TagDerArbeit                        3004      // 1 Bit, Bit 4
+#define LOG_TagDerArbeit                        5929      // 1 Bit, Bit 4
 #define     LOG_TagDerArbeitMask 0x10
 #define     LOG_TagDerArbeitShift 4
-#define LOG_Himmelfahrt                         3004      // 1 Bit, Bit 3
+#define LOG_Himmelfahrt                         5929      // 1 Bit, Bit 3
 #define     LOG_HimmelfahrtMask 0x08
 #define     LOG_HimmelfahrtShift 3
-#define LOG_Pfingstsonntag                      3004      // 1 Bit, Bit 2
+#define LOG_Pfingstsonntag                      5929      // 1 Bit, Bit 2
 #define     LOG_PfingstsonntagMask 0x04
 #define     LOG_PfingstsonntagShift 2
-#define LOG_Pfingstmontag                       3004      // 1 Bit, Bit 1
+#define LOG_Pfingstmontag                       5929      // 1 Bit, Bit 1
 #define     LOG_PfingstmontagMask 0x02
 #define     LOG_PfingstmontagShift 1
-#define LOG_Fronleichnam                        3004      // 1 Bit, Bit 0
+#define LOG_Fronleichnam                        5929      // 1 Bit, Bit 0
 #define     LOG_FronleichnamMask 0x01
 #define     LOG_FronleichnamShift 0
-#define LOG_Friedensfest                        3005      // 1 Bit, Bit 7
+#define LOG_Friedensfest                        5930      // 1 Bit, Bit 7
 #define     LOG_FriedensfestMask 0x80
 #define     LOG_FriedensfestShift 7
-#define LOG_MariaHimmelfahrt                    3005      // 1 Bit, Bit 6
+#define LOG_MariaHimmelfahrt                    5930      // 1 Bit, Bit 6
 #define     LOG_MariaHimmelfahrtMask 0x40
 #define     LOG_MariaHimmelfahrtShift 6
-#define LOG_DeutscheEinheit                     3005      // 1 Bit, Bit 5
+#define LOG_DeutscheEinheit                     5930      // 1 Bit, Bit 5
 #define     LOG_DeutscheEinheitMask 0x20
 #define     LOG_DeutscheEinheitShift 5
-#define LOG_Reformationstag                     3005      // 1 Bit, Bit 4
+#define LOG_Reformationstag                     5930      // 1 Bit, Bit 4
 #define     LOG_ReformationstagMask 0x10
 #define     LOG_ReformationstagShift 4
-#define LOG_Allerheiligen                       3005      // 1 Bit, Bit 3
+#define LOG_Allerheiligen                       5930      // 1 Bit, Bit 3
 #define     LOG_AllerheiligenMask 0x08
 #define     LOG_AllerheiligenShift 3
-#define LOG_BussBettag                          3005      // 1 Bit, Bit 2
+#define LOG_BussBettag                          5930      // 1 Bit, Bit 2
 #define     LOG_BussBettagMask 0x04
 #define     LOG_BussBettagShift 2
-#define LOG_Advent1                             3005      // 1 Bit, Bit 1
+#define LOG_Advent1                             5930      // 1 Bit, Bit 1
 #define     LOG_Advent1Mask 0x02
 #define     LOG_Advent1Shift 1
-#define LOG_Advent2                             3005      // 1 Bit, Bit 0
+#define LOG_Advent2                             5930      // 1 Bit, Bit 0
 #define     LOG_Advent2Mask 0x01
 #define     LOG_Advent2Shift 0
-#define LOG_Advent3                             3006      // 1 Bit, Bit 7
+#define LOG_Advent3                             5931      // 1 Bit, Bit 7
 #define     LOG_Advent3Mask 0x80
 #define     LOG_Advent3Shift 7
-#define LOG_Advent4                             3006      // 1 Bit, Bit 6
+#define LOG_Advent4                             5931      // 1 Bit, Bit 6
 #define     LOG_Advent4Mask 0x40
 #define     LOG_Advent4Shift 6
-#define LOG_Heiligabend                         3006      // 1 Bit, Bit 5
+#define LOG_Heiligabend                         5931      // 1 Bit, Bit 5
 #define     LOG_HeiligabendMask 0x20
 #define     LOG_HeiligabendShift 5
-#define LOG_Weihnachtstag1                      3006      // 1 Bit, Bit 4
+#define LOG_Weihnachtstag1                      5931      // 1 Bit, Bit 4
 #define     LOG_Weihnachtstag1Mask 0x10
 #define     LOG_Weihnachtstag1Shift 4
-#define LOG_Weihnachtstag2                      3006      // 1 Bit, Bit 3
+#define LOG_Weihnachtstag2                      5931      // 1 Bit, Bit 3
 #define     LOG_Weihnachtstag2Mask 0x08
 #define     LOG_Weihnachtstag2Shift 3
-#define LOG_Silvester                           3006      // 1 Bit, Bit 2
+#define LOG_Silvester                           5931      // 1 Bit, Bit 2
 #define     LOG_SilvesterMask 0x04
 #define     LOG_SilvesterShift 2
-#define LOG_Nationalfeiertag                    3006      // 1 Bit, Bit 1
+#define LOG_Nationalfeiertag                    5931      // 1 Bit, Bit 1
 #define     LOG_NationalfeiertagMask 0x02
 #define     LOG_NationalfeiertagShift 1
-#define LOG_MariaEmpfaengnis                    3006      // 1 Bit, Bit 0
+#define LOG_MariaEmpfaengnis                    5931      // 1 Bit, Bit 0
 #define     LOG_MariaEmpfaengnisMask 0x01
 #define     LOG_MariaEmpfaengnisShift 0
-#define LOG_NationalfeiertagSchweiz             3007      // 1 Bit, Bit 7
+#define LOG_NationalfeiertagSchweiz             5932      // 1 Bit, Bit 7
 #define     LOG_NationalfeiertagSchweizMask 0x80
 #define     LOG_NationalfeiertagSchweizShift 7
-#define LOG_Totensonntag                        3007      // 1 Bit, Bit 6
+#define LOG_Totensonntag                        5932      // 1 Bit, Bit 6
 #define     LOG_TotensonntagMask 0x40
 #define     LOG_TotensonntagShift 6
-#define LOG_Weltkindertag                       3007      // 1 Bit, Bit 5
-#define     LOG_WeltkindertagMask 0x20
-#define     LOG_WeltkindertagShift 5
-#define LOG_BuzzerSilent                        3008      // uint16_t
-#define LOG_BuzzerNormal                        3010      // uint16_t
-#define LOG_BuzzerLoud                          3012      // uint16_t
-#define LOG_VisibleChannels                     3014      // uint8_t
-#define LOG_LedMapping                          3015      // 3 Bits, Bit 7-5
+#define LOG_BuzzerSilent                        5933      // uint16_t
+#define LOG_BuzzerNormal                        5935      // uint16_t
+#define LOG_BuzzerLoud                          5937      // uint16_t
+#define LOG_VisibleChannels                     5939      // uint8_t
+#define LOG_LedMapping                          5940      // 3 Bits, Bit 7-5
 #define     LOG_LedMappingMask 0xE0
 #define     LOG_LedMappingShift 5
-#define LOG_UserFormula1                        3016      // char*, 99 Byte
-#define LOG_UserFormula1Active                  3115      // 1 Bit, Bit 7
+#define LOG_UserFormula1                        5941      // char*, 99 Byte
+#define LOG_UserFormula1Active                  6040      // 1 Bit, Bit 7
 #define     LOG_UserFormula1ActiveMask 0x80
 #define     LOG_UserFormula1ActiveShift 7
-#define LOG_UserFormula2                        3116      // char*, 99 Byte
-#define LOG_UserFormula2Active                  3215      // 1 Bit, Bit 7
+#define LOG_UserFormula2                        6041      // char*, 99 Byte
+#define LOG_UserFormula2Active                  6140      // 1 Bit, Bit 7
 #define     LOG_UserFormula2ActiveMask 0x80
 #define     LOG_UserFormula2ActiveShift 7
-#define LOG_UserFormula3                        3216      // char*, 99 Byte
-#define LOG_UserFormula3Active                  3315      // 1 Bit, Bit 7
+#define LOG_UserFormula3                        6141      // char*, 99 Byte
+#define LOG_UserFormula3Active                  6240      // 1 Bit, Bit 7
 #define     LOG_UserFormula3ActiveMask 0x80
 #define     LOG_UserFormula3ActiveShift 7
-#define LOG_UserFormula4                        3316      // char*, 99 Byte
-#define LOG_UserFormula4Active                  3415      // 1 Bit, Bit 7
+#define LOG_UserFormula4                        6241      // char*, 99 Byte
+#define LOG_UserFormula4Active                  6340      // 1 Bit, Bit 7
 #define     LOG_UserFormula4ActiveMask 0x80
 #define     LOG_UserFormula4ActiveShift 7
-#define LOG_UserFormula5                        3416      // char*, 99 Byte
-#define LOG_UserFormula5Active                  3515      // 1 Bit, Bit 7
+#define LOG_UserFormula5                        6341      // char*, 99 Byte
+#define LOG_UserFormula5Active                  6440      // 1 Bit, Bit 7
 #define     LOG_UserFormula5ActiveMask 0x80
 #define     LOG_UserFormula5ActiveShift 7
-#define LOG_UserFormula6                        3516      // char*, 99 Byte
-#define LOG_UserFormula6Active                  3615      // 1 Bit, Bit 7
+#define LOG_UserFormula6                        6441      // char*, 99 Byte
+#define LOG_UserFormula6Active                  6540      // 1 Bit, Bit 7
 #define     LOG_UserFormula6ActiveMask 0x80
 #define     LOG_UserFormula6ActiveShift 7
-#define LOG_UserFormula7                        3616      // char*, 99 Byte
-#define LOG_UserFormula7Active                  3715      // 1 Bit, Bit 7
+#define LOG_UserFormula7                        6541      // char*, 99 Byte
+#define LOG_UserFormula7Active                  6640      // 1 Bit, Bit 7
 #define     LOG_UserFormula7ActiveMask 0x80
 #define     LOG_UserFormula7ActiveShift 7
-#define LOG_UserFormula8                        3716      // char*, 99 Byte
-#define LOG_UserFormula8Active                  3815      // 1 Bit, Bit 7
+#define LOG_UserFormula8                        6641      // char*, 99 Byte
+#define LOG_UserFormula8Active                  6740      // 1 Bit, Bit 7
 #define     LOG_UserFormula8ActiveMask 0x80
 #define     LOG_UserFormula8ActiveShift 7
-#define LOG_UserFormula9                        3816      // char*, 99 Byte
-#define LOG_UserFormula9Active                  3915      // 1 Bit, Bit 7
+#define LOG_UserFormula9                        6741      // char*, 99 Byte
+#define LOG_UserFormula9Active                  6840      // 1 Bit, Bit 7
 #define     LOG_UserFormula9ActiveMask 0x80
 #define     LOG_UserFormula9ActiveShift 7
-#define LOG_UserFormula10                       3916      // char*, 99 Byte
-#define LOG_UserFormula10Active                 4015      // 1 Bit, Bit 7
+#define LOG_UserFormula10                       6841      // char*, 99 Byte
+#define LOG_UserFormula10Active                 6940      // 1 Bit, Bit 7
 #define     LOG_UserFormula10ActiveMask 0x80
 #define     LOG_UserFormula10ActiveShift 7
-#define LOG_UserFormula11                       4016      // char*, 99 Byte
-#define LOG_UserFormula11Active                 4115      // 1 Bit, Bit 7
+#define LOG_UserFormula11                       6941      // char*, 99 Byte
+#define LOG_UserFormula11Active                 7040      // 1 Bit, Bit 7
 #define     LOG_UserFormula11ActiveMask 0x80
 #define     LOG_UserFormula11ActiveShift 7
-#define LOG_UserFormula12                       4116      // char*, 99 Byte
-#define LOG_UserFormula12Active                 4215      // 1 Bit, Bit 7
+#define LOG_UserFormula12                       7041      // char*, 99 Byte
+#define LOG_UserFormula12Active                 7140      // 1 Bit, Bit 7
 #define     LOG_UserFormula12ActiveMask 0x80
 #define     LOG_UserFormula12ActiveShift 7
-#define LOG_UserFormula13                       4216      // char*, 99 Byte
-#define LOG_UserFormula13Active                 4315      // 1 Bit, Bit 7
+#define LOG_UserFormula13                       7141      // char*, 99 Byte
+#define LOG_UserFormula13Active                 7240      // 1 Bit, Bit 7
 #define     LOG_UserFormula13ActiveMask 0x80
 #define     LOG_UserFormula13ActiveShift 7
-#define LOG_UserFormula14                       4316      // char*, 99 Byte
-#define LOG_UserFormula14Active                 4415      // 1 Bit, Bit 7
+#define LOG_UserFormula14                       7241      // char*, 99 Byte
+#define LOG_UserFormula14Active                 7340      // 1 Bit, Bit 7
 #define     LOG_UserFormula14ActiveMask 0x80
 #define     LOG_UserFormula14ActiveShift 7
-#define LOG_UserFormula15                       4416      // char*, 99 Byte
-#define LOG_UserFormula15Active                 4515      // 1 Bit, Bit 7
+#define LOG_UserFormula15                       7341      // char*, 99 Byte
+#define LOG_UserFormula15Active                 7440      // 1 Bit, Bit 7
 #define     LOG_UserFormula15ActiveMask 0x80
 #define     LOG_UserFormula15ActiveShift 7
-#define LOG_UserFormula16                       4516      // char*, 99 Byte
-#define LOG_UserFormula16Active                 4615      // 1 Bit, Bit 7
+#define LOG_UserFormula16                       7441      // char*, 99 Byte
+#define LOG_UserFormula16Active                 7540      // 1 Bit, Bit 7
 #define     LOG_UserFormula16ActiveMask 0x80
 #define     LOG_UserFormula16ActiveShift 7
-#define LOG_UserFormula17                       4616      // char*, 99 Byte
-#define LOG_UserFormula17Active                 4715      // 1 Bit, Bit 7
+#define LOG_UserFormula17                       7541      // char*, 99 Byte
+#define LOG_UserFormula17Active                 7640      // 1 Bit, Bit 7
 #define     LOG_UserFormula17ActiveMask 0x80
 #define     LOG_UserFormula17ActiveShift 7
-#define LOG_UserFormula18                       4716      // char*, 99 Byte
-#define LOG_UserFormula18Active                 4815      // 1 Bit, Bit 7
+#define LOG_UserFormula18                       7641      // char*, 99 Byte
+#define LOG_UserFormula18Active                 7740      // 1 Bit, Bit 7
 #define     LOG_UserFormula18ActiveMask 0x80
 #define     LOG_UserFormula18ActiveShift 7
-#define LOG_UserFormula19                       4816      // char*, 99 Byte
-#define LOG_UserFormula19Active                 4915      // 1 Bit, Bit 7
+#define LOG_UserFormula19                       7741      // char*, 99 Byte
+#define LOG_UserFormula19Active                 7840      // 1 Bit, Bit 7
 #define     LOG_UserFormula19ActiveMask 0x80
 #define     LOG_UserFormula19ActiveShift 7
-#define LOG_UserFormula20                       4916      // char*, 99 Byte
-#define LOG_UserFormula20Active                 5015      // 1 Bit, Bit 7
+#define LOG_UserFormula20                       7841      // char*, 99 Byte
+#define LOG_UserFormula20Active                 7940      // 1 Bit, Bit 7
 #define     LOG_UserFormula20ActiveMask 0x80
 #define     LOG_UserFormula20ActiveShift 7
-#define LOG_UserFormula21                       5016      // char*, 99 Byte
-#define LOG_UserFormula21Active                 5115      // 1 Bit, Bit 7
+#define LOG_UserFormula21                       7941      // char*, 99 Byte
+#define LOG_UserFormula21Active                 8040      // 1 Bit, Bit 7
 #define     LOG_UserFormula21ActiveMask 0x80
 #define     LOG_UserFormula21ActiveShift 7
-#define LOG_UserFormula22                       5116      // char*, 99 Byte
-#define LOG_UserFormula22Active                 5215      // 1 Bit, Bit 7
+#define LOG_UserFormula22                       8041      // char*, 99 Byte
+#define LOG_UserFormula22Active                 8140      // 1 Bit, Bit 7
 #define     LOG_UserFormula22ActiveMask 0x80
 #define     LOG_UserFormula22ActiveShift 7
-#define LOG_UserFormula23                       5216      // char*, 99 Byte
-#define LOG_UserFormula23Active                 5315      // 1 Bit, Bit 7
+#define LOG_UserFormula23                       8141      // char*, 99 Byte
+#define LOG_UserFormula23Active                 8240      // 1 Bit, Bit 7
 #define     LOG_UserFormula23ActiveMask 0x80
 #define     LOG_UserFormula23ActiveShift 7
-#define LOG_UserFormula24                       5316      // char*, 99 Byte
-#define LOG_UserFormula24Active                 5415      // 1 Bit, Bit 7
+#define LOG_UserFormula24                       8241      // char*, 99 Byte
+#define LOG_UserFormula24Active                 8340      // 1 Bit, Bit 7
 #define     LOG_UserFormula24ActiveMask 0x80
 #define     LOG_UserFormula24ActiveShift 7
-#define LOG_UserFormula25                       5416      // char*, 99 Byte
-#define LOG_UserFormula25Active                 5515      // 1 Bit, Bit 7
+#define LOG_UserFormula25                       8341      // char*, 99 Byte
+#define LOG_UserFormula25Active                 8440      // 1 Bit, Bit 7
 #define     LOG_UserFormula25ActiveMask 0x80
 #define     LOG_UserFormula25ActiveShift 7
-#define LOG_UserFormula26                       5516      // char*, 99 Byte
-#define LOG_UserFormula26Active                 5615      // 1 Bit, Bit 7
+#define LOG_UserFormula26                       8441      // char*, 99 Byte
+#define LOG_UserFormula26Active                 8540      // 1 Bit, Bit 7
 #define     LOG_UserFormula26ActiveMask 0x80
 #define     LOG_UserFormula26ActiveShift 7
-#define LOG_UserFormula27                       5616      // char*, 99 Byte
-#define LOG_UserFormula27Active                 5715      // 1 Bit, Bit 7
+#define LOG_UserFormula27                       8541      // char*, 99 Byte
+#define LOG_UserFormula27Active                 8640      // 1 Bit, Bit 7
 #define     LOG_UserFormula27ActiveMask 0x80
 #define     LOG_UserFormula27ActiveShift 7
-#define LOG_UserFormula28                       5716      // char*, 99 Byte
-#define LOG_UserFormula28Active                 5815      // 1 Bit, Bit 7
+#define LOG_UserFormula28                       8641      // char*, 99 Byte
+#define LOG_UserFormula28Active                 8740      // 1 Bit, Bit 7
 #define     LOG_UserFormula28ActiveMask 0x80
 #define     LOG_UserFormula28ActiveShift 7
-#define LOG_UserFormula29                       5816      // char*, 99 Byte
-#define LOG_UserFormula29Active                 5915      // 1 Bit, Bit 7
+#define LOG_UserFormula29                       8741      // char*, 99 Byte
+#define LOG_UserFormula29Active                 8840      // 1 Bit, Bit 7
 #define     LOG_UserFormula29ActiveMask 0x80
 #define     LOG_UserFormula29ActiveShift 7
-#define LOG_UserFormula30                       5916      // char*, 99 Byte
-#define LOG_UserFormula30Active                 6015      // 1 Bit, Bit 7
+#define LOG_UserFormula30                       8841      // char*, 99 Byte
+#define LOG_UserFormula30Active                 8940      // 1 Bit, Bit 7
 #define     LOG_UserFormula30ActiveMask 0x80
 #define     LOG_UserFormula30ActiveShift 7
 
@@ -1113,8 +1110,6 @@
 #define ParamLOG_NationalfeiertagSchweiz             ((bool)(knx.paramByte(LOG_NationalfeiertagSchweiz) & LOG_NationalfeiertagSchweizMask))
 // 34. Totensonntag
 #define ParamLOG_Totensonntag                        ((bool)(knx.paramByte(LOG_Totensonntag) & LOG_TotensonntagMask))
-// 35. Weltkindertag
-#define ParamLOG_Weltkindertag                       ((bool)(knx.paramByte(LOG_Weltkindertag) & LOG_WeltkindertagMask))
 // Frequenz für Buzzer (leise)
 #define ParamLOG_BuzzerSilent                        (knx.paramWord(LOG_BuzzerSilent))
 // Frequenz für Buzzer (normal)
@@ -1263,10 +1258,10 @@
 // Buzzer sperren
 #define KoLOG_BuzzerLock                          (knx.getGroupObject(LOG_KoBuzzerLock))
 
-#define LOG_ChannelCount 3
+#define LOG_ChannelCount 99
 
 // Parameter per channel
-#define LOG_ParamBlockOffset 6016
+#define LOG_ParamBlockOffset 8941
 #define LOG_ParamBlockSize 85
 #define LOG_ParamCalcIndex(index) (index + LOG_ParamBlockOffset + _channelIndex * LOG_ParamBlockSize)
 
@@ -2982,10 +2977,10 @@
 #define ParamLOG_fOOffKOSendNumberRel                ((int16_t)knx.paramWord(LOG_ParamCalcIndex(LOG_fOOffKOSendNumberRel)))
 
 // deprecated
-#define LOG_KoOffset 100
+#define LOG_KoOffset 700
 
 // Communication objects per channel (multiple occurrence)
-#define LOG_KoBlockOffset 100
+#define LOG_KoBlockOffset 700
 #define LOG_KoBlockSize 3
 
 #define LOG_KoCalcNumber(index) (index + LOG_KoBlockOffset + _channelIndex * LOG_KoBlockSize)
@@ -3003,10 +2998,10 @@
 // Ausgang
 #define KoLOG_KOfO                                (knx.getGroupObject(LOG_KoCalcNumber(LOG_KoKOfO)))
 
-#define BTN_ReactionTimeMultiClick              6271      // 8 Bits, Bit 7-0
-#define BTN_ReactionTimeLong                    6272      // 8 Bits, Bit 7-0
-#define BTN_ReactionTimeExtraLong               6273      // 8 Bits, Bit 7-0
-#define BTN_VisibleChannels                     6274      // uint8_t
+#define BTN_ReactionTimeMultiClick              17356      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeLong                    17357      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeExtraLong               17358      // 8 Bits, Bit 7-0
+#define BTN_VisibleChannels                     17359      // uint8_t
 
 // Mehrfach-Klick
 #define ParamBTN_ReactionTimeMultiClick              (knx.paramByte(BTN_ReactionTimeMultiClick))
@@ -3017,10 +3012,10 @@
 // Verfügbare Kanäle
 #define ParamBTN_VisibleChannels                     (knx.paramByte(BTN_VisibleChannels))
 
-#define BTN_ChannelCount 8
+#define BTN_ChannelCount 20
 
 // Parameter per channel
-#define BTN_ParamBlockOffset 6275
+#define BTN_ParamBlockOffset 17360
 #define BTN_ParamBlockSize 53
 #define BTN_ParamCalcIndex(index) (index + BTN_ParamBlockOffset + _channelIndex * BTN_ParamBlockSize)
 
@@ -3488,10 +3483,10 @@
 #define ParamBTN_bStatusThresholdLow                 (knx.paramByte(BTN_ParamCalcIndex(BTN_bStatusThresholdLow)))
 
 // deprecated
-#define BTN_KoOffset 400
+#define BTN_KoOffset 1000
 
 // Communication objects per channel (multiple occurrence)
-#define BTN_KoBlockOffset 400
+#define BTN_KoBlockOffset 1000
 #define BTN_KoBlockSize 12
 
 #define BTN_KoCalcNumber(index) (index + BTN_KoBlockOffset + _channelIndex * BTN_KoBlockSize)
@@ -3541,7 +3536,7 @@
 #define BI_ChannelCount 4
 
 // Parameter per channel
-#define BI_ParamBlockOffset 6699
+#define BI_ParamBlockOffset 18420
 #define BI_ParamBlockSize 4
 #define BI_ParamCalcIndex(index) (index + BI_ParamBlockOffset + _channelIndex * BI_ParamBlockSize)
 
@@ -3606,7 +3601,7 @@
 #define BASE_KommentarModuleModuleParamSize 0
 #define BASE_KommentarModuleSubmodulesParamSize 0
 #define BASE_KommentarModuleParamSize 0
-#define BASE_KommentarModuleParamOffset 6715
+#define BASE_KommentarModuleParamOffset 18436
 #define BASE_KommentarModuleCalcIndex(index, m1) (index + BASE_KommentarModuleParamOffset + _channelIndex * BASE_KommentarModuleCount * BASE_KommentarModuleParamSize + m1 * BASE_KommentarModuleParamSize)
 
 

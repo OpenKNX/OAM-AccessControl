@@ -1,4 +1,4 @@
-#include "FingerprintModule.h"
+#include "AccessControl.h"
 #include "SwitchActuatorModule.h"
 #include "Logic.h"
 #include "GpioBinaryInputModule.h"
@@ -11,7 +11,7 @@ void setup()
     const uint8_t firmwareRevision = 0;
     openknx.init(firmwareRevision);
     openknx.addModule(1, openknxLogic);
-    openknx.addModule(2, openknxFingerprintModule);
+    openknx.addModule(2, openknxAccessControl);
     openknx.addModule(3, openknxVirtualButtonModule);
     openknx.addModule(4, openknxSwitchActuatorModule);
     openknx.addModule(5, openknxGpioBinaryInputModule);

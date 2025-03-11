@@ -1,22 +1,22 @@
 #pragma once
 
-#define MAIN_Version "b9add34"
+#define MAIN_Version "faa7f8f"
 #define KNX_Version "2.1.2+764900e"
+#define MODULE_AccessControl_Version "0.7.0+db8a302"
+#define MODULE_AccessControl_Version_Major 0
+#define MODULE_AccessControl_Version_Minor 7
+#define MODULE_AccessControl_Version_Revision 0
+#define MODULE_AccessControl_ETS 7
 #define MODULE_Common_Version "1.2.0+9f24e6e"
 #define MODULE_Common_Version_Major 1
 #define MODULE_Common_Version_Minor 2
 #define MODULE_Common_Version_Revision 0
 #define MODULE_Common_ETS 18
-#define MODULE_SwitchActuator_Version "0.1.0+644ad97"
+#define MODULE_SwitchActuator_Version "0.1.0+cfaf665"
 #define MODULE_SwitchActuator_Version_Major 0
 #define MODULE_SwitchActuator_Version_Minor 1
 #define MODULE_SwitchActuator_Version_Revision 0
 #define MODULE_SwitchActuator_ETS 1
-#define MODULE_GPIOModule_Version "0.0.0+f6e148c"
-#define MODULE_GPIOModule_Version_Major 0
-#define MODULE_GPIOModule_Version_Minor 0
-#define MODULE_GPIOModule_Version_Revision 0
-#define MODULE_GPIOModule_ETS 0
 #define MODULE_LogicModule_Version "3.5.2+9a1cfe1"
 #define MODULE_LogicModule_Version_Major 3
 #define MODULE_LogicModule_Version_Minor 5
@@ -27,7 +27,7 @@
 #define MODULE_BinaryInput_Version_Minor 2
 #define MODULE_BinaryInput_Version_Revision 0
 #define MODULE_BinaryInput_ETS 2
-#define MODULE_VirtualButton_Version "0.5.0+e39365e"
+#define MODULE_VirtualButton_Version "0.5.0+35b02ba"
 #define MODULE_VirtualButton_Version_Major 0
 #define MODULE_VirtualButton_Version_Minor 5
 #define MODULE_VirtualButton_Version_Revision 0
@@ -37,3 +37,8 @@
 #define MODULE_FileTransferModule_Version_Minor 1
 #define MODULE_FileTransferModule_Version_Revision 0
 #define MODULE_FileTransferModule_ETS 1
+#define MODULE_GPIOModule_Version "0.0.0+2b8c0a8"
+#define MODULE_GPIOModule_Version_Major 0
+#define MODULE_GPIOModule_Version_Minor 0
+#define MODULE_GPIOModule_Version_Revision 0
+#define MODULE_GPIOModule_ETS 0

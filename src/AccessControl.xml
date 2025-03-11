@@ -2,21 +2,21 @@
 <?xml-model href="../../Organization/knxprod-support/knx_project_20/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
 
-  <op:config href="FingerprintModule.conf.xml" />
+  <op:config href="AccessControl.conf.xml" />
   <op:config name="%IsSecureEnabled%" value="false" />
 
-  <op:nowarn id="1" regex="FIN_ReplacesVersions" />
+  <op:nowarn id="1" regex="ACC_ReplacesVersions" />
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="7.4"
-    ReplacesVersions="7.3 6.15 6.14 6.13 6.12 6.11 6.10 6.9 6.0 5.2 5.1 5.0 4.15 4.14 4.13 4.12 4.11 4.10 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
+    ApplicationVersion="7.11"
+    ReplacesVersions="7.10 7.9 7.8 7.7 7.6 7.3 6.15 6.14 6.13 6.12 6.11 6.10 6.9 6.0 5.2 5.1 5.0 4.15 4.14 4.13 4.12 4.11 4.10 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
     ApplicationRevision="0"
-    ProductName="Fingerabdruckleser"
-    ApplicationName="AB-Finger-Logic-Button"
+    ProductName="Zutrittskontrolle"
+    ApplicationName="AB-AccessControl-Logic-Button"
     BuildSuffix="-dev"
     BuildSuffixText=" (dev)"
-    OrderNumber="OpenKnxFingerprint"
+    OrderNumber="OpenKnxAccessControl"
     BaggagesRootDir="A6/01"
   />
 
@@ -26,52 +26,52 @@
   </op:define>
 
   <op:define prefix="UCT"
-    share="../../OFM-ConfigTransfer/src/ConfigTransfer.share.xml"
+    share="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml"
     noConfigTransfer="true"
     ModuleType="99">
-    <op:verify File="../../OFM-ConfigTransfer/library.json" ModuleVersion="%UCT_VerifyVersion%" />
+    <op:verify File="../lib/OFM-ConfigTransfer/library.json" ModuleVersion="%UCT_VerifyVersion%" />
   </op:define>
 
 
   <!-- for FIN, we have to stay with ModuleType 2!!! -->
-  <op:define prefix="FIN"
-    configTransferName="Fingerprint (Aktionen)"
-    share="FingerprintModule.share.xml"
-    template="FingerprintModule.templ.xml"
+  <op:define prefix="ACC"
+    configTransferName="Zutrittskontrolle (Aktionen)"
+    share="../lib/OFM-AccessControl/src/AccessControl.share.xml"
+    template="../lib/OFM-AccessControl/src/Action.templ.xml"
     ModuleType="2"
     KoSingleOffset="20"
     KoOffset="500"
     NumChannels="99">
-    <op:verify File="../library.json" ModuleVersion="%FIN_ApplicationVersion%" />
+    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_ApplicationVersion%" />
   </op:define>
 
     <op:define prefix="FINACT"
-    prefixDoc="FIN"
-    configTransferName="Fingerprint (Finger)"
-    share="FingerAction.share.xml"
-    template="FingerAction.templ.xml"
+    prefixDoc="ACC"
+    configTransferName="Zutrittskontrolle (Finger)"
+    share="../lib/OFM-AccessControl/src/FingerAction.share.xml"
+    template="../lib/OFM-AccessControl/src/FingerAction.templ.xml"
     ModuleType="2"
     NumChannels="99" />
 
     <op:define prefix="FINACTSER"
     noConfigTransfer="true"
-    prefixDoc="FIN"
-    template="FingerActionSearch.templ.xml"
+    prefixDoc="ACC"
+    template="../lib/OFM-AccessControl/src/FingerActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />
 
     <op:define prefix="NFCACT"
-    prefixDoc="FIN"
-    configTransferName="Fingerprint (NFC)"
-    share="NfcAction.share.xml"
-    template="NfcAction.templ.xml"
+    prefixDoc="ACC"
+    configTransferName="Zutrittskontrolle (NFC)"
+    share="../lib/OFM-AccessControl/src/NfcAction.share.xml"
+    template="../lib/OFM-AccessControl/src/NfcAction.templ.xml"
     ModuleType="2"
     NumChannels="99" />
 
     <op:define prefix="NFCACTSER"
     noConfigTransfer="true"
-    prefixDoc="FIN"
-    template="NfcActionSearch.templ.xml"
+    prefixDoc="ACC"
+    template="../lib/OFM-AccessControl/src/NfcActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />
 
@@ -116,8 +116,8 @@
     <generate base="SecureApplication.xml">
       <Dynamic>
       <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
-      <op:include href="../../OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
-        <op:include href="FingerprintModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="FIN" />
+      <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
+        <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="ACC" />
         <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
         <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
         <op:include href="../lib/OFM-VirtualButton/src/VirtualButton.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BTN" />

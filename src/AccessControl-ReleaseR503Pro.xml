@@ -2,18 +2,18 @@
 <?xml-model href="../../Organization/knxprod-support/knx_project_20/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
 
-  <op:config href="FingerprintModule.conf.xml" />
+  <op:config href="AccessControl.conf.xml" />
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x00"
-    ApplicationVersion="%FIN_ApplicationVersion%"
-    ReplacesVersions="%FIN_ReplacesVersions%"
+    ApplicationVersion="%ACC_ApplicationVersion%"
+    ReplacesVersions="%ACC_ReplacesVersions%"
     ApplicationRevision="0"
-    ProductName="Fingerabdruckleser"
-    ApplicationName="AB-Finger-Logic-Button"
-    BuildSuffix="-R503"
-    BuildSuffixText=" (R503)"
-    OrderNumber="OpenKnxFingerprint"
+    ProductName="Zutrittskontrolle"
+    ApplicationName="AB-AccessControl-Logic-Button"
+    BuildSuffix="-R503Pro"
+    BuildSuffixText=" (R503Pro)"
+    OrderNumber="OpenKnxAccessControl"
   />
 
   <op:define prefix="BASE" ModuleType="1"
@@ -22,37 +22,52 @@
   </op:define>
 
   <op:define prefix="UCT"
-    share="../../OFM-ConfigTransfer/src/ConfigTransfer.share.xml"
+    share="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml"
     noConfigTransfer="true"
     ModuleType="99">
-    <op:verify File="../../OFM-ConfigTransfer/library.json" ModuleVersion="%UCT_VerifyVersion%" />
+    <op:verify File="../lib/OFM-ConfigTransfer/library.json" ModuleVersion="%UCT_VerifyVersion%" />
   </op:define>
 
 
   <!-- for FIN, we have to stay with ModuleType 2!!! -->
-  <op:define prefix="FIN"
-    configTransferName="Fingerprint (Aktionen)"
-    share="FingerprintModule.share.xml"
-    template="FingerprintModule.templ.xml"
+  <op:define prefix="ACC"
+    configTransferName="Zutrittskontrolle (Aktionen)"
+    share="../lib/OFM-AccessControl/src/AccessControl.share.xml"
+    template="../lib/OFM-AccessControl/src/Action.templ.xml"
     ModuleType="2"
     KoSingleOffset="20"
     KoOffset="100"
-    NumChannels="200">
-    <op:verify File="../library.json" ModuleVersion="%FIN_ApplicationVersion%" />
+    NumChannels="1500">
+    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_ApplicationVersion%" />
   </op:define>
 
   <op:define prefix="FINACT"
-    prefixDoc="FIN"
-    configTransferName="Fingerprint (Finger)"
-    share="FingerAction.share.xml"
-    template="FingerAction.templ.xml"
+    prefixDoc="ACC"
+    configTransferName="Zutrittskontrolle (Finger)"
+    share="../lib/OFM-AccessControl/src/FingerAction.share.xml"
+    template="../lib/OFM-AccessControl/src/FingerAction.templ.xml"
     ModuleType="2"
-    NumChannels="300" />
+    NumChannels="1500" />
 
   <op:define prefix="FINACTSER"
     noConfigTransfer="true"
-    prefixDoc="FIN"
-    template="FingerActionSearch.templ.xml"
+    prefixDoc="ACC"
+    template="../lib/OFM-AccessControl/src/FingerActionSearch.templ.xml"
+    ModuleType="2"
+    NumChannels="7" />
+
+    <op:define prefix="NFCACT"
+    prefixDoc="ACC"
+    configTransferName="Zutrittskontrolle (NFC)"
+    share="../lib/OFM-AccessControl/src/NfcAction.share.xml"
+    template="../lib/OFM-AccessControl/src/NfcAction.templ.xml"
+    ModuleType="2"
+    NumChannels="99" />
+
+    <op:define prefix="NFCACTSER"
+    noConfigTransfer="true"
+    prefixDoc="ACC"
+    template="../lib/OFM-AccessControl/src/NfcActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />
 
@@ -70,7 +85,7 @@
             share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
             template="../lib/OFM-LogicModule/src/Logikmodul.templ.xml"
             NumChannels="99"
-            KoOffset="700"
+            KoOffset="4600"
             ModuleType="1" >
     <op:verify File="../lib/OFM-LogicModule/library.json" ModuleVersion="%LOG_VerifyVersion%" />
   </op:define>
@@ -79,7 +94,7 @@
             share="../lib/OFM-VirtualButton/src/VirtualButton.share.xml"
             template="../lib/OFM-VirtualButton/src/VirtualButton.templ.xml"
             NumChannels="20"
-            KoOffset="1000"
+            KoOffset="4900"
             ModuleType="3" >
     <op:verify File="../lib/OFM-VirtualButton/library.json" ModuleVersion="%BTN_VerifyVersion%" />
   </op:define>
@@ -97,8 +112,8 @@
     <!-- <generate base="SecureApplication.xml"> -->
     <Dynamic>
       <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
-      <op:include href="../../OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
-      <op:include href="FingerprintModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="FIN" />
+      <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
+      <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="ACC" />
       <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
       <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
       <op:include href="../lib/OFM-VirtualButton/src/VirtualButton.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BTN" />

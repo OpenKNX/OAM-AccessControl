@@ -29,6 +29,9 @@
 		},
 		{
 			"path": "../knx"
+		},
+		{
+			"path": "../OFM-AccessControl"
 		}
 	],
 	"settings": {
