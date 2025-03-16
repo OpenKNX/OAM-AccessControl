@@ -214,117 +214,80 @@
 // Verzögerung zwischen Sync-Telegrammen
 #define ParamACC_SyncDelay                           (knx.paramByte(ACC_SyncDelay))
 
-#define ACC_KoFingerTouched 21
-#define ACC_KoFingerTouchedNoAction 22
-#define ACC_KoFingerScannerStatus 25
-#define ACC_KoLock 26
-#define ACC_KoLockStatus 27
-#define ACC_KoFingerScanSuccess 31
-#define ACC_KoFingerScanSuccessId 32
-#define ACC_KoFingerScanSuccessData 33
-#define ACC_KoFingerLedRingColor 36
-#define ACC_KoFingerLedRingControl 37
-#define ACC_KoFingerLedRingSpeed 38
-#define ACC_KoFingerLedRingCount 39
-#define ACC_KoFingerEnrollNext 41
-#define ACC_KoFingerEnrollId 42
-#define ACC_KoFingerEnrollData 43
-#define ACC_KoFingerEnrollSuccess 44
-#define ACC_KoFingerEnrollSuccessId 45
-#define ACC_KoFingerEnrollSuccessData 46
-#define ACC_KoFingerEnrollFailedId 47
-#define ACC_KoFingerDeleteId 51
-#define ACC_KoFingerDeleteData 52
-#define ACC_KoFingerDeleteSuccess 53
-#define ACC_KoFingerDeleteSuccessId 54
-#define ACC_KoFingerDeleteSuccessData 55
-#define ACC_KoFingerDeleteFailedId 56
-#define ACC_KoFingerExternId 61
-#define ACC_KoFingerActionAddId 62
-#define ACC_KoFingerActionRemoveId 63
-#define ACC_KoSync 66
+#define ACC_KoLock 20
+#define ACC_KoLockStatus 21
+#define ACC_KoSync 23
+#define ACC_KoScanAccessData 24
+#define ACC_KoVacInput 25
+#define ACC_KoVacOutput 26
+#define ACC_KoRemoteManagementCommand 27
+#define ACC_KoRemoteManagementStatus 28
+#define ACC_KoFingerLedRingColor 30
+#define ACC_KoFingerLedRingControl 31
+#define ACC_KoFingerLedRingSpeed 32
+#define ACC_KoFingerLedRingCount 33
+#define ACC_KoFingerTouched 34
+#define ACC_KoFingerTouchedNoAction 35
+#define ACC_KoFingerScannerStatus 36
+#define ACC_KoFingerScanSuccess 40
+#define ACC_KoFingerScanSuccessId 41
+#define ACC_KoFingerEnrollNext 42
+#define ACC_KoFingerEnrollId 43
+#define ACC_KoNfcScanSuccess 45
+#define ACC_KoNfcScanSuccessId 46
+#define ACC_KoNfcEnrollNext 47
+#define ACC_KoNfcEnrollId 48
 #define ACC_KoTouchPcbButtonLeft 71
 #define ACC_KoTouchPcbButtonRight 72
 #define ACC_KoTouchPcbLedRed 73
 #define ACC_KoTouchPcbLedGreen 74
-#define ACC_KoNfcExternId 60
-#define ACC_KoNfcActionAddId 64
-#define ACC_KoNfcActionRemoveId 65
-#define ACC_KoNfcScanSuccess 181
-#define ACC_KoNfcScanSuccessId 182
-#define ACC_KoNfcScanSuccessData 183
-#define ACC_KoNfcEnrollNext 184
-#define ACC_KoNfcEnrollId 185
-#define ACC_KoNfcEnrollData 186
-#define ACC_KoNfcEnrollSuccess 187
-#define ACC_KoNfcEnrollSuccessId 188
-#define ACC_KoNfcEnrollSuccessData 189
-#define ACC_KoNfcEnrollFailedId 190
-#define ACC_KoNfcDeleteId 191
-#define ACC_KoNfcDeleteData 192
-#define ACC_KoNfcDeleteSuccess 193
-#define ACC_KoNfcDeleteSuccessId 194
-#define ACC_KoNfcDeleteSuccessData 195
-#define ACC_KoNfcDeleteFailedId 196
 
-// Berührung (sofort, immer)
-#define KoACC_FingerTouched                       (knx.getGroupObject(ACC_KoFingerTouched))
-// Berührung (verzögert, wenn keine Aktion zugeordnet)
-#define KoACC_FingerTouchedNoAction               (knx.getGroupObject(ACC_KoFingerTouchedNoAction))
-// Status des Scanners
-#define KoACC_FingerScannerStatus                 (knx.getGroupObject(ACC_KoFingerScannerStatus))
-// Sperre
+// Sperre (alle Aktionen)
 #define KoACC_Lock                                (knx.getGroupObject(ACC_KoLock))
 // Status der Sperre
 #define KoACC_LockStatus                          (knx.getGroupObject(ACC_KoLockStatus))
-// Scan: Erfolg
-#define KoACC_FingerScanSuccess                   (knx.getGroupObject(ACC_KoFingerScanSuccess))
-// Scan: ID
-#define KoACC_FingerScanSuccessId                 (knx.getGroupObject(ACC_KoFingerScanSuccessId))
-// Scan: Zutrittsdaten
-#define KoACC_FingerScanSuccessData               (knx.getGroupObject(ACC_KoFingerScanSuccessData))
-// LED-Ring: Farbe (1: Rot, 2: Blau, 3: Violett, 4: Grün, 5: Gelb, 6: Cyan, 7: Weiß)
-#define KoACC_FingerLedRingColor                  (knx.getGroupObject(ACC_KoFingerLedRingColor))
-// LED-Ring: Steuerung (1: Atmen, 2: Blinken, 3: Konstant an, 4: Konstant aus, 5: Langsam an, 6: Langsam aus)
-#define KoACC_FingerLedRingControl                (knx.getGroupObject(ACC_KoFingerLedRingControl))
-// LED-Ring: Geschwindigkeit (wird bei konstant an/aus ignoriert)
-#define KoACC_FingerLedRingSpeed                  (knx.getGroupObject(ACC_KoFingerLedRingSpeed))
-// LED-Ring: Anzahl der Zyklen (0: unendlich, nur relevant für atmen und blinken)
-#define KoACC_FingerLedRingCount                  (knx.getGroupObject(ACC_KoFingerLedRingCount))
-// Lerne an: Nächste freie ID
-#define KoACC_FingerEnrollNext                    (knx.getGroupObject(ACC_KoFingerEnrollNext))
-// Lerne an: ID (verfügbare Slots: R503S: 0-149, R503: 0-199, R503Pro: 0-1499)
-#define KoACC_FingerEnrollId                      (knx.getGroupObject(ACC_KoFingerEnrollId))
-// Lerne an: Zutrittsdaten (verfügbare Slots: R503S: 0-149, R503: 0-199, R503Pro: 0-1499)
-#define KoACC_FingerEnrollData                    (knx.getGroupObject(ACC_KoFingerEnrollData))
-// Anlernen: Erfolg
-#define KoACC_FingerEnrollSuccess                 (knx.getGroupObject(ACC_KoFingerEnrollSuccess))
-// Anlernen: Erfolg ID
-#define KoACC_FingerEnrollSuccessId               (knx.getGroupObject(ACC_KoFingerEnrollSuccessId))
-// Anlernen: Zutrittsdaten
-#define KoACC_FingerEnrollSuccessData             (knx.getGroupObject(ACC_KoFingerEnrollSuccessData))
-// Anlernen: Fehlgeschlagen ID
-#define KoACC_FingerEnrollFailedId                (knx.getGroupObject(ACC_KoFingerEnrollFailedId))
-// Lösche: ID
-#define KoACC_FingerDeleteId                      (knx.getGroupObject(ACC_KoFingerDeleteId))
-// Lösche: Zutrittsdaten
-#define KoACC_FingerDeleteData                    (knx.getGroupObject(ACC_KoFingerDeleteData))
-// Löschen: Erfolg
-#define KoACC_FingerDeleteSuccess                 (knx.getGroupObject(ACC_KoFingerDeleteSuccess))
-// Löschen: Erfolg ID
-#define KoACC_FingerDeleteSuccessId               (knx.getGroupObject(ACC_KoFingerDeleteSuccessId))
-// Löschen: Zutrittsdaten
-#define KoACC_FingerDeleteSuccessData             (knx.getGroupObject(ACC_KoFingerDeleteSuccessData))
-// Löschen: Fehlgeschlagen ID
-#define KoACC_FingerDeleteFailedId                (knx.getGroupObject(ACC_KoFingerDeleteFailedId))
-// Externe Finger ID
-#define KoACC_FingerExternId                      (knx.getGroupObject(ACC_KoFingerExternId))
-// Finger ID zu Aktion hinzufügen
-#define KoACC_FingerActionAddId                   (knx.getGroupObject(ACC_KoFingerActionAddId))
-// Finger ID von Aktion entfernen
-#define KoACC_FingerActionRemoveId                (knx.getGroupObject(ACC_KoFingerActionRemoveId))
-// Datenaustausch zwischen Fingerprints
+// Datenaustausch zwischen Zutrittskontrollgeräten
 #define KoACC_Sync                                (knx.getGroupObject(ACC_KoSync))
+// Scan - Zutrittsdaten
+#define KoACC_ScanAccessData                      (knx.getGroupObject(ACC_KoScanAccessData))
+// VAC: Eingang
+#define KoACC_VacInput                            (knx.getGroupObject(ACC_KoVacInput))
+// VAC: Ausgang
+#define KoACC_VacOutput                           (knx.getGroupObject(ACC_KoVacOutput))
+// Externe Verwaltung: Befehl
+#define KoACC_RemoteManagementCommand             (knx.getGroupObject(ACC_KoRemoteManagementCommand))
+// Externe Verwaltung: Rückmeldung
+#define KoACC_RemoteManagementStatus              (knx.getGroupObject(ACC_KoRemoteManagementStatus))
+// Finger-LED-Ring: Farbe (1: Rot, 2: Blau, 3: Violett, 4: Grün, 5: Gelb, 6: Cyan, 7: Weiß)
+#define KoACC_FingerLedRingColor                  (knx.getGroupObject(ACC_KoFingerLedRingColor))
+// Finger-LED-Ring: Steuerung (1: Atmen, 2: Blinken, 3: Konstant an, 4: Konstant aus, 5: Langsam an, 6: Langsam aus)
+#define KoACC_FingerLedRingControl                (knx.getGroupObject(ACC_KoFingerLedRingControl))
+// Finger-LED-Ring: Geschwindigkeit (wird bei konstant an/aus ignoriert)
+#define KoACC_FingerLedRingSpeed                  (knx.getGroupObject(ACC_KoFingerLedRingSpeed))
+// Finger-LED-Ring: Anzahl der Zyklen (0: unendlich, nur relevant für atmen und blinken)
+#define KoACC_FingerLedRingCount                  (knx.getGroupObject(ACC_KoFingerLedRingCount))
+// Finger: Berührung (sofort, immer)
+#define KoACC_FingerTouched                       (knx.getGroupObject(ACC_KoFingerTouched))
+// Finger: Berührung (verzögert, wenn keine Aktion zugeordnet)
+#define KoACC_FingerTouchedNoAction               (knx.getGroupObject(ACC_KoFingerTouchedNoAction))
+// Finger: Status des Scanners
+#define KoACC_FingerScannerStatus                 (knx.getGroupObject(ACC_KoFingerScannerStatus))
+// Finger: Scan - Erfolg
+#define KoACC_FingerScanSuccess                   (knx.getGroupObject(ACC_KoFingerScanSuccess))
+// Finger: Scan - ID
+#define KoACC_FingerScanSuccessId                 (knx.getGroupObject(ACC_KoFingerScanSuccessId))
+// Finger: Lerne an - Nächste freie ID
+#define KoACC_FingerEnrollNext                    (knx.getGroupObject(ACC_KoFingerEnrollNext))
+// Finger: Lerne an - ID (verfügbare Slots: R503S: 0-149, R503: 0-199, R503Pro: 0-1499)
+#define KoACC_FingerEnrollId                      (knx.getGroupObject(ACC_KoFingerEnrollId))
+// NFC: Scan - Erfolg
+#define KoACC_NfcScanSuccess                      (knx.getGroupObject(ACC_KoNfcScanSuccess))
+// NFC: Scan - ID
+#define KoACC_NfcScanSuccessId                    (knx.getGroupObject(ACC_KoNfcScanSuccessId))
+// NFC: Lerne an - Nächste freie ID
+#define KoACC_NfcEnrollNext                       (knx.getGroupObject(ACC_KoNfcEnrollNext))
+// NFC: Lerne an - ID (0-1499)
+#define KoACC_NfcEnrollId                         (knx.getGroupObject(ACC_KoNfcEnrollId))
 // Touch-Front: Taste links
 #define KoACC_TouchPcbButtonLeft                  (knx.getGroupObject(ACC_KoTouchPcbButtonLeft))
 // Touch-Front: Taste rechts
@@ -333,44 +296,6 @@
 #define KoACC_TouchPcbLedRed                      (knx.getGroupObject(ACC_KoTouchPcbLedRed))
 // Touch-Front: LED grün
 #define KoACC_TouchPcbLedGreen                    (knx.getGroupObject(ACC_KoTouchPcbLedGreen))
-// NFC: Externe Tag ID
-#define KoACC_NfcExternId                         (knx.getGroupObject(ACC_KoNfcExternId))
-// NFC: Tag ID zu Aktion hinzufügen
-#define KoACC_NfcActionAddId                      (knx.getGroupObject(ACC_KoNfcActionAddId))
-// NFC: Tag ID von Aktion entfernen
-#define KoACC_NfcActionRemoveId                   (knx.getGroupObject(ACC_KoNfcActionRemoveId))
-// NFC: Scan: Erfolg
-#define KoACC_NfcScanSuccess                      (knx.getGroupObject(ACC_KoNfcScanSuccess))
-// NFC: Scan: ID
-#define KoACC_NfcScanSuccessId                    (knx.getGroupObject(ACC_KoNfcScanSuccessId))
-// NFC: Scan: Zutrittsdaten
-#define KoACC_NfcScanSuccessData                  (knx.getGroupObject(ACC_KoNfcScanSuccessData))
-// NFC: Lerne an: Nächste freie ID
-#define KoACC_NfcEnrollNext                       (knx.getGroupObject(ACC_KoNfcEnrollNext))
-// NFC: Lerne an: ID (0-1499)
-#define KoACC_NfcEnrollId                         (knx.getGroupObject(ACC_KoNfcEnrollId))
-// NFC: Lerne an: Zutrittsdaten (0-1499)
-#define KoACC_NfcEnrollData                       (knx.getGroupObject(ACC_KoNfcEnrollData))
-// NFC: Anlernen: Erfolg
-#define KoACC_NfcEnrollSuccess                    (knx.getGroupObject(ACC_KoNfcEnrollSuccess))
-// NFC: Anlernen: Erfolg ID
-#define KoACC_NfcEnrollSuccessId                  (knx.getGroupObject(ACC_KoNfcEnrollSuccessId))
-// NFC: Anlernen: Zutrittsdaten
-#define KoACC_NfcEnrollSuccessData                (knx.getGroupObject(ACC_KoNfcEnrollSuccessData))
-// NFC: Anlernen: Fehlgeschlagen ID
-#define KoACC_NfcEnrollFailedId                   (knx.getGroupObject(ACC_KoNfcEnrollFailedId))
-// NFC: Lösche: ID
-#define KoACC_NfcDeleteId                         (knx.getGroupObject(ACC_KoNfcDeleteId))
-// NFC: Lösche: Zutrittsdaten
-#define KoACC_NfcDeleteData                       (knx.getGroupObject(ACC_KoNfcDeleteData))
-// NFC: Löschen: Erfolg
-#define KoACC_NfcDeleteSuccess                    (knx.getGroupObject(ACC_KoNfcDeleteSuccess))
-// NFC: Löschen: Erfolg ID
-#define KoACC_NfcDeleteSuccessId                  (knx.getGroupObject(ACC_KoNfcDeleteSuccessId))
-// NFC: Löschen: Zutrittsdaten
-#define KoACC_NfcDeleteSuccessData                (knx.getGroupObject(ACC_KoNfcDeleteSuccessData))
-// NFC: Löschen: Fehlgeschlagen ID
-#define KoACC_NfcDeleteFailedId                   (knx.getGroupObject(ACC_KoNfcDeleteFailedId))
 
 #define ACC_ChannelCount 200
 
@@ -644,7 +569,7 @@
 
 // Kanalaktivität
 #define ParamSWA_ChActive                            ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChActive)) & SWA_ChActiveMask) >> SWA_ChActiveShift)
-// 
+// Synchron schalten
 #define ParamSWA_ChSyncSwitch                        ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSyncSwitch)) & SWA_ChSyncSwitchMask))
 // Betriebsmodus
 #define ParamSWA_ChOperationMode                     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChOperationMode)) & SWA_ChOperationModeMask))
