@@ -29,7 +29,11 @@
 if (!$?) { exit 1 }
 
 # build firmware for R503
-lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_R503 firmware-fingerprint uf2
+lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_R503 firmware-AccessControl uf2
+if (!$?) { exit 1 }
+
+# build firmware for UP1
+lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_UP1 firmware-SEN_UP1_8XTH uf2
 if (!$?) { exit 1 }
 
 # execute generic post-build steps

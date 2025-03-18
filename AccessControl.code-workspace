@@ -4,6 +4,9 @@
 			"path": "."
 		},
 		{
+			"path": "../OFM-AccessControl"
+		},
+		{
 			"path": "./../OFM-SwitchActuator"
 		},
 		{
@@ -11,6 +14,9 @@
 		},
 		{
 			"path": "../OGM-Common"
+		},
+		{
+			"path": "../OGM-HardwareConfig"
 		},
 		{
 			"path": "../OFM-VirtualButton"
@@ -29,9 +35,6 @@
 		},
 		{
 			"path": "../knx"
-		},
-		{
-			"path": "../OFM-AccessControl"
 		}
 	],
 	"settings": {

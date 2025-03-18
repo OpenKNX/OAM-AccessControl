@@ -1,4 +1,4 @@
-#include <OpenKNXHardware.h>
+#include <HardwareConfig.h>
 
 #ifdef BOARD_AB_SMARTHOUSE_FINGERPRINT_V13
     #define INFO_LED_PIN 11
@@ -37,32 +37,35 @@
     #define OPENKNX_BI_GPIO_COUNT 4
 #endif
 
-#ifdef OKNXHW_UP1_CONTROLLER2040
-    #define THPCHANNEL_A_SCL 29
-    #define THPCHANNEL_A_SDA 28
-    #define THPCHANNEL_B_SCL 27 // Touch Right
-    #define THPCHANNEL_B_SDA 26 // Touch Left
-    #define THPCHANNEL_C_SCL 25 // LED Red
-    #define THPCHANNEL_C_SDA 24 // LED Green
-    #define THPCHANNEL_D_SCL 23 // Binary
-    #define THPCHANNEL_D_SDA 22 // Binary
-    #define THPCHANNEL_E_SCL 21 // RX
-    #define THPCHANNEL_E_SDA 20 // TX
-    #define THPCHANNEL_F_SCL 19 // Touch
-    #define THPCHANNEL_F_SDA 18
-    #define THPCHANNEL_G_SCL 17 // Binary
-    #define THPCHANNEL_G_SDA 16 // Binary
-    #define THPCHANNEL_H_SCL 15
-    #define THPCHANNEL_H_SDA 14​
+#ifdef DEVICE_SEN_UP1_8XTH
+    // #define DEVICE_ID "SEN-UP1-8xTH"
+    // #define DEVICE_NAME "OpenKNX UP1 8xSensor"
+
+    // #define OKNXHW_SENSOR_A1_SCL_PIN (29)
+    // #define OKNXHW_SENSOR_A2_SDA_PIN (28)
+    // #define OKNXHW_SENSOR_B1_SCL_PIN (27) // Touch Right
+    // #define OKNXHW_SENSOR_B2_SDA_PIN (26) // Touch Left
+    // #define OKNXHW_SENSOR_C1_SCL_PIN (25) // LED Red
+    // #define OKNXHW_SENSOR_C2_SDA_PIN (24) // LED Green
+    // #define OKNXHW_SENSOR_D1_SCL_PIN (23) // Binary
+    // #define OKNXHW_SENSOR_D2_SDA_PIN (22) // Binary
+    // #define OKNXHW_SENSOR_E1_SCL_PIN (21) // RX
+    // #define OKNXHW_SENSOR_E2_SDA_PIN (20) // TX
+    // #define OKNXHW_SENSOR_F1_SCL_PIN (19) // Touch
+    // #define OKNXHW_SENSOR_F2_SDA_PIN (18)
+    // #define OKNXHW_SENSOR_G1_SCL_PIN (17) // Binary
+    // #define OKNXHW_SENSOR_G2_SDA_PIN (16) // Binary
+    // #define OKNXHW_SENSOR_H1_SCL_PIN (15)
+    // #define OKNXHW_SENSOR_H2_SDA_PIN (14)​
 
     #define SCANNER_SERIAL Serial2
-    #define SCANNER_SERIAL_RX_PIN THPCHANNEL_E_SCL
-    #define SCANNER_SERIAL_TX_PIN THPCHANNEL_E_SDA
-    #define SCANNER_TOUCH_PIN THPCHANNEL_F_SCL
-    #define TOUCH_LEFT_PIN THPCHANNEL_B_SDA
-    #define TOUCH_RIGHT_PIN THPCHANNEL_B_SCL
-    #define LED_GREEN_PIN THPCHANNEL_C_SDA 
-    #define LED_RED_PIN THPCHANNEL_C_SCL
+    #define SCANNER_SERIAL_RX_PIN OKNXHW_SENSOR_E1_SCL_PIN
+    #define SCANNER_SERIAL_TX_PIN OKNXHW_SENSOR_E2_SDA_PIN
+    #define SCANNER_TOUCH_PIN OKNXHW_SENSOR_F1_SCL_PIN
+    #define TOUCH_LEFT_PIN OKNXHW_SENSOR_B2_SDA_PIN
+    #define TOUCH_RIGHT_PIN OKNXHW_SENSOR_B1_SCL_PIN
+    #define LED_GREEN_PIN OKNXHW_SENSOR_C2_SDA_PIN 
+    #define LED_RED_PIN OKNXHW_SENSOR_C1_SCL_PIN
 
     #define OPENKNX_SWA_CHANNEL_COUNT 0
     #define OPENKNX_SWA_SET_ACTIVE_ON LOW
@@ -72,6 +75,6 @@
     #define OPENKNX_GPIO_NUM 0
     #define OPENKNX_GPIO_TYPES
 
-    #define OPENKNX_BI_GPIO_PINS THPCHANNEL_D_SCL, THPCHANNEL_D_SDA, THPCHANNEL_G_SCL, THPCHANNEL_G_SDA
+    #define OPENKNX_BI_GPIO_PINS OKNXHW_SENSOR_D1_SCL_PIN, OKNXHW_SENSOR_D2_SDA_PIN, OKNXHW_SENSOR_G1_SCL_PIN, OKNXHW_SENSOR_G2_SDA_PIN
     #define OPENKNX_BI_GPIO_COUNT 4
 #endif
