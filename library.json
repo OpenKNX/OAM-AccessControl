@@ -1,7 +1,7 @@
 {
-    "name": "OAM-Fingerprint",
-    "version": "0.6.0",
-    "description": "Fingerprint Firmware and ETS-Application",
+    "name": "OAM-AccessControl",
+    "version": "0.8.0",
+    "description": "AccessControl Firmware and ETS-Application",
     "homepage": "https://openknx.de",
     "authors": {
         "name": "OpenKNX",
@@ -11,6 +11,6 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/OpenKNX/OAM-Fingerprint"
+        "url": "https://github.com/OpenKNX/OAM-AccessControl"
     }
 }
