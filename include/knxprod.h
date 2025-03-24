@@ -10,7 +10,7 @@
                                              
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 134
+#define MAIN_ApplicationVersion 140
 #define MAIN_ParameterSize 6715
 #define MAIN_MaxKoNumber 796
 #define MAIN_OrderNumber "OpenKnxAccessControl"
