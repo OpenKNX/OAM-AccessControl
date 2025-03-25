@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAIN_Version "1b2039a"
+#define MAIN_Version "04334d5"
 #define KNX_Version "2.1.2+764900e"
 #define MODULE_AccessControl_Version "0.8.0+7142d74"
 #define MODULE_AccessControl_Version_Major 0
