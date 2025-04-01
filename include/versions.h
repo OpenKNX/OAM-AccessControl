@@ -2,11 +2,11 @@
 
 #define MAIN_Version "04334d5"
 #define KNX_Version "2.1.2+764900e"
-#define MODULE_AccessControl_Version "0.8.0+7142d74"
+#define MODULE_AccessControl_Version "0.9.0+064fc1c"
 #define MODULE_AccessControl_Version_Major 0
-#define MODULE_AccessControl_Version_Minor 8
+#define MODULE_AccessControl_Version_Minor 9
 #define MODULE_AccessControl_Version_Revision 0
-#define MODULE_AccessControl_ETS 8
+#define MODULE_AccessControl_ETS 9
 #define MODULE_Common_Version "1.2.0+9f24e6e"
 #define MODULE_Common_Version_Major 1
 #define MODULE_Common_Version_Minor 2
@@ -17,16 +17,16 @@
 #define MODULE_HardwareConfig_Version_Minor 0
 #define MODULE_HardwareConfig_Version_Revision 0
 #define MODULE_HardwareConfig_ETS 16
-#define MODULE_SwitchActuator_Version "0.1.0+274ac3e"
-#define MODULE_SwitchActuator_Version_Major 0
-#define MODULE_SwitchActuator_Version_Minor 1
-#define MODULE_SwitchActuator_Version_Revision 0
-#define MODULE_SwitchActuator_ETS 1
-#define MODULE_GPIOModule_Version "0.0.0+2b8c0a8"
+#define MODULE_GPIOModule_Version "0.0.0+b95bb8c"
 #define MODULE_GPIOModule_Version_Major 0
 #define MODULE_GPIOModule_Version_Minor 0
 #define MODULE_GPIOModule_Version_Revision 0
 #define MODULE_GPIOModule_ETS 0
+#define MODULE_SwitchActuator_Version "0.1.0+0ac7c64"
+#define MODULE_SwitchActuator_Version_Major 0
+#define MODULE_SwitchActuator_Version_Minor 1
+#define MODULE_SwitchActuator_Version_Revision 0
+#define MODULE_SwitchActuator_ETS 1
 #define MODULE_LogicModule_Version "3.5.2+9a1cfe1"
 #define MODULE_LogicModule_Version_Major 3
 #define MODULE_LogicModule_Version_Minor 5
