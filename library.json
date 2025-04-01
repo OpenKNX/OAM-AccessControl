@@ -1,6 +1,6 @@
 {
     "name": "OAM-AccessControl",
-    "version": "0.8.0",
+    "version": "0.9.0",
     "description": "AccessControl Firmware and ETS-Application",
     "homepage": "https://openknx.de",
     "authors": {
