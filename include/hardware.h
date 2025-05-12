@@ -50,6 +50,8 @@
     #define NFC_VEN_PIN 17
     #define NFC_DWL_REQ_PIN 23
 
+    #define KEYPAD_PCA9633_ADDR 0x62 //(0xc0 >> 1)
+
     #define OPENKNX_BI_GPIO_PINS 28, 18, 29, 19
     #define OPENKNX_BI_GPIO_COUNT 4
 #endif
