@@ -55,34 +55,23 @@
 #endif
 
 #ifdef DEVICE_SEN_UP1_8XTH
-    // #define DEVICE_ID "SEN-UP1-8xTH"
-    // #define DEVICE_NAME "OpenKNX UP1 8xSensor"
-
-    // #define OKNXHW_SENSOR_A1_SCL_PIN (29)
-    // #define OKNXHW_SENSOR_A2_SDA_PIN (28)
-    // #define OKNXHW_SENSOR_B1_SCL_PIN (27) // Touch Right
-    // #define OKNXHW_SENSOR_B2_SDA_PIN (26) // Touch Left
-    // #define OKNXHW_SENSOR_C1_SCL_PIN (25) // LED Red
-    // #define OKNXHW_SENSOR_C2_SDA_PIN (24) // LED Green
-    // #define OKNXHW_SENSOR_D1_SCL_PIN (23) // Binary
-    // #define OKNXHW_SENSOR_D2_SDA_PIN (22) // Binary
-    // #define OKNXHW_SENSOR_E1_SCL_PIN (21) // RX
-    // #define OKNXHW_SENSOR_E2_SDA_PIN (20) // TX
-    // #define OKNXHW_SENSOR_F1_SCL_PIN (19) // Touch
-    // #define OKNXHW_SENSOR_F2_SDA_PIN (18)
-    // #define OKNXHW_SENSOR_G1_SCL_PIN (17) // Binary
-    // #define OKNXHW_SENSOR_G2_SDA_PIN (16) // Binary
-    // #define OKNXHW_SENSOR_H1_SCL_PIN (15)
-    // #define OKNXHW_SENSOR_H2_SDA_PIN (14)​
-
     #define SCANNER_SERIAL Serial2
     #define SCANNER_SERIAL_RX_PIN OKNXHW_SENSOR_E1_SCL_PIN
     #define SCANNER_SERIAL_TX_PIN OKNXHW_SENSOR_E2_SDA_PIN
     #define SCANNER_TOUCH_PIN OKNXHW_SENSOR_F1_SCL_PIN
     #define DIRECT_TOUCH_LEFT_PIN OKNXHW_SENSOR_B2_SDA_PIN
     #define DIRECT_TOUCH_RIGHT_PIN OKNXHW_SENSOR_B1_SCL_PIN
-    #define DIRECT_LED_GREEN_PIN OKNXHW_SENSOR_C2_SDA_PIN 
+    #define DIRECT_LED_GREEN_PIN OKNXHW_SENSOR_C2_SDA_PIN
     #define DIRECT_LED_RED_PIN OKNXHW_SENSOR_C1_SCL_PIN
+
+    #define EXTERN_TOUCH_LEFT_PIN -1
+    #define EXTERN_TOUCH_RIGHT_PIN -1
+    #define EXTERN_LED_GREEN_PIN -1
+    #define EXTERN_LED_RED_PIN -1
+
+    #define NFC_IRQ_PIN -1
+    #define NFC_VEN_PIN -1
+    #define NFC_PN7160_ADDR 0
 
     #define OPENKNX_SWA_CHANNEL_COUNT 0
     #define OPENKNX_SWA_SET_ACTIVE_ON LOW
