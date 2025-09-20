@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAIN_Version "fce5b58"
+#define MAIN_Version "ff4d10f"
 #define KNX_Version "2.2.1+1b646c1"
 #define MODULE_AccessControl_Version "0.10.1+8714e13"
 #define MODULE_AccessControl_Version_Major 0
@@ -12,7 +12,7 @@
 #define MODULE_Common_Version_Minor 4
 #define MODULE_Common_Version_Revision 3
 #define MODULE_Common_ETS 20
-#define MODULE_HardwareConfig_Version "1.0.0+31b5142"
+#define MODULE_HardwareConfig_Version "1.0.0+af559bd"
 #define MODULE_HardwareConfig_Version_Major 1
 #define MODULE_HardwareConfig_Version_Minor 0
 #define MODULE_HardwareConfig_Version_Revision 0
