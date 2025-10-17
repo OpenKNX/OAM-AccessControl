@@ -4,6 +4,7 @@
 
   <op:config href="AccessControl.conf.xml" />
   <op:config name="%IsSecureEnabled%" value="false" />
+  <op:config name="%SWA_Measure%" value="0" />
 
   <op:nowarn id="1" regex="ACC_ReplacesVersions" />
 

@@ -9,9 +9,9 @@
   <op:config name="%SWA_VerifyVersion%" value="0.1" />
   <op:config name="%BTN_VerifyVersion%" value="0.5" />
   <op:config name="%BI_VerifyVersion%" value="0.2" />
-  <op:config name="%UCT_VerifyVersion%" value="0.2" />
+  <op:config name="%UCT_VerifyVersion%" value="0.4" />
   <op:config name="%LOG_VerifyVersion%" value="3.7" />
-  <op:config name="%BASE_VerifyVersion%" value="1.4" />
+  <op:config name="%BASE_VerifyVersion%" value="1.5" />
 
   <op:config name="%ACC_ApplicationVersion%" value="0.10" />
   <op:config name="%ACC_ReplacesVersions%" value="0.9 0.8 0.7 0.6 0.5 0.2" />
