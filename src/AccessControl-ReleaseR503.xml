@@ -3,6 +3,7 @@
 <KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
 
   <op:config href="AccessControl.conf.xml" />
+  <op:config name="%SWA_Measure%" value="0" />
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x00"
