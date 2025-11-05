@@ -617,6 +617,9 @@
 #define SWA_ChScenesActive                       9      // 1 Bit, Bit 6
 #define     SWA_ChScenesActiveMask 0x40
 #define     SWA_ChScenesActiveShift 6
+#define SWA_ChMeasureActive                      9      // 1 Bit, Bit 5
+#define     SWA_ChMeasureActiveMask 0x20
+#define     SWA_ChMeasureActiveShift 5
 #define SWA_ChSceneLearn                         9      // 1 Bit, Bit 0
 #define     SWA_ChSceneLearnMask 0x01
 #define     SWA_ChSceneLearnShift 0
@@ -638,6 +641,39 @@
 #define SWA_ChStairBlinkTime                    13      // 14 Bits, Bit 13-0
 #define     SWA_ChStairBlinkTimeMask 0x3FFF
 #define     SWA_ChStairBlinkTimeShift 0
+#define SWA_ChPowerSend                         15      // 1 Bit, Bit 7
+#define     SWA_ChPowerSendMask 0x80
+#define     SWA_ChPowerSendShift 7
+#define SWA_ChCurrentSend                       15      // 1 Bit, Bit 6
+#define     SWA_ChCurrentSendMask 0x40
+#define     SWA_ChCurrentSendShift 6
+#define SWA_ChVoltageSend                       15      // 1 Bit, Bit 5
+#define     SWA_ChVoltageSendMask 0x20
+#define     SWA_ChVoltageSendShift 5
+#define SWA_ChPowerSendMinChangePercent         16      // uint8_t
+#define SWA_ChPowerSendMinChangeAbsolute        17      // uint16_t
+#define SWA_ChPowerSendCyclicBase               19      // 2 Bits, Bit 7-6
+#define     SWA_ChPowerSendCyclicBaseMask 0xC0
+#define     SWA_ChPowerSendCyclicBaseShift 6
+#define SWA_ChPowerSendCyclicTime               19      // 14 Bits, Bit 13-0
+#define     SWA_ChPowerSendCyclicTimeMask 0x3FFF
+#define     SWA_ChPowerSendCyclicTimeShift 0
+#define SWA_ChCurrentSendMinChangePercent       21      // uint8_t
+#define SWA_ChCurrentSendMinChangeAbsolute      22      // uint16_t
+#define SWA_ChCurrentSendCyclicBase             24      // 2 Bits, Bit 7-6
+#define     SWA_ChCurrentSendCyclicBaseMask 0xC0
+#define     SWA_ChCurrentSendCyclicBaseShift 6
+#define SWA_ChCurrentSendCyclicTime             24      // 14 Bits, Bit 13-0
+#define     SWA_ChCurrentSendCyclicTimeMask 0x3FFF
+#define     SWA_ChCurrentSendCyclicTimeShift 0
+#define SWA_ChVoltageSendMinChangePercent       26      // uint8_t
+#define SWA_ChVoltageSendMinChangeAbsolute      27      // uint8_t
+#define SWA_ChVoltageSendCyclicBase             28      // 2 Bits, Bit 7-6
+#define     SWA_ChVoltageSendCyclicBaseMask 0xC0
+#define     SWA_ChVoltageSendCyclicBaseShift 6
+#define SWA_ChVoltageSendCyclicTime             28      // 14 Bits, Bit 13-0
+#define     SWA_ChVoltageSendCyclicTimeMask 0x3FFF
+#define     SWA_ChVoltageSendCyclicTimeShift 0
 #define SWA_ChSceneAActive                      58      // 1 Bit, Bit 7
 #define     SWA_ChSceneAActiveMask 0x80
 #define     SWA_ChSceneAActiveShift 7
@@ -737,6 +773,8 @@
 #define ParamSWA_ChStairLightActive                  ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChStairLightActive)) & SWA_ChStairLightActiveMask))
 // Szenen aktivieren
 #define ParamSWA_ChScenesActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChScenesActive)) & SWA_ChScenesActiveMask))
+// Messungen aktivieren
+#define ParamSWA_ChMeasureActive                     ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChMeasureActive)) & SWA_ChMeasureActiveMask))
 // Szene lernen
 #define ParamSWA_ChSceneLearn                        ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneLearn)) & SWA_ChSceneLearnMask))
 // Zeit für Treppenlicht
@@ -755,6 +793,42 @@
 #define ParamSWA_ChStairBlinkTime                    (knx.paramWord(SWA_ParamCalcIndex(SWA_ChStairBlinkTime)) & SWA_ChStairBlinkTimeMask)
 // Treppenlicht blinkt im Rhythmus (in Millisekunden)
 #define ParamSWA_ChStairBlinkTimeMS                  (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChStairBlinkTime))))
+// Bei Änderung senden
+#define ParamSWA_ChPowerSend                         ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChPowerSend)) & SWA_ChPowerSendMask))
+// Bei Änderung senden
+#define ParamSWA_ChCurrentSend                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChCurrentSend)) & SWA_ChCurrentSendMask))
+// Bei Änderung senden
+#define ParamSWA_ChVoltageSend                       ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChVoltageSend)) & SWA_ChVoltageSendMask))
+// Mindeständerung relativ
+#define ParamSWA_ChPowerSendMinChangePercent         (knx.paramByte(SWA_ParamCalcIndex(SWA_ChPowerSendMinChangePercent)))
+// Mindeständerung absolut
+#define ParamSWA_ChPowerSendMinChangeAbsolute        (knx.paramWord(SWA_ParamCalcIndex(SWA_ChPowerSendMinChangeAbsolute)))
+// Zeitbasis
+#define ParamSWA_ChPowerSendCyclicBase               ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChPowerSendCyclicBase)) & SWA_ChPowerSendCyclicBaseMask) >> SWA_ChPowerSendCyclicBaseShift)
+// Zeit
+#define ParamSWA_ChPowerSendCyclicTime               (knx.paramWord(SWA_ParamCalcIndex(SWA_ChPowerSendCyclicTime)) & SWA_ChPowerSendCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_ChPowerSendCyclicTimeMS             (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChPowerSendCyclicTime))))
+// Mindeständerung relativ
+#define ParamSWA_ChCurrentSendMinChangePercent       (knx.paramByte(SWA_ParamCalcIndex(SWA_ChCurrentSendMinChangePercent)))
+// Mindeständerung absolut
+#define ParamSWA_ChCurrentSendMinChangeAbsolute      (knx.paramWord(SWA_ParamCalcIndex(SWA_ChCurrentSendMinChangeAbsolute)))
+// Zeitbasis
+#define ParamSWA_ChCurrentSendCyclicBase             ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChCurrentSendCyclicBase)) & SWA_ChCurrentSendCyclicBaseMask) >> SWA_ChCurrentSendCyclicBaseShift)
+// Zeit
+#define ParamSWA_ChCurrentSendCyclicTime             (knx.paramWord(SWA_ParamCalcIndex(SWA_ChCurrentSendCyclicTime)) & SWA_ChCurrentSendCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_ChCurrentSendCyclicTimeMS           (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChCurrentSendCyclicTime))))
+// Mindeständerung relativ
+#define ParamSWA_ChVoltageSendMinChangePercent       (knx.paramByte(SWA_ParamCalcIndex(SWA_ChVoltageSendMinChangePercent)))
+// Mindeständerung absolut
+#define ParamSWA_ChVoltageSendMinChangeAbsolute      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChVoltageSendMinChangeAbsolute)))
+// Zeitbasis
+#define ParamSWA_ChVoltageSendCyclicBase             ((knx.paramByte(SWA_ParamCalcIndex(SWA_ChVoltageSendCyclicBase)) & SWA_ChVoltageSendCyclicBaseMask) >> SWA_ChVoltageSendCyclicBaseShift)
+// Zeit
+#define ParamSWA_ChVoltageSendCyclicTime             (knx.paramWord(SWA_ParamCalcIndex(SWA_ChVoltageSendCyclicTime)) & SWA_ChVoltageSendCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamSWA_ChVoltageSendCyclicTimeMS           (paramDelay(knx.paramWord(SWA_ParamCalcIndex(SWA_ChVoltageSendCyclicTime))))
 // Szene aktiv
 #define ParamSWA_ChSceneAActive                      ((bool)(knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneAActive)) & SWA_ChSceneAActiveMask))
 // Szene Verhalten
@@ -809,7 +883,7 @@
 
 // Communication objects per channel (multiple occurrence)
 #define SWA_KoBlockOffset 91
-#define SWA_KoBlockSize 6
+#define SWA_KoBlockSize 9
 
 #define SWA_KoCalcNumber(index) (index + SWA_KoBlockOffset + _channelIndex * SWA_KoBlockSize)
 #define SWA_KoCalcIndex(number) ((number >= SWA_KoCalcNumber(0) && number < SWA_KoCalcNumber(SWA_KoBlockSize)) ? (number - SWA_KoBlockOffset) % SWA_KoBlockSize : -1)
@@ -821,6 +895,9 @@
 #define SWA_KoChLock 3
 #define SWA_KoChLockStatus 4
 #define SWA_KoChScene 5
+#define SWA_KoChPower 6
+#define SWA_KoChCurrent 7
+#define SWA_KoChVoltage 8
 
 // 
 #define KoSWA_ChSwitch                            (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChSwitch)))
@@ -834,6 +911,12 @@
 #define KoSWA_ChLockStatus                        (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChLockStatus)))
 // 
 #define KoSWA_ChScene                             (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChScene)))
+// 
+#define KoSWA_ChPower                             (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChPower)))
+// 
+#define KoSWA_ChCurrent                           (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChCurrent)))
+// 
+#define KoSWA_ChVoltage                           (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChVoltage)))
 
 #define LOG_BuzzerInstalled                     7073      // 1 Bit, Bit 7
 #define     LOG_BuzzerInstalledMask 0x80
