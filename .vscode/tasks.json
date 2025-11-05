@@ -2,6 +2,65 @@
 	"version": "2.0.0",
 	"tasks": [
         {
+            "label": "\u2714 (release)",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "useCurrent"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2714 (debug)",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "-DebugBuild",
+                "useCurrent"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2794 (release)",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "useCurrent",
+                "upload"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2794 (debug)",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "-DebugBuild",
+                "useCurrent",
+                "upload"
+            ],
+            "presentation": {
+                "panel": "shared"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2794\u2794 upload only",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "-DebugBuild",
+                "useCurrent",
+                "uploadOnly"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
             "label": "OpenKNXproducer",
             "type": "shell",
             "command": "~/bin/OpenKNXproducer.exe",
