@@ -132,7 +132,10 @@
 			"xloctime": "cpp",
 			"xmemory": "cpp",
 			"xtr1common": "cpp",
-			"text_encoding": "cpp"
+			"text_encoding": "cpp",
+			"coroutine": "cpp",
+			"source_location": "cpp",
+			"cfenv": "cpp"
 		}
 	}
 }
