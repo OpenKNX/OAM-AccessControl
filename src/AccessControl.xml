@@ -10,13 +10,12 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="9.1"
-    ReplacesVersions="9.0 8.15 8.14 8.13 8.12 8.11 8.10 8.9 8.8 8.7 8.6 8.5 8.4 8.3 8.2 8.1 8.0 7.15 7.14 7.13 7.12 7.11 7.10 7.9 7.8 7.7 7.6 7.3 6.15 6.14 6.13 6.12 6.11 6.10 6.9 6.0 5.2 5.1 5.0 4.15 4.14 4.13 4.12 4.11 4.10 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
+    ApplicationVersion="9.7.0"
+    ReplacesVersions="9.6 9.4 9.3 9.2 9.1 9.0 8.15 8.14 8.13 8.12 8.11 8.10 8.9 8.8 8.7 8.6 8.5 8.4 8.3 8.2 8.1 8.0 7.15 7.14 7.13 7.12 7.11 7.10 7.9 7.8 7.7 7.6 7.3 6.15 6.14 6.13 6.12 6.11 6.10 6.9 6.0 5.2 5.1 5.0 4.15 4.14 4.13 4.12 4.11 4.10 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
-    ApplicationName="AB-AccessControl-Logic-Button"
-    BuildSuffix="-dev"
-    BuildSuffixText=" (dev)"
+    BuildSuffix="-Dev"
+    BuildSuffixText=" (Dev)"
     OrderNumber="OpenKnxAccessControl"
     BaggagesRootDir="A6/01"
   />
@@ -42,7 +41,7 @@
     ModuleType="2"
     KoSingleOffset="20"
     KoOffset="500"
-    NumChannels="99">
+    NumChannels="150">
     <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_ApplicationVersion%" />
   </op:define>
 
@@ -52,7 +51,7 @@
     share="../lib/OFM-AccessControl/src/FingerAction.share.xml"
     template="../lib/OFM-AccessControl/src/FingerAction.templ.xml"
     ModuleType="2"
-    NumChannels="99" />
+    NumChannels="300" />
 
     <op:define prefix="FINACTSER"
     noConfigTransfer="true"
@@ -67,12 +66,27 @@
     share="../lib/OFM-AccessControl/src/NfcAction.share.xml"
     template="../lib/OFM-AccessControl/src/NfcAction.templ.xml"
     ModuleType="2"
-    NumChannels="99" />
+    NumChannels="310" />
 
     <op:define prefix="NFCACTSER"
     noConfigTransfer="true"
     prefixDoc="ACC"
     template="../lib/OFM-AccessControl/src/NfcActionSearch.templ.xml"
+    ModuleType="2"
+    NumChannels="7" />
+
+    <op:define prefix="KEYACT"
+    prefixDoc="ACC"
+    configTransferName="Zutrittskontrolle (Keypad)"
+    share="../lib/OFM-AccessControl/src/KeypadAction.share.xml"
+    template="../lib/OFM-AccessControl/src/KeypadAction.templ.xml"
+    ModuleType="2"
+    NumChannels="320" />
+
+    <op:define prefix="KEYACTSER"
+    noConfigTransfer="true"
+    prefixDoc="ACC"
+    template="../lib/OFM-AccessControl/src/KeypadActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />
 
@@ -116,8 +130,8 @@
   <!-- <generate> -->
     <generate base="SecureApplication.xml">
       <Dynamic>
-      <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
-      <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
+        <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
+        <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
         <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="ACC" />
         <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
         <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
