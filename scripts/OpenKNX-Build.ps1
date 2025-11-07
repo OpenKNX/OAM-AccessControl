@@ -2,6 +2,9 @@ param (
   [Parameter(Mandatory = $false, HelpMessage="Initiate debug build, -DebugBuild should be first odr last parameter")]
   [switch]$DebugBuild,
 
+  [Parameter(Mandatory = $false, HelpMessage="-Monitor starts pio monitor after build, env useCurrent is supported")]
+  [switch]$Monitor,
+
   [Parameter(Mandatory = $true)]
   [ValidateNotNullOrEmpty()]
   [string]$env,
@@ -64,6 +67,12 @@ try {
 }
 
 if ($env -eq "useCurrent") { $env = $currentEnv }
+
+if ($Monitor) {
+    Write-Host "Starte den Monitor..."
+    ~/.platformio/penv/Scripts/pio.exe device monitor --environment $env
+    exit 0
+}
 
 if ($DebugBuild -or $target -eq "uploadOnly") {
     if ($target -ne "uploadOnly") {
@@ -139,10 +148,10 @@ if ($DebugBuild -or $target -eq "uploadOnly") {
         if (-not $success) {
             Write-Host "Firmware-Upload abgebrochen, eventuell Moitor-Modus beenden!" -ForegroundColor Red
         }
-        if ($monitorStarted) {
-            Write-Host "Starte den Monitor neu..."
-            ~/.platformio/penv/Scripts/pio.exe device monitor --environment $env
-        }
+        # if ($monitorStarted) {
+            # Write-Host "Starte den Monitor neu..."
+            # ~/.platformio/penv/Scripts/pio.exe device monitor --environment $env
+        # }
     }
 }
 else {
