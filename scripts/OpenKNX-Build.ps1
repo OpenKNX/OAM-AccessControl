@@ -77,10 +77,11 @@ if ($Monitor) {
 if ($DebugBuild -or $target -eq "uploadOnly") {
     if ($target -ne "uploadOnly") {
         lib/OGM-Common/scripts/build/OpenKNX-Build.ps1 -DebugBuild -env $env
+        if (!$?) { exit 1 }
     }
     if ($target -eq "upload" -or $target -eq "uploadOnly") {
         $success = $true
-        $monitorStarted = StopPioMontor
+        StopPioMontor
         if ($currentProcessor -eq "rp2040") {
             $device = $(Get-WmiObject Win32_LogicalDisk | Where-Object { $_.VolumeName -match "RPI-RP2|RP2350" }) | Select-Object -First 1
 

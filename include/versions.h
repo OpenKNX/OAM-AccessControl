@@ -1,8 +1,8 @@
 #pragma once
 
-#define MAIN_Version "f819bde"
+#define MAIN_Version "b042196"
 #define KNX_Version "2.2.2+ee3c00e"
-#define MODULE_AccessControl_Version "0.10.1+35c96ce"
+#define MODULE_AccessControl_Version "0.10.1+7d52580"
 #define MODULE_AccessControl_Version_Major 0
 #define MODULE_AccessControl_Version_Minor 10
 #define MODULE_AccessControl_Version_Revision 1
@@ -27,7 +27,7 @@
 #define MODULE_BinaryInput_Version_Minor 2
 #define MODULE_BinaryInput_Version_Revision 1
 #define MODULE_BinaryInput_ETS 2
-#define MODULE_SwitchActuator_Version "0.1.0+70b79ab"
+#define MODULE_SwitchActuator_Version "0.1.0+3a1f371"
 #define MODULE_SwitchActuator_Version_Major 0
 #define MODULE_SwitchActuator_Version_Minor 1
 #define MODULE_SwitchActuator_Version_Revision 0
