@@ -11,7 +11,6 @@
     ReplacesVersions="%ACC_ReplacesVersions%"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
-    ApplicationName="AB-AccessControl-Logic-Button"
     BuildSuffix="-R503"
     BuildSuffixText=" (R503)"
     OrderNumber="OpenKnxAccessControl"
@@ -69,6 +68,21 @@
     noConfigTransfer="true"
     prefixDoc="ACC"
     template="../lib/OFM-AccessControl/src/NfcActionSearch.templ.xml"
+    ModuleType="2"
+    NumChannels="7" />
+
+    <op:define prefix="KEYACT"
+    prefixDoc="ACC"
+    configTransferName="Zutrittskontrolle (Keypad)"
+    share="../lib/OFM-AccessControl/src/KeypadAction.share.xml"
+    template="../lib/OFM-AccessControl/src/KeypadAction.templ.xml"
+    ModuleType="2"
+    NumChannels="320" />
+
+    <op:define prefix="KEYACTSER"
+    noConfigTransfer="true"
+    prefixDoc="ACC"
+    template="../lib/OFM-AccessControl/src/KeypadActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />
 

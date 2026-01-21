@@ -7,7 +7,9 @@
 
 void setup()
 {
-    openknx.init();
+    const uint8_t firmwareRevision = 0;
+
+    openknx.init(firmwareRevision);
     openknx.addModule(1, openknxLogic);
     openknx.addModule(2, openknxAccessControl);
     openknx.addModule(3, openknxVirtualButtonModule);
