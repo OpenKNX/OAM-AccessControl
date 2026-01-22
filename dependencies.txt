@@ -1,6 +1,6 @@
 ﻿------- Built with -------
 ee3c00e v1 lib/knx https://github.com/OpenKNX/knx
-92ee92f devel-keypad lib/OFM-AccessControl https://github.com/OpenKNX/OFM-AccessControl
+391d39d devel-keypad lib/OFM-AccessControl https://github.com/OpenKNX/OFM-AccessControl
 7b628ef v1 lib/OFM-BinaryInput https://github.com/OpenKNX/OFM-BinaryInput.git
 e003477 v1 lib/OFM-ConfigTransfer https://github.com/OpenKNX/OFM-ConfigTransfer
 3a96b4e v1 lib/OFM-FileTransferModule https://github.com/OpenKNX/OFM-FileTransferModule.git
