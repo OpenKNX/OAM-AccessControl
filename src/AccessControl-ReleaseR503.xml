@@ -62,7 +62,7 @@
     share="../lib/OFM-AccessControl/src/NfcAction.share.xml"
     template="../lib/OFM-AccessControl/src/NfcAction.templ.xml"
     ModuleType="2"
-    NumChannels="99" />
+    NumChannels="300" />
 
     <op:define prefix="NFCACTSER"
     noConfigTransfer="true"
@@ -77,7 +77,7 @@
     share="../lib/OFM-AccessControl/src/KeypadAction.share.xml"
     template="../lib/OFM-AccessControl/src/KeypadAction.templ.xml"
     ModuleType="2"
-    NumChannels="320" />
+    NumChannels="300" />
 
     <op:define prefix="KEYACTSER"
     noConfigTransfer="true"
