@@ -2,19 +2,27 @@
 <?xml-model href="../../Organization/knxprod-support/knx_project_20/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
 
+  <op:minOpenKNXproducerVersion value="4.3.5" />
+  
   <op:config name="%LOG_NumChannelsDefault%" value="3" />
   <op:config name="%BTN_NumChannelsDefault%" value="3" />
   <op:config name="%BI_NumChannelsDefault%" value="2" />
 
   <op:config name="%SWA_VerifyVersion%" value="0.1" />
-  <op:config name="%BTN_VerifyVersion%" value="0.5" />
-  <op:config name="%BI_VerifyVersion%" value="0.2" />
+  <op:config name="%BTN_VerifyVersion%" value="0.6" />
+  <op:config name="%BI_VerifyVersion%" value="0.3" />
   <op:config name="%UCT_VerifyVersion%" value="0.5" />
-  <op:config name="%LOG_VerifyVersion%" value="4.0" />
+  <op:config name="%LOG_VerifyVersion%" value="4.2" />
   <op:config name="%BASE_VerifyVersion%" value="1.7" />
+  <op:config name="%BUZZ_VerifyVersion%" value="0.3" />
+  <op:config name="%ACC_VerifyVersion%" value="0.12" />
 
-  <op:config name="%ACC_ApplicationVersion%" value="0.11" />
-  <op:config name="%ACC_ReplacesVersions%" value="0.10 0.9 0.8 0.7 0.6 0.5 0.2" />
+  <op:config name="%ACC_ApplicationVersion%" value="0.12.0" />
+  <op:config name="%ACC_ReplacesVersions%" value="0.11 0.10 0.9 0.8 0.7 0.6 0.5 0.2" />
+
+  <op:config name="%BUZZ_ModuleText%" value="Buzzer" />
+  <op:config name="%BUZZ_BuzzerVisible%" value="1" />
+  <op:config name="%BUZZ_VibrationVisible%" value="0" />
 
   <op:nowarn id="3" regex="ACC_sleep" />
 </KNX>

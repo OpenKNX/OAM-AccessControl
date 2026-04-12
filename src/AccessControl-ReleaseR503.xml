@@ -38,7 +38,7 @@
     KoSingleOffset="20"
     KoOffset="100"
     NumChannels="200">
-    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_ApplicationVersion%" />
+    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_VerifyVersion%" />
   </op:define>
 
   <op:define prefix="FINACT"
@@ -123,16 +123,29 @@
     <op:verify File="../lib/OFM-BinaryInput/library.json" ModuleVersion="%BI_VerifyVersion%" />
     </op:define>
 
+  <!-- 
+  6 KOs 
+  => 6 KOs
+  => [80,86[
+  -->
+  <op:define prefix="BUZZ"
+    share="../lib/OFM-Feedback/src/Feedback.share.xml"
+    KoSingleOffset="80"
+    ModuleType="6">
+    <op:verify File="../lib/OFM-Feedback/library.json" ModuleVersion="%BUZZ_VerifyVersion%" />
+  </op:define>
+
   <generate>
     <!-- <generate base="SecureApplication.xml"> -->
-    <Dynamic>
-      <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
-      <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
-      <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="ACC" />
-      <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
-      <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
-      <op:include href="../lib/OFM-VirtualButton/src/VirtualButton.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BTN" />
-      <op:include href="../lib/OFM-BinaryInput/src/BinaryInputChannel.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BI" />
-    </Dynamic>
-  </generate>
+      <Dynamic>
+        <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
+        <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
+        <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="ACC" />
+        <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
+        <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
+        <op:include href="../lib/OFM-VirtualButton/src/VirtualButton.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BTN" />
+        <op:include href="../lib/OFM-BinaryInput/src/BinaryInputChannel.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BI" />
+        <op:include href="../lib/OFM-Feedback/src/Feedback.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BUZZ" />
+      </Dynamic>
+    </generate>
 </KNX>

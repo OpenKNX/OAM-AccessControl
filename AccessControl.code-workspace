@@ -4,22 +4,10 @@
 			"path": "."
 		},
 		{
+			"path": "../knx"
+		},
+		{
 			"path": "../OFM-AccessControl"
-		},
-		{
-			"path": "./../OFM-SwitchActuator"
-		},
-		{
-			"path": "./../OFM-Logicmodule"
-		},
-		{
-			"path": "../OGM-Common"
-		},
-		{
-			"path": "../OGM-HardwareConfig"
-		},
-		{
-			"path": "../OFM-VirtualButton"
 		},
 		{
 			"path": "../OFM-BinaryInput"
@@ -28,10 +16,25 @@
 			"path": "../OFM-ConfigTransfer"
 		},
 		{
+			"path": "../OFM-Feedback"
+		},
+		{
 			"path": "../OFM-FileTransferModule"
 		},
 		{
-			"path": "../knx"
+			"path": "../OFM-Logicmodule"
+		},
+		{
+			"path": "../OFM-SwitchActuator"
+		},
+		{
+			"path": "../OFM-VirtualButton"
+		},
+		{
+			"path": "../OGM-Common"
+		},
+		{
+			"path": "../OGM-HardwareConfig"
 		}
 	],
 	"settings": {
