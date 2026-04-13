@@ -42,7 +42,7 @@
     KoSingleOffset="20"
     KoOffset="500"
     NumChannels="150">
-    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_ApplicationVersion%" />
+    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_VerifyVersion%" />
   </op:define>
 
     <op:define prefix="FINACT"
