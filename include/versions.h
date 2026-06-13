@@ -1,23 +1,23 @@
 #pragma once
 
-#define MAIN_Version "bab0ef8"
+#define MAIN_Version "c45f4fb"
 #define KNX_Version "2.3.1+7124a64"
-#define MODULE_AccessControl_Version "0.12.0+21c116b"
+#define MODULE_AccessControl_Version "0.12.0+d2a5f70"
 #define MODULE_AccessControl_Version_Major 0
 #define MODULE_AccessControl_Version_Minor 12
 #define MODULE_AccessControl_Version_Revision 0
 #define MODULE_AccessControl_ETS 12
-#define MODULE_Common_Version "1.7.2+8f9d2d9"
+#define MODULE_Common_Version "1.8.1+f6dbb3c"
 #define MODULE_Common_Version_Major 1
-#define MODULE_Common_Version_Minor 7
-#define MODULE_Common_Version_Revision 2
-#define MODULE_Common_ETS 23
-#define MODULE_LogicModule_Version "4.2.0+198e01c"
+#define MODULE_Common_Version_Minor 8
+#define MODULE_Common_Version_Revision 1
+#define MODULE_Common_ETS 24
+#define MODULE_LogicModule_Version "4.3.0+45e2159"
 #define MODULE_LogicModule_Version_Major 4
-#define MODULE_LogicModule_Version_Minor 2
+#define MODULE_LogicModule_Version_Minor 3
 #define MODULE_LogicModule_Version_Revision 0
-#define MODULE_LogicModule_ETS 66
-#define MODULE_Feedback_Version "0.3.0+abedb06"
+#define MODULE_LogicModule_ETS 67
+#define MODULE_Feedback_Version "0.3.0+ff6af21"
 #define MODULE_Feedback_Version_Major 0
 #define MODULE_Feedback_Version_Minor 3
 #define MODULE_Feedback_Version_Revision 0
@@ -27,7 +27,7 @@
 #define MODULE_FileTransferModule_Version_Minor 1
 #define MODULE_FileTransferModule_Version_Revision 5
 #define MODULE_FileTransferModule_ETS 1
-#define MODULE_BinaryInput_Version "0.3.1+86eeec5"
+#define MODULE_BinaryInput_Version "0.3.1+19e648c"
 #define MODULE_BinaryInput_Version_Major 0
 #define MODULE_BinaryInput_Version_Minor 3
 #define MODULE_BinaryInput_Version_Revision 1
