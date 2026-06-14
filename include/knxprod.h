@@ -21,14 +21,14 @@
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 0
 #define MAIN_ApplicationVersion 13
-#define MAIN_FirmwareRevision 0
+#define MAIN_FirmwareRevision 1
 #define MAIN_ApplicationEncoding iso-8859-15
 #define MAIN_ParameterSize 20922
 #define MAIN_MaxKoNumber 1239
 #define MAIN_OrderNumber "OpenKnxAccessControl"
 #define BASE_ModuleVersion 24
 #define UCT_ModuleVersion 5
-#define ACC_ModuleVersion 12
+#define ACC_ModuleVersion 13
 #define SWA_ModuleVersion 1
 #define LOG_ModuleVersion 67
 #define BTN_ModuleVersion 6
