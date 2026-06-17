@@ -1,26 +1,26 @@
 #pragma once
 
-#define MAIN_Version "f30f4d4"
+#define MAIN_Version "cfbafe7"
 #define KNX_Version "2.3.1+7124a64"
-#define MODULE_AccessControl_Version "0.13.1+26671f4"
+#define MODULE_AccessControl_Version "0.14.0+d6a6b72"
 #define MODULE_AccessControl_Version_Major 0
-#define MODULE_AccessControl_Version_Minor 13
-#define MODULE_AccessControl_Version_Revision 1
-#define MODULE_AccessControl_ETS 13
+#define MODULE_AccessControl_Version_Minor 14
+#define MODULE_AccessControl_Version_Revision 0
+#define MODULE_AccessControl_ETS 14
 #define MODULE_Common_Version "1.8.1+f6dbb3c"
 #define MODULE_Common_Version_Major 1
 #define MODULE_Common_Version_Minor 8
 #define MODULE_Common_Version_Revision 1
 #define MODULE_Common_ETS 24
-#define MODULE_LogicModule_Version "4.3.0+45e2159"
+#define MODULE_LogicModule_Version "4.3.0+8c0d835"
 #define MODULE_LogicModule_Version_Major 4
 #define MODULE_LogicModule_Version_Minor 3
 #define MODULE_LogicModule_Version_Revision 0
 #define MODULE_LogicModule_ETS 67
-#define MODULE_Feedback_Version "0.3.0+ff6af21"
+#define MODULE_Feedback_Version "0.3.1+2fb8d68"
 #define MODULE_Feedback_Version_Major 0
 #define MODULE_Feedback_Version_Minor 3
-#define MODULE_Feedback_Version_Revision 0
+#define MODULE_Feedback_Version_Revision 1
 #define MODULE_Feedback_ETS 3
 #define MODULE_FileTransferModule_Version "0.1.5+178f186"
 #define MODULE_FileTransferModule_Version_Major 0

@@ -20,15 +20,15 @@
 #define MAIN_FirmwareName "Zutrittskontrolle (R503)"
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 0
-#define MAIN_ApplicationVersion 13
-#define MAIN_FirmwareRevision 1
+#define MAIN_ApplicationVersion 14
+#define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
 #define MAIN_ParameterSize 20922
 #define MAIN_MaxKoNumber 1239
 #define MAIN_OrderNumber "OpenKnxAccessControl"
 #define BASE_ModuleVersion 24
 #define UCT_ModuleVersion 5
-#define ACC_ModuleVersion 13
+#define ACC_ModuleVersion 14
 #define SWA_ModuleVersion 1
 #define LOG_ModuleVersion 67
 #define BTN_ModuleVersion 6
@@ -334,9 +334,9 @@
 // Verzögerung zwischen Sync-Telegrammen
 #define ParamACC_SyncDelay                           (knx.paramByte(ACC_SyncDelay))
 // Hintergrundbeleuchtung
-#define ParamACC_BacklightState                      ((knx.paramByte(ACC_BacklightState) & ACC_BacklightStateMask) >> ACC_BacklightStateShift)
+#define ParamACC_BacklightState                      (PT_BacklightState)((knx.paramByte(ACC_BacklightState) & ACC_BacklightStateMask) >> ACC_BacklightStateShift)
 // Helligkeit
-#define ParamACC_BacklightIntensity                  ((knx.paramByte(ACC_BacklightIntensity) & ACC_BacklightIntensityMask) >> ACC_BacklightIntensityShift)
+#define ParamACC_BacklightIntensity                  (PT_BacklightIntensity)((knx.paramByte(ACC_BacklightIntensity) & ACC_BacklightIntensityMask) >> ACC_BacklightIntensityShift)
 // Tastendruck auf den Bus senden?
 #define ParamACC_KeypressTrigger                     ((bool)(knx.paramByte(ACC_KeypressTrigger) & ACC_KeypressTriggerMask))
 // Ersten Tastendruck ignorieren?
@@ -4075,6 +4075,22 @@
 
 
 // enumeration types
+enum class PT_BacklightState
+{
+    alwaysOn = 0,
+    onByAnyKey = 1,
+    onByKO = 2,
+    alwaysOff = 3
+};
+
+enum class PT_BacklightIntensity
+{
+    high = 0,
+    medium = 1,
+    low = 2,
+    byKO = 3
+};
+
 enum class PT_Logic
 {
     AUS = 0,
