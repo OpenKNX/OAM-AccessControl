@@ -9,7 +9,7 @@
         </CatalogSection>
       </Catalog>
       <ApplicationPrograms>
-        <op:version OpenKnxId="%OpenKnxId%" ApplicationNumber="%ApplicationNumber%" ApplicationVersion="%ApplicationVersion%" ReplacesVersions="%ReplacesVersions%" ApplicationRevision="%ApplicationRevision%" />
+        <op:version OpenKnxId="%OpenKnxId%" ApplicationNumber="%ApplicationNumber%" ApplicationVersion="%ApplicationVersion%" ReplacesVersions="%ReplacesVersions%" ApplicationRevision="%ApplicationRevision%" FirmwareRevision="%FirmwareRevision%" />
         <ApplicationProgram Id="%AID%" ProgramType="ApplicationProgram" MaskVersion="%MaskVersion%" Name="%ApplicationName%%BuildSuffix%" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="de-DE" IsSecureEnabled="%IsSecureEnabled%" MaxSecurityGroupKeyTableEntries="3000" MaxSecurityIndividualAddressEntries="1000" DynamicTableManagement="false" Linkable="true" MinEtsVersion="5.0" ContextHelpFile="%FILE-HELP-de%" IconFile="%FILE-ICONS%" IPConfig="Custom" ApplicationNumber="0" ApplicationVersion="0" ReplacesVersions="0">
           <Static>
             <Code>
@@ -58,9 +58,6 @@
                   <LdCtrlWriteRelMem ObjIdx="4" Offset="0" Size="%MemorySize%" Verify="true" AppliesTo="full,par" />
               </LoadProcedure>
               <LoadProcedure MergeId="7">
-                  <LdCtrlLoadImageProp ObjIdx="1" PropId="27" />
-                  <LdCtrlLoadImageProp ObjIdx="2" PropId="27" />
-                  <LdCtrlLoadImageProp ObjIdx="3" PropId="27" />
                   <LdCtrlLoadImageProp ObjIdx="4" PropId="27" />
               </LoadProcedure>
             </LoadProcedures>
@@ -72,7 +69,7 @@
             <Script>
               <op:includetemplate href="%share%" xpath="//ApplicationProgram/Static/Script/text()" prefix="%prefix%" />
             </Script>
-            <Options />
+            <Options TextParameterEncoding="iso-8859-15" SupportsExtendedMemoryServices="true" SupportsExtendedPropertyServices="true" />
           </Static>
           <ModuleDefs>
             <op:includetemplate href="%share%" xpath="//ApplicationProgram/ModuleDefs/*" prefix="%prefix%" />

@@ -4,18 +4,18 @@
 
   <op:config href="AccessControl.conf.xml" />
   <op:config name="%IsSecureEnabled%" value="false" />
+  <op:config name="%SWA_Measure%" value="0" />
 
-  <op:nowarn id="1" regex="ACC_ReplacesVersions" />
+  <op:nowarn id="1" regex="ACC_ApplicationVersion" />
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="9.1"
-    ReplacesVersions="9.0 8.15 8.14 8.13 8.12 8.11 8.10 8.9 8.8 8.7 8.6 8.5 8.4 8.3 8.2 8.1 8.0 7.15 7.14 7.13 7.12 7.11 7.10 7.9 7.8 7.7 7.6 7.3 6.15 6.14 6.13 6.12 6.11 6.10 6.9 6.0 5.2 5.1 5.0 4.15 4.14 4.13 4.12 4.11 4.10 4.9 4.8 4.7 4.6 4.5 4.4 4.3 4.2 4.1 4.0"
+    ApplicationVersion="%ACC_ApplicationVersion_Dev%"
+    ReplacesVersionsDownTo="4.0"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
-    ApplicationName="AB-AccessControl-Logic-Button"
-    BuildSuffix="-dev"
-    BuildSuffixText=" (dev)"
+    BuildSuffix="-Dev"
+    BuildSuffixText=" (Dev)"
     OrderNumber="OpenKnxAccessControl"
     BaggagesRootDir="A6/01"
   />
@@ -35,23 +35,23 @@
 
   <!-- for FIN, we have to stay with ModuleType 2!!! -->
   <op:define prefix="ACC"
-    configTransferName="Zutrittskontrolle (Aktionen)"
+    configTransferName="Zutrittskontrolle (Aktionen + Allgemein)"
     share="../lib/OFM-AccessControl/src/AccessControl.share.xml"
     template="../lib/OFM-AccessControl/src/Action.templ.xml"
     ModuleType="2"
     KoSingleOffset="20"
     KoOffset="500"
-    NumChannels="99">
-    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_ApplicationVersion%" />
+    NumChannels="150">
+    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_VerifyVersion%" />
   </op:define>
 
     <op:define prefix="FINACT"
     prefixDoc="ACC"
-    configTransferName="Zutrittskontrolle (Finger)"
+    configTransferName="    - (Finger)"
     share="../lib/OFM-AccessControl/src/FingerAction.share.xml"
     template="../lib/OFM-AccessControl/src/FingerAction.templ.xml"
     ModuleType="2"
-    NumChannels="99" />
+    NumChannels="300" />
 
     <op:define prefix="FINACTSER"
     noConfigTransfer="true"
@@ -62,16 +62,31 @@
 
     <op:define prefix="NFCACT"
     prefixDoc="ACC"
-    configTransferName="Zutrittskontrolle (NFC)"
+    configTransferName="    - (NFC)"
     share="../lib/OFM-AccessControl/src/NfcAction.share.xml"
     template="../lib/OFM-AccessControl/src/NfcAction.templ.xml"
     ModuleType="2"
-    NumChannels="99" />
+    NumChannels="310" />
 
     <op:define prefix="NFCACTSER"
     noConfigTransfer="true"
     prefixDoc="ACC"
     template="../lib/OFM-AccessControl/src/NfcActionSearch.templ.xml"
+    ModuleType="2"
+    NumChannels="7" />
+
+    <op:define prefix="KEYACT"
+    prefixDoc="ACC"
+    configTransferName="    - (Keypad)"
+    share="../lib/OFM-AccessControl/src/KeypadAction.share.xml"
+    template="../lib/OFM-AccessControl/src/KeypadAction.templ.xml"
+    ModuleType="2"
+    NumChannels="320" />
+
+    <op:define prefix="KEYACTSER"
+    noConfigTransfer="true"
+    prefixDoc="ACC"
+    template="../lib/OFM-AccessControl/src/KeypadActionSearch.templ.xml"
     ModuleType="2"
     NumChannels="7" />
 
@@ -112,16 +127,29 @@
     <op:verify File="../lib/OFM-BinaryInput/library.json" ModuleVersion="%BI_VerifyVersion%" />
     </op:define>
 
+  <!-- 
+  6 KOs 
+  => 6 KOs
+  => [80,86[
+  -->
+  <op:define prefix="BUZZ"
+    share="../lib/OFM-Feedback/src/Feedback.share.xml"
+    KoSingleOffset="80"
+    ModuleType="6">
+    <op:verify File="../lib/OFM-Feedback/library.json" ModuleVersion="%BUZZ_VerifyVersion%" />
+  </op:define>
+
   <!-- <generate> -->
     <generate base="SecureApplication.xml">
       <Dynamic>
-      <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
-      <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
+        <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
+        <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
         <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="ACC" />
         <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
         <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
         <op:include href="../lib/OFM-VirtualButton/src/VirtualButton.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BTN" />
         <op:include href="../lib/OFM-BinaryInput/src/BinaryInputChannel.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BI" />
+        <op:include href="../lib/OFM-Feedback/src/Feedback.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BUZZ" />
       </Dynamic>
     </generate>
 </KNX>

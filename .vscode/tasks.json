@@ -2,6 +2,94 @@
 	"version": "2.0.0",
 	"tasks": [
         {
+            "label": "\u2714 (release)",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "useCurrent"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2714 (debug)",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "-DebugBuild",
+                "useCurrent"
+            ],
+            "presentation": {
+                "panel": "shared",
+                "group": "build-and-flash"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2794 (release)",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "useCurrent",
+                "upload"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2794 (debug)",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "-DebugBuild",
+                "useCurrent",
+                "upload"
+            ],
+            "runOptions": {
+                "instanceLimit": 1,
+                "instancePolicy": "terminateNewest"
+            },
+            "presentation": {
+                "panel": "shared",
+                "group": "build-and-flash"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2794\u2794 upload only",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "-DebugBuild",
+                "useCurrent",
+                "uploadOnly"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "\u2794 (debug) + Monitor",
+            "type": "shell",
+            "command": "scripts/OpenKNX-Build.ps1",
+            "args": [
+                "-Monitor",
+                "useCurrent"
+            ],
+            "runOptions": {
+                "instanceLimit": 1,
+                "instancePolicy": "terminateNewest"
+            },
+            "presentation": {
+                "panel": "shared",
+                "group": "monitor"
+            },
+            "dependsOn": ["\u2794 (debug)"],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
             "label": "OpenKNXproducer",
             "type": "shell",
             "command": "~/bin/OpenKNXproducer.exe",
@@ -20,6 +108,18 @@
             "type": "shell",
             "command": "lib/OGM-Common/scripts/setup/reusable/Build-Dependencies.ps1",
             "args": [
+            ],
+            "problemMatcher": [],
+            "group": "test"
+        },
+        {
+            "label": "Resolve platformio.ini",
+            "type": "shell",
+            "command": "~/.platformio/penv/Scripts/pio",
+            "args": [
+                "project",
+                "config",
+                ">platformio.ini.full.txt"
             ],
             "problemMatcher": [],
             "group": "test"

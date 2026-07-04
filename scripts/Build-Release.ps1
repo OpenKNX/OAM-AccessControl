@@ -29,7 +29,7 @@
 if (!$?) { exit 1 }
 
 # build firmware for R503
-lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_R503 firmware-AccessControl uf2
+lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_R503 firmware-AB-SmartHouse-AccessControl uf2
 if (!$?) { exit 1 }
 
 # build firmware for UP1
