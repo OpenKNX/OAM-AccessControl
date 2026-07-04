@@ -5,10 +5,12 @@
   <op:config href="AccessControl.conf.xml" />
   <op:config name="%SWA_Measure%" value="0" />
 
+  <op:nowarn id="1" regex="ACC_ApplicationVersion_Dev" />
+
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x00"
     ApplicationVersion="%ACC_ApplicationVersion%"
-    ReplacesVersions="%ACC_ReplacesVersions%"
+    ReplacesVersionsDownTo="0.2"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
     BuildSuffix="-R503"

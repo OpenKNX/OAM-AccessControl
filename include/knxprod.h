@@ -20,7 +20,7 @@
 #define MAIN_FirmwareName "Zutrittskontrolle (R503)"
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 0
-#define MAIN_ApplicationVersion 14
+#define MAIN_ApplicationVersion 15
 #define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
 #define MAIN_ParameterSize 20922
