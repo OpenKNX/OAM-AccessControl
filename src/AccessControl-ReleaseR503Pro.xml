@@ -8,7 +8,7 @@
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x00"
     ApplicationVersion="%ACC_ApplicationVersion%"
-    ReplacesVersions="%ACC_ReplacesVersions%"
+    ReplacesVersionsDownTo="0.2"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
     ApplicationName="AB-AccessControl-Logic-Button"
@@ -39,7 +39,7 @@
     KoSingleOffset="20"
     KoOffset="100"
     NumChannels="1500">
-    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_ApplicationVersion%" />
+    <op:verify File="../lib/OFM-AccessControl/library.json" ModuleVersion="%ACC_VerifyVersion%" />
   </op:define>
 
   <op:define prefix="FINACT"
@@ -72,11 +72,26 @@
     ModuleType="2"
     NumChannels="7" />
 
+    <op:define prefix="KEYACT"
+    prefixDoc="ACC"
+    configTransferName="Zutrittskontrolle (Keypad)"
+    share="../lib/OFM-AccessControl/src/KeypadAction.share.xml"
+    template="../lib/OFM-AccessControl/src/KeypadAction.templ.xml"
+    ModuleType="2"
+    NumChannels="300" />
+
+    <op:define prefix="KEYACTSER"
+    noConfigTransfer="true"
+    prefixDoc="ACC"
+    template="../lib/OFM-AccessControl/src/KeypadActionSearch.templ.xml"
+    ModuleType="2"
+    NumChannels="7" />
+
     <op:define prefix="SWA"
     share="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml"
     template="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.templ.xml"
     NumChannels="1"
-    KoSingleOffset="90"
+    KoSingleOffset="8"
     KoOffset="91"
     ModuleType="4">
     <op:verify File="../lib/OFM-SwitchActuator/library.json" ModuleVersion="%SWA_VerifyVersion%" />
@@ -108,6 +123,13 @@
     ModuleType="5">
     <op:verify File="../lib/OFM-BinaryInput/library.json" ModuleVersion="%BI_VerifyVersion%" />
     </op:define>
+
+  <op:define prefix="BUZZ"
+    share="../lib/OFM-Feedback/src/Feedback.share.xml"
+    KoSingleOffset="80"
+    ModuleType="6">
+    <op:verify File="../lib/OFM-Feedback/library.json" ModuleVersion="%BUZZ_VerifyVersion%" />
+  </op:define>
 
   <generate>
     <!-- <generate base="SecureApplication.xml"> -->

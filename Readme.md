@@ -30,9 +30,17 @@ Eine Funktionsbeschreibung sowie kompatible Hardware findet sich [hier](https://
 ## Local builds and ESP32 PN7160 support
 
 Use the dependency revisions in `dependencies.txt` for this application's ETS
-header. The `lib/` entries link separate local repositories; newer shared
-checkouts can fail module version checks. Do not bypass those checks or edit
-`knxprod.h` to hide a mismatch.
+header. The snapshot now records the currently linked local repositories,
+including KNX 2.4.0, Common 1.9.1, LogicModule 4.4.1, ConfigTransfer 0.6,
+SwitchActuator 0.3, VirtualButton 0.7 and BinaryInput 0.4. The XML verifies these
+module versions. Do not bypass those checks or edit `knxprod.h` to hide a mismatch.
+
+The release ETS application version is 1.0 (encoded as 16, following 0.15), and
+the development version is 10.15. SwitchActuator global objects now use numbers
+8–10; its channel objects remain at 91–99. Regenerate/import the matching ETS
+application when using this firmware. Both normal and isolated builds use a
+project-local `.pio/libdeps` directory. The R503Pro XML includes the keypad and
+feedback definitions referenced by the shared AccessControl description.
 
 The local build helper clones committed local source and the recorded revisions
 onto `v1dev_HomeKey`, without switching shared checkouts or pushing. It isolates
@@ -129,14 +137,17 @@ c++ -std=c++17 -DARDUINO_ARCH_ESP32 \
 /tmp/accesscontrol-parity-test
 ```
 
-On this machine, the existing PlatformIO Python could not load `liblzma`; use a
-temporary Python environment and the isolated toolchain cache:
+The default PlatformIO environment on this machine uses Python 3.14 with working
+LZMA support. Build the current workspace directly:
 
 ```sh
-python3 -m venv /tmp/oam-homekey-pio-venv
-/tmp/oam-homekey-pio-venv/bin/python -m pip install platformio
-PLATFORMIO_CORE_DIR=/tmp/oam-homekey-platformio \
-  python3 scripts/Build-HomeKey-Local.py \
-  --build-dir /tmp/oam-homekey-parity-validation \
-  --pio /tmp/oam-homekey-pio-venv/bin/pio
+~/.platformio/penv/bin/pio run -e debug_ESP32S3_HomeKey
+```
+
+To build a separate snapshot of committed sources:
+
+```sh
+python3 scripts/Build-HomeKey-Local.py \
+  --build-dir /tmp/oam-homekey-current-validation \
+  --pio ~/.platformio/penv/bin/pio
 ```
