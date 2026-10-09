@@ -24,6 +24,19 @@
     #define NFC_IRQ_PIN 3
     #define NFC_VEN_PIN 4
 
+    #ifdef OPENKNX_HOMEKEY_ENABLED
+        // PN7161 SPI prototype, mutually exclusive with the peripheral test profile.
+        #ifdef OPENKNX_ACC_TEST_PERIPHERALS
+            #error Home Key SPI pins conflict with the optional peripheral profile
+        #endif
+        #define HOMEKEY_SPI_CS 1
+        #define HOMEKEY_SPI_SCLK 7
+        #define HOMEKEY_SPI_MISO 8
+        #define HOMEKEY_SPI_MOSI 9
+        #define HOMEKEY_IRQ_PIN 3
+        #define HOMEKEY_VEN_PIN 4
+    #endif
+
     #ifdef OPENKNX_ACC_TEST_PERIPHERALS
         #define SCANNER_SERIAL Serial2
         #define SCANNER_SERIAL_RX_PIN 1

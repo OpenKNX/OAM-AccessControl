@@ -19,8 +19,8 @@ def main():
                         help="New directory for isolated checkouts; never overwrites an existing directory")
     parser.add_argument("--pio", default=shutil.which("pio"), help="PlatformIO executable path")
     parser.add_argument("-e", "--environment", action="append",
-                        choices=["debug_RP2040", "debug_ESP32S3_HomeKey", "debug_ESP32S3_PN7160_Peripherals"],
-                        help="Build selected target; default: RP2040, ESP32 NFC and ESP32 peripheral profile")
+                        choices=["debug_RP2040", "debug_ESP32S3_HomeKey", "debug_ESP32S3_PN7160_Peripherals", "debug_ESP32S3_AppleHomeKey"],
+                        help="Build selected target; default: all four RP2040 / ESP32 targets")
     args = parser.parse_args()
     if not args.pio:
         parser.error("PlatformIO is not on PATH; supply --pio /path/to/pio")
@@ -58,12 +58,14 @@ def main():
         run("git", "-C", str(target), "switch", "--quiet", "-C", branch, revision)
         print(f"{relative}: {revision}", flush=True)
     command = [args.pio, "run", "-d", str(destination)]
-    for environment in args.environment or ["debug_RP2040", "debug_ESP32S3_HomeKey", "debug_ESP32S3_PN7160_Peripherals"]:
+    for environment in args.environment or ["debug_RP2040", "debug_ESP32S3_HomeKey", "debug_ESP32S3_PN7160_Peripherals", "debug_ESP32S3_AppleHomeKey"]:
         command.extend(["-e", environment])
     # Inherit PLATFORMIO_CORE_DIR so callers can use an isolated toolchain cache.
     build_environment = os.environ.copy()
     # A shared /tmp/libdeps can be replaced by another application's build.
-    build_environment["PLATFORMIO_LIBDEPS_DIR"] = str(destination / ".pio/libdeps")
+    import hashlib
+    cache_id = hashlib.sha256(str(destination).encode()).hexdigest()[:12]
+    build_environment["PLATFORMIO_LIBDEPS_DIR"] = f"/tmp/oam-accesscontrol-libdeps-{cache_id}"
     subprocess.run(command, check=True, env=build_environment)
 
 

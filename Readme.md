@@ -38,8 +38,8 @@ module versions. Do not bypass those checks or edit `knxprod.h` to hide a mismat
 The release ETS application version is 1.0 (encoded as 16, following 0.15), and
 the development version is 10.15. SwitchActuator global objects now use numbers
 8–10; its channel objects remain at 91–99. Regenerate/import the matching ETS
-application when using this firmware. Both normal and isolated builds use a
-project-local `.pio/libdeps` directory. The R503Pro XML includes the keypad and
+application when using this firmware. Normal builds use `/tmp/oam-accesscontrol-libdeps`; isolated builds use a
+separate project-specific cache under `/tmp`. The R503Pro XML includes the keypad and
 feedback definitions referenced by the shared AccessControl description.
 
 The local build helper clones committed local source and the recorded revisions
@@ -59,10 +59,11 @@ The helper builds these targets by default; use `-e` to select individual ones:
 | `debug_RP2040` | Existing RP2040 target and PN7160 implementation |
 | `debug_ESP32S3_HomeKey` | XIAO ESP32-S3 with PN7160 I2C and existing access-control features |
 | `debug_ESP32S3_PN7160_Peripherals` | ESP32 PN7160 plus fingerprint UART, Gira/matrix keypad, touch/LED expanders, four binary inputs and one bistable relay |
+| `debug_ESP32S3_AppleHomeKey` | ESP32 HomeSpan provisioning, DigitalDoorKey and PN7161 SPI prototype |
 
 Despite its development name, the ESP32 HomeKey target currently uses the legacy
-PN7160 protocol and UID-based credentials. PN7161 and Apple Home Key
-provisioning/authentication belong to a later implementation stage.
+PN7160 protocol and UID-based credentials. Apple Home Key provisioning and
+authentication use the separate `debug_ESP32S3_AppleHomeKey` target.
 
 The ESP32 backend uses the same PN7160 NCI engine, tag detection/removal, UID
 enrollment and lookup, ETS action mappings and KNX synchronization as RP2040.
@@ -108,7 +109,8 @@ peripheral target for the prototype that connects those devices.
 Both ESP32 profiles use the experimental 8 MB partition table with two 3 MB OTA
 slots, a 32 KB OpenKNX partition, separate fingerprint/NFC/keypad partitions and
 reserved Home Key NVS space. Credential records retain their existing format.
-Home Key credential storage and encryption are not implemented. The OpenKNX
+The separate Apple Home Key target implements credential storage; encryption
+is not enabled in this development layout. The OpenKNX
 partition is kept below 64 KB because the shared persistence code uses 16-bit
 slot sizes.
 
@@ -151,3 +153,66 @@ python3 scripts/Build-HomeKey-Local.py \
   --build-dir /tmp/oam-homekey-current-validation \
   --pio ~/.platformio/penv/bin/pio
 ```
+
+
+## Apple Home Key implementation (ESP32 prototype)
+
+`debug_ESP32S3_AppleHomeKey` adds the separately versioned OFM-HomeKey module,
+HomeSpan NFC Access provisioning, DigitalDoorKey authentication, PN7161 SPI,
+and persistent explicit issuer/endpoint-to-NFC-ID mappings. The existing RP2040
+and ESP32 PN7160 I2C environments retain their reader paths. The new target
+excludes the legacy reader so only one module owns NFC. HomeKit pairing and UID
+identification do not authorize a Home Key endpoint; authenticated mapped IDs
+reuse the existing NFC action engine on the OpenKNX thread.
+
+```sh
+~/.platformio/penv/bin/pio run -e debug_ESP32S3_AppleHomeKey
+```
+
+Use `src/AccessControl-HomeKey.xml` (development application A6/02, version 0.1)
+and `include/homekey/knxprod.h` together. The build script selects that header
+before all module compilations; existing application XML/header selection is
+retained for the other targets. Generate it with OpenKNXproducer 4.3.12:
+
+```sh
+/path/to/OpenKNXproducer create src/AccessControl-HomeKey.xml \
+  -h include/homekey/knxprod.h -o /tmp/AccessControl-HomeKey.knxprod -d
+```
+
+On this Mac the producer generates the header and checks the expanded XML;
+ETS product signing is skipped and an XSD is not installed. Generate/sign the
+ETS import product with the appropriate producer setup on Windows.
+
+Enable Home Key and commissioning in its ETS parameters. Local commands start
+with `hk wifi <SSID> <password>` and `hk pair <8digits>` (five-minute window).
+After Apple Home provisioning, `hk list` shows endpoint IDs; use
+`hk map <issuer16hex> <endpoint12hex> <id0..1499>` to assign an empty conventional
+UID slot to the device, and configure that ID in the existing NFCACT table.
+Full commissioning, retention and revocation details are in
+[OFM-HomeKey/Readme.md](lib/OFM-HomeKey/Readme.md).
+
+PN7161 SPI prototype pins: CS GPIO1 (D0), SCLK GPIO7 (D8), MISO GPIO8 (D9),
+MOSI GPIO9 (D10), IRQ GPIO3 (D2), VEN GPIO4 (D3). They conflict with the optional
+fingerprint/relay profile; the build rejects that combination. Lock feedback
+uses KO 11 (1=physically locked). Home app remote unlock is not enabled.
+
+The Arduino-only integration builds without an IDF project conversion. Exact
+local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.5 is
+pinned in the environment. The new OFM repository and wrappers live under
+`.homekey-repos`, linked from `lib`. Do not replace those links with upstream
+clones: the committed local wrappers are required. The isolated build helper
+copies all recorded local dependencies and now builds all four targets.
+Generated package caches use a project-specific `/tmp` directory because files
+in the synced project cache acquired duplicate source copies during builds.
+
+This is the first software prototype. Physical PN7161 operation, Home Key
+provisioning/taps on iPhone or Watch, RF timing and concurrent KNX traffic have
+not been verified. NVS encryption, secure boot and production commissioning
+hardening remain for the next hardware/security stage.
+
+Validation on 2026-10-09: all four environments compiled and linked; the new
+ETS header passed producer consistency checks; native Home Key persistence,
+revocation and policy tests and the existing PN7160/scanner/GPIO tests passed.
+Home Key firmware occupies about 2.75 MB of its 3 MB OTA slot (87.3%); static
+RAM is about 72 KB (22.1%). The SDK size-report helper emits a nonfatal `--ng`
+option warning; PlatformIO's firmware size check and image generation succeed.

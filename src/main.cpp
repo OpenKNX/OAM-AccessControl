@@ -5,6 +5,9 @@
 #include "VirtualButtonModule.h"
 #include "FileTransferModule.h"
 #include "Feedback.h"
+#if defined(OPENKNX_HOMEKEY_ENABLED) && defined(ARDUINO_ARCH_ESP32)
+#include "HomeKeyModule.h"
+#endif
 
 void setup()
 {
@@ -17,6 +20,9 @@ void setup()
     openknx.addModule(5, openknxGpioBinaryInputModule);
 #endif
     openknx.addModule(6, openknxFeedback);
+#if defined(OPENKNX_HOMEKEY_ENABLED) && defined(ARDUINO_ARCH_ESP32)
+    openknx.addModule(7, openknxHomeKey);
+#endif
     openknx.addModule(9, openknxFileTransferModule);
     openknx.setup();
 }
