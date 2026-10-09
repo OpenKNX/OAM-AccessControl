@@ -27,81 +27,113 @@ Die kompakte Steuerplatine kann optional vollständig in ein Standard-Schalterpr
 
 Eine Funktionsbeschreibung sowie kompatible Hardware findet sich [hier](https://openknx.atlassian.net/wiki/spaces/OpenKNX/pages/6553602/Zutrittskontrolle).
 
-## Local builds and experimental Home Key target
+## Local builds and ESP32 PN7160 support
 
-Use the dependency revisions in `dependencies.txt` for this application's existing
-ETS header. The `lib/` entries are links to separate repositories; newer shared
-checkouts can fail the module version checks. Do not bypass those checks or edit
-the generated `knxprod.h` to hide a mismatch.
+Use the dependency revisions in `dependencies.txt` for this application's ETS
+header. The `lib/` entries link separate local repositories; newer shared
+checkouts can fail module version checks. Do not bypass those checks or edit
+`knxprod.h` to hide a mismatch.
+
+The local build helper clones committed local source and the recorded revisions
+onto `v1dev_HomeKey`, without switching shared checkouts or pushing. It isolates
+PlatformIO's library directory to avoid collisions with other local builds.
+PlatformIO may download toolchains and third-party libraries. Choose a new build
+directory for each snapshot:
 
 ```sh
-pio run -e debug_RP2040
-pio run -e debug_ESP32S3_HomeKey
+python3 scripts/Build-HomeKey-Local.py --build-dir /tmp/oam-homekey-parity-validation
 ```
 
-`debug_ESP32S3_HomeKey` selects **Seeed Studio XIAO ESP32-S3**, the shared
-OGM-Common PioArduino/Arduino configuration, USB serial, and an experimental 8 MB
-partition table. It reserves two 3 MB OTA slots, the existing KNX/OpenKNX data,
-separate fingerprint/NFC/keypad partitions, and a future Home Key NVS partition.
-The Home Key partition is only reserved space; credential storage and encryption
-are not implemented. `PN7160_RP2040` remains enabled only in RP2040 environments.
+The helper builds these targets by default; use `-e` to select individual ones:
 
-The provisional KNX connection is UART1, TX GPIO43 (D6), RX GPIO44 (D7), requiring
-an external KNX TP transceiver. Peripheral pins and physical wiring still need
-confirmation. The onboard programming LED uses GPIO21 (active low).
-This target preserves the existing modules; binary inputs register only when
-the board defines real input pins.
-It does not yet implement Home Key, HomeKit provisioning, or an ESP32 NFC backend.
-Scanner, keypad, touch, LED and actuator mappings are intentionally not inherited
-from the RP2040 boards. Hardware wiring and runtime behavior still need validation.
-
-Local validation on 2026-10-09 (application base `810e212`):
-
-| Build | Result |
+| Target | Configuration |
 | --- | --- |
-| Unchanged RP2040 with installed shared libraries | Failed: LogicModule 4.4 versus ETS 4.3 |
-| Unchanged RP2040 with exact `dependencies.txt` revisions | Compile and link passed; UF2 generated |
-| RP2040 after adding the ESP32 environment, same pinned revisions | Compile and link passed; RAM 67,140 bytes, flash 696,272 bytes, unchanged from baseline |
-| Initial XIAO ESP32-S3 attempt before the module port | Failed in legacy PN7160: missing Teensy `i2c_t3.h` |
-| XIAO ESP32-S3 with ported OFM-AccessControl 0.14.1 | Compile/link and factory image generation passed |
-| RP2040 with ported OFM-AccessControl 0.14.1 | Compile/link and UF2 generation passed |
-| Native scanner/GPIO checks | Passed: missing devices perform no I/O; real pins preserved |
+| `debug_RP2040` | Existing RP2040 target and PN7160 implementation |
+| `debug_ESP32S3_HomeKey` | XIAO ESP32-S3 with PN7160 I2C and existing access-control features |
+| `debug_ESP32S3_PN7160_Peripherals` | ESP32 PN7160 plus fingerprint UART, Gira/matrix keypad, touch/LED expanders, four binary inputs and one bistable relay |
 
-Tests used isolated local dependency clones in `/tmp/oam-homekey-build`, each on
-`v1dev_HomeKey`, preserving the shared repositories. The successful baseline used
-OGM-Common `f6dbb3c`, Arduino-Pico 5.4.4 and its pinned Raspberry Pi platform.
-The ESP32 attempt used PioArduino `54.03.21-2`, Arduino-ESP32 3.2.1 and GCC 14.2.
-The partition table was checked for alignment, overlaps and the 8 MB boundary.
-No hardware boot, KNX traffic, NFC or HomeKit tests have been performed.
+Despite its development name, the ESP32 HomeKey target currently uses the legacy
+PN7160 protocol and UID-based credentials. PN7161 and Apple Home Key
+provisioning/authentication belong to a later implementation stage.
 
-OFM-AccessControl 0.14.1 uses named ESP32 credential partitions and an inactive
-scanner object when no scanner UART is configured. This target defines
-`OPENKNX_ACC_DISABLE_LEGACY_NFC` and excludes PN7160 from compilation; enrollment
-on the disabled reader fails. No NFC task accesses hardware on this target yet.
-RP2040 retains its original NFC driver. The OpenKNX partition is 32 KB because
-the shared persistence code uses 16-bit slot sizes.
+The ESP32 backend uses the same PN7160 NCI engine, tag detection/removal, UID
+enrollment and lookup, ETS action mappings and KNX synchronization as RP2040.
+It adds explicit I2C bus/pin selection, 258-byte packet buffers, bounded timeouts
+and rejection of incomplete transfers. Invalid UID lengths are rejected on ESP32.
+`OPENKNX_ACC_DISABLE_LEGACY_NFC` is no longer set in these targets. The old
+RP2040 transport body and platform-specific peripheral operations are retained.
 
-To reproduce builds without switching the shared dependency checkouts, use the
-local build helper. It clones committed local source and the exact dependency
-revisions, creates `v1dev_HomeKey` in the isolated clones, and builds both targets.
-It leaves shared checkouts unchanged and never pushes. PlatformIO can download
-toolchains and external libraries. Use a new build directory for each snapshot:
+The application links the separately committed local `PN7160` checkout. Its
+OGM-Common dependency uses an isolated worktree under `.homekey-repos/OGM-Common`
+at the compatible 1.8 branch with an ESP32 I2C initialization backport; the shared
+OGM-Common development checkout remains on its original branch.
+
+### XIAO ESP32-S3 prototype wiring
+
+These assignments are a prototype configuration, not a validated carrier board.
+Confirm physical connections before flashing. KNX requires an external TP
+transceiver, and the peripheral profile requires the listed extra components.
+
+| Function | GPIO / connection |
+| --- | --- |
+| KNX UART1 | TX GPIO43 (D6), RX GPIO44 (D7) |
+| PN7160 and shared I2C | SDA GPIO5 (D4), SCL GPIO6 (D5), PN7160 address 0x28 |
+| PN7160 control | IRQ GPIO3 (D2), VEN GPIO4 (D3) |
+| Onboard programming LED | GPIO21, active low |
+| Optional fingerprint UART2 | RX GPIO1 (D0), TX GPIO2 (D1), touch GPIO7 (D8) |
+| Optional bistable relay | SET GPIO8 (D9), RESET GPIO9 (D10), active low; external driver required |
+| Direct touch/LED and binary-input expander | PCA9554 address 0x21, GPIO namespace 0x01xx |
+| External touch/LED expander | PCA9554 address 0x20, GPIO namespace 0x02xx |
+| Matrix keypad expander | PCA9554 address 0x22, GPIO namespace 0x03xx |
+| Gira keypad | BS8116 address 0x50 and PCA9633 LED driver address 0x62 |
+
+ESP32 expander touch inputs are polled instead of being registered as MCU GPIO
+interrupts. Keypad reads temporarily use 100 kHz; the shared bus otherwise uses
+400 kHz. The Gira keypad uses ESP32's bounded Wire timeout and backs off while a
+device does not ACK. RP2040 retains its existing timeout recovery and interrupts.
+The main ESP32 target safely handles an absent fingerprint sensor. Use the
+peripheral target for the prototype that connects those devices.
+
+Both ESP32 profiles use the experimental 8 MB partition table with two 3 MB OTA
+slots, a 32 KB OpenKNX partition, separate fingerprint/NFC/keypad partitions and
+reserved Home Key NVS space. Credential records retain their existing format.
+Home Key credential storage and encryption are not implemented. The OpenKNX
+partition is kept below 64 KB because the shared persistence code uses 16-bit
+slot sizes.
+
+### Validation
+
+Local compile/link checks on 2026-10-09 passed for RP2040, ESP32 PN7160 and the
+ESP32 peripheral profile. Native tests passed for initialization, bus selection,
+IRQ/VEN, I2C failures, 258-byte packets and the shared NCI engine's reset,
+4/7/10-byte UIDs, repeat suppression and tag removal. Scanner/GPIO checks verify
+safe operation when hardware is absent and preservation of real pin IDs.
+
+The unchanged RP2040 baseline was built first with the recorded dependency
+snapshot. An initial ESP32 attempt failed on the RP2040 driver's Teensy fallback;
+the dedicated ESP32 transport resolves that failure. Build libraries are now
+isolated because the old shared `/tmp/libdeps` could be replaced by other builds.
+
+No physical reader, fingerprint sensor, KNX traffic or HomeKit tests have been
+performed. On-device validation is still needed to confirm timing and wiring.
 
 ```sh
-python3 scripts/Build-HomeKey-Local.py --build-dir /tmp/oam-homekey-validation
+python3 lib/PN7160/test/esp32/run.py
+c++ -std=c++17 -DARDUINO_ARCH_ESP32 \
+  -Ilib/OFM-AccessControl/test/native/stubs -Ilib/OFM-AccessControl/src \
+  lib/OFM-AccessControl/test/native/port_test.cpp \
+  lib/OFM-AccessControl/src/Fingerprint.cpp -o /tmp/accesscontrol-parity-test
+/tmp/accesscontrol-parity-test
 ```
 
-The next implementation stage is the single-owner ESP32 NFC adapter and Home Key
-module. The platform port does not provide Apple authentication or provisioning.
-
-On this machine, the existing PlatformIO Python could not load `liblzma`. A
-temporary Python environment allowed the ESP32 toolchain to install:
+On this machine, the existing PlatformIO Python could not load `liblzma`; use a
+temporary Python environment and the isolated toolchain cache:
 
 ```sh
 python3 -m venv /tmp/oam-homekey-pio-venv
 /tmp/oam-homekey-pio-venv/bin/python -m pip install platformio
 PLATFORMIO_CORE_DIR=/tmp/oam-homekey-platformio \
   python3 scripts/Build-HomeKey-Local.py \
-  --build-dir /tmp/oam-homekey-validation \
+  --build-dir /tmp/oam-homekey-parity-validation \
   --pio /tmp/oam-homekey-pio-venv/bin/pio
 ```
