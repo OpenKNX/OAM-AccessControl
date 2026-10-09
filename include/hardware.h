@@ -1,5 +1,18 @@
 #include <HardwareConfig.h>
 
+#ifdef BOARD_XIAO_ESP32S3_HOMEKEY
+    // Compile prototype: external KNX transceiver on XIAO D6/D7.
+    // Confirm wiring before using this target on hardware.
+    #define KNX_UART_NUM 1
+    #define KNX_UART_TX_PIN 43
+    #define KNX_UART_RX_PIN 44
+
+    // Peripheral assignments are intentionally pending the ESP32 platform port.
+    // Do not inherit the RP2040 scanner, NFC, keypad or actuator pins.
+    #define OPENKNX_SWA_CHANNEL_COUNT 0
+    #define OPENKNX_BI_GPIO_COUNT 0
+#endif
+
 #ifdef BOARD_AB_SMARTHOUSE_FINGERPRINT_V13
     #define INFO_LED_PIN 11
     #define INFO_LED_PIN_ACTIVE_ON HIGH
