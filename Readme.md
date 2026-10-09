@@ -211,6 +211,13 @@ MOSI GPIO9 (D10), IRQ GPIO3 (D2), VEN GPIO4 (D3). They conflict with the optiona
 fingerprint/relay profile; the build rejects that combination. Lock feedback
 uses KO 11 (1=physically locked). Home app remote unlock is not enabled.
 
+The three XIAO environments (`debug_ESP32S3_HomeKey`,
+`debug_ESP32S3_PN7160_Peripherals`, `debug_ESP32S3_AppleHomeKey`) locally pin
+PioArduino 55.03.38-1 (Arduino 3.3.8 / ESP-IDF 5.5.4) through their shared
+HomeKey environment. The OGM-Common ESP32 platform selection and RP2040
+configuration are unchanged. HomeSpan remains pinned to 2.1.5. All three
+profiles compiled and linked successfully with this platform pin on 2026-10-09.
+
 The Arduino-only integration builds without an IDF project conversion. Exact
 local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.5 is
 pinned in the environment. The OFM-HomeKey repository lives alongside this application at
