@@ -21,10 +21,10 @@
 #define MAIN_FirmwareName "Zutrittskontrolle (Home Key)"
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 2
-#define MAIN_ApplicationVersion 1
+#define MAIN_ApplicationVersion 2
 #define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
-#define MAIN_ParameterSize 10830
+#define MAIN_ParameterSize 11358
 #define MAIN_MaxKoNumber 949
 #define MAIN_OrderNumber "OpenKnxAccessControl"
 #define BASE_ModuleVersion 25
@@ -35,7 +35,7 @@
 #define BTN_ModuleVersion 7
 #define BI_ModuleVersion 4
 #define BUZZ_ModuleVersion 3
-#define HK_ModuleVersion 1
+#define HK_ModuleVersion 2
 // Parameter with single occurrence
 
 
@@ -4226,18 +4226,335 @@
 #define HK_AllowUid                            10829      // 1 Bit, Bit 5
 #define     HK_AllowUidMask 0x20
 #define     HK_AllowUidShift 5
+#define HK_EtsAuthorization                    10829      // 1 Bit, Bit 4
+#define     HK_EtsAuthorizationMask 0x10
+#define     HK_EtsAuthorizationShift 4
+#define HK_Authorization01Enabled              10830      // 1 Bit, Bit 7
+#define     HK_Authorization01EnabledMask 0x80
+#define     HK_Authorization01EnabledShift 7
+#define HK_Authorization01Issuer               10831      // char*, 17 Byte
+#define     HK_Authorization01IssuerLength 17
+#define HK_Authorization01Endpoint             10848      // char*, 13 Byte
+#define     HK_Authorization01EndpointLength 13
+#define HK_Authorization01AccessId             10861      // uint16_t
+#define HK_Authorization02Enabled              10863      // 1 Bit, Bit 7
+#define     HK_Authorization02EnabledMask 0x80
+#define     HK_Authorization02EnabledShift 7
+#define HK_Authorization02Issuer               10864      // char*, 17 Byte
+#define     HK_Authorization02IssuerLength 17
+#define HK_Authorization02Endpoint             10881      // char*, 13 Byte
+#define     HK_Authorization02EndpointLength 13
+#define HK_Authorization02AccessId             10894      // uint16_t
+#define HK_Authorization03Enabled              10896      // 1 Bit, Bit 7
+#define     HK_Authorization03EnabledMask 0x80
+#define     HK_Authorization03EnabledShift 7
+#define HK_Authorization03Issuer               10897      // char*, 17 Byte
+#define     HK_Authorization03IssuerLength 17
+#define HK_Authorization03Endpoint             10914      // char*, 13 Byte
+#define     HK_Authorization03EndpointLength 13
+#define HK_Authorization03AccessId             10927      // uint16_t
+#define HK_Authorization04Enabled              10929      // 1 Bit, Bit 7
+#define     HK_Authorization04EnabledMask 0x80
+#define     HK_Authorization04EnabledShift 7
+#define HK_Authorization04Issuer               10930      // char*, 17 Byte
+#define     HK_Authorization04IssuerLength 17
+#define HK_Authorization04Endpoint             10947      // char*, 13 Byte
+#define     HK_Authorization04EndpointLength 13
+#define HK_Authorization04AccessId             10960      // uint16_t
+#define HK_Authorization05Enabled              10962      // 1 Bit, Bit 7
+#define     HK_Authorization05EnabledMask 0x80
+#define     HK_Authorization05EnabledShift 7
+#define HK_Authorization05Issuer               10963      // char*, 17 Byte
+#define     HK_Authorization05IssuerLength 17
+#define HK_Authorization05Endpoint             10980      // char*, 13 Byte
+#define     HK_Authorization05EndpointLength 13
+#define HK_Authorization05AccessId             10993      // uint16_t
+#define HK_Authorization06Enabled              10995      // 1 Bit, Bit 7
+#define     HK_Authorization06EnabledMask 0x80
+#define     HK_Authorization06EnabledShift 7
+#define HK_Authorization06Issuer               10996      // char*, 17 Byte
+#define     HK_Authorization06IssuerLength 17
+#define HK_Authorization06Endpoint             11013      // char*, 13 Byte
+#define     HK_Authorization06EndpointLength 13
+#define HK_Authorization06AccessId             11026      // uint16_t
+#define HK_Authorization07Enabled              11028      // 1 Bit, Bit 7
+#define     HK_Authorization07EnabledMask 0x80
+#define     HK_Authorization07EnabledShift 7
+#define HK_Authorization07Issuer               11029      // char*, 17 Byte
+#define     HK_Authorization07IssuerLength 17
+#define HK_Authorization07Endpoint             11046      // char*, 13 Byte
+#define     HK_Authorization07EndpointLength 13
+#define HK_Authorization07AccessId             11059      // uint16_t
+#define HK_Authorization08Enabled              11061      // 1 Bit, Bit 7
+#define     HK_Authorization08EnabledMask 0x80
+#define     HK_Authorization08EnabledShift 7
+#define HK_Authorization08Issuer               11062      // char*, 17 Byte
+#define     HK_Authorization08IssuerLength 17
+#define HK_Authorization08Endpoint             11079      // char*, 13 Byte
+#define     HK_Authorization08EndpointLength 13
+#define HK_Authorization08AccessId             11092      // uint16_t
+#define HK_Authorization09Enabled              11094      // 1 Bit, Bit 7
+#define     HK_Authorization09EnabledMask 0x80
+#define     HK_Authorization09EnabledShift 7
+#define HK_Authorization09Issuer               11095      // char*, 17 Byte
+#define     HK_Authorization09IssuerLength 17
+#define HK_Authorization09Endpoint             11112      // char*, 13 Byte
+#define     HK_Authorization09EndpointLength 13
+#define HK_Authorization09AccessId             11125      // uint16_t
+#define HK_Authorization10Enabled              11127      // 1 Bit, Bit 7
+#define     HK_Authorization10EnabledMask 0x80
+#define     HK_Authorization10EnabledShift 7
+#define HK_Authorization10Issuer               11128      // char*, 17 Byte
+#define     HK_Authorization10IssuerLength 17
+#define HK_Authorization10Endpoint             11145      // char*, 13 Byte
+#define     HK_Authorization10EndpointLength 13
+#define HK_Authorization10AccessId             11158      // uint16_t
+#define HK_Authorization11Enabled              11160      // 1 Bit, Bit 7
+#define     HK_Authorization11EnabledMask 0x80
+#define     HK_Authorization11EnabledShift 7
+#define HK_Authorization11Issuer               11161      // char*, 17 Byte
+#define     HK_Authorization11IssuerLength 17
+#define HK_Authorization11Endpoint             11178      // char*, 13 Byte
+#define     HK_Authorization11EndpointLength 13
+#define HK_Authorization11AccessId             11191      // uint16_t
+#define HK_Authorization12Enabled              11193      // 1 Bit, Bit 7
+#define     HK_Authorization12EnabledMask 0x80
+#define     HK_Authorization12EnabledShift 7
+#define HK_Authorization12Issuer               11194      // char*, 17 Byte
+#define     HK_Authorization12IssuerLength 17
+#define HK_Authorization12Endpoint             11211      // char*, 13 Byte
+#define     HK_Authorization12EndpointLength 13
+#define HK_Authorization12AccessId             11224      // uint16_t
+#define HK_Authorization13Enabled              11226      // 1 Bit, Bit 7
+#define     HK_Authorization13EnabledMask 0x80
+#define     HK_Authorization13EnabledShift 7
+#define HK_Authorization13Issuer               11227      // char*, 17 Byte
+#define     HK_Authorization13IssuerLength 17
+#define HK_Authorization13Endpoint             11244      // char*, 13 Byte
+#define     HK_Authorization13EndpointLength 13
+#define HK_Authorization13AccessId             11257      // uint16_t
+#define HK_Authorization14Enabled              11259      // 1 Bit, Bit 7
+#define     HK_Authorization14EnabledMask 0x80
+#define     HK_Authorization14EnabledShift 7
+#define HK_Authorization14Issuer               11260      // char*, 17 Byte
+#define     HK_Authorization14IssuerLength 17
+#define HK_Authorization14Endpoint             11277      // char*, 13 Byte
+#define     HK_Authorization14EndpointLength 13
+#define HK_Authorization14AccessId             11290      // uint16_t
+#define HK_Authorization15Enabled              11292      // 1 Bit, Bit 7
+#define     HK_Authorization15EnabledMask 0x80
+#define     HK_Authorization15EnabledShift 7
+#define HK_Authorization15Issuer               11293      // char*, 17 Byte
+#define     HK_Authorization15IssuerLength 17
+#define HK_Authorization15Endpoint             11310      // char*, 13 Byte
+#define     HK_Authorization15EndpointLength 13
+#define HK_Authorization15AccessId             11323      // uint16_t
+#define HK_Authorization16Enabled              11325      // 1 Bit, Bit 7
+#define     HK_Authorization16EnabledMask 0x80
+#define     HK_Authorization16EnabledShift 7
+#define HK_Authorization16Issuer               11326      // char*, 17 Byte
+#define     HK_Authorization16IssuerLength 17
+#define HK_Authorization16Endpoint             11343      // char*, 13 Byte
+#define     HK_Authorization16EndpointLength 13
+#define HK_Authorization16AccessId             11356      // uint16_t
 
 // Apple Home Key aktivieren
 #define ParamHK_Enabled                             ((bool)(knx.paramByte(HK_Enabled) & HK_EnabledMask))
-// Lokale NFC-Inbetriebnahme erlauben
+// NFC-Inbetriebnahme über USB/KNX erlauben
 #define ParamHK_PairingPermitted                    ((bool)(knx.paramByte(HK_PairingPermitted) & HK_PairingPermittedMask))
 // Konventionelle UID-Tags zulassen
 #define ParamHK_AllowUid                            ((bool)(knx.paramByte(HK_AllowUid) & HK_AllowUidMask))
+// Berechtigungen aus ETS-Tabelle (sonst USB)
+#define ParamHK_EtsAuthorization                    ((bool)(knx.paramByte(HK_EtsAuthorization) & HK_EtsAuthorizationMask))
+// Berechtigung 1 aktiv
+#define ParamHK_Authorization01Enabled              ((bool)(knx.paramByte(HK_Authorization01Enabled) & HK_Authorization01EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization01Issuer               (knx.paramData(HK_Authorization01Issuer))
+#define ParamHK_Authorization01IssuerStr            (knx.paramString(HK_Authorization01Issuer, HK_Authorization01IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization01Endpoint             (knx.paramData(HK_Authorization01Endpoint))
+#define ParamHK_Authorization01EndpointStr          (knx.paramString(HK_Authorization01Endpoint, HK_Authorization01EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization01AccessId             (knx.paramWord(HK_Authorization01AccessId))
+// Berechtigung 2 aktiv
+#define ParamHK_Authorization02Enabled              ((bool)(knx.paramByte(HK_Authorization02Enabled) & HK_Authorization02EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization02Issuer               (knx.paramData(HK_Authorization02Issuer))
+#define ParamHK_Authorization02IssuerStr            (knx.paramString(HK_Authorization02Issuer, HK_Authorization02IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization02Endpoint             (knx.paramData(HK_Authorization02Endpoint))
+#define ParamHK_Authorization02EndpointStr          (knx.paramString(HK_Authorization02Endpoint, HK_Authorization02EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization02AccessId             (knx.paramWord(HK_Authorization02AccessId))
+// Berechtigung 3 aktiv
+#define ParamHK_Authorization03Enabled              ((bool)(knx.paramByte(HK_Authorization03Enabled) & HK_Authorization03EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization03Issuer               (knx.paramData(HK_Authorization03Issuer))
+#define ParamHK_Authorization03IssuerStr            (knx.paramString(HK_Authorization03Issuer, HK_Authorization03IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization03Endpoint             (knx.paramData(HK_Authorization03Endpoint))
+#define ParamHK_Authorization03EndpointStr          (knx.paramString(HK_Authorization03Endpoint, HK_Authorization03EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization03AccessId             (knx.paramWord(HK_Authorization03AccessId))
+// Berechtigung 4 aktiv
+#define ParamHK_Authorization04Enabled              ((bool)(knx.paramByte(HK_Authorization04Enabled) & HK_Authorization04EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization04Issuer               (knx.paramData(HK_Authorization04Issuer))
+#define ParamHK_Authorization04IssuerStr            (knx.paramString(HK_Authorization04Issuer, HK_Authorization04IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization04Endpoint             (knx.paramData(HK_Authorization04Endpoint))
+#define ParamHK_Authorization04EndpointStr          (knx.paramString(HK_Authorization04Endpoint, HK_Authorization04EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization04AccessId             (knx.paramWord(HK_Authorization04AccessId))
+// Berechtigung 5 aktiv
+#define ParamHK_Authorization05Enabled              ((bool)(knx.paramByte(HK_Authorization05Enabled) & HK_Authorization05EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization05Issuer               (knx.paramData(HK_Authorization05Issuer))
+#define ParamHK_Authorization05IssuerStr            (knx.paramString(HK_Authorization05Issuer, HK_Authorization05IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization05Endpoint             (knx.paramData(HK_Authorization05Endpoint))
+#define ParamHK_Authorization05EndpointStr          (knx.paramString(HK_Authorization05Endpoint, HK_Authorization05EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization05AccessId             (knx.paramWord(HK_Authorization05AccessId))
+// Berechtigung 6 aktiv
+#define ParamHK_Authorization06Enabled              ((bool)(knx.paramByte(HK_Authorization06Enabled) & HK_Authorization06EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization06Issuer               (knx.paramData(HK_Authorization06Issuer))
+#define ParamHK_Authorization06IssuerStr            (knx.paramString(HK_Authorization06Issuer, HK_Authorization06IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization06Endpoint             (knx.paramData(HK_Authorization06Endpoint))
+#define ParamHK_Authorization06EndpointStr          (knx.paramString(HK_Authorization06Endpoint, HK_Authorization06EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization06AccessId             (knx.paramWord(HK_Authorization06AccessId))
+// Berechtigung 7 aktiv
+#define ParamHK_Authorization07Enabled              ((bool)(knx.paramByte(HK_Authorization07Enabled) & HK_Authorization07EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization07Issuer               (knx.paramData(HK_Authorization07Issuer))
+#define ParamHK_Authorization07IssuerStr            (knx.paramString(HK_Authorization07Issuer, HK_Authorization07IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization07Endpoint             (knx.paramData(HK_Authorization07Endpoint))
+#define ParamHK_Authorization07EndpointStr          (knx.paramString(HK_Authorization07Endpoint, HK_Authorization07EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization07AccessId             (knx.paramWord(HK_Authorization07AccessId))
+// Berechtigung 8 aktiv
+#define ParamHK_Authorization08Enabled              ((bool)(knx.paramByte(HK_Authorization08Enabled) & HK_Authorization08EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization08Issuer               (knx.paramData(HK_Authorization08Issuer))
+#define ParamHK_Authorization08IssuerStr            (knx.paramString(HK_Authorization08Issuer, HK_Authorization08IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization08Endpoint             (knx.paramData(HK_Authorization08Endpoint))
+#define ParamHK_Authorization08EndpointStr          (knx.paramString(HK_Authorization08Endpoint, HK_Authorization08EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization08AccessId             (knx.paramWord(HK_Authorization08AccessId))
+// Berechtigung 9 aktiv
+#define ParamHK_Authorization09Enabled              ((bool)(knx.paramByte(HK_Authorization09Enabled) & HK_Authorization09EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization09Issuer               (knx.paramData(HK_Authorization09Issuer))
+#define ParamHK_Authorization09IssuerStr            (knx.paramString(HK_Authorization09Issuer, HK_Authorization09IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization09Endpoint             (knx.paramData(HK_Authorization09Endpoint))
+#define ParamHK_Authorization09EndpointStr          (knx.paramString(HK_Authorization09Endpoint, HK_Authorization09EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization09AccessId             (knx.paramWord(HK_Authorization09AccessId))
+// Berechtigung 10 aktiv
+#define ParamHK_Authorization10Enabled              ((bool)(knx.paramByte(HK_Authorization10Enabled) & HK_Authorization10EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization10Issuer               (knx.paramData(HK_Authorization10Issuer))
+#define ParamHK_Authorization10IssuerStr            (knx.paramString(HK_Authorization10Issuer, HK_Authorization10IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization10Endpoint             (knx.paramData(HK_Authorization10Endpoint))
+#define ParamHK_Authorization10EndpointStr          (knx.paramString(HK_Authorization10Endpoint, HK_Authorization10EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization10AccessId             (knx.paramWord(HK_Authorization10AccessId))
+// Berechtigung 11 aktiv
+#define ParamHK_Authorization11Enabled              ((bool)(knx.paramByte(HK_Authorization11Enabled) & HK_Authorization11EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization11Issuer               (knx.paramData(HK_Authorization11Issuer))
+#define ParamHK_Authorization11IssuerStr            (knx.paramString(HK_Authorization11Issuer, HK_Authorization11IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization11Endpoint             (knx.paramData(HK_Authorization11Endpoint))
+#define ParamHK_Authorization11EndpointStr          (knx.paramString(HK_Authorization11Endpoint, HK_Authorization11EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization11AccessId             (knx.paramWord(HK_Authorization11AccessId))
+// Berechtigung 12 aktiv
+#define ParamHK_Authorization12Enabled              ((bool)(knx.paramByte(HK_Authorization12Enabled) & HK_Authorization12EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization12Issuer               (knx.paramData(HK_Authorization12Issuer))
+#define ParamHK_Authorization12IssuerStr            (knx.paramString(HK_Authorization12Issuer, HK_Authorization12IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization12Endpoint             (knx.paramData(HK_Authorization12Endpoint))
+#define ParamHK_Authorization12EndpointStr          (knx.paramString(HK_Authorization12Endpoint, HK_Authorization12EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization12AccessId             (knx.paramWord(HK_Authorization12AccessId))
+// Berechtigung 13 aktiv
+#define ParamHK_Authorization13Enabled              ((bool)(knx.paramByte(HK_Authorization13Enabled) & HK_Authorization13EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization13Issuer               (knx.paramData(HK_Authorization13Issuer))
+#define ParamHK_Authorization13IssuerStr            (knx.paramString(HK_Authorization13Issuer, HK_Authorization13IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization13Endpoint             (knx.paramData(HK_Authorization13Endpoint))
+#define ParamHK_Authorization13EndpointStr          (knx.paramString(HK_Authorization13Endpoint, HK_Authorization13EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization13AccessId             (knx.paramWord(HK_Authorization13AccessId))
+// Berechtigung 14 aktiv
+#define ParamHK_Authorization14Enabled              ((bool)(knx.paramByte(HK_Authorization14Enabled) & HK_Authorization14EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization14Issuer               (knx.paramData(HK_Authorization14Issuer))
+#define ParamHK_Authorization14IssuerStr            (knx.paramString(HK_Authorization14Issuer, HK_Authorization14IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization14Endpoint             (knx.paramData(HK_Authorization14Endpoint))
+#define ParamHK_Authorization14EndpointStr          (knx.paramString(HK_Authorization14Endpoint, HK_Authorization14EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization14AccessId             (knx.paramWord(HK_Authorization14AccessId))
+// Berechtigung 15 aktiv
+#define ParamHK_Authorization15Enabled              ((bool)(knx.paramByte(HK_Authorization15Enabled) & HK_Authorization15EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization15Issuer               (knx.paramData(HK_Authorization15Issuer))
+#define ParamHK_Authorization15IssuerStr            (knx.paramString(HK_Authorization15Issuer, HK_Authorization15IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization15Endpoint             (knx.paramData(HK_Authorization15Endpoint))
+#define ParamHK_Authorization15EndpointStr          (knx.paramString(HK_Authorization15Endpoint, HK_Authorization15EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization15AccessId             (knx.paramWord(HK_Authorization15AccessId))
+// Berechtigung 16 aktiv
+#define ParamHK_Authorization16Enabled              ((bool)(knx.paramByte(HK_Authorization16Enabled) & HK_Authorization16EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization16Issuer               (knx.paramData(HK_Authorization16Issuer))
+#define ParamHK_Authorization16IssuerStr            (knx.paramString(HK_Authorization16Issuer, HK_Authorization16IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization16Endpoint             (knx.paramData(HK_Authorization16Endpoint))
+#define ParamHK_Authorization16EndpointStr          (knx.paramString(HK_Authorization16Endpoint, HK_Authorization16EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization16AccessId             (knx.paramWord(HK_Authorization16AccessId))
 
 #define HK_KoLockFeedback 11
+#define HK_KoCommissioningControl 12
+#define HK_KoCommissioningOpen 13
+#define HK_KoAuthorizationStatus 14
+#define HK_KoEndpointIndex 60
+#define HK_KoIssuerHigh 61
+#define HK_KoIssuerLow 62
+#define HK_KoEndpointId 63
+#define HK_KoCommissioningResult 64
 
 // Physische Verriegelung
 #define KoHK_LockFeedback                        (knx.getGroupObject(HK_KoLockFeedback))
+// Inbetriebnahme: 1=5 Minuten öffnen, 0=schließen
+#define KoHK_CommissioningControl                (knx.getGroupObject(HK_KoCommissioningControl))
+// Inbetriebnahme geöffnet
+#define KoHK_CommissioningOpen                   (knx.getGroupObject(HK_KoCommissioningOpen))
+// Berechtigungstabelle: Status
+#define KoHK_AuthorizationStatus                 (knx.getGroupObject(HK_KoAuthorizationStatus))
+// Provisionierten Endpoint auswählen (0..63)
+#define KoHK_EndpointIndex                       (knx.getGroupObject(HK_KoEndpointIndex))
+// Issuer-ID: erste 8 Hex-Zeichen
+#define KoHK_IssuerHigh                          (knx.getGroupObject(HK_KoIssuerHigh))
+// Issuer-ID: letzte 8 Hex-Zeichen
+#define KoHK_IssuerLow                           (knx.getGroupObject(HK_KoIssuerLow))
+// Endpoint-ID: 12 Hex-Zeichen
+#define KoHK_EndpointId                          (knx.getGroupObject(HK_KoEndpointId))
+// Inbetriebnahme: Befehlsergebnis
+#define KoHK_CommissioningResult                 (knx.getGroupObject(HK_KoCommissioningResult))
 
 
 // enumeration types

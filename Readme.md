@@ -169,7 +169,7 @@ reuse the existing NFC action engine on the OpenKNX thread.
 ~/.platformio/penv/bin/pio run -e debug_ESP32S3_AppleHomeKey
 ```
 
-Use `src/AccessControl-HomeKey.xml` (development application A6/02, version 0.1)
+Use `src/AccessControl-HomeKey.xml` (development application A6/02, version 0.2)
 and `include/homekey/knxprod.h` together. The build script selects that header
 before all module compilations; existing application XML/header selection is
 retained for the other targets. Generate it with OpenKNXproducer 4.3.12:
@@ -183,12 +183,24 @@ On this Mac the producer generates the header and checks the expanded XML;
 ETS product signing is skipped and an XSD is not installed. Generate/sign the
 ETS import product with the appropriate producer setup on Windows.
 
-Enable Home Key and commissioning in its ETS parameters. Local commands start
-with `hk wifi <SSID> <password>` and `hk pair <8digits>` (five-minute window).
-After Apple Home provisioning, `hk list` shows endpoint IDs; use
-`hk map <issuer16hex> <endpoint12hex> <id0..1499>` to assign an empty conventional
-UID slot to the device, and configure that ID in the existing NFCACT table.
-Full commissioning, retention and revocation details are in
+Enable Home Key and commissioning in its ETS parameters. Configure Wi-Fi and
+set a private HomeKit code once locally using `hk wifi <SSID> <password>` and
+`hk code <8digits>`. In ETS Group Monitor, write 1 to KO 12 to open a five-minute
+pairing window (0 closes it); KO 13 reports the actual state and KO 64 the command
+result. Pair the accessory in Apple Home using the locally configured code.
+
+Select endpoint indexes with KO 60; KOs 61/62 return the two halves of the public
+issuer ID and KO 63 the endpoint ID. Enable the ETS authorization table and fill
+up to 16 rows with the full issuer ID, endpoint ID and an empty NFC action ID
+0..1499. Configure those IDs in the existing NFCACT table, then download. KO 14
+reports table validity, pending endpoints and UID collisions. Local `hk map` /
+`hk unmap` is available when ETS authorization is off. An invalid/empty ETS
+policy cannot use a saved local mapping as fallback.
+
+The Home Key application/header is now version 0.2; regenerate and use the
+matching ETS product for this firmware. All existing RP2040/legacy applications
+retain their versions, parameters and object numbers. Full object/status tables,
+commissioning, retention and revocation details are in
 [OFM-HomeKey/Readme.md](lib/OFM-HomeKey/Readme.md).
 
 PN7161 SPI prototype pins: CS GPIO1 (D0), SCLK GPIO7 (D8), MISO GPIO8 (D9),
@@ -214,6 +226,6 @@ hardening remain for the next hardware/security stage.
 Validation on 2026-10-09: all four environments compiled and linked; the new
 ETS header passed producer consistency checks; native Home Key persistence,
 revocation and policy tests and the existing PN7160/scanner/GPIO tests passed.
-Home Key firmware occupies about 2.75 MB of its 3 MB OTA slot (87.3%); static
+Home Key firmware occupies about 2.75 MB of its 3 MB OTA slot (87.5%); static
 RAM is about 72 KB (22.1%). The SDK size-report helper emits a nonfatal `--ng`
 option warning; PlatformIO's firmware size check and image generation succeed.
