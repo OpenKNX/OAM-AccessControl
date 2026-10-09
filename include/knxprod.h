@@ -26,7 +26,7 @@
 #define MAIN_ParameterSize 20922
 #define MAIN_MaxKoNumber 1239
 #define MAIN_OrderNumber "OpenKnxAccessControl"
-#define BASE_ModuleVersion 24
+#define BASE_ModuleVersion 25
 #define UCT_ModuleVersion 5
 #define ACC_ModuleVersion 14
 #define SWA_ModuleVersion 1
@@ -4059,19 +4059,6 @@
 #define KoBUZZ_VibrationState                      (knx.getGroupObject(BUZZ_KoVibrationState))
 // Vibration: Sperren
 #define KoBUZZ_VibrationLock                       (knx.getGroupObject(BUZZ_KoVibrationLock))
-
-
-
-// Header generation for Module 'BASE_KommentarModule'
-
-#define BASE_KommentarModuleCount 0
-#define BASE_KommentarModuleModuleParamSize 0
-#define BASE_KommentarModuleSubmodulesParamSize 0
-#define BASE_KommentarModuleParamSize 0
-#define BASE_KommentarModuleParamOffset 20922
-#define BASE_KommentarModuleCalcIndex(index, m1) (index + BASE_KommentarModuleParamOffset + _channelIndex * BASE_KommentarModuleCount * BASE_KommentarModuleParamSize + m1 * BASE_KommentarModuleParamSize)
-
-
 
 
 // enumeration types

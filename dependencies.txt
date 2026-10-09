@@ -8,6 +8,6 @@ eca6977 v1 lib/OFM-ConfigTransfer https://github.com/OpenKNX/OFM-ConfigTransfer
 8c0d835 v1 lib/OFM-LogicModule https://github.com/OpenKNX/OFM-LogicModule
 7d4ec51 main lib/OFM-SwitchActuator https://github.com/OpenKNX/OFM-SwitchActuator
 9ea99b5 v1 lib/OFM-VirtualButton https://github.com/OpenKNX/OFM-VirtualButton.git
-897898c v1dev_HomeKey lib/OGM-Common https://github.com/OpenKNX/OGM-Common
+f099eb9 v1dev lib/OGM-Common https://github.com/OpenKNX/OGM-Common
 a9e034d v1 lib/OGM-HardwareConfig https://github.com/OpenKNX/OGM-HardwareConfig
 0c3dfe5 v1dev_HomeKey lib/PN7160 https://github.com/Strooom/PN7160.git

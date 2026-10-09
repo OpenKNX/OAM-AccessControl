@@ -65,8 +65,11 @@ RP2040 transport body and platform-specific peripheral operations are retained.
 
 The application links the separately committed local `PN7160` checkout. Its
 OGM-Common dependency uses an isolated worktree under `.homekey-repos/OGM-Common`
-at the compatible 1.8 branch with an ESP32 I2C initialization backport; the shared
-OGM-Common development checkout remains on its original branch.
+at the unmodified upstream `v1dev` revision `f099eb9` (1.9.1), which already
+includes ESP32 I2C initialization. The shared OGM-Common development checkout
+remains on its original branch. The ETS configuration uses Common 1.9 and
+requires OpenKNXproducer 4.3.12 or newer. The checked-in R503 header was
+regenerated from `src/AccessControl-ReleaseR503.xml`.
 
 ### XIAO ESP32-S3 prototype wiring
 
