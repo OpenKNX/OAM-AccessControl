@@ -21,10 +21,10 @@
 #define MAIN_FirmwareName "Zutrittskontrolle (Home Key)"
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 2
-#define MAIN_ApplicationVersion 2
+#define MAIN_ApplicationVersion 3
 #define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
-#define MAIN_ParameterSize 11358
+#define MAIN_ParameterSize 11558
 #define MAIN_MaxKoNumber 949
 #define MAIN_OrderNumber "OpenKnxAccessControl"
 #define BASE_ModuleVersion 25
@@ -35,7 +35,7 @@
 #define BTN_ModuleVersion 7
 #define BI_ModuleVersion 4
 #define BUZZ_ModuleVersion 3
-#define HK_ModuleVersion 2
+#define HK_ModuleVersion 3
 // Parameter with single occurrence
 
 
@@ -4357,6 +4357,8 @@
 #define HK_Authorization16Endpoint             11343      // char*, 13 Byte
 #define     HK_Authorization16EndpointLength 13
 #define HK_Authorization16AccessId             11356      // uint16_t
+#define HK_OnlineStatus                        11358      // char*, 200 Byte
+#define     HK_OnlineStatusLength 200
 
 // Apple Home Key aktivieren
 #define ParamHK_Enabled                             ((bool)(knx.paramByte(HK_Enabled) & HK_EnabledMask))
@@ -4526,6 +4528,9 @@
 #define ParamHK_Authorization16EndpointStr          (knx.paramString(HK_Authorization16Endpoint, HK_Authorization16EndpointLength))
 // Logische NFC-Aktions-ID
 #define ParamHK_Authorization16AccessId             (knx.paramWord(HK_Authorization16AccessId))
+// Letzte Online-Abfrage
+#define ParamHK_OnlineStatus                        (knx.paramData(HK_OnlineStatus))
+#define ParamHK_OnlineStatusStr                     (knx.paramString(HK_OnlineStatus, HK_OnlineStatusLength))
 
 #define HK_KoLockFeedback 11
 #define HK_KoCommissioningControl 12

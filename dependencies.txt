@@ -1,4 +1,4 @@
-﻿------- Built with -------
+------- Built with -------
 8e4c5bc v1dev lib/knx https://github.com/OpenKNX/knx
 718777d v1dev_HomeKey lib/OFM-AccessControl https://github.com/OpenKNX/OFM-AccessControl
 5048828 HEAD lib/OFM-BinaryInput https://github.com/OpenKNX/OFM-BinaryInput.git
@@ -13,4 +13,4 @@ f099eb9 v1dev_HomeKey lib/OGM-Common https://github.com/OpenKNX/OGM-Common
 0c3dfe5 v1dev_HomeKey lib/PN7160 https://github.com/Strooom/PN7160.git
 67a2631 v1dev_HomeKey lib/DigitalDoorKey https://github.com/rednblkx/DigitalDoorKey
 4543486 v1dev_HomeKey lib/PN7161 https://github.com/rednblkx/pn7160
-4c1cdc5 v1dev_HomeKey lib/OFM-HomeKey local
+2fb49e5 v1dev_HomeKey lib/OFM-HomeKey local

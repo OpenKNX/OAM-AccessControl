@@ -169,7 +169,7 @@ reuse the existing NFC action engine on the OpenKNX thread.
 ~/.platformio/penv/bin/pio run -e debug_ESP32S3_AppleHomeKey
 ```
 
-Use `src/AccessControl-HomeKey.xml` (development application A6/02, version 0.2)
+Use `src/AccessControl-HomeKey.xml` (development application A6/02, version 0.3)
 and `include/homekey/knxprod.h` together. The build script selects that header
 before all module compilations; existing application XML/header selection is
 retained for the other targets. Generate it with OpenKNXproducer 4.3.12:
@@ -185,19 +185,22 @@ ETS import product with the appropriate producer setup on Windows.
 
 Enable Home Key and commissioning in its ETS parameters. Configure Wi-Fi and
 set a private HomeKit code once locally using `hk wifi <SSID> <password>` and
-`hk code <8digits>`. In ETS Group Monitor, write 1 to KO 12 to open a five-minute
-pairing window (0 closes it); KO 13 reports the actual state and KO 64 the command
-result. Pair the accessory in Apple Home using the locally configured code.
+`hk code <8digits>`. Use the ETS parameter-page buttons to open/close the
+five-minute pairing window and refresh its status. The buttons use the device's
+individual address through the ETS KNX interface. Pair in Apple Home with the
+locally configured code; KO 12/13/64 remain available for Group Monitor control.
 
-Select endpoint indexes with KO 60; KOs 61/62 return the two halves of the public
-issuer ID and KO 63 the endpoint ID. Enable the ETS authorization table and fill
-up to 16 rows with the full issuer ID, endpoint ID and an empty NFC action ID
-0..1499. Configure those IDs in the existing NFCACT table, then download. KO 14
-reports table validity, pending endpoints and UID collisions. Local `hk map` /
+Enable the ETS authorization table, then press `Provisionierte Geräte-IDs
+importieren`. The script adds full public issuer/endpoint IDs to completely
+empty rows, preserves existing rows and rights, and leaves new rows disabled.
+Assign unused NFC action IDs 0..1499, configure the corresponding NFCACT actions,
+enable the rows and download. Importing IDs alone grants no access. The script
+checks snapshot consistency and available capacity before writing. KO 14 reports
+table validity, pending endpoints and UID collisions. Local `hk map` /
 `hk unmap` is available when ETS authorization is off. An invalid/empty ETS
 policy cannot use a saved local mapping as fallback.
 
-The Home Key application/header is now version 0.2; regenerate and use the
+The Home Key application/header is now version 0.3; regenerate and use the
 matching ETS product for this firmware. All existing RP2040/legacy applications
 retain their versions, parameters and object numbers. Full object/status tables,
 commissioning, retention and revocation details are in
@@ -225,7 +228,9 @@ hardening remain for the next hardware/security stage.
 
 Validation on 2026-10-09: all four environments compiled and linked; the new
 ETS header passed producer consistency checks; native Home Key persistence,
-revocation and policy tests and the existing PN7160/scanner/GPIO tests passed.
+revocation, policy and online protocol tests passed. ETS JavaScript tests cover
+safe imports, commissioning and the actual Common wrapper with small APDUs.
+Live ETS buttons and physical KNX/Home Key operation still require validation.
 Home Key firmware occupies about 2.75 MB of its 3 MB OTA slot (87.5%); static
 RAM is about 72 KB (22.1%). The SDK size-report helper emits a nonfatal `--ng`
 option warning; PlatformIO's firmware size check and image generation succeed.

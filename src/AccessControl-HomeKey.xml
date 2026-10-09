@@ -10,7 +10,7 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x02"
-    ApplicationVersion="0.2.0"
+    ApplicationVersion="0.3.0"
     ReplacesVersionsDownTo="0.1"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
@@ -141,7 +141,7 @@
 
   <op:define prefix="HK" ModuleType="7"
     share="../lib/OFM-HomeKey/src/HomeKey.share.xml" KoSingleOffset="11">
-    <op:verify File="../lib/OFM-HomeKey/library.json" ModuleVersion="0.2" />
+    <op:verify File="../lib/OFM-HomeKey/library.json" ModuleVersion="0.3" />
   </op:define>
 
   <generate>
