@@ -198,8 +198,9 @@ uses KO 11 (1=physically locked). Home app remote unlock is not enabled.
 
 The Arduino-only integration builds without an IDF project conversion. Exact
 local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.5 is
-pinned in the environment. The new OFM repository and wrappers live under
-`.homekey-repos`, linked from `lib`. Do not replace those links with upstream
+pinned in the environment. The OFM-HomeKey repository lives alongside this application at
+`../OFM-HomeKey`; its build wrappers remain under `.homekey-repos`.
+All three repositories are linked from `lib`. Do not replace those links with upstream
 clones: the committed local wrappers are required. The isolated build helper
 copies all recorded local dependencies and now builds all four targets.
 Generated package caches use a project-specific `/tmp` directory because files
