@@ -1,6 +1,6 @@
 ﻿------- Built with -------
 7124a64 v1 lib/knx https://github.com/OpenKNX/knx
-cb0220f main lib/OFM-AccessControl https://github.com/OpenKNX/OFM-AccessControl
+e864e08 v1dev_HomeKey lib/OFM-AccessControl https://github.com/OpenKNX/OFM-AccessControl
 19e648c v1 lib/OFM-BinaryInput https://github.com/OpenKNX/OFM-BinaryInput.git
 eca6977 v1 lib/OFM-ConfigTransfer https://github.com/OpenKNX/OFM-ConfigTransfer
 3fa76cd v1 lib/OFM-Feedback https://github.com/OpenKNX/OFM-Feedback.git

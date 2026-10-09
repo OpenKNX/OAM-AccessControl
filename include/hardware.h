@@ -6,8 +6,13 @@
     #define KNX_UART_NUM 1
     #define KNX_UART_TX_PIN 43
     #define KNX_UART_RX_PIN 44
+    #define PROG_LED_PIN 21
+    #define PROG_LED_PIN_ACTIVE_ON LOW
+    #define OPENKNX_SWA_SET_ACTIVE_ON LOW
+    #define OPENKNX_SWA_RESET_ACTIVE_ON LOW
+    #define OPENKNX_SWA_BISTABLE_IMPULSE_LENGTH 50
 
-    // Peripheral assignments are intentionally pending the ESP32 platform port.
+    // Optional peripherals remain absent until prototype wiring is selected.
     // Do not inherit the RP2040 scanner, NFC, keypad or actuator pins.
     #define OPENKNX_SWA_CHANNEL_COUNT 0
     #define OPENKNX_BI_GPIO_COUNT 0

@@ -48,11 +48,12 @@ are not implemented. `PN7160_RP2040` remains enabled only in RP2040 environments
 
 The provisional KNX connection is UART1, TX GPIO43 (D6), RX GPIO44 (D7), requiring
 an external KNX TP transceiver. Peripheral pins and physical wiring still need
-confirmation. This target retains the application's existing module registrations;
-it does not yet implement Home Key, HomeKit provisioning, or an ESP32 NFC backend.
+confirmation. The onboard programming LED uses GPIO21 (active low).
+This target preserves the existing modules; binary inputs register only when
+the board defines real input pins.
+It does not yet implement Home Key, HomeKit provisioning, or an ESP32 NFC backend.
 Scanner, keypad, touch, LED and actuator mappings are intentionally not inherited
-from the RP2040 boards. Do not upload this experimental target before completing
-the platform port and validating its wiring.
+from the RP2040 boards. Hardware wiring and runtime behavior still need validation.
 
 Local validation on 2026-10-09 (application base `810e212`):
 
@@ -61,7 +62,10 @@ Local validation on 2026-10-09 (application base `810e212`):
 | Unchanged RP2040 with installed shared libraries | Failed: LogicModule 4.4 versus ETS 4.3 |
 | Unchanged RP2040 with exact `dependencies.txt` revisions | Compile and link passed; UF2 generated |
 | RP2040 after adding the ESP32 environment, same pinned revisions | Compile and link passed; RAM 67,140 bytes, flash 696,272 bytes, unchanged from baseline |
-| XIAO ESP32-S3 with exact `dependencies.txt` revisions | Failed in legacy PN7160: missing Teensy `i2c_t3.h` |
+| Initial XIAO ESP32-S3 attempt before the module port | Failed in legacy PN7160: missing Teensy `i2c_t3.h` |
+| XIAO ESP32-S3 with ported OFM-AccessControl 0.14.1 | Compile/link and factory image generation passed |
+| RP2040 with ported OFM-AccessControl 0.14.1 | Compile/link and UF2 generation passed |
+| Native scanner/GPIO checks | Passed: missing devices perform no I/O; real pins preserved |
 
 Tests used isolated local dependency clones in `/tmp/oam-homekey-build`, each on
 `v1dev_HomeKey`, preserving the shared repositories. The successful baseline used
@@ -70,10 +74,25 @@ The ESP32 attempt used PioArduino `54.03.21-2`, Arduino-ESP32 3.2.1 and GCC 14.2
 The partition table was checked for alignment, overlaps and the 8 MB boundary.
 No hardware boot, KNX traffic, NFC or HomeKit tests have been performed.
 
-The next port must disable/replace the RP2040 PN7160 path without introducing a
-second reader owner, adapt AccessControl's flash initialization to ESP32 named
-partitions, and handle absent fingerprint/peripheral devices safely. These are
-source changes in OFM-AccessControl, separate from adding a build environment.
+OFM-AccessControl 0.14.1 uses named ESP32 credential partitions and an inactive
+scanner object when no scanner UART is configured. This target defines
+`OPENKNX_ACC_DISABLE_LEGACY_NFC` and excludes PN7160 from compilation; enrollment
+on the disabled reader fails. No NFC task accesses hardware on this target yet.
+RP2040 retains its original NFC driver. The OpenKNX partition is 32 KB because
+the shared persistence code uses 16-bit slot sizes.
+
+To reproduce builds without switching the shared dependency checkouts, use the
+local build helper. It clones committed local source and the exact dependency
+revisions, creates `v1dev_HomeKey` in the isolated clones, and builds both targets.
+It leaves shared checkouts unchanged and never pushes. PlatformIO can download
+toolchains and external libraries. Use a new build directory for each snapshot:
+
+```sh
+python3 scripts/Build-HomeKey-Local.py --build-dir /tmp/oam-homekey-validation
+```
+
+The next implementation stage is the single-owner ESP32 NFC adapter and Home Key
+module. The platform port does not provide Apple authentication or provisioning.
 
 On this machine, the existing PlatformIO Python could not load `liblzma`. A
 temporary Python environment allowed the ESP32 toolchain to install:
@@ -82,6 +101,7 @@ temporary Python environment allowed the ESP32 toolchain to install:
 python3 -m venv /tmp/oam-homekey-pio-venv
 /tmp/oam-homekey-pio-venv/bin/python -m pip install platformio
 PLATFORMIO_CORE_DIR=/tmp/oam-homekey-platformio \
-  /tmp/oam-homekey-pio-venv/bin/pio run \
-  -d /tmp/oam-homekey-build -e debug_ESP32S3_HomeKey
+  python3 scripts/Build-HomeKey-Local.py \
+  --build-dir /tmp/oam-homekey-validation \
+  --pio /tmp/oam-homekey-pio-venv/bin/pio
 ```
