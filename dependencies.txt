@@ -13,4 +13,4 @@ f099eb9 v1dev_HomeKey lib/OGM-Common https://github.com/OpenKNX/OGM-Common
 0c3dfe5 v1dev_HomeKey lib/PN7160 https://github.com/Strooom/PN7160.git
 67a2631 v1dev_HomeKey lib/DigitalDoorKey https://github.com/rednblkx/DigitalDoorKey
 4543486 v1dev_HomeKey lib/PN7161 https://github.com/rednblkx/pn7160
-2fb49e5 v1dev_HomeKey lib/OFM-HomeKey local
+0740a1c v1dev_HomeKey lib/OFM-HomeKey local

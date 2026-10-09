@@ -215,11 +215,11 @@ The three XIAO environments (`debug_ESP32S3_HomeKey`,
 `debug_ESP32S3_PN7160_Peripherals`, `debug_ESP32S3_AppleHomeKey`) locally pin
 PioArduino 55.03.38-1 (Arduino 3.3.8 / ESP-IDF 5.5.4) through their shared
 HomeKey environment. The OGM-Common ESP32 platform selection and RP2040
-configuration are unchanged. HomeSpan remains pinned to 2.1.5. All three
+configuration are unchanged. HomeSpan is pinned to 2.1.8. All three
 profiles compiled and linked successfully with this platform pin on 2026-10-09.
 
 The Arduino-only integration builds without an IDF project conversion. Exact
-local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.5 is
+local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.8 is
 pinned in the environment. The OFM-HomeKey repository lives alongside this application at
 `../OFM-HomeKey`; its build wrappers remain under `.homekey-repos`.
 All three repositories are linked from `lib`. Do not replace those links with upstream
@@ -238,6 +238,10 @@ ETS header passed producer consistency checks; native Home Key persistence,
 revocation, policy and online protocol tests passed. ETS JavaScript tests cover
 safe imports, commissioning and the actual Common wrapper with small APDUs.
 Live ETS buttons and physical KNX/Home Key operation still require validation.
-Home Key firmware occupies about 2.75 MB of its 3 MB OTA slot (87.5%); static
-RAM is about 72 KB (22.1%). The SDK size-report helper emits a nonfatal `--ng`
+Home Key firmware occupies about 2.79 MB of its 3 MB OTA slot (88.8%); static
+RAM is about 74 KB (22.6%). The SDK size-report helper emits a nonfatal `--ng`
 option warning; PlatformIO's firmware size check and image generation succeed.
+
+The Apple Home Key target also compiled and linked with HomeSpan 2.1.8 and
+PioArduino 55.03.38-1 on 2026-10-09; no integration code changes were needed.
+Pairing/provisioning on physical hardware remains unverified.
