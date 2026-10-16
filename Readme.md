@@ -19,6 +19,10 @@ Weitere Fingerabdruckleser können bei Bedarf angebunden werden.
 
 Aktuell werden NFC-Leser basierend auf dem NXP PN7160 unterstützt.
 
+## Wiegand-Leser
+
+Mit der Hardware "RP2040 SmartMF-Wiegand-Reader" werden RFID/NFC-Karten und Tastaturen über die Wiegand-Schnittstelle gelesen (Karten: 26/34 Bit, Tasten: 4/8 Bit). In der ETS-Applikation wird dafür bei "NFC Scanner" bzw. "Keypad" eine beliebige Option ungleich "Kein ..." gewählt. Der Fingerabdruckleser R503 wird wie gewohnt angeschlossen.
+
 ## Kompatible Hardware
 
 Die kompakte Steuerplatine kann optional vollständig in ein Standard-Schalterprogramm integriert werden. Hier als Beispiel mit Gira-Schalterprogramm in matt schwarz und Edelstahlrahmen:

@@ -21,7 +21,7 @@
   <op:config name="%BUZZ_BuzzerVisible%" value="1" />
   <op:config name="%BUZZ_VibrationVisible%" value="0" />
   
-  <op:config name="%ACC_ApplicationVersion%" value="0.15.0" />
+  <op:config name="%ACC_ApplicationVersion%" value="1.0.0" />
   <op:config name="%ACC_ApplicationVersion_Dev%" value="10.14.0" />
 
 

@@ -36,6 +36,10 @@ if (!$?) { exit 1 }
 lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_UP1 firmware-UP1-SEN-8x uf2
 if (!$?) { exit 1 }
 
+# build firmware for Smart-MF Wiegand Reader
+lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_SMARTMF_WIEGAND_READER firmware-SmartMF-Wiegand-Reader uf2 "RP2040 SmartMF-Wiegand-Reader"
+if (!$?) { exit 1 }
+
 # execute generic post-build steps
 ../OGM-Common/scripts/setup/reusable/Build-Release-Postprocess.ps1 $args[0]
 if (!$?) { exit 1 }

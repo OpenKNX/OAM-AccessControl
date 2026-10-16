@@ -89,3 +89,35 @@
 
     #define OPENKNX_BUZZER_PIN OKNXHW_SENSOR_D2_SDA_PIN
 #endif
+
+#ifdef DEVICE_SMARTMF_WIEGAND_READER
+    // base pins and Wiegand_* / FP_* pins are defined in OGM-HardwareConfig
+    #define SCANNER_SERIAL Serial2
+    #define SCANNER_SERIAL_RX_PIN FP_UART_RX
+    #define SCANNER_SERIAL_TX_PIN FP_UART_TX
+    #define SCANNER_TOUCH_PIN FP_Wake
+
+    // NFC/RFID and keypad are read via wiegand, there is no touch PCB
+    #define DIRECT_TOUCH_LEFT_PIN -1
+    #define DIRECT_TOUCH_RIGHT_PIN -1
+    #define DIRECT_LED_GREEN_PIN -1
+    #define DIRECT_LED_RED_PIN -1
+
+    #define EXTERN_TOUCH_LEFT_PIN -1
+    #define EXTERN_TOUCH_RIGHT_PIN -1
+    #define EXTERN_LED_GREEN_PIN -1
+    #define EXTERN_LED_RED_PIN -1
+
+    #define NFC_IRQ_PIN -1
+    #define NFC_VEN_PIN -1
+    #define NFC_PN7160_ADDR 0
+
+    #define WIEGAND_OUTPUT_ACTIVE_ON HIGH
+
+    #define OPENKNX_SWA_CHANNEL_COUNT 0
+    #define OPENKNX_SWA_SET_ACTIVE_ON LOW
+    #define OPENKNX_SWA_RESET_ACTIVE_ON LOW
+    #define OPENKNX_SWA_BISTABLE_IMPULSE_LENGTH 50
+
+    #define OPENKNX_BUZZER_PIN Wiegand_Buzzer
+#endif
