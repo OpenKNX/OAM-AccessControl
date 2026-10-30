@@ -80,6 +80,92 @@ remains on its original branch. The ETS configuration uses Common 1.9 and
 requires OpenKNXproducer 4.3.12 or newer. The checked-in R503 header was
 regenerated from `src/AccessControl-ReleaseR503.xml`.
 
+### REG1-ipTpControllerESP-Devboard v00.11 with PN7161
+
+Choose a target with `pio run -e <environment>`:
+
+| Environment | KNX transport |
+| --- | --- |
+| `debug_REG1_ESP_PN7161_TP` | TP, mask 0x07B0 |
+| `debug_REG1_ESP_PN7161_IP` | KNX IP over Wi-Fi, mask 0x57B0 |
+| `debug_REG1_ESP_PN7161_TPIP` | KNX exclusively over TP, mask 0x07B0; Wi-Fi/IP for Apple Home Key |
+
+`debug_REG1_ESP_PN7161` remains an alias for the TP environment.
+TPIP inherits the TP configuration. HomeSpan manages its Wi-Fi connection for
+HomeKit/Home Key; KNXnet/IP tunneling and routing are disabled. Wi-Fi connection
+changes do not restart the KNX TP stack. Since all REG1 targets enable Home Key,
+the TP and TPIP environments currently have the same transport configuration.
+IP firmware requires a matching
+ETS application for mask 0x57B0; the existing TP ETS application cannot be used
+unchanged for that target.
+
+Apple Home Key is compiled into all three REG1 environments (and the TP alias).
+They select `include/homekey/knxprod.h` and exclusively use OFM-HomeKey's
+PN7161 I2C backend for ECP, provisioning, authentication and optional UID tags.
+Use the Home Key ETS application and commissioning steps below; Home Key must
+still be enabled and its endpoints explicitly authorized in ETS.
+
+The Wi-Fi targets connect as a station using credentials stored in NVS.
+For initial setup, enter `wifi <SSID> <password>` in the local serial console
+(`hk wifi <SSID> <password>` also works). This is available immediately, before
+ETS configuration or Home Key enablement, and saves the network for KNX IP
+startup and HomeSpan. After Home Key starts, network changes run on its worker.
+Diagnostic KNX commands cannot change Wi-Fi credentials. The command is listed
+in console help. An open network can be selected with `wifi <SSID>`.
+
+Alternatively, provide quoted string build flags `OPENKNX_WIFI_SSID` and
+`OPENKNX_WIFI_PASSWORD` in a local environment override, for example:
+
+```ini
+[env:local_REG1_IP]
+extends = env:debug_REG1_ESP_PN7161_IP
+build_flags =
+  ${env:debug_REG1_ESP_PN7161_IP.build_flags}
+  -D OPENKNX_WIFI_SSID=\"your-network\"
+  -D OPENKNX_WIFI_PASSWORD=\"your-password\"
+```
+
+Keep credentials out of version control. Wi-Fi connection proceeds without
+blocking KNX TP startup. HomeSpan uses the same network for Home Key.
+On the TP and TPIP environments, Home Key also needs Wi-Fi for HomeKit
+provisioning; use the same console command or a local build override.
+
+These environments use the
+REG1 v00.11 hardware definition (KNX UART1 TX GPIO5, RX GPIO37), the RGB
+front panel, and a 4 MB flash layout with a 3 MB application, credential storage
+and a separate 128 KB `homekey` NVS partition. Flash the factory image to install
+the new partition table. Data from the earlier REG1 partition layout is not
+migrated; these 4 MB targets have one application slot.
+Fingerprint, keypad, relay and binary-input wiring is not configured.
+
+| PN7161 signal | Connection |
+| --- | --- |
+| DWL | GPIO19 (held low for normal NCI operation) |
+| SDA | GPIO21 |
+| SCL | GPIO22 |
+| IRQ | GPIO14 |
+| VEN | GPIO13 |
+| VDD | 3.3 V |
+| GND | GND |
+| VANT | 3.3 V |
+
+The I2C address is 0x28 and the bus runs at 400 kHz. GPIO19/21/22 are shared
+with Ethernet RMII, so Ethernet must remain disconnected and disabled with
+this wiring. The Home Key reader applies the fixed 3.3 V PMU/TXLDO preset for
+VANT=3.3 V, following the [module vendor's supply configuration](https://www.elechouse.com/docs/pn7161/).
+Reader operation and phone/watch provisioning require hardware validation.
+
+Native I2C transport checks (header/payload framing, transfer failures, standby
+NACK retry, IRQ timeout/tick wrap and reset):
+
+```sh
+c++ -std=c++17 -DOPENKNX_HOMEKEY_ENABLED -DARDUINO_ARCH_ESP32 \
+  -Itest/homekey_i2c/stubs -Ilib/OFM-HomeKey/src -Ilib/PN7161/include \
+  test/homekey_i2c/transport_test.cpp lib/OFM-HomeKey/src/Pn7161I2cTransport.cpp \
+  -o /tmp/oam-homekey-i2c-test
+/tmp/oam-homekey-i2c-test
+```
+
 ### XIAO ESP32-S3 prototype wiring
 
 These assignments are a prototype configuration, not a validated carrier board.
@@ -157,11 +243,12 @@ python3 scripts/Build-HomeKey-Local.py \
 
 ## Apple Home Key implementation (ESP32 prototype)
 
-`debug_ESP32S3_AppleHomeKey` adds the separately versioned OFM-HomeKey module,
-HomeSpan NFC Access provisioning, DigitalDoorKey authentication, PN7161 SPI,
-and persistent explicit issuer/endpoint-to-NFC-ID mappings. The existing RP2040
-and ESP32 PN7160 I2C environments retain their reader paths. The new target
-excludes the legacy reader so only one module owns NFC. HomeKit pairing and UID
+`debug_ESP32S3_AppleHomeKey` and the REG1 environments enable the separately
+versioned OFM-HomeKey module, HomeSpan NFC Access provisioning, DigitalDoorKey
+authentication, and persistent explicit issuer/endpoint-to-NFC-ID mappings.
+REG1 uses PN7161 I2C; XIAO uses SPI. The existing RP2040 and XIAO ESP32 PN7160
+I2C environments retain their reader paths. The Home Key targets exclude the
+legacy reader so only one module owns NFC. HomeKit pairing and UID
 identification do not authorize a Home Key endpoint; authenticated mapped IDs
 reuse the existing NFC action engine on the OpenKNX thread.
 
@@ -183,9 +270,10 @@ On this Mac the producer generates the header and checks the expanded XML;
 ETS product signing is skipped and an XSD is not installed. Generate/sign the
 ETS import product with the appropriate producer setup on Windows.
 
-Enable Home Key and commissioning in its ETS parameters. Configure Wi-Fi and
-set a private HomeKit code once locally using `hk wifi <SSID> <password>` and
-`hk code <8digits>`. Use the ETS parameter-page buttons to open/close the
+Configure Wi-Fi from the local serial console with `wifi <SSID> <password>`
+before ETS setup if needed. Enable Home Key and commissioning in its ETS
+parameters, then set a private HomeKit code locally using `hk code <8digits>`.
+Use the ETS parameter-page buttons to open/close the
 five-minute pairing window and refresh its status. The buttons use the device's
 individual address through the ETS KNX interface. Pair in Apple Home with the
 locally configured code; KO 12/13/64 remain available for Group Monitor control.
@@ -222,6 +310,39 @@ The Arduino-only integration builds without an IDF project conversion. Exact
 local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.8 is
 pinned in the environment. The OFM-HomeKey repository lives alongside this application at
 `../OFM-HomeKey`; its build wrappers remain under `.homekey-repos`.
+
+Home Key upstream dependencies were checked on 2026-10-30:
+
+| Dependency | Selected upstream revision | Status |
+| --- | --- | --- |
+| HomeSpan | [2.1.8 / 107ffc0](https://github.com/HomeSpan/HomeSpan/releases/tag/2.1.8) | Latest stable release; existing pin retained |
+| DigitalDoorKey | [80e4a1e](https://github.com/rednblkx/DigitalDoorKey/commit/80e4a1e14eab3646b62ab3bdad6d2ed01d399375) | Updated Arduino wrapper; crypto shim moved to public includes |
+| PN7161 driver (`rednblkx/pn7160`) | [db5cb56](https://github.com/rednblkx/pn7160/commit/db5cb56b2ccfbaa4c30879043a3597bd6c7d53c8) | Current upstream; existing wrapper retained |
+
+The updated DigitalDoorKey wrapper lives in
+`.homekey-repos/updates-20261030/DigitalDoorKey` and is linked through
+`lib/DigitalDoorKey`. Its exact local revision is pinned in `dependencies.txt`.
+The local OFM-HomeKey implementation retains its PN7161 I2C, Wi-Fi console and
+commissioning changes. Other OpenKNX dependencies were not updated.
+
+The Home Key implementation and its ESP32 integration changed these repositories:
+
+| Repository | Changes |
+| --- | --- |
+| OAM-AccessControl | Build environments, board wiring, flash partitions, ETS integration, startup and regression checks |
+| OFM-HomeKey | HomeKit provisioning, authentication, authorization mappings, ETS commissioning, PN7161 I2C transport and Wi-Fi console/help |
+| OFM-AccessControl | ESP32 credential storage/peripherals and guarded Home Key/externally owned NFC adapter |
+| DigitalDoorKey | Arduino/PlatformIO wrapper and SDK crypto/header integration |
+| PN7161 (`rednblkx/pn7160`) | Distinct Arduino/PlatformIO SPI/NCI driver wrapper; the I2C transport is in OFM-HomeKey |
+| PN7160 (`Strooom/PN7160`) | ESP32 I2C port for the legacy reader environments, preserving RP2040 behavior |
+| OFM-SwitchActuator | Console diagnostic API compatibility fix used by the integration |
+| OFM-FileTransferModule | Conditional gzip compiler-warning fix in the earlier Home Key integration; current checkout uses the upstream `ec/v1dev` branch |
+
+HomeSpan is used without source modifications. OGM-Common, OGM-HardwareConfig,
+LogicModule, BinaryInput, VirtualButton and ConfigTransfer use their existing
+upstream checkouts. `dependencies.txt` records the actual local revisions used
+by the verified builds, including the current KNX stack checkout.
+
 All three repositories are linked from `lib`. Do not replace those links with upstream
 clones: the committed local wrappers are required. The isolated build helper
 copies all recorded local dependencies and now builds all four targets.

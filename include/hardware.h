@@ -1,5 +1,37 @@
 #include <HardwareConfig.h>
 
+#ifdef DEVICE_DEV_REG1_LAN_TP_Base_V00_11
+    // PN7161 I2C is owned exclusively by the Home Key reader.
+    // GPIO19/21/22 overlap RMII: do not connect/enable Ethernet.
+    #define OPENKNX_GPIO_WIRE Wire
+    #define OPENKNX_GPIO_SDA 21
+    #define OPENKNX_GPIO_SCL 22
+    #define OPENKNX_GPIO_CLOCK 400000
+    #define NFC_PN7160_ADDR 0x28
+    #define NFC_IRQ_PIN 14
+    #define NFC_VEN_PIN 13
+    #define NFC_DWL_REQ_PIN 19
+
+    #ifdef OPENKNX_HOMEKEY_ENABLED
+        #define HOMEKEY_READER_I2C
+        #define HOMEKEY_I2C_SDA OPENKNX_GPIO_SDA
+        #define HOMEKEY_I2C_SCL OPENKNX_GPIO_SCL
+        #define HOMEKEY_I2C_ADDRESS NFC_PN7160_ADDR
+        #define HOMEKEY_I2C_CLOCK OPENKNX_GPIO_CLOCK
+        #define HOMEKEY_IRQ_PIN NFC_IRQ_PIN
+        #define HOMEKEY_VEN_PIN NFC_VEN_PIN
+        #define HOMEKEY_DWL_PIN NFC_DWL_REQ_PIN
+        #define HOMEKEY_PN7161_FIXED_3V3
+        #define HOMEKEY_DEVICE_MODEL "REG1 ESP v00.11 PN7161"
+    #endif
+
+    #define OPENKNX_SWA_CHANNEL_COUNT 0
+    #define OPENKNX_SWA_SET_ACTIVE_ON LOW
+    #define OPENKNX_SWA_RESET_ACTIVE_ON LOW
+    #define OPENKNX_SWA_BISTABLE_IMPULSE_LENGTH 50
+    #define OPENKNX_BI_GPIO_COUNT 0
+#endif
+
 #ifdef BOARD_XIAO_ESP32S3_HOMEKEY
     // Compile prototype: external KNX transceiver on XIAO D6/D7.
     // Confirm wiring before using this target on hardware.

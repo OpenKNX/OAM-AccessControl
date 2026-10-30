@@ -5,12 +5,33 @@
 #include "VirtualButtonModule.h"
 #include "FileTransferModule.h"
 #include "Feedback.h"
+#if defined(DEVICE_DEV_REG1_LAN_TP_Base_V00_11) && defined(KNX_IP_WIFI)
+#include <WiFi.h>
+#endif
 #if defined(OPENKNX_HOMEKEY_ENABLED) && defined(ARDUINO_ARCH_ESP32)
 #include "HomeKeyModule.h"
 #endif
 
 void setup()
 {
+#ifdef DEVICE_DEV_REG1_LAN_TP_Base_V00_11
+    // Keep the PN7161 in normal NCI mode before reader initialization.
+    digitalWrite(NFC_DWL_REQ_PIN, LOW);
+    pinMode(NFC_DWL_REQ_PIN, OUTPUT);
+    #ifdef KNX_IP_WIFI
+    WiFi.mode(WIFI_STA);
+    WiFi.setAutoReconnect(true);
+    #ifdef OPENKNX_WIFI_SSID
+        #ifndef OPENKNX_WIFI_PASSWORD
+            #define OPENKNX_WIFI_PASSWORD ""
+        #endif
+    WiFi.begin(OPENKNX_WIFI_SSID, OPENKNX_WIFI_PASSWORD);
+    #else
+    // Reuse Wi-Fi credentials already stored in NVS.
+    WiFi.begin();
+    #endif
+    #endif
+#endif
     openknx.init();
     openknx.addModule(1, openknxLogic);
     openknx.addModule(2, openknxAccessControl);
@@ -29,5 +50,24 @@ void setup()
 
 void loop()
 {
+#if defined(DEVICE_DEV_REG1_LAN_TP_Base_V00_11) && defined(KNX_IP_WIFI)
+    // Wi-Fi can acquire/change its address after knx.start(). Reopen the IP
+    // endpoint on that transition, and retry a failed multicast join.
+    static uint32_t previousIp = 0;
+    static uint32_t lastJoinAttempt = 0;
+    const uint32_t currentIp = WiFi.status() == WL_CONNECTED ? uint32_t(WiFi.localIP()) : 0;
+    if (currentIp != 0 && currentIp != previousIp)
+    {
+        knx.enabled(false);
+        knx.enabled(true);
+        lastJoinAttempt = millis();
+    }
+    else if (currentIp != 0 && !knx.enabled() && millis() - lastJoinAttempt >= 1000)
+    {
+        knx.enabled(true);
+        lastJoinAttempt = millis();
+    }
+    previousIp = currentIp;
+#endif
     openknx.loop();
 }
