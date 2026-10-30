@@ -308,8 +308,8 @@ profiles compiled and linked successfully with this platform pin on 2026-10-09.
 
 The Arduino-only integration builds without an IDF project conversion. Exact
 local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.8 is
-pinned in the environment. The OFM-HomeKey repository lives alongside this application at
-`../OFM-HomeKey`; its build wrappers remain under `.homekey-repos`.
+pinned in the environment. Modified dependencies, including OFM-HomeKey, are
+checked out under `.homekey-repos/private` and linked from `lib`.
 
 Home Key upstream dependencies were checked on 2026-10-30:
 
@@ -320,8 +320,8 @@ Home Key upstream dependencies were checked on 2026-10-30:
 | PN7161 driver (`rednblkx/pn7160`) | [db5cb56](https://github.com/rednblkx/pn7160/commit/db5cb56b2ccfbaa4c30879043a3597bd6c7d53c8) | Current upstream; existing wrapper retained |
 
 The updated DigitalDoorKey wrapper lives in
-`.homekey-repos/updates-20261030/DigitalDoorKey` and is linked through
-`lib/DigitalDoorKey`. Its exact local revision is pinned in `dependencies.txt`.
+`.homekey-repos/private/DigitalDoorKey` and is linked through `lib/DigitalDoorKey`.
+Its exact local revision is pinned in `dependencies.txt`.
 The local OFM-HomeKey implementation retains its PN7161 I2C, Wi-Fi console and
 commissioning changes. Other OpenKNX dependencies were not updated.
 
@@ -343,7 +343,32 @@ LogicModule, BinaryInput, VirtualButton and ConfigTransfer use their existing
 upstream checkouts. `dependencies.txt` records the actual local revisions used
 by the verified builds, including the current KNX stack checkout.
 
-All three repositories are linked from `lib`. Do not replace those links with upstream
+### Private Home Key development repositories
+
+The application and modified dependencies are maintained as independent private
+repositories under `u20p17`:
+
+| Repository | Purpose |
+| --- | --- |
+| [OAM-AccessControl](https://github.com/u20p17/OAM-AccessControl) | Application and build configuration |
+| [OFM-HomeKey](https://github.com/u20p17/OFM-HomeKey) | Home Key implementation |
+| [OFM-AccessControl](https://github.com/u20p17/OFM-AccessControl) | Access-control integration |
+| [DigitalDoorKey](https://github.com/u20p17/DigitalDoorKey) | Arduino authentication wrapper |
+| [PN7161](https://github.com/u20p17/PN7161) | PN7161 NCI driver wrapper |
+| [PN7160](https://github.com/u20p17/PN7160) | Legacy ESP32 I2C reader port |
+| [OFM-SwitchActuator](https://github.com/u20p17/OFM-SwitchActuator) | Compatibility changes |
+| [OFM-FileTransferModule](https://github.com/u20p17/OFM-FileTransferModule) | Firmware/file-transfer dependency |
+| [knx](https://github.com/u20p17/knx) | KNX stack branch used by this application |
+
+Each private repository uses `v1dev_HomeKey` as its development branch. The
+local `origin` points to the private repository and is the default push remote.
+Where a public source exists, it is retained as `upstream` for fetching, with
+its push URL disabled (`no_push://public-upstream-disabled`). Existing shared
+OpenKNX checkouts retain their original remotes. GitHub Actions is disabled on
+the private repositories; no collaborators were added. `dependencies.txt`
+records the private clone URLs and exact revisions of modified dependencies.
+
+The dependency checkouts are linked from `lib`. Do not replace those links with public upstream
 clones: the committed local wrappers are required. The isolated build helper
 copies all recorded local dependencies and now builds all four targets.
 Generated package caches use a project-specific `/tmp` directory because files
