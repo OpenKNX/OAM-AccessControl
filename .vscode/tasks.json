@@ -91,15 +91,20 @@
         },
         {
             "label": "OpenKNXproducer",
-            "type": "shell",
-            "command": "~/bin/OpenKNXproducer.exe",
+            "type": "process",
+            "command": "${userHome}\\bin\\OpenKNXproducer.exe",
             "args": [
                 "create",
                 "--Debug",
                 "-h",
-                "include/knxprod.h",
-                "src/AccessControl"
+                "include\\knxprod.h",
+                "-o",
+                "src\\AccessControl.knxprod",
+                "src\\AccessControl.xml"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "problemMatcher": [],
             "group": "test"
         },

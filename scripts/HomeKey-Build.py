@@ -1,10 +1,9 @@
 from pathlib import Path
 import re
 Import("env")
-header = Path(env.subst("$PROJECT_DIR")) / "include/homekey/knxprod.h"
+header = Path(env.subst("$PROJECT_DIR")) / "include" / "knxprod.h"
 if not header.exists():
-    raise RuntimeError("Generate the Apple Home Key ETS header from src/AccessControl-HomeKey.xml first")
-env.Prepend(CPPPATH=[str(header.parent)])
+    raise RuntimeError("Generate the development ETS header from src/AccessControl.xml first")
 
 # The ETS row decoder consumes a fixed byte layout. Fail before compiling if
 # producer output no longer matches it (including bit positions and NUL space).

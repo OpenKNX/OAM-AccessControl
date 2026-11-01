@@ -5,12 +5,16 @@
   <op:config href="AccessControl.conf.xml" />
   <op:config name="%IsSecureEnabled%" value="false" />
   <op:config name="%SWA_Measure%" value="0" />
+  <op:config name="%NET_ServiceHTTP%" value="1" />
+  <op:config name="%NET_ServiceNTP%" value="0" />
+  <op:config name="%NET_ServiceOTA%" value="0" />
+  <op:config name="%NET_WifiTool%" value="1" />
 
   <op:nowarn id="1" regex="ACC_ApplicationVersion" />
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="%ACC_ApplicationVersion_Dev%"
+    ApplicationVersion="11.1.0"
     ReplacesVersionsDownTo="4.0"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
@@ -139,12 +143,29 @@
     <op:verify File="../lib/OFM-Feedback/library.json" ModuleVersion="%BUZZ_VerifyVersion%" />
   </op:define>
 
-  <!-- <generate> -->
+  <op:define prefix="HK" ModuleType="7"
+    share="../lib/OFM-HomeKey/src/HomeKey.share.xml" KoSingleOffset="11">
+    <op:verify File="../lib/OFM-HomeKey/library.json" ModuleVersion="0.3" />
+  </op:define>
+
+  <op:define prefix="NET" ModuleType="8"
+    share="../lib/OFM-Network/src/Network.share.xml">
+    <op:verify File="../lib/OFM-Network/library.json" ModuleVersion="0.8" />
+  </op:define>
+
     <generate base="SecureApplication.xml">
       <Dynamic>
         <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
         <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
-        <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="ACC" />
+        <Channel Id="%AID%_CH-ACC" Name="BasicChannel" Number="ACC" Text="Zutrittskontrolle" Icon="shield-lock-outline" HelpContext="ACC-Dokumentation">
+          <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*" prefix="ACC" />
+          <choose ParamRefId="%AID%_UP-2000034_R-200003401">
+            <when test="!=0">
+              <op:include href="../lib/OFM-HomeKey/src/HomeKey.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*" prefix="HK" />
+            </when>
+          </choose>
+        </Channel>
+        <op:include href="../lib/OFM-Network/src/Network.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="NET" />
         <op:include href="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SWA" />
         <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
         <op:include href="../lib/OFM-VirtualButton/src/VirtualButton.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BTN" />

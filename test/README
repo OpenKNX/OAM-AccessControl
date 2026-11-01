@@ -9,3 +9,20 @@ in the development cycle.
 
 More information about PlatformIO Unit Testing:
 - https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+
+Focused native Home Key web checks (run from the project root):
+
+clang++ -std=c++17 -Itest\homekey_web\stubs -Ilib\OFM-Network\src -Ilib\OFM-HomeKey\src test\homekey_web\web_request_test.cpp lib\OFM-Network\src\OpenKNX\Network\Webserver\WebRequest.cpp -o homekey-web-test.exe
+.\homekey-web-test.exe
+
+npm install --prefix test\homekey_web --ignore-scripts
+npm test --prefix test\homekey_web
+
+These check the unmodified Network request body API, exact 42/50-byte framing,
+valid/invalid eight-digit setup codes, existing-code comparison, first setup,
+five-attempt cooldown, reboot/wraparound policy, MAC-derived setup IDs and form
+behavior. QR checks use an independent jsQR decoder to verify scannability and
+the exact HomeKit payload, including leading-zero codes, IP flag and lock
+category. They also verify local-only generation, gating and secret clearing.
+The UI test uses a mock DOM/device. On-device NVS persistence, actual HTTP
+operation and iPhone scanning/Apple pairing still require hardware validation.

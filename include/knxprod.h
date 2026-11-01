@@ -17,14 +17,16 @@
 #define ETS_ModuleId_BTN 6
 #define ETS_ModuleId_BI 7
 #define ETS_ModuleId_BUZZ 8
-#define MAIN_FirmwareName "Zutrittskontrolle (R503)"
+#define ETS_ModuleId_HK 9
+#define ETS_ModuleId_NET 10
+#define MAIN_FirmwareName "Zutrittskontrolle (Dev)"
 #define MAIN_OpenKnxId 0xA6
-#define MAIN_ApplicationNumber 0
-#define MAIN_ApplicationVersion 16
+#define MAIN_ApplicationNumber 1
+#define MAIN_ApplicationVersion 177
 #define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
-#define MAIN_ParameterSize 20939
-#define MAIN_MaxKoNumber 1239
+#define MAIN_ParameterSize 11756
+#define MAIN_MaxKoNumber 949
 #define MAIN_OrderNumber "OpenKnxAccessControl"
 #define BASE_ModuleVersion 25
 #define UCT_ModuleVersion 6
@@ -34,6 +36,8 @@
 #define BTN_ModuleVersion 7
 #define BI_ModuleVersion 4
 #define BUZZ_ModuleVersion 3
+#define HK_ModuleVersion 3
+#define NET_ModuleVersion 8
 // Parameter with single occurrence
 
 
@@ -118,6 +122,12 @@
 #define BASE_ModuleEnabled_BUZZ                  110      // 1 Bit, Bit 0
 #define     BASE_ModuleEnabled_BUZZMask 0x01
 #define     BASE_ModuleEnabled_BUZZShift 0
+#define BASE_ModuleEnabled_HK                    111      // 1 Bit, Bit 7
+#define     BASE_ModuleEnabled_HKMask 0x80
+#define     BASE_ModuleEnabled_HKShift 7
+#define BASE_ModuleEnabled_NET                   111      // 1 Bit, Bit 6
+#define     BASE_ModuleEnabled_NETMask 0x40
+#define     BASE_ModuleEnabled_NETShift 6
 
 // Zeitbasis
 #define ParamBASE_StartupDelayBase                    ((knx.paramByte(BASE_StartupDelayBase) & BASE_StartupDelayBaseMask) >> BASE_StartupDelayBaseShift)
@@ -188,6 +198,10 @@
 #define ParamBASE_ModuleEnabled_BI                    ((bool)(knx.paramByte(BASE_ModuleEnabled_BI) & BASE_ModuleEnabled_BIMask))
 // BUZZ
 #define ParamBASE_ModuleEnabled_BUZZ                  ((bool)(knx.paramByte(BASE_ModuleEnabled_BUZZ) & BASE_ModuleEnabled_BUZZMask))
+// HK
+#define ParamBASE_ModuleEnabled_HK                    ((bool)(knx.paramByte(BASE_ModuleEnabled_HK) & BASE_ModuleEnabled_HKMask))
+// NET
+#define ParamBASE_ModuleEnabled_NET                   ((bool)(knx.paramByte(BASE_ModuleEnabled_NET) & BASE_ModuleEnabled_NETMask))
 
 #define BASE_KoHeartbeat 1
 #define BASE_KoTime 2
@@ -478,7 +492,7 @@
 // Touch-Front: LED grün
 #define KoACC_TouchPcbLedGreen                    (knx.getGroupObject(ACC_KoTouchPcbLedGreen))
 
-#define ACC_ChannelCount 200
+#define ACC_ChannelCount 150
 
 // Parameter per channel
 #define ACC_ParamBlockOffset 127
@@ -520,10 +534,10 @@
 #define ParamACC_ActOnOff                            ((bool)(knx.paramByte(ACC_ParamCalcIndex(ACC_ActOnOff)) & ACC_ActOnOffMask))
 
 // deprecated
-#define ACC_KoOffset 100
+#define ACC_KoOffset 500
 
 // Communication objects per channel (multiple occurrence)
-#define ACC_KoBlockOffset 100
+#define ACC_KoBlockOffset 500
 #define ACC_KoBlockSize 3
 
 #define ACC_KoCalcNumber(index) (index + ACC_KoBlockOffset + _channelIndex * ACC_KoBlockSize)
@@ -541,7 +555,7 @@
 // Eingang
 #define KoACC_ActCallLock                         (knx.getGroupObject(ACC_KoCalcNumber(ACC_KoActCallLock)))
 
-#define FINACT_FingerActionCount                   4327      // uint16_t
+#define FINACT_FingerActionCount                   3277      // uint16_t
 
 // Verfügbare Zuordnungen
 #define ParamFINACT_FingerActionCount                   (knx.paramWord(FINACT_FingerActionCount))
@@ -549,7 +563,7 @@
 #define FINACT_ChannelCount 300
 
 // Parameter per channel
-#define FINACT_ParamBlockOffset 4329
+#define FINACT_ParamBlockOffset 3279
 #define FINACT_ParamBlockSize 4
 #define FINACT_ParamCalcIndex(index) (index + FINACT_ParamBlockOffset + _channelIndex * FINACT_ParamBlockSize)
 
@@ -570,15 +584,15 @@
 
 
 
-#define NFCACT_NfcActionCount                      5529      // uint16_t
+#define NFCACT_NfcActionCount                      4479      // uint16_t
 
 // Verfügbare Zuordnungen
 #define ParamNFCACT_NfcActionCount                      (knx.paramWord(NFCACT_NfcActionCount))
 
-#define NFCACT_ChannelCount 300
+#define NFCACT_ChannelCount 310
 
 // Parameter per channel
-#define NFCACT_ParamBlockOffset 5531
+#define NFCACT_ParamBlockOffset 4481
 #define NFCACT_ParamBlockSize 4
 #define NFCACT_ParamCalcIndex(index) (index + NFCACT_ParamBlockOffset + _channelIndex * NFCACT_ParamBlockSize)
 
@@ -599,15 +613,15 @@
 
 
 
-#define KEYACT_KeypadActionCount                   6731      // uint16_t
+#define KEYACT_KeypadActionCount                   5721      // uint16_t
 
 // Verfügbare Zuordnungen
 #define ParamKEYACT_KeypadActionCount                   (knx.paramWord(KEYACT_KeypadActionCount))
 
-#define KEYACT_ChannelCount 300
+#define KEYACT_ChannelCount 320
 
 // Parameter per channel
-#define KEYACT_ParamBlockOffset 6733
+#define KEYACT_ParamBlockOffset 5723
 #define KEYACT_ParamBlockSize 4
 #define KEYACT_ParamCalcIndex(index) (index + KEYACT_ParamBlockOffset + _channelIndex * KEYACT_ParamBlockSize)
 
@@ -628,36 +642,36 @@
 
 
 
-#define SWA_VisibleChannels                     7933      // uint8_t
-#define SWA_HardwareVariant                     7934      // 4 Bits, Bit 7-4
+#define SWA_VisibleChannels                     7003      // uint8_t
+#define SWA_HardwareVariant                     7004      // 4 Bits, Bit 7-4
 #define     SWA_HardwareVariantMask 0xF0
 #define     SWA_HardwareVariantShift 4
-#define SWA_TotalPowerSend                      7935      // 1 Bit, Bit 7
+#define SWA_TotalPowerSend                      7005      // 1 Bit, Bit 7
 #define     SWA_TotalPowerSendMask 0x80
 #define     SWA_TotalPowerSendShift 7
-#define SWA_TotalCurrentSend                    7935      // 1 Bit, Bit 6
+#define SWA_TotalCurrentSend                    7005      // 1 Bit, Bit 6
 #define     SWA_TotalCurrentSendMask 0x40
 #define     SWA_TotalCurrentSendShift 6
-#define SWA_TotalPowerSendMinChangePercent      7936      // uint8_t
-#define SWA_TotalPowerSendMinChangeAbsolute     7937      // uint16_t
-#define SWA_TotalPowerSendCyclicBase            7939      // 2 Bits, Bit 7-6
+#define SWA_TotalPowerSendMinChangePercent      7006      // uint8_t
+#define SWA_TotalPowerSendMinChangeAbsolute     7007      // uint16_t
+#define SWA_TotalPowerSendCyclicBase            7009      // 2 Bits, Bit 7-6
 #define     SWA_TotalPowerSendCyclicBaseMask 0xC0
 #define     SWA_TotalPowerSendCyclicBaseShift 6
-#define SWA_TotalPowerSendCyclicTime            7939      // 14 Bits, Bit 13-0
+#define SWA_TotalPowerSendCyclicTime            7009      // 14 Bits, Bit 13-0
 #define     SWA_TotalPowerSendCyclicTimeMask 0x3FFF
 #define     SWA_TotalPowerSendCyclicTimeShift 0
-#define SWA_TotalCurrentSendMinChangePercent    7941      // uint8_t
-#define SWA_TotalCurrentSendMinChangeAbsolute   7942      // uint16_t
-#define SWA_TotalCurrentSendCyclicBase          7944      // 2 Bits, Bit 7-6
+#define SWA_TotalCurrentSendMinChangePercent    7011      // uint8_t
+#define SWA_TotalCurrentSendMinChangeAbsolute   7012      // uint16_t
+#define SWA_TotalCurrentSendCyclicBase          7014      // 2 Bits, Bit 7-6
 #define     SWA_TotalCurrentSendCyclicBaseMask 0xC0
 #define     SWA_TotalCurrentSendCyclicBaseShift 6
-#define SWA_TotalCurrentSendCyclicTime          7944      // 14 Bits, Bit 13-0
+#define SWA_TotalCurrentSendCyclicTime          7014      // 14 Bits, Bit 13-0
 #define     SWA_TotalCurrentSendCyclicTimeMask 0x3FFF
 #define     SWA_TotalCurrentSendCyclicTimeShift 0
-#define SWA_FrontControlInput                   7950      // 1 Bit, Bit 7
+#define SWA_FrontControlInput                   7020      // 1 Bit, Bit 7
 #define     SWA_FrontControlInputMask 0x80
 #define     SWA_FrontControlInputShift 7
-#define SWA_FrontControlOutput                  7950      // 1 Bit, Bit 6
+#define SWA_FrontControlOutput                  7020      // 1 Bit, Bit 6
 #define     SWA_FrontControlOutputMask 0x40
 #define     SWA_FrontControlOutputShift 6
 
@@ -708,7 +722,7 @@
 #define SWA_ChannelCount 1
 
 // Parameter per channel
-#define SWA_ParamBlockOffset 7952
+#define SWA_ParamBlockOffset 7022
 #define SWA_ParamBlockSize 74
 #define SWA_ParamCalcIndex(index) (index + SWA_ParamBlockOffset + _channelIndex * SWA_ParamBlockSize)
 
@@ -1067,272 +1081,272 @@
 // Spannung
 #define KoSWA_ChVoltage                           (knx.getGroupObject(SWA_KoCalcNumber(SWA_KoChVoltage)))
 
-#define LOG_VisibleChannels                     8026      // uint8_t
-#define LOG_VacationKo                          8027      // 1 Bit, Bit 7
+#define LOG_VisibleChannels                     7096      // uint8_t
+#define LOG_VacationKo                          7097      // 1 Bit, Bit 7
 #define     LOG_VacationKoMask 0x80
 #define     LOG_VacationKoShift 7
-#define LOG_HolidayKo                           8027      // 1 Bit, Bit 6
+#define LOG_HolidayKo                           7097      // 1 Bit, Bit 6
 #define     LOG_HolidayKoMask 0x40
 #define     LOG_HolidayKoShift 6
-#define LOG_VacationRead                        8027      // 1 Bit, Bit 5
+#define LOG_VacationRead                        7097      // 1 Bit, Bit 5
 #define     LOG_VacationReadMask 0x20
 #define     LOG_VacationReadShift 5
-#define LOG_HolidaySend                         8027      // 1 Bit, Bit 4
+#define LOG_HolidaySend                         7097      // 1 Bit, Bit 4
 #define     LOG_HolidaySendMask 0x10
 #define     LOG_HolidaySendShift 4
-#define LOG_Neujahr                             8028      // 1 Bit, Bit 7
+#define LOG_Neujahr                             7098      // 1 Bit, Bit 7
 #define     LOG_NeujahrMask 0x80
 #define     LOG_NeujahrShift 7
-#define LOG_DreiKoenige                         8028      // 1 Bit, Bit 6
+#define LOG_DreiKoenige                         7098      // 1 Bit, Bit 6
 #define     LOG_DreiKoenigeMask 0x40
 #define     LOG_DreiKoenigeShift 6
-#define LOG_Weiberfastnacht                     8028      // 1 Bit, Bit 5
+#define LOG_Weiberfastnacht                     7098      // 1 Bit, Bit 5
 #define     LOG_WeiberfastnachtMask 0x20
 #define     LOG_WeiberfastnachtShift 5
-#define LOG_Rosenmontag                         8028      // 1 Bit, Bit 4
+#define LOG_Rosenmontag                         7098      // 1 Bit, Bit 4
 #define     LOG_RosenmontagMask 0x10
 #define     LOG_RosenmontagShift 4
-#define LOG_Fastnachtsdienstag                  8028      // 1 Bit, Bit 3
+#define LOG_Fastnachtsdienstag                  7098      // 1 Bit, Bit 3
 #define     LOG_FastnachtsdienstagMask 0x08
 #define     LOG_FastnachtsdienstagShift 3
-#define LOG_Aschermittwoch                      8028      // 1 Bit, Bit 2
+#define LOG_Aschermittwoch                      7098      // 1 Bit, Bit 2
 #define     LOG_AschermittwochMask 0x04
 #define     LOG_AschermittwochShift 2
-#define LOG_Frauentag                           8028      // 1 Bit, Bit 1
+#define LOG_Frauentag                           7098      // 1 Bit, Bit 1
 #define     LOG_FrauentagMask 0x02
 #define     LOG_FrauentagShift 1
-#define LOG_Gruendonnerstag                     8028      // 1 Bit, Bit 0
+#define LOG_Gruendonnerstag                     7098      // 1 Bit, Bit 0
 #define     LOG_GruendonnerstagMask 0x01
 #define     LOG_GruendonnerstagShift 0
-#define LOG_Karfreitag                          8029      // 1 Bit, Bit 7
+#define LOG_Karfreitag                          7099      // 1 Bit, Bit 7
 #define     LOG_KarfreitagMask 0x80
 #define     LOG_KarfreitagShift 7
-#define LOG_Ostersonntag                        8029      // 1 Bit, Bit 6
+#define LOG_Ostersonntag                        7099      // 1 Bit, Bit 6
 #define     LOG_OstersonntagMask 0x40
 #define     LOG_OstersonntagShift 6
-#define LOG_Ostermontag                         8029      // 1 Bit, Bit 5
+#define LOG_Ostermontag                         7099      // 1 Bit, Bit 5
 #define     LOG_OstermontagMask 0x20
 #define     LOG_OstermontagShift 5
-#define LOG_TagDerArbeit                        8029      // 1 Bit, Bit 4
+#define LOG_TagDerArbeit                        7099      // 1 Bit, Bit 4
 #define     LOG_TagDerArbeitMask 0x10
 #define     LOG_TagDerArbeitShift 4
-#define LOG_Himmelfahrt                         8029      // 1 Bit, Bit 3
+#define LOG_Himmelfahrt                         7099      // 1 Bit, Bit 3
 #define     LOG_HimmelfahrtMask 0x08
 #define     LOG_HimmelfahrtShift 3
-#define LOG_Pfingstsonntag                      8029      // 1 Bit, Bit 2
+#define LOG_Pfingstsonntag                      7099      // 1 Bit, Bit 2
 #define     LOG_PfingstsonntagMask 0x04
 #define     LOG_PfingstsonntagShift 2
-#define LOG_Pfingstmontag                       8029      // 1 Bit, Bit 1
+#define LOG_Pfingstmontag                       7099      // 1 Bit, Bit 1
 #define     LOG_PfingstmontagMask 0x02
 #define     LOG_PfingstmontagShift 1
-#define LOG_Fronleichnam                        8029      // 1 Bit, Bit 0
+#define LOG_Fronleichnam                        7099      // 1 Bit, Bit 0
 #define     LOG_FronleichnamMask 0x01
 #define     LOG_FronleichnamShift 0
-#define LOG_Friedensfest                        8030      // 1 Bit, Bit 7
+#define LOG_Friedensfest                        7100      // 1 Bit, Bit 7
 #define     LOG_FriedensfestMask 0x80
 #define     LOG_FriedensfestShift 7
-#define LOG_MariaHimmelfahrt                    8030      // 1 Bit, Bit 6
+#define LOG_MariaHimmelfahrt                    7100      // 1 Bit, Bit 6
 #define     LOG_MariaHimmelfahrtMask 0x40
 #define     LOG_MariaHimmelfahrtShift 6
-#define LOG_DeutscheEinheit                     8030      // 1 Bit, Bit 5
+#define LOG_DeutscheEinheit                     7100      // 1 Bit, Bit 5
 #define     LOG_DeutscheEinheitMask 0x20
 #define     LOG_DeutscheEinheitShift 5
-#define LOG_Reformationstag                     8030      // 1 Bit, Bit 4
+#define LOG_Reformationstag                     7100      // 1 Bit, Bit 4
 #define     LOG_ReformationstagMask 0x10
 #define     LOG_ReformationstagShift 4
-#define LOG_Allerheiligen                       8030      // 1 Bit, Bit 3
+#define LOG_Allerheiligen                       7100      // 1 Bit, Bit 3
 #define     LOG_AllerheiligenMask 0x08
 #define     LOG_AllerheiligenShift 3
-#define LOG_BussBettag                          8030      // 1 Bit, Bit 2
+#define LOG_BussBettag                          7100      // 1 Bit, Bit 2
 #define     LOG_BussBettagMask 0x04
 #define     LOG_BussBettagShift 2
-#define LOG_Advent1                             8030      // 1 Bit, Bit 1
+#define LOG_Advent1                             7100      // 1 Bit, Bit 1
 #define     LOG_Advent1Mask 0x02
 #define     LOG_Advent1Shift 1
-#define LOG_Advent2                             8030      // 1 Bit, Bit 0
+#define LOG_Advent2                             7100      // 1 Bit, Bit 0
 #define     LOG_Advent2Mask 0x01
 #define     LOG_Advent2Shift 0
-#define LOG_Advent3                             8031      // 1 Bit, Bit 7
+#define LOG_Advent3                             7101      // 1 Bit, Bit 7
 #define     LOG_Advent3Mask 0x80
 #define     LOG_Advent3Shift 7
-#define LOG_Advent4                             8031      // 1 Bit, Bit 6
+#define LOG_Advent4                             7101      // 1 Bit, Bit 6
 #define     LOG_Advent4Mask 0x40
 #define     LOG_Advent4Shift 6
-#define LOG_Heiligabend                         8031      // 1 Bit, Bit 5
+#define LOG_Heiligabend                         7101      // 1 Bit, Bit 5
 #define     LOG_HeiligabendMask 0x20
 #define     LOG_HeiligabendShift 5
-#define LOG_Weihnachtstag1                      8031      // 1 Bit, Bit 4
+#define LOG_Weihnachtstag1                      7101      // 1 Bit, Bit 4
 #define     LOG_Weihnachtstag1Mask 0x10
 #define     LOG_Weihnachtstag1Shift 4
-#define LOG_Weihnachtstag2                      8031      // 1 Bit, Bit 3
+#define LOG_Weihnachtstag2                      7101      // 1 Bit, Bit 3
 #define     LOG_Weihnachtstag2Mask 0x08
 #define     LOG_Weihnachtstag2Shift 3
-#define LOG_Silvester                           8031      // 1 Bit, Bit 2
+#define LOG_Silvester                           7101      // 1 Bit, Bit 2
 #define     LOG_SilvesterMask 0x04
 #define     LOG_SilvesterShift 2
-#define LOG_Nationalfeiertag                    8031      // 1 Bit, Bit 1
+#define LOG_Nationalfeiertag                    7101      // 1 Bit, Bit 1
 #define     LOG_NationalfeiertagMask 0x02
 #define     LOG_NationalfeiertagShift 1
-#define LOG_MariaEmpfaengnis                    8031      // 1 Bit, Bit 0
+#define LOG_MariaEmpfaengnis                    7101      // 1 Bit, Bit 0
 #define     LOG_MariaEmpfaengnisMask 0x01
 #define     LOG_MariaEmpfaengnisShift 0
-#define LOG_NationalfeiertagSchweiz             8032      // 1 Bit, Bit 7
+#define LOG_NationalfeiertagSchweiz             7102      // 1 Bit, Bit 7
 #define     LOG_NationalfeiertagSchweizMask 0x80
 #define     LOG_NationalfeiertagSchweizShift 7
-#define LOG_Totensonntag                        8032      // 1 Bit, Bit 6
+#define LOG_Totensonntag                        7102      // 1 Bit, Bit 6
 #define     LOG_TotensonntagMask 0x40
 #define     LOG_TotensonntagShift 6
-#define LOG_Weltkindertag                       8032      // 1 Bit, Bit 5
+#define LOG_Weltkindertag                       7102      // 1 Bit, Bit 5
 #define     LOG_WeltkindertagMask 0x20
 #define     LOG_WeltkindertagShift 5
-#define LOG_UserFormula1                        8033      // char*, 99 Byte
+#define LOG_UserFormula1                        7103      // char*, 99 Byte
 #define     LOG_UserFormula1Length 99
-#define LOG_UserFormula1Active                  8132      // 1 Bit, Bit 7
+#define LOG_UserFormula1Active                  7202      // 1 Bit, Bit 7
 #define     LOG_UserFormula1ActiveMask 0x80
 #define     LOG_UserFormula1ActiveShift 7
-#define LOG_UserFormula2                        8133      // char*, 99 Byte
+#define LOG_UserFormula2                        7203      // char*, 99 Byte
 #define     LOG_UserFormula2Length 99
-#define LOG_UserFormula2Active                  8232      // 1 Bit, Bit 7
+#define LOG_UserFormula2Active                  7302      // 1 Bit, Bit 7
 #define     LOG_UserFormula2ActiveMask 0x80
 #define     LOG_UserFormula2ActiveShift 7
-#define LOG_UserFormula3                        8233      // char*, 99 Byte
+#define LOG_UserFormula3                        7303      // char*, 99 Byte
 #define     LOG_UserFormula3Length 99
-#define LOG_UserFormula3Active                  8332      // 1 Bit, Bit 7
+#define LOG_UserFormula3Active                  7402      // 1 Bit, Bit 7
 #define     LOG_UserFormula3ActiveMask 0x80
 #define     LOG_UserFormula3ActiveShift 7
-#define LOG_UserFormula4                        8333      // char*, 99 Byte
+#define LOG_UserFormula4                        7403      // char*, 99 Byte
 #define     LOG_UserFormula4Length 99
-#define LOG_UserFormula4Active                  8432      // 1 Bit, Bit 7
+#define LOG_UserFormula4Active                  7502      // 1 Bit, Bit 7
 #define     LOG_UserFormula4ActiveMask 0x80
 #define     LOG_UserFormula4ActiveShift 7
-#define LOG_UserFormula5                        8433      // char*, 99 Byte
+#define LOG_UserFormula5                        7503      // char*, 99 Byte
 #define     LOG_UserFormula5Length 99
-#define LOG_UserFormula5Active                  8532      // 1 Bit, Bit 7
+#define LOG_UserFormula5Active                  7602      // 1 Bit, Bit 7
 #define     LOG_UserFormula5ActiveMask 0x80
 #define     LOG_UserFormula5ActiveShift 7
-#define LOG_UserFormula6                        8533      // char*, 99 Byte
+#define LOG_UserFormula6                        7603      // char*, 99 Byte
 #define     LOG_UserFormula6Length 99
-#define LOG_UserFormula6Active                  8632      // 1 Bit, Bit 7
+#define LOG_UserFormula6Active                  7702      // 1 Bit, Bit 7
 #define     LOG_UserFormula6ActiveMask 0x80
 #define     LOG_UserFormula6ActiveShift 7
-#define LOG_UserFormula7                        8633      // char*, 99 Byte
+#define LOG_UserFormula7                        7703      // char*, 99 Byte
 #define     LOG_UserFormula7Length 99
-#define LOG_UserFormula7Active                  8732      // 1 Bit, Bit 7
+#define LOG_UserFormula7Active                  7802      // 1 Bit, Bit 7
 #define     LOG_UserFormula7ActiveMask 0x80
 #define     LOG_UserFormula7ActiveShift 7
-#define LOG_UserFormula8                        8733      // char*, 99 Byte
+#define LOG_UserFormula8                        7803      // char*, 99 Byte
 #define     LOG_UserFormula8Length 99
-#define LOG_UserFormula8Active                  8832      // 1 Bit, Bit 7
+#define LOG_UserFormula8Active                  7902      // 1 Bit, Bit 7
 #define     LOG_UserFormula8ActiveMask 0x80
 #define     LOG_UserFormula8ActiveShift 7
-#define LOG_UserFormula9                        8833      // char*, 99 Byte
+#define LOG_UserFormula9                        7903      // char*, 99 Byte
 #define     LOG_UserFormula9Length 99
-#define LOG_UserFormula9Active                  8932      // 1 Bit, Bit 7
+#define LOG_UserFormula9Active                  8002      // 1 Bit, Bit 7
 #define     LOG_UserFormula9ActiveMask 0x80
 #define     LOG_UserFormula9ActiveShift 7
-#define LOG_UserFormula10                       8933      // char*, 99 Byte
+#define LOG_UserFormula10                       8003      // char*, 99 Byte
 #define     LOG_UserFormula10Length 99
-#define LOG_UserFormula10Active                 9032      // 1 Bit, Bit 7
+#define LOG_UserFormula10Active                 8102      // 1 Bit, Bit 7
 #define     LOG_UserFormula10ActiveMask 0x80
 #define     LOG_UserFormula10ActiveShift 7
-#define LOG_UserFormula11                       9033      // char*, 99 Byte
+#define LOG_UserFormula11                       8103      // char*, 99 Byte
 #define     LOG_UserFormula11Length 99
-#define LOG_UserFormula11Active                 9132      // 1 Bit, Bit 7
+#define LOG_UserFormula11Active                 8202      // 1 Bit, Bit 7
 #define     LOG_UserFormula11ActiveMask 0x80
 #define     LOG_UserFormula11ActiveShift 7
-#define LOG_UserFormula12                       9133      // char*, 99 Byte
+#define LOG_UserFormula12                       8203      // char*, 99 Byte
 #define     LOG_UserFormula12Length 99
-#define LOG_UserFormula12Active                 9232      // 1 Bit, Bit 7
+#define LOG_UserFormula12Active                 8302      // 1 Bit, Bit 7
 #define     LOG_UserFormula12ActiveMask 0x80
 #define     LOG_UserFormula12ActiveShift 7
-#define LOG_UserFormula13                       9233      // char*, 99 Byte
+#define LOG_UserFormula13                       8303      // char*, 99 Byte
 #define     LOG_UserFormula13Length 99
-#define LOG_UserFormula13Active                 9332      // 1 Bit, Bit 7
+#define LOG_UserFormula13Active                 8402      // 1 Bit, Bit 7
 #define     LOG_UserFormula13ActiveMask 0x80
 #define     LOG_UserFormula13ActiveShift 7
-#define LOG_UserFormula14                       9333      // char*, 99 Byte
+#define LOG_UserFormula14                       8403      // char*, 99 Byte
 #define     LOG_UserFormula14Length 99
-#define LOG_UserFormula14Active                 9432      // 1 Bit, Bit 7
+#define LOG_UserFormula14Active                 8502      // 1 Bit, Bit 7
 #define     LOG_UserFormula14ActiveMask 0x80
 #define     LOG_UserFormula14ActiveShift 7
-#define LOG_UserFormula15                       9433      // char*, 99 Byte
+#define LOG_UserFormula15                       8503      // char*, 99 Byte
 #define     LOG_UserFormula15Length 99
-#define LOG_UserFormula15Active                 9532      // 1 Bit, Bit 7
+#define LOG_UserFormula15Active                 8602      // 1 Bit, Bit 7
 #define     LOG_UserFormula15ActiveMask 0x80
 #define     LOG_UserFormula15ActiveShift 7
-#define LOG_UserFormula16                       9533      // char*, 99 Byte
+#define LOG_UserFormula16                       8603      // char*, 99 Byte
 #define     LOG_UserFormula16Length 99
-#define LOG_UserFormula16Active                 9632      // 1 Bit, Bit 7
+#define LOG_UserFormula16Active                 8702      // 1 Bit, Bit 7
 #define     LOG_UserFormula16ActiveMask 0x80
 #define     LOG_UserFormula16ActiveShift 7
-#define LOG_UserFormula17                       9633      // char*, 99 Byte
+#define LOG_UserFormula17                       8703      // char*, 99 Byte
 #define     LOG_UserFormula17Length 99
-#define LOG_UserFormula17Active                 9732      // 1 Bit, Bit 7
+#define LOG_UserFormula17Active                 8802      // 1 Bit, Bit 7
 #define     LOG_UserFormula17ActiveMask 0x80
 #define     LOG_UserFormula17ActiveShift 7
-#define LOG_UserFormula18                       9733      // char*, 99 Byte
+#define LOG_UserFormula18                       8803      // char*, 99 Byte
 #define     LOG_UserFormula18Length 99
-#define LOG_UserFormula18Active                 9832      // 1 Bit, Bit 7
+#define LOG_UserFormula18Active                 8902      // 1 Bit, Bit 7
 #define     LOG_UserFormula18ActiveMask 0x80
 #define     LOG_UserFormula18ActiveShift 7
-#define LOG_UserFormula19                       9833      // char*, 99 Byte
+#define LOG_UserFormula19                       8903      // char*, 99 Byte
 #define     LOG_UserFormula19Length 99
-#define LOG_UserFormula19Active                 9932      // 1 Bit, Bit 7
+#define LOG_UserFormula19Active                 9002      // 1 Bit, Bit 7
 #define     LOG_UserFormula19ActiveMask 0x80
 #define     LOG_UserFormula19ActiveShift 7
-#define LOG_UserFormula20                       9933      // char*, 99 Byte
+#define LOG_UserFormula20                       9003      // char*, 99 Byte
 #define     LOG_UserFormula20Length 99
-#define LOG_UserFormula20Active                 10032      // 1 Bit, Bit 7
+#define LOG_UserFormula20Active                 9102      // 1 Bit, Bit 7
 #define     LOG_UserFormula20ActiveMask 0x80
 #define     LOG_UserFormula20ActiveShift 7
-#define LOG_UserFormula21                       10033      // char*, 99 Byte
+#define LOG_UserFormula21                       9103      // char*, 99 Byte
 #define     LOG_UserFormula21Length 99
-#define LOG_UserFormula21Active                 10132      // 1 Bit, Bit 7
+#define LOG_UserFormula21Active                 9202      // 1 Bit, Bit 7
 #define     LOG_UserFormula21ActiveMask 0x80
 #define     LOG_UserFormula21ActiveShift 7
-#define LOG_UserFormula22                       10133      // char*, 99 Byte
+#define LOG_UserFormula22                       9203      // char*, 99 Byte
 #define     LOG_UserFormula22Length 99
-#define LOG_UserFormula22Active                 10232      // 1 Bit, Bit 7
+#define LOG_UserFormula22Active                 9302      // 1 Bit, Bit 7
 #define     LOG_UserFormula22ActiveMask 0x80
 #define     LOG_UserFormula22ActiveShift 7
-#define LOG_UserFormula23                       10233      // char*, 99 Byte
+#define LOG_UserFormula23                       9303      // char*, 99 Byte
 #define     LOG_UserFormula23Length 99
-#define LOG_UserFormula23Active                 10332      // 1 Bit, Bit 7
+#define LOG_UserFormula23Active                 9402      // 1 Bit, Bit 7
 #define     LOG_UserFormula23ActiveMask 0x80
 #define     LOG_UserFormula23ActiveShift 7
-#define LOG_UserFormula24                       10333      // char*, 99 Byte
+#define LOG_UserFormula24                       9403      // char*, 99 Byte
 #define     LOG_UserFormula24Length 99
-#define LOG_UserFormula24Active                 10432      // 1 Bit, Bit 7
+#define LOG_UserFormula24Active                 9502      // 1 Bit, Bit 7
 #define     LOG_UserFormula24ActiveMask 0x80
 #define     LOG_UserFormula24ActiveShift 7
-#define LOG_UserFormula25                       10433      // char*, 99 Byte
+#define LOG_UserFormula25                       9503      // char*, 99 Byte
 #define     LOG_UserFormula25Length 99
-#define LOG_UserFormula25Active                 10532      // 1 Bit, Bit 7
+#define LOG_UserFormula25Active                 9602      // 1 Bit, Bit 7
 #define     LOG_UserFormula25ActiveMask 0x80
 #define     LOG_UserFormula25ActiveShift 7
-#define LOG_UserFormula26                       10533      // char*, 99 Byte
+#define LOG_UserFormula26                       9603      // char*, 99 Byte
 #define     LOG_UserFormula26Length 99
-#define LOG_UserFormula26Active                 10632      // 1 Bit, Bit 7
+#define LOG_UserFormula26Active                 9702      // 1 Bit, Bit 7
 #define     LOG_UserFormula26ActiveMask 0x80
 #define     LOG_UserFormula26ActiveShift 7
-#define LOG_UserFormula27                       10633      // char*, 99 Byte
+#define LOG_UserFormula27                       9703      // char*, 99 Byte
 #define     LOG_UserFormula27Length 99
-#define LOG_UserFormula27Active                 10732      // 1 Bit, Bit 7
+#define LOG_UserFormula27Active                 9802      // 1 Bit, Bit 7
 #define     LOG_UserFormula27ActiveMask 0x80
 #define     LOG_UserFormula27ActiveShift 7
-#define LOG_UserFormula28                       10733      // char*, 99 Byte
+#define LOG_UserFormula28                       9803      // char*, 99 Byte
 #define     LOG_UserFormula28Length 99
-#define LOG_UserFormula28Active                 10832      // 1 Bit, Bit 7
+#define LOG_UserFormula28Active                 9902      // 1 Bit, Bit 7
 #define     LOG_UserFormula28ActiveMask 0x80
 #define     LOG_UserFormula28ActiveShift 7
-#define LOG_UserFormula29                       10833      // char*, 99 Byte
+#define LOG_UserFormula29                       9903      // char*, 99 Byte
 #define     LOG_UserFormula29Length 99
-#define LOG_UserFormula29Active                 10932      // 1 Bit, Bit 7
+#define LOG_UserFormula29Active                 10002      // 1 Bit, Bit 7
 #define     LOG_UserFormula29ActiveMask 0x80
 #define     LOG_UserFormula29ActiveShift 7
-#define LOG_UserFormula30                       10933      // char*, 99 Byte
+#define LOG_UserFormula30                       10003      // char*, 99 Byte
 #define     LOG_UserFormula30Length 99
-#define LOG_UserFormula30Active                 11032      // 1 Bit, Bit 7
+#define LOG_UserFormula30Active                 10102      // 1 Bit, Bit 7
 #define     LOG_UserFormula30ActiveMask 0x80
 #define     LOG_UserFormula30ActiveShift 7
 
@@ -1578,10 +1592,10 @@
 // Welcher Feiertag ist morgen?
 #define KoLOG_Holiday2                            (knx.getGroupObject(LOG_KoHoliday2))
 
-#define LOG_ChannelCount 99
+#define LOG_ChannelCount 3
 
 // Parameter per channel
-#define LOG_ParamBlockOffset 11033
+#define LOG_ParamBlockOffset 10103
 #define LOG_ParamBlockSize 89
 #define LOG_ParamCalcIndex(index) (index + LOG_ParamBlockOffset + _channelIndex * LOG_ParamBlockSize)
 
@@ -3465,10 +3479,10 @@
 #define ParamLOG_fOOffKOSendNumberRel                ((int16_t)knx.paramWord(LOG_ParamCalcIndex(LOG_fOOffKOSendNumberRel)))
 
 // deprecated
-#define LOG_KoOffset 700
+#define LOG_KoOffset 100
 
 // Communication objects per channel (multiple occurrence)
-#define LOG_KoBlockOffset 700
+#define LOG_KoBlockOffset 100
 #define LOG_KoBlockSize 3
 
 #define LOG_KoCalcNumber(index) (index + LOG_KoBlockOffset + _channelIndex * LOG_KoBlockSize)
@@ -3486,9 +3500,9 @@
 // Ausgang
 #define KoLOG_KOfO                                (knx.getGroupObject(LOG_KoCalcNumber(LOG_KoKOfO)))
 
-#define BTN_ReactionTimeMultiClick              19844      // 8 Bits, Bit 7-0
-#define BTN_ReactionTimeLong                    19845      // 8 Bits, Bit 7-0
-#define BTN_ReactionTimeExtraLong               19846      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeMultiClick              10370      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeLong                    10371      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeExtraLong               10372      // 8 Bits, Bit 7-0
 
 // Mehrfach-Klick
 #define ParamBTN_ReactionTimeMultiClick              (knx.paramByte(BTN_ReactionTimeMultiClick))
@@ -3497,10 +3511,10 @@
 // Extra langer Tastendruck
 #define ParamBTN_ReactionTimeExtraLong               (knx.paramByte(BTN_ReactionTimeExtraLong))
 
-#define BTN_ChannelCount 20
+#define BTN_ChannelCount 8
 
 // Parameter per channel
-#define BTN_ParamBlockOffset 19847
+#define BTN_ParamBlockOffset 10373
 #define BTN_ParamBlockSize 53
 #define BTN_ParamCalcIndex(index) (index + BTN_ParamBlockOffset + _channelIndex * BTN_ParamBlockSize)
 
@@ -3973,10 +3987,10 @@
 #define ParamBTN_bStatusThresholdLow                 (knx.paramByte(BTN_ParamCalcIndex(BTN_bStatusThresholdLow)))
 
 // deprecated
-#define BTN_KoOffset 1000
+#define BTN_KoOffset 400
 
 // Communication objects per channel (multiple occurrence)
-#define BTN_KoBlockOffset 1000
+#define BTN_KoBlockOffset 400
 #define BTN_KoBlockSize 12
 
 #define BTN_KoCalcNumber(index) (index + BTN_KoBlockOffset + _channelIndex * BTN_KoBlockSize)
@@ -4024,7 +4038,7 @@
 #define BI_ChannelCount 4
 
 // Parameter per channel
-#define BI_ParamBlockOffset 20907
+#define BI_ParamBlockOffset 10797
 #define BI_ParamBlockSize 4
 #define BI_ParamCalcIndex(index) (index + BI_ParamBlockOffset + _channelIndex * BI_ParamBlockSize)
 
@@ -4081,61 +4095,61 @@
 // 
 #define KoBI_ChannelOutput                       (knx.getGroupObject(BI_KoCalcNumber(BI_KoChannelOutput)))
 
-#define BUZZ_BuzzerInstalled                     20923      // 1 Bit, Bit 7
+#define BUZZ_BuzzerInstalled                     10813      // 1 Bit, Bit 7
 #define     BUZZ_BuzzerInstalledMask 0x80
 #define     BUZZ_BuzzerInstalledShift 7
-#define BUZZ_VibrationInstalled                  20923      // 1 Bit, Bit 6
+#define BUZZ_VibrationInstalled                  10813      // 1 Bit, Bit 6
 #define     BUZZ_VibrationInstalledMask 0x40
 #define     BUZZ_VibrationInstalledShift 6
-#define BUZZ_BuzzerSetup                         20923      // 2 Bits, Bit 5-4
+#define BUZZ_BuzzerSetup                         10813      // 2 Bits, Bit 5-4
 #define     BUZZ_BuzzerSetupMask 0x30
 #define     BUZZ_BuzzerSetupShift 4
-#define BUZZ_BuzzerVolumeExternal                20923      // 2 Bits, Bit 3-2
+#define BUZZ_BuzzerVolumeExternal                10813      // 2 Bits, Bit 3-2
 #define     BUZZ_BuzzerVolumeExternalMask 0x0C
 #define     BUZZ_BuzzerVolumeExternalShift 2
-#define BUZZ_BuzzerLock                          20923      // 2 Bits, Bit 1-0
+#define BUZZ_BuzzerLock                          10813      // 2 Bits, Bit 1-0
 #define     BUZZ_BuzzerLockMask 0x03
 #define     BUZZ_BuzzerLockShift 0
-#define BUZZ_VibrationLock                       20924      // 2 Bits, Bit 7-6
+#define BUZZ_VibrationLock                       10814      // 2 Bits, Bit 7-6
 #define     BUZZ_VibrationLockMask 0xC0
 #define     BUZZ_VibrationLockShift 6
-#define BUZZ_VibrationLockAlsoInternal           20924      // 1 Bit, Bit 5
+#define BUZZ_VibrationLockAlsoInternal           10814      // 1 Bit, Bit 5
 #define     BUZZ_VibrationLockAlsoInternalMask 0x20
 #define     BUZZ_VibrationLockAlsoInternalShift 5
-#define BUZZ_BuzzerLockAlsoInternal              20924      // 1 Bit, Bit 4
+#define BUZZ_BuzzerLockAlsoInternal              10814      // 1 Bit, Bit 4
 #define     BUZZ_BuzzerLockAlsoInternalMask 0x10
 #define     BUZZ_BuzzerLockAlsoInternalShift 4
-#define BUZZ_BuzzerVolumeInternal                20924      // 2 Bits, Bit 3-2
+#define BUZZ_BuzzerVolumeInternal                10814      // 2 Bits, Bit 3-2
 #define     BUZZ_BuzzerVolumeInternalMask 0x0C
 #define     BUZZ_BuzzerVolumeInternalShift 2
-#define BUZZ_BuzzerWithFrequency                 20924      // 1 Bit, Bit 1
+#define BUZZ_BuzzerWithFrequency                 10814      // 1 Bit, Bit 1
 #define     BUZZ_BuzzerWithFrequencyMask 0x02
 #define     BUZZ_BuzzerWithFrequencyShift 1
-#define BUZZ_BuzzerSilent                        20925      // uint16_t
-#define BUZZ_BuzzerNormal                        20927      // uint16_t
-#define BUZZ_BuzzerLoud                          20929      // uint16_t
-#define BUZZ_BuzzerExtBase                       20931      // 2 Bits, Bit 7-6
+#define BUZZ_BuzzerSilent                        10815      // uint16_t
+#define BUZZ_BuzzerNormal                        10817      // uint16_t
+#define BUZZ_BuzzerLoud                          10819      // uint16_t
+#define BUZZ_BuzzerExtBase                       10821      // 2 Bits, Bit 7-6
 #define     BUZZ_BuzzerExtBaseMask 0xC0
 #define     BUZZ_BuzzerExtBaseShift 6
-#define BUZZ_BuzzerExtTime                       20931      // 14 Bits, Bit 13-0
+#define BUZZ_BuzzerExtTime                       10821      // 14 Bits, Bit 13-0
 #define     BUZZ_BuzzerExtTimeMask 0x3FFF
 #define     BUZZ_BuzzerExtTimeShift 0
-#define BUZZ_VibrationIntBase                    20933      // 2 Bits, Bit 7-6
+#define BUZZ_VibrationIntBase                    10823      // 2 Bits, Bit 7-6
 #define     BUZZ_VibrationIntBaseMask 0xC0
 #define     BUZZ_VibrationIntBaseShift 6
-#define BUZZ_VibrationIntTime                    20933      // 14 Bits, Bit 13-0
+#define BUZZ_VibrationIntTime                    10823      // 14 Bits, Bit 13-0
 #define     BUZZ_VibrationIntTimeMask 0x3FFF
 #define     BUZZ_VibrationIntTimeShift 0
-#define BUZZ_VibrationExtBase                    20935      // 2 Bits, Bit 7-6
+#define BUZZ_VibrationExtBase                    10825      // 2 Bits, Bit 7-6
 #define     BUZZ_VibrationExtBaseMask 0xC0
 #define     BUZZ_VibrationExtBaseShift 6
-#define BUZZ_VibrationExtTime                    20935      // 14 Bits, Bit 13-0
+#define BUZZ_VibrationExtTime                    10825      // 14 Bits, Bit 13-0
 #define     BUZZ_VibrationExtTimeMask 0x3FFF
 #define     BUZZ_VibrationExtTimeShift 0
-#define BUZZ_BuzzerIntBase                       20937      // 2 Bits, Bit 7-6
+#define BUZZ_BuzzerIntBase                       10827      // 2 Bits, Bit 7-6
 #define     BUZZ_BuzzerIntBaseMask 0xC0
 #define     BUZZ_BuzzerIntBaseShift 6
-#define BUZZ_BuzzerIntTime                       20937      // 14 Bits, Bit 13-0
+#define BUZZ_BuzzerIntTime                       10827      // 14 Bits, Bit 13-0
 #define     BUZZ_BuzzerIntTimeMask 0x3FFF
 #define     BUZZ_BuzzerIntTimeShift 0
 
@@ -4209,6 +4223,447 @@
 #define KoBUZZ_VibrationState                      (knx.getGroupObject(BUZZ_KoVibrationState))
 // Vibration: Sperren
 #define KoBUZZ_VibrationLock                       (knx.getGroupObject(BUZZ_KoVibrationLock))
+
+#define HK_Enabled                             10829      // 1 Bit, Bit 7
+#define     HK_EnabledMask 0x80
+#define     HK_EnabledShift 7
+#define HK_PairingPermitted                    10829      // 1 Bit, Bit 6
+#define     HK_PairingPermittedMask 0x40
+#define     HK_PairingPermittedShift 6
+#define HK_AllowUid                            10829      // 1 Bit, Bit 5
+#define     HK_AllowUidMask 0x20
+#define     HK_AllowUidShift 5
+#define HK_EtsAuthorization                    10829      // 1 Bit, Bit 4
+#define     HK_EtsAuthorizationMask 0x10
+#define     HK_EtsAuthorizationShift 4
+#define HK_Authorization01Enabled              10830      // 1 Bit, Bit 7
+#define     HK_Authorization01EnabledMask 0x80
+#define     HK_Authorization01EnabledShift 7
+#define HK_Authorization01Issuer               10831      // char*, 17 Byte
+#define     HK_Authorization01IssuerLength 17
+#define HK_Authorization01Endpoint             10848      // char*, 13 Byte
+#define     HK_Authorization01EndpointLength 13
+#define HK_Authorization01AccessId             10861      // uint16_t
+#define HK_Authorization02Enabled              10863      // 1 Bit, Bit 7
+#define     HK_Authorization02EnabledMask 0x80
+#define     HK_Authorization02EnabledShift 7
+#define HK_Authorization02Issuer               10864      // char*, 17 Byte
+#define     HK_Authorization02IssuerLength 17
+#define HK_Authorization02Endpoint             10881      // char*, 13 Byte
+#define     HK_Authorization02EndpointLength 13
+#define HK_Authorization02AccessId             10894      // uint16_t
+#define HK_Authorization03Enabled              10896      // 1 Bit, Bit 7
+#define     HK_Authorization03EnabledMask 0x80
+#define     HK_Authorization03EnabledShift 7
+#define HK_Authorization03Issuer               10897      // char*, 17 Byte
+#define     HK_Authorization03IssuerLength 17
+#define HK_Authorization03Endpoint             10914      // char*, 13 Byte
+#define     HK_Authorization03EndpointLength 13
+#define HK_Authorization03AccessId             10927      // uint16_t
+#define HK_Authorization04Enabled              10929      // 1 Bit, Bit 7
+#define     HK_Authorization04EnabledMask 0x80
+#define     HK_Authorization04EnabledShift 7
+#define HK_Authorization04Issuer               10930      // char*, 17 Byte
+#define     HK_Authorization04IssuerLength 17
+#define HK_Authorization04Endpoint             10947      // char*, 13 Byte
+#define     HK_Authorization04EndpointLength 13
+#define HK_Authorization04AccessId             10960      // uint16_t
+#define HK_Authorization05Enabled              10962      // 1 Bit, Bit 7
+#define     HK_Authorization05EnabledMask 0x80
+#define     HK_Authorization05EnabledShift 7
+#define HK_Authorization05Issuer               10963      // char*, 17 Byte
+#define     HK_Authorization05IssuerLength 17
+#define HK_Authorization05Endpoint             10980      // char*, 13 Byte
+#define     HK_Authorization05EndpointLength 13
+#define HK_Authorization05AccessId             10993      // uint16_t
+#define HK_Authorization06Enabled              10995      // 1 Bit, Bit 7
+#define     HK_Authorization06EnabledMask 0x80
+#define     HK_Authorization06EnabledShift 7
+#define HK_Authorization06Issuer               10996      // char*, 17 Byte
+#define     HK_Authorization06IssuerLength 17
+#define HK_Authorization06Endpoint             11013      // char*, 13 Byte
+#define     HK_Authorization06EndpointLength 13
+#define HK_Authorization06AccessId             11026      // uint16_t
+#define HK_Authorization07Enabled              11028      // 1 Bit, Bit 7
+#define     HK_Authorization07EnabledMask 0x80
+#define     HK_Authorization07EnabledShift 7
+#define HK_Authorization07Issuer               11029      // char*, 17 Byte
+#define     HK_Authorization07IssuerLength 17
+#define HK_Authorization07Endpoint             11046      // char*, 13 Byte
+#define     HK_Authorization07EndpointLength 13
+#define HK_Authorization07AccessId             11059      // uint16_t
+#define HK_Authorization08Enabled              11061      // 1 Bit, Bit 7
+#define     HK_Authorization08EnabledMask 0x80
+#define     HK_Authorization08EnabledShift 7
+#define HK_Authorization08Issuer               11062      // char*, 17 Byte
+#define     HK_Authorization08IssuerLength 17
+#define HK_Authorization08Endpoint             11079      // char*, 13 Byte
+#define     HK_Authorization08EndpointLength 13
+#define HK_Authorization08AccessId             11092      // uint16_t
+#define HK_Authorization09Enabled              11094      // 1 Bit, Bit 7
+#define     HK_Authorization09EnabledMask 0x80
+#define     HK_Authorization09EnabledShift 7
+#define HK_Authorization09Issuer               11095      // char*, 17 Byte
+#define     HK_Authorization09IssuerLength 17
+#define HK_Authorization09Endpoint             11112      // char*, 13 Byte
+#define     HK_Authorization09EndpointLength 13
+#define HK_Authorization09AccessId             11125      // uint16_t
+#define HK_Authorization10Enabled              11127      // 1 Bit, Bit 7
+#define     HK_Authorization10EnabledMask 0x80
+#define     HK_Authorization10EnabledShift 7
+#define HK_Authorization10Issuer               11128      // char*, 17 Byte
+#define     HK_Authorization10IssuerLength 17
+#define HK_Authorization10Endpoint             11145      // char*, 13 Byte
+#define     HK_Authorization10EndpointLength 13
+#define HK_Authorization10AccessId             11158      // uint16_t
+#define HK_Authorization11Enabled              11160      // 1 Bit, Bit 7
+#define     HK_Authorization11EnabledMask 0x80
+#define     HK_Authorization11EnabledShift 7
+#define HK_Authorization11Issuer               11161      // char*, 17 Byte
+#define     HK_Authorization11IssuerLength 17
+#define HK_Authorization11Endpoint             11178      // char*, 13 Byte
+#define     HK_Authorization11EndpointLength 13
+#define HK_Authorization11AccessId             11191      // uint16_t
+#define HK_Authorization12Enabled              11193      // 1 Bit, Bit 7
+#define     HK_Authorization12EnabledMask 0x80
+#define     HK_Authorization12EnabledShift 7
+#define HK_Authorization12Issuer               11194      // char*, 17 Byte
+#define     HK_Authorization12IssuerLength 17
+#define HK_Authorization12Endpoint             11211      // char*, 13 Byte
+#define     HK_Authorization12EndpointLength 13
+#define HK_Authorization12AccessId             11224      // uint16_t
+#define HK_Authorization13Enabled              11226      // 1 Bit, Bit 7
+#define     HK_Authorization13EnabledMask 0x80
+#define     HK_Authorization13EnabledShift 7
+#define HK_Authorization13Issuer               11227      // char*, 17 Byte
+#define     HK_Authorization13IssuerLength 17
+#define HK_Authorization13Endpoint             11244      // char*, 13 Byte
+#define     HK_Authorization13EndpointLength 13
+#define HK_Authorization13AccessId             11257      // uint16_t
+#define HK_Authorization14Enabled              11259      // 1 Bit, Bit 7
+#define     HK_Authorization14EnabledMask 0x80
+#define     HK_Authorization14EnabledShift 7
+#define HK_Authorization14Issuer               11260      // char*, 17 Byte
+#define     HK_Authorization14IssuerLength 17
+#define HK_Authorization14Endpoint             11277      // char*, 13 Byte
+#define     HK_Authorization14EndpointLength 13
+#define HK_Authorization14AccessId             11290      // uint16_t
+#define HK_Authorization15Enabled              11292      // 1 Bit, Bit 7
+#define     HK_Authorization15EnabledMask 0x80
+#define     HK_Authorization15EnabledShift 7
+#define HK_Authorization15Issuer               11293      // char*, 17 Byte
+#define     HK_Authorization15IssuerLength 17
+#define HK_Authorization15Endpoint             11310      // char*, 13 Byte
+#define     HK_Authorization15EndpointLength 13
+#define HK_Authorization15AccessId             11323      // uint16_t
+#define HK_Authorization16Enabled              11325      // 1 Bit, Bit 7
+#define     HK_Authorization16EnabledMask 0x80
+#define     HK_Authorization16EnabledShift 7
+#define HK_Authorization16Issuer               11326      // char*, 17 Byte
+#define     HK_Authorization16IssuerLength 17
+#define HK_Authorization16Endpoint             11343      // char*, 13 Byte
+#define     HK_Authorization16EndpointLength 13
+#define HK_Authorization16AccessId             11356      // uint16_t
+#define HK_OnlineStatus                        11358      // char*, 200 Byte
+#define     HK_OnlineStatusLength 200
+
+// Apple Home Key aktivieren
+#define ParamHK_Enabled                             ((bool)(knx.paramByte(HK_Enabled) & HK_EnabledMask))
+// NFC-Inbetriebnahme über USB/KNX erlauben
+#define ParamHK_PairingPermitted                    ((bool)(knx.paramByte(HK_PairingPermitted) & HK_PairingPermittedMask))
+// Konventionelle UID-Tags zulassen
+#define ParamHK_AllowUid                            ((bool)(knx.paramByte(HK_AllowUid) & HK_AllowUidMask))
+// Berechtigungen aus ETS-Tabelle (sonst USB)
+#define ParamHK_EtsAuthorization                    ((bool)(knx.paramByte(HK_EtsAuthorization) & HK_EtsAuthorizationMask))
+// Berechtigung 1 aktiv
+#define ParamHK_Authorization01Enabled              ((bool)(knx.paramByte(HK_Authorization01Enabled) & HK_Authorization01EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization01Issuer               (knx.paramData(HK_Authorization01Issuer))
+#define ParamHK_Authorization01IssuerStr            (knx.paramString(HK_Authorization01Issuer, HK_Authorization01IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization01Endpoint             (knx.paramData(HK_Authorization01Endpoint))
+#define ParamHK_Authorization01EndpointStr          (knx.paramString(HK_Authorization01Endpoint, HK_Authorization01EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization01AccessId             (knx.paramWord(HK_Authorization01AccessId))
+// Berechtigung 2 aktiv
+#define ParamHK_Authorization02Enabled              ((bool)(knx.paramByte(HK_Authorization02Enabled) & HK_Authorization02EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization02Issuer               (knx.paramData(HK_Authorization02Issuer))
+#define ParamHK_Authorization02IssuerStr            (knx.paramString(HK_Authorization02Issuer, HK_Authorization02IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization02Endpoint             (knx.paramData(HK_Authorization02Endpoint))
+#define ParamHK_Authorization02EndpointStr          (knx.paramString(HK_Authorization02Endpoint, HK_Authorization02EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization02AccessId             (knx.paramWord(HK_Authorization02AccessId))
+// Berechtigung 3 aktiv
+#define ParamHK_Authorization03Enabled              ((bool)(knx.paramByte(HK_Authorization03Enabled) & HK_Authorization03EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization03Issuer               (knx.paramData(HK_Authorization03Issuer))
+#define ParamHK_Authorization03IssuerStr            (knx.paramString(HK_Authorization03Issuer, HK_Authorization03IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization03Endpoint             (knx.paramData(HK_Authorization03Endpoint))
+#define ParamHK_Authorization03EndpointStr          (knx.paramString(HK_Authorization03Endpoint, HK_Authorization03EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization03AccessId             (knx.paramWord(HK_Authorization03AccessId))
+// Berechtigung 4 aktiv
+#define ParamHK_Authorization04Enabled              ((bool)(knx.paramByte(HK_Authorization04Enabled) & HK_Authorization04EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization04Issuer               (knx.paramData(HK_Authorization04Issuer))
+#define ParamHK_Authorization04IssuerStr            (knx.paramString(HK_Authorization04Issuer, HK_Authorization04IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization04Endpoint             (knx.paramData(HK_Authorization04Endpoint))
+#define ParamHK_Authorization04EndpointStr          (knx.paramString(HK_Authorization04Endpoint, HK_Authorization04EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization04AccessId             (knx.paramWord(HK_Authorization04AccessId))
+// Berechtigung 5 aktiv
+#define ParamHK_Authorization05Enabled              ((bool)(knx.paramByte(HK_Authorization05Enabled) & HK_Authorization05EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization05Issuer               (knx.paramData(HK_Authorization05Issuer))
+#define ParamHK_Authorization05IssuerStr            (knx.paramString(HK_Authorization05Issuer, HK_Authorization05IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization05Endpoint             (knx.paramData(HK_Authorization05Endpoint))
+#define ParamHK_Authorization05EndpointStr          (knx.paramString(HK_Authorization05Endpoint, HK_Authorization05EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization05AccessId             (knx.paramWord(HK_Authorization05AccessId))
+// Berechtigung 6 aktiv
+#define ParamHK_Authorization06Enabled              ((bool)(knx.paramByte(HK_Authorization06Enabled) & HK_Authorization06EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization06Issuer               (knx.paramData(HK_Authorization06Issuer))
+#define ParamHK_Authorization06IssuerStr            (knx.paramString(HK_Authorization06Issuer, HK_Authorization06IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization06Endpoint             (knx.paramData(HK_Authorization06Endpoint))
+#define ParamHK_Authorization06EndpointStr          (knx.paramString(HK_Authorization06Endpoint, HK_Authorization06EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization06AccessId             (knx.paramWord(HK_Authorization06AccessId))
+// Berechtigung 7 aktiv
+#define ParamHK_Authorization07Enabled              ((bool)(knx.paramByte(HK_Authorization07Enabled) & HK_Authorization07EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization07Issuer               (knx.paramData(HK_Authorization07Issuer))
+#define ParamHK_Authorization07IssuerStr            (knx.paramString(HK_Authorization07Issuer, HK_Authorization07IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization07Endpoint             (knx.paramData(HK_Authorization07Endpoint))
+#define ParamHK_Authorization07EndpointStr          (knx.paramString(HK_Authorization07Endpoint, HK_Authorization07EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization07AccessId             (knx.paramWord(HK_Authorization07AccessId))
+// Berechtigung 8 aktiv
+#define ParamHK_Authorization08Enabled              ((bool)(knx.paramByte(HK_Authorization08Enabled) & HK_Authorization08EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization08Issuer               (knx.paramData(HK_Authorization08Issuer))
+#define ParamHK_Authorization08IssuerStr            (knx.paramString(HK_Authorization08Issuer, HK_Authorization08IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization08Endpoint             (knx.paramData(HK_Authorization08Endpoint))
+#define ParamHK_Authorization08EndpointStr          (knx.paramString(HK_Authorization08Endpoint, HK_Authorization08EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization08AccessId             (knx.paramWord(HK_Authorization08AccessId))
+// Berechtigung 9 aktiv
+#define ParamHK_Authorization09Enabled              ((bool)(knx.paramByte(HK_Authorization09Enabled) & HK_Authorization09EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization09Issuer               (knx.paramData(HK_Authorization09Issuer))
+#define ParamHK_Authorization09IssuerStr            (knx.paramString(HK_Authorization09Issuer, HK_Authorization09IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization09Endpoint             (knx.paramData(HK_Authorization09Endpoint))
+#define ParamHK_Authorization09EndpointStr          (knx.paramString(HK_Authorization09Endpoint, HK_Authorization09EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization09AccessId             (knx.paramWord(HK_Authorization09AccessId))
+// Berechtigung 10 aktiv
+#define ParamHK_Authorization10Enabled              ((bool)(knx.paramByte(HK_Authorization10Enabled) & HK_Authorization10EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization10Issuer               (knx.paramData(HK_Authorization10Issuer))
+#define ParamHK_Authorization10IssuerStr            (knx.paramString(HK_Authorization10Issuer, HK_Authorization10IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization10Endpoint             (knx.paramData(HK_Authorization10Endpoint))
+#define ParamHK_Authorization10EndpointStr          (knx.paramString(HK_Authorization10Endpoint, HK_Authorization10EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization10AccessId             (knx.paramWord(HK_Authorization10AccessId))
+// Berechtigung 11 aktiv
+#define ParamHK_Authorization11Enabled              ((bool)(knx.paramByte(HK_Authorization11Enabled) & HK_Authorization11EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization11Issuer               (knx.paramData(HK_Authorization11Issuer))
+#define ParamHK_Authorization11IssuerStr            (knx.paramString(HK_Authorization11Issuer, HK_Authorization11IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization11Endpoint             (knx.paramData(HK_Authorization11Endpoint))
+#define ParamHK_Authorization11EndpointStr          (knx.paramString(HK_Authorization11Endpoint, HK_Authorization11EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization11AccessId             (knx.paramWord(HK_Authorization11AccessId))
+// Berechtigung 12 aktiv
+#define ParamHK_Authorization12Enabled              ((bool)(knx.paramByte(HK_Authorization12Enabled) & HK_Authorization12EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization12Issuer               (knx.paramData(HK_Authorization12Issuer))
+#define ParamHK_Authorization12IssuerStr            (knx.paramString(HK_Authorization12Issuer, HK_Authorization12IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization12Endpoint             (knx.paramData(HK_Authorization12Endpoint))
+#define ParamHK_Authorization12EndpointStr          (knx.paramString(HK_Authorization12Endpoint, HK_Authorization12EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization12AccessId             (knx.paramWord(HK_Authorization12AccessId))
+// Berechtigung 13 aktiv
+#define ParamHK_Authorization13Enabled              ((bool)(knx.paramByte(HK_Authorization13Enabled) & HK_Authorization13EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization13Issuer               (knx.paramData(HK_Authorization13Issuer))
+#define ParamHK_Authorization13IssuerStr            (knx.paramString(HK_Authorization13Issuer, HK_Authorization13IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization13Endpoint             (knx.paramData(HK_Authorization13Endpoint))
+#define ParamHK_Authorization13EndpointStr          (knx.paramString(HK_Authorization13Endpoint, HK_Authorization13EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization13AccessId             (knx.paramWord(HK_Authorization13AccessId))
+// Berechtigung 14 aktiv
+#define ParamHK_Authorization14Enabled              ((bool)(knx.paramByte(HK_Authorization14Enabled) & HK_Authorization14EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization14Issuer               (knx.paramData(HK_Authorization14Issuer))
+#define ParamHK_Authorization14IssuerStr            (knx.paramString(HK_Authorization14Issuer, HK_Authorization14IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization14Endpoint             (knx.paramData(HK_Authorization14Endpoint))
+#define ParamHK_Authorization14EndpointStr          (knx.paramString(HK_Authorization14Endpoint, HK_Authorization14EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization14AccessId             (knx.paramWord(HK_Authorization14AccessId))
+// Berechtigung 15 aktiv
+#define ParamHK_Authorization15Enabled              ((bool)(knx.paramByte(HK_Authorization15Enabled) & HK_Authorization15EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization15Issuer               (knx.paramData(HK_Authorization15Issuer))
+#define ParamHK_Authorization15IssuerStr            (knx.paramString(HK_Authorization15Issuer, HK_Authorization15IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization15Endpoint             (knx.paramData(HK_Authorization15Endpoint))
+#define ParamHK_Authorization15EndpointStr          (knx.paramString(HK_Authorization15Endpoint, HK_Authorization15EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization15AccessId             (knx.paramWord(HK_Authorization15AccessId))
+// Berechtigung 16 aktiv
+#define ParamHK_Authorization16Enabled              ((bool)(knx.paramByte(HK_Authorization16Enabled) & HK_Authorization16EnabledMask))
+// Issuer-ID (16 Hex-Zeichen)
+#define ParamHK_Authorization16Issuer               (knx.paramData(HK_Authorization16Issuer))
+#define ParamHK_Authorization16IssuerStr            (knx.paramString(HK_Authorization16Issuer, HK_Authorization16IssuerLength))
+// Endpoint-ID (12 Hex-Zeichen)
+#define ParamHK_Authorization16Endpoint             (knx.paramData(HK_Authorization16Endpoint))
+#define ParamHK_Authorization16EndpointStr          (knx.paramString(HK_Authorization16Endpoint, HK_Authorization16EndpointLength))
+// Logische NFC-Aktions-ID
+#define ParamHK_Authorization16AccessId             (knx.paramWord(HK_Authorization16AccessId))
+// Letzte Online-Abfrage
+#define ParamHK_OnlineStatus                        (knx.paramData(HK_OnlineStatus))
+#define ParamHK_OnlineStatusStr                     (knx.paramString(HK_OnlineStatus, HK_OnlineStatusLength))
+
+#define HK_KoLockFeedback 11
+#define HK_KoCommissioningControl 12
+#define HK_KoCommissioningOpen 13
+#define HK_KoAuthorizationStatus 14
+#define HK_KoEndpointIndex 60
+#define HK_KoIssuerHigh 61
+#define HK_KoIssuerLow 62
+#define HK_KoEndpointId 63
+#define HK_KoCommissioningResult 64
+
+// Physische Verriegelung
+#define KoHK_LockFeedback                        (knx.getGroupObject(HK_KoLockFeedback))
+// Inbetriebnahme: 1=5 Minuten öffnen, 0=schließen
+#define KoHK_CommissioningControl                (knx.getGroupObject(HK_KoCommissioningControl))
+// Inbetriebnahme geöffnet
+#define KoHK_CommissioningOpen                   (knx.getGroupObject(HK_KoCommissioningOpen))
+// Berechtigungstabelle: Status
+#define KoHK_AuthorizationStatus                 (knx.getGroupObject(HK_KoAuthorizationStatus))
+// Provisionierten Endpoint auswählen (0..63)
+#define KoHK_EndpointIndex                       (knx.getGroupObject(HK_KoEndpointIndex))
+// Issuer-ID: erste 8 Hex-Zeichen
+#define KoHK_IssuerHigh                          (knx.getGroupObject(HK_KoIssuerHigh))
+// Issuer-ID: letzte 8 Hex-Zeichen
+#define KoHK_IssuerLow                           (knx.getGroupObject(HK_KoIssuerLow))
+// Endpoint-ID: 12 Hex-Zeichen
+#define KoHK_EndpointId                          (knx.getGroupObject(HK_KoEndpointId))
+// Inbetriebnahme: Befehlsergebnis
+#define KoHK_CommissioningResult                 (knx.getGroupObject(HK_KoCommissioningResult))
+
+#define NET_HostAddress                         11558      // IP address, 4 Byte
+#define NET_SubnetMask                          11562      // IP address, 4 Byte
+#define NET_GatewayAddress                      11566      // IP address, 4 Byte
+#define NET_NameserverAddress                   11570      // IP address, 4 Byte
+#define NET_CustomHostname                      11574      // 1 Bit, Bit 7
+#define     NET_CustomHostnameMask 0x80
+#define     NET_CustomHostnameShift 7
+#define NET_StaticIP                            11574      // 1 Bit, Bit 6
+#define     NET_StaticIPMask 0x40
+#define     NET_StaticIPShift 6
+#define NET_mDNS                                11575      // 1 Bit, Bit 7
+#define     NET_mDNSMask 0x80
+#define     NET_mDNSShift 7
+#define NET_HTTP                                11575      // 1 Bit, Bit 6
+#define     NET_HTTPMask 0x40
+#define     NET_HTTPShift 6
+#define NET_NTP                                 11575      // 1 Bit, Bit 5
+#define     NET_NTPMask 0x20
+#define     NET_NTPShift 5
+#define NET_OTAUpdate                           11575      // 2 Bits, Bit 4-3
+#define     NET_OTAUpdateMask 0x18
+#define     NET_OTAUpdateShift 3
+#define NET_MQTT                                11575      // 1 Bit, Bit 2
+#define     NET_MQTTMask 0x04
+#define     NET_MQTTShift 2
+#define NET_HostName                            11576      // char*, 24 Byte
+#define     NET_HostNameLength 24
+#define NET_LanMode                             11617      // 4 Bits, Bit 7-4
+#define     NET_LanModeMask 0xF0
+#define     NET_LanModeShift 4
+#define NET_NTPServer                           11618      // char*, 50 Byte
+#define     NET_NTPServerLength 50
+#define NET_MQTTServer                          11669      // char*, 20 Byte
+#define     NET_MQTTServerLength 20
+#define NET_MQTTUsername                        11690      // char*, 20 Byte
+#define     NET_MQTTUsernameLength 20
+#define NET_MQTTPassword                        11711      // char*, 20 Byte
+#define     NET_MQTTPasswordLength 20
+#define NET_MQTTPrefix                          11732      // char*, 20 Byte
+#define     NET_MQTTPrefixLength 20
+#define NET_MQTTPort                            11753      // uint16_t
+#define NET_MQTTTPRawData                       11755      // 1 Bit, Bit 7
+#define     NET_MQTTTPRawDataMask 0x80
+#define     NET_MQTTTPRawDataShift 7
+#define NET_MQTTMode                            11755      // 1 Bit, Bit 6
+#define     NET_MQTTModeMask 0x40
+#define     NET_MQTTModeShift 6
+
+// IP-Adresse
+#define ParamNET_HostAddress                         (knx.paramInt(NET_HostAddress))
+// Subnetzsmaske
+#define ParamNET_SubnetMask                          (knx.paramInt(NET_SubnetMask))
+// Standardgateway
+#define ParamNET_GatewayAddress                      (knx.paramInt(NET_GatewayAddress))
+// Nameserver
+#define ParamNET_NameserverAddress                   (knx.paramInt(NET_NameserverAddress))
+// Hostname anpassen
+#define ParamNET_CustomHostname                      ((bool)(knx.paramByte(NET_CustomHostname) & NET_CustomHostnameMask))
+// DHCP
+#define ParamNET_StaticIP                            ((bool)(knx.paramByte(NET_StaticIP) & NET_StaticIPMask))
+// mDNS
+#define ParamNET_mDNS                                ((bool)(knx.paramByte(NET_mDNS) & NET_mDNSMask))
+// Weberver
+#define ParamNET_HTTP                                ((bool)(knx.paramByte(NET_HTTP) & NET_HTTPMask))
+// NTP-Client
+#define ParamNET_NTP                                 ((bool)(knx.paramByte(NET_NTP) & NET_NTPMask))
+// OTA-Update
+#define ParamNET_OTAUpdate                           ((knx.paramByte(NET_OTAUpdate) & NET_OTAUpdateMask) >> NET_OTAUpdateShift)
+// MQTT
+#define ParamNET_MQTT                                ((bool)(knx.paramByte(NET_MQTT) & NET_MQTTMask))
+// Hostname
+#define ParamNET_HostName                            (knx.paramData(NET_HostName))
+#define ParamNET_HostNameStr                         (knx.paramString(NET_HostName, NET_HostNameLength))
+// LAN-Modus
+#define ParamNET_LanMode                             ((knx.paramByte(NET_LanMode) & NET_LanModeMask) >> NET_LanModeShift)
+// Zeitserver
+#define ParamNET_NTPServer                           (knx.paramData(NET_NTPServer))
+#define ParamNET_NTPServerStr                        (knx.paramString(NET_NTPServer, NET_NTPServerLength))
+// Server
+#define ParamNET_MQTTServer                          (knx.paramData(NET_MQTTServer))
+#define ParamNET_MQTTServerStr                       (knx.paramString(NET_MQTTServer, NET_MQTTServerLength))
+// Benutzer
+#define ParamNET_MQTTUsername                        (knx.paramData(NET_MQTTUsername))
+#define ParamNET_MQTTUsernameStr                     (knx.paramString(NET_MQTTUsername, NET_MQTTUsernameLength))
+// Passwort
+#define ParamNET_MQTTPassword                        (knx.paramData(NET_MQTTPassword))
+#define ParamNET_MQTTPasswordStr                     (knx.paramString(NET_MQTTPassword, NET_MQTTPasswordLength))
+// Prefix
+#define ParamNET_MQTTPrefix                          (knx.paramData(NET_MQTTPrefix))
+#define ParamNET_MQTTPrefixStr                       (knx.paramString(NET_MQTTPrefix, NET_MQTTPrefixLength))
+// Port
+#define ParamNET_MQTTPort                            (knx.paramWord(NET_MQTTPort))
+// Sende KNX TP Rohdaten
+#define ParamNET_MQTTTPRawData                       ((bool)(knx.paramByte(NET_MQTTTPRawData) & NET_MQTTTPRawDataMask))
+// Modus
+#define ParamNET_MQTTMode                            ((bool)(knx.paramByte(NET_MQTTMode) & NET_MQTTModeMask))
 
 
 // enumeration types

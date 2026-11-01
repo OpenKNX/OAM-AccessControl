@@ -10,6 +10,10 @@
 #endif
 #if defined(OPENKNX_HOMEKEY_ENABLED) && defined(ARDUINO_ARCH_ESP32)
 #include "HomeKeyModule.h"
+#ifdef OPENKNX_HOMEKEY_WEB
+#include "NetworkModule.h"
+#include "HomeKeyWifi.h"
+#endif
 #endif
 
 void setup()
@@ -18,7 +22,7 @@ void setup()
     // Keep the PN7161 in normal NCI mode before reader initialization.
     digitalWrite(NFC_DWL_REQ_PIN, LOW);
     pinMode(NFC_DWL_REQ_PIN, OUTPUT);
-    #ifdef KNX_IP_WIFI
+    #if defined(KNX_IP_WIFI) && !defined(OPENKNX_HOMEKEY_WEB)
     WiFi.mode(WIFI_STA);
     WiFi.setAutoReconnect(true);
     #ifdef OPENKNX_WIFI_SSID
@@ -33,6 +37,13 @@ void setup()
     #endif
 #endif
     openknx.init();
+#if defined(OPENKNX_HOMEKEY_WEB) && defined(OPENKNX_WIFI_SSID)
+    #ifndef OPENKNX_WIFI_PASSWORD
+        #define OPENKNX_WIFI_PASSWORD ""
+    #endif
+    if (!HomeKeyWifi::configure(OPENKNX_WIFI_SSID, OPENKNX_WIFI_PASSWORD))
+        logError("HomeKey", "Build-time WiFi configuration could not be saved or started");
+#endif
     openknx.addModule(1, openknxLogic);
     openknx.addModule(2, openknxAccessControl);
     openknx.addModule(3, openknxVirtualButtonModule);
@@ -43,6 +54,9 @@ void setup()
     openknx.addModule(6, openknxFeedback);
 #if defined(OPENKNX_HOMEKEY_ENABLED) && defined(ARDUINO_ARCH_ESP32)
     openknx.addModule(7, openknxHomeKey);
+#ifdef OPENKNX_HOMEKEY_WEB
+    openknx.addModule(8, openknxNetwork);
+#endif
 #endif
     openknx.addModule(9, openknxFileTransferModule);
     openknx.setup();
@@ -50,7 +64,7 @@ void setup()
 
 void loop()
 {
-#if defined(DEVICE_DEV_REG1_LAN_TP_Base_V00_11) && defined(KNX_IP_WIFI)
+#if defined(DEVICE_DEV_REG1_LAN_TP_Base_V00_11) && defined(KNX_IP_WIFI) && !defined(OPENKNX_HOMEKEY_WEB)
     // Wi-Fi can acquire/change its address after knx.start(). Reopen the IP
     // endpoint on that transition, and retry a failed multicast join.
     static uint32_t previousIp = 0;

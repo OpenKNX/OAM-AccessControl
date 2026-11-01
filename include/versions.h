@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAIN_Version "30f0531"
+#define MAIN_Version "e18d018"
 #define KNX_Version "2.6.0-beta.1+8e38048"
 #define MODULE_Common_Version "1.9.1+f099eb9"
 #define MODULE_Common_Version_Major 1
@@ -27,12 +27,17 @@
 #define MODULE_FileTransferModule_Version_Minor 3
 #define MODULE_FileTransferModule_Version_Revision 0
 #define MODULE_FileTransferModule_ETS 3
+#define MODULE_Network_Version "0.8.1+f28408c"
+#define MODULE_Network_Version_Major 0
+#define MODULE_Network_Version_Minor 8
+#define MODULE_Network_Version_Revision 1
+#define MODULE_Network_ETS 8
 #define MODULE_BinaryInput_Version "0.4.0+5048828"
 #define MODULE_BinaryInput_Version_Major 0
 #define MODULE_BinaryInput_Version_Minor 4
 #define MODULE_BinaryInput_Version_Revision 0
 #define MODULE_BinaryInput_ETS 4
-#define MODULE_HomeKey_Version "0.3.1+f44ad62"
+#define MODULE_HomeKey_Version "0.3.1+27f2757"
 #define MODULE_HomeKey_Version_Major 0
 #define MODULE_HomeKey_Version_Minor 3
 #define MODULE_HomeKey_Version_Revision 1

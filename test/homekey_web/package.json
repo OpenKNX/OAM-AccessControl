@@ -1,0 +1,10 @@
+{
+  "name": "homekey-web-tests",
+  "private": true,
+  "scripts": {
+    "test": "node homekey_ui_test.cjs"
+  },
+  "devDependencies": {
+    "jsqr": "1.4.0"
+  }
+}

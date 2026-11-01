@@ -36,7 +36,7 @@ SwitchActuator 0.3, VirtualButton 0.7 and BinaryInput 0.4. The XML verifies thes
 module versions. Do not bypass those checks or edit `knxprod.h` to hide a mismatch.
 
 The release ETS application version is 1.0 (encoded as 16, following 0.15), and
-the development version is 10.15. SwitchActuator global objects now use numbers
+the development version is 11.1. SwitchActuator global objects now use numbers
 8–10; its channel objects remain at 91–99. Regenerate/import the matching ETS
 application when using this firmware. Normal builds use `/tmp/oam-accesscontrol-libdeps`; isolated builds use a
 separate project-specific cache under `/tmp`. The R503Pro XML includes the keypad and
@@ -45,6 +45,8 @@ feedback definitions referenced by the shared AccessControl description.
 The local build helper clones committed local source and the recorded revisions
 onto `v1dev_HomeKey`, without switching shared checkouts or pushing. It isolates
 PlatformIO's library directory to avoid collisions with other local builds.
+`scripts/Build-HomeKey-Local.py` is an optional snapshot-validation helper, not
+an ETS generator or a normal build hook. Uncommitted changes are not included.
 PlatformIO may download toolchains and third-party libraries. Choose a new build
 directory for each snapshot:
 
@@ -100,7 +102,7 @@ ETS application for mask 0x57B0; the existing TP ETS application cannot be used
 unchanged for that target.
 
 Apple Home Key is compiled into all three REG1 environments (and the TP alias).
-They select `include/homekey/knxprod.h` and exclusively use OFM-HomeKey's
+They use the shared `include/knxprod.h` and exclusively use OFM-HomeKey's
 PN7161 I2C backend for ECP, provisioning, authentication and optional UID tags.
 Use the Home Key ETS application and commissioning steps below; Home Key must
 still be enabled and its endpoints explicitly authorized in ETS.
@@ -256,19 +258,119 @@ reuse the existing NFC action engine on the OpenKNX thread.
 ~/.platformio/penv/bin/pio run -e debug_ESP32S3_AppleHomeKey
 ```
 
-Use `src/AccessControl-HomeKey.xml` (development application A6/02, version 0.3)
-and `include/homekey/knxprod.h` together. The build script selects that header
-before all module compilations; existing application XML/header selection is
-retained for the other targets. Generate it with OpenKNXproducer 4.3.12:
+Use `src/AccessControl.xml` and `include/knxprod.h` together for development.
+Home Key parameters, communication objects and commissioning controls are
+included in the original A6/01 development application, alongside the existing
+modules. Home Key firmware remains opt-in via `OPENKNX_HOMEKEY_ENABLED`.
+The R503/R503Pro release XMLs remain unchanged and do not include Home Key;
+their release generation continues to regenerate the shared header as before.
+Regenerate the development header before returning to development builds.
+
+The development application version is now 11.1 (encoded as 177), including
+Home Key and Network. Rebuild firmware and download the
+matching ETS application; the former A6/02 Home Key product is no longer used.
+
+`scripts/HomeKey-Build.py` is a PlatformIO pre-build hook for Home Key-enabled
+targets. It checks that the shared generated header contains all 16
+authorization rows with the byte offsets, bit masks and string lengths
+expected by the firmware decoder. It does not generate ETS files, choose an
+alternate header, or clone repositories.
+
+Generate the development product with OpenKNXproducer 4.3.12 or newer:
 
 ```sh
-/path/to/OpenKNXproducer create src/AccessControl-HomeKey.xml \
-  -h include/homekey/knxprod.h -o /tmp/AccessControl-HomeKey.knxprod -d
+/path/to/OpenKNXproducer create src/AccessControl.xml \
+  -h include/knxprod.h -o src/AccessControl.knxprod -d
 ```
 
 On this Mac the producer generates the header and checks the expanded XML;
 ETS product signing is skipped and an XSD is not installed. Generate/sign the
 ETS import product with the appropriate producer setup on Windows.
+
+Apple Home Key is a parameter page inside **Zutrittskontrolle**, with an Apple
+icon and German context help for every displayed parameter and commissioning
+control. It is shown only when **Allgemein > Hardware > NFC Scanner** selects
+an NFC scanner rather than **Kein NFC**. The development application also includes OFM-Network's Webserver
+and Wi-Fi commissioning parameters. R503/R503Pro release applications remain
+unchanged.
+
+### Home Key web page
+
+Home Key-enabled REG1 and XIAO targets include OFM-Network from `v1dev` at
+`f28408cd6cfd4e78c6df66586f88b16e6a2b5f33`. Its isolated checkout is linked
+through `lib/OFM-Network`; shared sibling checkouts are not switched.
+Network is used without local source patches. Home Key carries its anti-CSRF
+token and setup codes in a bounded POST body, not custom headers or URLs.
+Wi-Fi serves the web UI and HomeSpan even on
+KNX TP targets; it does not change the selected KNX transport.
+The REG1 TP and IP debug targets use `-Og` with full debug information to keep
+KNX IP, Home Key and the web UI inside the existing 3 MB application slot;
+the flash partition layout is unchanged.
+
+Enable **Netzwerk > Webserver** in ETS, then open the device's IP address in a
+browser. The standard **Übersicht** and **Gerätekonsole** pages use
+OFM-Network's built-in implementations, like OAM-NeoPixel. The web group monitor,
+file manager/upload and NeoPixel-specific pages are not included.
+Choose **Home Key** for its setup-code form, using the same OpenKNX navigation,
+layout, typography and status table. To save a setup code:
+
+1. Enable Apple Home Key and NFC commissioning in ETS and download the application.
+2. Activate programming mode.
+3. If a code is already stored, enter that existing code. Enter the new private
+   eight-digit setup code twice and select **Setup-Code speichern**.
+4. Wait for the persisted-save confirmation, then deactivate programming mode.
+
+Repeated digits and `12345678` / `87654321` are rejected. The page never reads
+back the code. Saving runs on the HomeSpan worker and closes any earlier pairing
+window; it does not open a new window or grant access. Disabled ETS commissioning,
+table unload, or loss of programming-mode permission cancels pending changes.
+Replacement is verified against the stored code on the HomeSpan worker, including
+console requests (`hk code <new8digits> <old8digits>` or
+`hk pair <new8digits> <old8digits>`). Only first initialization accepts no old code.
+Five incorrect attempts block changes for five minutes. The failure counter
+persists; reboot restarts an exhausted cooldown instead of clearing it.
+Successful authentication clears the counter. `hk reset` does not erase the
+setup code or provide a way around the old-code check.
+Requests use a per-boot anti-CSRF token. There is no web login or HTTPS; use only
+a trusted network. Programming mode can also be switched from OpenKNX's web UI
+and is not a physical-presence authentication mechanism.
+
+**Development security limitation:** web administration authentication has been
+deferred. The standard console permits commands and broadcasts their text to
+connected consoles; do not enter Wi-Fi passwords or setup codes there. Prefer
+the Home Key form for code changes. Console reset/flash commands can bypass
+application-level protections.
+Requiring the old code does **not** make these web tools safe on an untrusted
+network. Keep the webserver disabled except for supervised commissioning.
+A separate, user-configurable web administrator password and physically
+authorized first-use password setup are not implemented yet.
+
+To add the accessory in Apple Home, open the pairing window in ETS, then enter
+the current setup code under **In Apple Home hinzufügen** on the Home Key page.
+Scan the displayed QR with the iPhone camera or Apple Home's **Add Accessory**
+scanner; both devices must be on the same network. The QR uses a HomeKit
+`X-HM://` payload, lock category and IP pairing, with a stable MAC-derived
+four-character setup ID also configured in HomeSpan. QR generation runs entirely
+in the browser using locally served qrcode-generator 2.0.4 (MIT); no external
+service receives the code. This input is not checked against the saved code:
+an incorrect code cannot pair. No saved code is read back. The QR contains the
+entered code; keep it private. It is cleared when hidden, on page exit, on
+connection loss, or when polling reports commissioning closed/code changes
+pending. Apple Home pairing alone does not grant door access.
+
+On Windows, install OpenKNXproducer 4.3.12 or newer at
+`%USERPROFILE%\bin\OpenKNXproducer.exe`. In VS Code, select **Terminal > Run Task >
+OpenKNXproducer**. This generates `src/AccessControl.knxprod` for ETS import
+and refreshes `include/knxprod.h`, including the Home Key definitions.
+Rebuild development firmware after regenerating its header.
+
+The equivalent PowerShell command, run from the project root, is:
+
+```powershell
+& "$HOME\bin\OpenKNXproducer.exe" create --Debug `
+  -h include\knxprod.h -o src\AccessControl.knxprod `
+  src\AccessControl.xml
+```
 
 Configure Wi-Fi from the local serial console with `wifi <SSID> <password>`
 before ETS setup if needed. Enable Home Key and commissioning in its ETS
