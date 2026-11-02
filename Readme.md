@@ -75,10 +75,10 @@ and rejection of incomplete transfers. Invalid UID lengths are rejected on ESP32
 RP2040 transport body and platform-specific peripheral operations are retained.
 
 The application links the separately committed local `PN7160` checkout. Its
-OGM-Common dependency uses an isolated worktree under `.homekey-repos/OGM-Common`
-at the unmodified upstream `v1dev` revision `f099eb9` (1.9.1), which already
-includes ESP32 I2C initialization. The shared OGM-Common development checkout
-remains on its original branch. The ETS configuration uses Common 1.9 and
+OGM-Common dependency uses the private checkout under `.homekey-repos/private/OGM-Common`,
+based on upstream revision `f099eb9` (1.9.1) with the logger prefix overflow fix.
+The exact revision is pinned in `dependencies.txt`. The shared OGM-Common
+development checkout is not used or modified. The ETS configuration uses Common 1.9 and
 requires OpenKNXproducer 4.3.12 or newer. The checked-in R503 header was
 regenerated from `src/AccessControl-ReleaseR503.xml`.
 
@@ -172,6 +172,48 @@ with Ethernet RMII, so Ethernet must remain disconnected and disabled with
 this wiring. The Home Key reader applies the fixed 3.3 V PMU/TXLDO preset for
 VANT=3.3 V, following the [module vendor's supply configuration](https://www.elechouse.com/docs/pn7161/).
 Reader operation and phone/watch provisioning require hardware validation.
+
+#### Power supply and startup troubleshooting
+
+Use the board's documented external-power input and supply-selection settings
+when the USB-only supply cannot sustain Wi-Fi startup. On the tested v00.11
+board, USB-only operation measured approximately 2.9 V on the nominal 3.3 V rail:
+serial-only and OpenKNX-only tests stayed running, but enabling Wi-Fi caused the
+USB serial connection to disappear. The same Wi-Fi test booted successfully
+with external power connected alongside USB. HomeSpan enables Wi-Fi before
+Arduino `setup()`, so this supply issue can prevent any application log output.
+
+The [official v00.11 schematic](https://github.com/OpenKNX/OpenKNX-REG1/blob/main/doc/REG1-Controller-ESP/REG1-IpTpControllerESP-Devboard_V00.11.sch.pdf)
+shows USB regulator U150 followed by Schottky diodes D150/D151 (1N5819).
+Check the loaded ESP32 supply and the documented power routing; do not bypass
+diodes, bridge unverified power jumpers or disable brownout protection as a
+workaround. The `No core dump partition found` message also appeared in stable
+test runs and does not by itself identify the reset cause. The normal IP
+environment includes the full application, not the temporary isolation tests.
+With external power, the restored full IP firmware was also verified to boot,
+join Wi-Fi, serve its web UI and answer serial commands for over two minutes
+without restarting. The board was ETS-unconfigured during this test; Home Key
+provisioning and NFC authentication were not exercised.
+
+After ETS configuration, a separate `Stack smashing protect failure` during
+fingerprint flash initialization was traced to Common's logger: the prefix
+`FlashDriver<fingerprint>` exceeds its old 23-byte construction buffer.
+The private Common dependency now constructs prefixes as strings; the display
+width still uses `OPENKNX_MAX_LOG_PREFIX_LENGTH`. This fix is independent of
+the Wi-Fi power issue. Run the native regression against the actual prefix
+implementations with:
+
+```powershell
+.\test\logger\prefix_test.ps1 -Compiler C:\msys64\mingw64\bin\g++.exe
+```
+
+The regression and IP firmware build passed, and the flashed fix passed
+configured fingerprint initialization. With browser clients closed, a 95-second
+boot test stayed running with about 39.5 KiB free heap after Wi-Fi connected.
+Full configured operation is not yet validated: separate intermittent allocation
+failures in the web server caused resets, and the connected PN7161 reported
+I2C health-check failures. The logger fix is included in the pinned private
+Common dependency revision.
 
 Native I2C transport checks (header/payload framing, transfer failures, standby
 NACK retry, IRQ timeout/tick wrap and reset):
@@ -456,7 +498,8 @@ The Home Key implementation and its ESP32 integration changed these repositories
 | OFM-SwitchActuator | Console diagnostic API compatibility fix used by the integration |
 | OFM-FileTransferModule | Conditional gzip compiler-warning fix in the earlier Home Key integration; current checkout uses the upstream `ec/v1dev` branch |
 
-HomeSpan is used without source modifications. OGM-Common, OGM-HardwareConfig,
+HomeSpan is used without source modifications. OGM-Common uses the private
+repository with the logger prefix overflow fix. OGM-HardwareConfig,
 LogicModule, BinaryInput, VirtualButton and ConfigTransfer use their existing
 upstream checkouts. `dependencies.txt` records the actual local revisions used
 by the verified builds, including the current KNX stack checkout.
@@ -469,6 +512,7 @@ repositories under `u20p17`:
 | Repository | Purpose |
 | --- | --- |
 | [OAM-AccessControl](https://github.com/u20p17/OAM-AccessControl) | Application and build configuration |
+| [OGM-Common](https://github.com/u20p17/OGM-Common) | Logger prefix overflow fix |
 | [OFM-HomeKey](https://github.com/u20p17/OFM-HomeKey) | Home Key implementation |
 | [OFM-AccessControl](https://github.com/u20p17/OFM-AccessControl) | Access-control integration |
 | [DigitalDoorKey](https://github.com/u20p17/DigitalDoorKey) | Arduino authentication wrapper |

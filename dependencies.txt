@@ -8,7 +8,7 @@ bdf6a2e v1dev_HomeKey lib/OFM-FileTransferModule https://github.com/u20p17/OFM-F
 ad02129 v1dev lib/OFM-LogicModule https://github.com/OpenKNX/OFM-LogicModule
 d8c4ccc v1dev_HomeKey lib/OFM-SwitchActuator https://github.com/u20p17/OFM-SwitchActuator.git
 f822931 HEAD lib/OFM-VirtualButton https://github.com/OpenKNX/OFM-VirtualButton.git
-f099eb9 v1dev_HomeKey lib/OGM-Common https://github.com/OpenKNX/OGM-Common
+73bd37998243f320858d49d3ddb6a9d02e3e7759 v1dev_HomeKey lib/OGM-Common https://github.com/u20p17/OGM-Common.git
 0c5a94d HEAD lib/OGM-HardwareConfig https://github.com/OpenKNX/OGM-HardwareConfig
 0c3dfe5 v1dev_HomeKey lib/PN7160 https://github.com/u20p17/PN7160.git
 6489a51 v1dev_HomeKey lib/DigitalDoorKey https://github.com/u20p17/DigitalDoorKey.git
