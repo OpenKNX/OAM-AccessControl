@@ -20,8 +20,8 @@ void setup()
 {
 #ifdef DEVICE_DEV_REG1_LAN_TP_Base_V00_11
     // Keep the PN7161 in normal NCI mode before reader initialization.
-    digitalWrite(NFC_DWL_REQ_PIN, LOW);
     pinMode(NFC_DWL_REQ_PIN, OUTPUT);
+    digitalWrite(NFC_DWL_REQ_PIN, LOW);
     #if defined(KNX_IP_WIFI) && !defined(OPENKNX_HOMEKEY_WEB)
     WiFi.mode(WIFI_STA);
     WiFi.setAutoReconnect(true);

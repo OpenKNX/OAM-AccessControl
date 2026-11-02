@@ -229,6 +229,16 @@ and a 4 KiB largest free block. Under pressure the server returns HTTP 503 with
 `Retry-After: 5`, closes that connection and prints the free/largest heap sizes.
 These are runtime memory limits; flash partition sizes do not add RAM.
 
+REG1 uses a 2 KiB web-console ring instead of 4 KiB, saving 2 KiB of static
+RAM. Long log bursts can overwrite older buffered output sooner. Other
+profiles keep their existing defaults. The 16 KiB web admission threshold
+and Home Key task stack sizes remain unchanged.
+
+Use `hk memory` on the serial console after boot, web access, pairing and a
+Home Key authentication. It reports internal free/minimum heap, largest block,
+and Home Key task minimum stack headroom. Runtime heap and stack margins
+require these on-device exercises before reducing stacks further.
+
 Native fragmented-heap/allocation-failure and stream-cleanup regression:
 
 ```sh
