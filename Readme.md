@@ -75,7 +75,8 @@ and rejection of incomplete transfers. Invalid UID lengths are rejected on ESP32
 RP2040 transport body and platform-specific peripheral operations are retained.
 
 The application links the separately committed local `PN7160` checkout. Its
-OGM-Common dependency uses the private checkout under `.homekey-repos/private/OGM-Common`,
+OGM-Common dependency uses the private checkout at
+`../OGM-Common`,
 based on upstream revision `f099eb9` (1.9.1) with the logger prefix overflow fix.
 The exact revision is pinned in `dependencies.txt`. The shared OGM-Common
 development checkout is not used or modified. The ETS configuration uses Common 1.9 and
@@ -384,10 +385,10 @@ unchanged.
 
 ### Home Key web page
 
-Home Key-enabled REG1 and XIAO targets include OFM-Network from `v1dev` at
-`f28408cd6cfd4e78c6df66586f88b16e6a2b5f33`. Its isolated checkout is linked
-through `lib/OFM-Network`; shared sibling checkouts are not switched.
-Network is used without local source patches. Home Key carries its anti-CSRF
+Home Key-enabled REG1 and XIAO targets include the private OFM-Network `v1dev`
+checkout with the bounded web-memory fix at `9c46cb8`. Its checkout under the
+HomeKey workspace is linked through `lib/OFM-Network`.
+Home Key carries its anti-CSRF
 token and setup codes in a bounded POST body, not custom headers or URLs.
 Wi-Fi serves the web UI and HomeSpan even on
 KNX TP targets; it does not change the selected KNX transport.
@@ -499,7 +500,8 @@ profiles compiled and linked successfully with this platform pin on 2026-10-09.
 The Arduino-only integration builds without an IDF project conversion. Exact
 local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.8 is
 pinned in the environment. Modified dependencies, including OFM-HomeKey, are
-checked out under `.homekey-repos/private` and linked from `lib`.
+checked out under `..` and linked from
+`lib`. Each library has its own Git checkout in `HomeKey/<library-name>`.
 
 Home Key upstream dependencies were checked on 2026-10-30:
 
@@ -510,7 +512,7 @@ Home Key upstream dependencies were checked on 2026-10-30:
 | PN7161 driver (`rednblkx/pn7160`) | [db5cb56](https://github.com/rednblkx/pn7160/commit/db5cb56b2ccfbaa4c30879043a3597bd6c7d53c8) | Current upstream; existing wrapper retained |
 
 The updated DigitalDoorKey wrapper lives in
-`.homekey-repos/private/DigitalDoorKey` and is linked through `lib/DigitalDoorKey`.
+`../DigitalDoorKey` and is linked through `lib/DigitalDoorKey`.
 Its exact local revision is pinned in `dependencies.txt`.
 The local OFM-HomeKey implementation retains its PN7161 I2C, Wi-Fi console and
 commissioning changes. Other OpenKNX dependencies were not updated.
@@ -521,6 +523,8 @@ The Home Key implementation and its ESP32 integration changed these repositories
 | --- | --- |
 | OAM-AccessControl | Build environments, board wiring, flash partitions, ETS integration, startup and regression checks |
 | OFM-HomeKey | HomeKit provisioning, authentication, authorization mappings, ETS commissioning, PN7161 I2C transport and Wi-Fi console/help |
+| OFM-Network | Bounded ESP32 web response allocation and low-memory handling |
+| OGM-Common | Logger prefix overflow fix |
 | OFM-AccessControl | ESP32 credential storage/peripherals and guarded Home Key/externally owned NFC adapter |
 | DigitalDoorKey | Arduino/PlatformIO wrapper and SDK crypto/header integration |
 | PN7161 (`rednblkx/pn7160`) | Distinct Arduino/PlatformIO SPI/NCI driver wrapper; the I2C transport is in OFM-HomeKey |
@@ -544,6 +548,7 @@ repositories under `u20p17`:
 | [OAM-AccessControl](https://github.com/u20p17/OAM-AccessControl) | Application and build configuration |
 | [OGM-Common](https://github.com/u20p17/OGM-Common) | Logger prefix overflow fix |
 | [OFM-HomeKey](https://github.com/u20p17/OFM-HomeKey) | Home Key implementation |
+| [OFM-Network](https://github.com/u20p17/OFM-Network) | Web server and memory-pressure fixes |
 | [OFM-AccessControl](https://github.com/u20p17/OFM-AccessControl) | Access-control integration |
 | [DigitalDoorKey](https://github.com/u20p17/DigitalDoorKey) | Arduino authentication wrapper |
 | [PN7161](https://github.com/u20p17/PN7161) | PN7161 NCI driver wrapper |
@@ -552,13 +557,21 @@ repositories under `u20p17`:
 | [OFM-FileTransferModule](https://github.com/u20p17/OFM-FileTransferModule) | Firmware/file-transfer dependency |
 | [knx](https://github.com/u20p17/knx) | KNX stack branch used by this application |
 
-Each private repository uses `v1dev_HomeKey` as its development branch. The
+Most private dependencies use `v1dev_HomeKey`; OFM-Network uses `v1dev` and
+OFM-HomeKey's web-memory fix uses `fix/esp32-web-memory`. The exact branch and
+commit for every dependency are recorded in `dependencies.txt`. The
 local `origin` points to the private repository and is the default push remote.
 Where a public source exists, it is retained as `upstream` for fetching, with
 its push URL disabled (`no_push://public-upstream-disabled`). Existing shared
 OpenKNX checkouts retain their original remotes. GitHub Actions is disabled on
 the private repositories; no collaborators were added. `dependencies.txt`
 records the private clone URLs and exact revisions of modified dependencies.
+
+The ten private dependencies are checked out directly from GitHub in
+`..`. Application library links use
+relative paths such as `lib/OFM-Network -> ../../../HomeKey/OFM-Network`.
+`AccessControl.code-workspace` opens these active library links so the editor
+shows the same checkout that PlatformIO builds.
 
 The dependency checkouts are linked from `lib`. Do not replace those links with public upstream
 clones: the committed local wrappers are required. The isolated build helper

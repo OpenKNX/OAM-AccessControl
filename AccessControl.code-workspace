@@ -4,10 +4,10 @@
 			"path": "."
 		},
 		{
-			"path": "../knx"
+			"path": "lib/knx"
 		},
 		{
-			"path": "../OFM-AccessControl"
+			"path": "lib/OFM-AccessControl"
 		},
 		{
 			"path": "../OFM-BinaryInput"
@@ -19,22 +19,37 @@
 			"path": "../OFM-Feedback"
 		},
 		{
-			"path": "../OFM-FileTransferModule"
+			"path": "lib/OFM-FileTransferModule"
 		},
 		{
 			"path": "../OFM-Logicmodule"
 		},
 		{
-			"path": "../OFM-SwitchActuator"
+			"path": "lib/OFM-SwitchActuator"
 		},
 		{
 			"path": "../OFM-VirtualButton"
 		},
 		{
-			"path": "../OGM-Common"
+			"path": "lib/OGM-Common"
 		},
 		{
 			"path": "../OGM-HardwareConfig"
+		},
+		{
+			"path": "lib/DigitalDoorKey"
+		},
+		{
+			"path": "lib/OFM-HomeKey"
+		},
+		{
+			"path": "lib/OFM-Network"
+		},
+		{
+			"path": "lib/PN7160"
+		},
+		{
+			"path": "lib/PN7161"
 		}
 	],
 	"settings": {
