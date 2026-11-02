@@ -210,10 +210,40 @@ implementations with:
 The regression and IP firmware build passed, and the flashed fix passed
 configured fingerprint initialization. With browser clients closed, a 95-second
 boot test stayed running with about 39.5 KiB free heap after Wi-Fi connected.
-Full configured operation is not yet validated: separate intermittent allocation
-failures in the web server caused resets, and the connected PN7161 reported
-I2C health-check failures. The logger fix is included in the pinned private
-Common dependency revision.
+The logger fix is included in the pinned private Common dependency revision.
+
+The subsequent web reset was decoded with the matching Windows ELF (SHA-256
+prefix `802fa396b`): `operator new` → `std::string::_M_append` →
+`Webserver::buildOverviewPage()` at line 290. This is a failed contiguous heap
+allocation during overview HTML growth. The overview and Home Key page now
+assemble their body in checked 512-byte chunks, avoiding page-sized string
+growth and the second response copy. Partial output is discarded with HTTP 503
+if allocation fails. ESP32 request bodies/TX frames use checked allocations,
+WebSocket RX uses bounded storage, and aborting a streamed response releases
+the remaining HTML chunks.
+
+REG1 limits the HTTP/WebSocket pool to three connections and admits requests
+only with at least 16 KiB of internal heap left after request-body allocation
+and a 4 KiB largest free block. Under pressure the server returns HTTP 503 with
+`Retry-After: 5`, closes that connection and prints the free/largest heap sizes.
+These are runtime memory limits; flash partition sizes do not add RAM.
+
+Native fragmented-heap/allocation-failure and stream-cleanup regression:
+
+```sh
+c++ -std=c++17 -fsanitize=address,undefined -fno-omit-frame-pointer \
+  -Itest/web_memory/stubs -Ilib/OFM-Network/src \
+  test/web_memory/response_test.cpp \
+  lib/OFM-Network/src/OpenKNX/Network/Webserver/WebResponse.cpp \
+  -o /tmp/oam-web-memory-test
+/tmp/oam-web-memory-test
+```
+
+The regression renders a 12 KiB body with no body allocation above 1 KiB,
+injects allocation failures, and verifies HTML byte order, recovery and
+deferred file cleanup. The IP firmware build is the firmware validation target.
+Configured page loading still needs a device test; the separately reported
+PN7161 I2C health-check failures are not explained by this web allocation trace.
 
 Native I2C transport checks (header/payload framing, transfer failures, standby
 NACK retry, IRQ timeout/tick wrap and reset):
