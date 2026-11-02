@@ -36,7 +36,7 @@ SwitchActuator 0.3, VirtualButton 0.7 and BinaryInput 0.4. The XML verifies thes
 module versions. Do not bypass those checks or edit `knxprod.h` to hide a mismatch.
 
 The release ETS application version is 1.0 (encoded as 16, following 0.15), and
-the development version is 11.1. SwitchActuator global objects now use numbers
+the development version is 11.2. SwitchActuator global objects now use numbers
 8–10; its channel objects remain at 91–99. Regenerate/import the matching ETS
 application when using this firmware. Normal builds use `/tmp/oam-accesscontrol-libdeps`; isolated builds use a
 separate project-specific cache under `/tmp`. The R503Pro XML includes the keypad and
@@ -89,7 +89,7 @@ Choose a target with `pio run -e <environment>`:
 | Environment | KNX transport |
 | --- | --- |
 | `debug_REG1_ESP_PN7161_TP` | TP, mask 0x07B0 |
-| `debug_REG1_ESP_PN7161_IP` | KNX IP over Wi-Fi, mask 0x57B0 |
+| `debug_REG1_ESP_PN7161_IP` | KNX IP over Wi-Fi, internal mask 0x57B0, reported mask 0x07B0 |
 | `debug_REG1_ESP_PN7161_TPIP` | KNX exclusively over TP, mask 0x07B0; Wi-Fi/IP for Apple Home Key |
 
 `debug_REG1_ESP_PN7161` remains an alias for the TP environment.
@@ -97,9 +97,25 @@ TPIP inherits the TP configuration. HomeSpan manages its Wi-Fi connection for
 HomeKit/Home Key; KNXnet/IP tunneling and routing are disabled. Wi-Fi connection
 changes do not restart the KNX TP stack. Since all REG1 targets enable Home Key,
 the TP and TPIP environments currently have the same transport configuration.
-IP firmware requires a matching
-ETS application for mask 0x57B0; the existing TP ETS application cannot be used
-unchanged for that target.
+The development ETS product supports both TP (`MT-0`) and IP (`MT-5`), following
+OAM-NeoPixel's single-product pattern. It uses mask `MV-07B0`; the IP firmware
+sets `OPENKNX_OVERRIDE_MASK_VERSION=0x07B0` so ETS sees the same compatible mask,
+while `MASK_VERSION=0x57B0` still selects the KNX IP stack internally.
+Choose the device's medium/line in ETS and flash the corresponding TP or IP
+environment; an ETS parameter does not switch the firmware transport. The
+environment named TPIP is still TP-only for KNX, not a simultaneous TP/IP router.
+
+Regenerate the development product with the existing **OpenKNXproducer** VS Code
+task, or run:
+
+```powershell
+& "$env:USERPROFILE\bin\OpenKNXproducer.exe" create --Debug -h include\knxprod.h -o src\AccessControl.knxprod src\AccessControl.xml
+```
+
+Import the regenerated 11.2 development product into ETS and rebuild/flash the
+matching firmware. Older IP binaries that report mask `0x57B0` do not have this
+single-product compatibility setting. The TP-only R503/R503Pro release products
+are unchanged.
 
 Apple Home Key is compiled into all three REG1 environments (and the TP alias).
 They use the shared `include/knxprod.h` and exclusively use OFM-HomeKey's

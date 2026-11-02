@@ -14,7 +14,7 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="11.1.0"
+    ApplicationVersion="11.2.0"
     ReplacesVersionsDownTo="4.0"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
@@ -22,6 +22,8 @@
     BuildSuffixText=" (Dev)"
     OrderNumber="OpenKnxAccessControl"
     BaggagesRootDir="A6/01"
+    MediumTypes="MT-0 MT-5"
+    MaskVersion="MV-07B0"
   />
 
   <op:define prefix="BASE" ModuleType="1"
