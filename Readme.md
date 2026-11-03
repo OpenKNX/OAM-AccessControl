@@ -416,6 +416,12 @@ unchanged.
 
 ### Home Key web page
 
+The page uses OAM-NeoPixel Studio-style tabs and cards: **Setup-Code**,
+**Apple Home**, and **Status**. It supports keyboard tab navigation and a
+stacked mobile layout. Missing ETS commissioning permission and programming-mode
+requirements are shown beside the setup form. QR codes are cleared when leaving
+the Apple Home tab; code validation and commissioning gates are preserved.
+
 Home Key-enabled REG1 and XIAO targets include the private OFM-Network `v1dev`
 checkout with the bounded web-memory fix at `9c46cb8`. Its checkout under the
 HomeKey workspace is linked through `lib/OFM-Network`.

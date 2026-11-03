@@ -7,10 +7,13 @@ const jsQR = require(process.argv[2] || 'jsqr');
 
 async function main() {
     const elements = new Map();
+    let focused;
     const element = id => {
         if (!elements.has(id)) elements.set(id, {
             value: '', disabled: true, hidden: false, required: false, dataset: {}, textContent: '',
-            innerHTML: '',
+            innerHTML: '', attributes: {},
+            setAttribute(name, value) { this.attributes[name] = value; },
+            focus() { focused = id; },
             replaceChildren() { this.innerHTML = ''; },
             addEventListener(event, callback) { this[event] = callback; }
         });
@@ -55,6 +58,25 @@ async function main() {
     const confirm = element('homekey-confirm');
     const submit = () => form.submit({ preventDefault() {} });
     const poll = async () => { await timer(); };
+    assert.equal(element('homekey-panel-setup').hidden, false);
+    assert.equal(element('homekey-panel-pairing').hidden, true);
+    assert.equal(element('homekey-panel-status').hidden, true);
+    const key = (tab, value) => element('homekey-tab-' + tab).keydown({
+        key: value, preventDefault() {}
+    });
+    key('setup', 'ArrowRight');
+    assert.equal(element('homekey-panel-pairing').hidden, false);
+    assert.equal(element('homekey-tab-pairing').attributes['aria-selected'], 'true');
+    assert.equal(element('homekey-tab-pairing').tabIndex, 0);
+    assert.equal(element('homekey-tab-setup').tabIndex, -1);
+    assert.equal(focused, 'homekey-tab-pairing');
+    key('pairing', 'Home');
+    assert.equal(focused, 'homekey-tab-setup');
+    key('setup', 'ArrowLeft');
+    assert.equal(focused, 'homekey-tab-status');
+    key('status', 'End');
+    assert.equal(focused, 'homekey-tab-status');
+    element('homekey-tab-setup').click();
     assert.equal(element('homekey-previous-row').hidden, true);
     assert.equal(previous.required, false);
     assert.equal(element('homekey-save').disabled, false);
@@ -94,6 +116,7 @@ async function main() {
     assert.equal(element('homekey-save').disabled, false);
     status.canSetCode = false;
     await poll();
+    assert.match(element('homekey-permission').textContent, /Programmiermodus/);
     assert.equal(element('homekey-save').disabled, true);
     assert.equal(element('homekey-qr-show').disabled, true);
     status.pairing = true;
@@ -138,6 +161,13 @@ async function main() {
         assert.equal(decoded.data, generatedPayload);
     }
     assert.equal(posts.length, postsBeforeQr); // QR code/setup code never sent to a server.
+    element('homekey-tab-status').click();
+    assert.equal(element('homekey-qr').hidden, true);
+    assert.equal(element('homekey-qr').innerHTML, '');
+    assert.equal(element('homekey-qr-placeholder').hidden, false);
+    element('homekey-tab-pairing').click();
+    qrInput.value = '24681357'; qrSubmit();
+    assert.equal(element('homekey-qr-placeholder').hidden, true);
     element('homekey-qr-hide').click();
     assert.equal(element('homekey-qr').hidden, true);
     assert.equal(element('homekey-qr').innerHTML, '');
@@ -166,6 +196,8 @@ async function main() {
     qrInput.value = '24681357'; qrSubmit();
     status.commissioning = false;
     await poll();
+    assert.match(element('homekey-permission').textContent, /NFC-Inbetriebnahme über USB\/KNX erlauben/);
+    assert.equal(element('homekey-commissioning').dataset.state, 'off');
     assert.equal(element('homekey-qr-show').disabled, true);
     assert.equal(element('homekey-qr').innerHTML, '');
     status.commissioning = true;
@@ -175,7 +207,8 @@ async function main() {
     await poll();
     assert.equal(element('homekey-qr-show').disabled, true);
     assert.equal(element('homekey-qr').innerHTML, '');
-    console.log('Home Key form, cooldown and locally generated/scannable HomeKit QR checks passed');
+    assert.equal(element('homekey-connection').dataset.state, 'offline');
+    console.log('Home Key tabs, form, cooldown and locally generated/scannable HomeKit QR checks passed');
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });
