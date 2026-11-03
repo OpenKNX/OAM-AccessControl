@@ -18,6 +18,10 @@
 
 void setup()
 {
+#if defined(BOARD_XIAO_ESP32S3_HOMEKEY) && defined(OPENKNX_HOMEKEY_ENABLED)
+    pinMode(HOMEKEY_DWL_PIN, OUTPUT);
+    digitalWrite(HOMEKEY_DWL_PIN, LOW);
+#endif
 #ifdef DEVICE_DEV_REG1_LAN_TP_Base_V00_11
     // Keep the PN7161 in normal NCI mode before reader initialization.
     pinMode(NFC_DWL_REQ_PIN, OUTPUT);

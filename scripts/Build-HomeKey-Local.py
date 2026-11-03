@@ -19,7 +19,7 @@ def main():
                         help="New directory for isolated checkouts; never overwrites an existing directory")
     parser.add_argument("--pio", default=shutil.which("pio"), help="PlatformIO executable path")
     parser.add_argument("-e", "--environment", action="append",
-                        choices=["debug_RP2040", "debug_ESP32S3_HomeKey", "debug_ESP32S3_PN7160_Peripherals", "debug_ESP32S3_AppleHomeKey"],
+                        choices=["debug_RP2040", "debug_ESP32S3_HomeKey", "debug_ESP32S3_PN7160_Peripherals", "debug_ESP32S3_AppleHomeKey", "debug_ESP32S3_AppleHomeKey_IP"],
                         help="Build selected target; default: all four RP2040 / ESP32 targets")
     args = parser.parse_args()
     if not args.pio:

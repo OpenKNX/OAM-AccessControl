@@ -61,11 +61,27 @@ The helper builds these targets by default; use `-e` to select individual ones:
 | `debug_RP2040` | Existing RP2040 target and PN7160 implementation |
 | `debug_ESP32S3_HomeKey` | XIAO ESP32-S3 with PN7160 I2C and existing access-control features |
 | `debug_ESP32S3_PN7160_Peripherals` | ESP32 PN7160 plus fingerprint UART, Gira/matrix keypad, touch/LED expanders, four binary inputs and one bistable relay |
-| `debug_ESP32S3_AppleHomeKey` | ESP32 HomeSpan provisioning, DigitalDoorKey and PN7161 SPI prototype |
+| `debug_ESP32S3_AppleHomeKey` | KNX TP, ESP32 HomeSpan provisioning, DigitalDoorKey and PN7161 I2C module |
 
 Despite its development name, the ESP32 HomeKey target currently uses the legacy
 PN7160 protocol and UID-based credentials. Apple Home Key provisioning and
 authentication use the separate `debug_ESP32S3_AppleHomeKey` target.
+
+For XIAO Apple Home Key with **KNX IP over Wi-Fi**, select
+`debug_ESP32S3_AppleHomeKey_IP`. It uses the same PN7161 I2C pins and private
+library checkouts, Arduino 3.3.8/HomeSpan 2.1.8, PSRAM, and current Home Key
+startup/diagnostic fixes. The IP target uses internal mask 0x57B0 and reports
+0x07B0 for the development ETS product, matching REG1 IP. Its two Home Key
+task stacks are 8 KiB each, console ring 2 KiB, web connection limit three,
+and web admission limits 16 KiB free internal heap/4 KiB largest block.
+The original `debug_ESP32S3_AppleHomeKey` target remains KNX TP. Use:
+
+```sh
+~/.platformio/penv/bin/pio run -e debug_ESP32S3_AppleHomeKey_IP
+```
+
+The isolated build helper also accepts `-e debug_ESP32S3_AppleHomeKey_IP`;
+its default selection remains the four targets listed above.
 
 The ESP32 backend uses the same PN7160 NCI engine, tag detection/removal, UID
 enrollment and lookup, ETS action mappings and KNX synchronization as RP2040.
@@ -349,10 +365,10 @@ python3 scripts/Build-HomeKey-Local.py \
 
 ## Apple Home Key implementation (ESP32 prototype)
 
-`debug_ESP32S3_AppleHomeKey` and the REG1 environments enable the separately
+`debug_ESP32S3_AppleHomeKey`, `debug_ESP32S3_AppleHomeKey_IP` and the REG1 environments enable the separately
 versioned OFM-HomeKey module, HomeSpan NFC Access provisioning, DigitalDoorKey
 authentication, and persistent explicit issuer/endpoint-to-NFC-ID mappings.
-REG1 uses PN7161 I2C; XIAO uses SPI. The existing RP2040 and XIAO ESP32 PN7160
+REG1 and XIAO both use PN7161 I2C. The existing RP2040 and XIAO ESP32 PN7160
 I2C environments retain their reader paths. The Home Key targets exclude the
 legacy reader so only one module owns NFC. HomeKit pairing and UID
 identification do not authorize a Home Key endpoint; authenticated mapped IDs
@@ -407,7 +423,7 @@ Home Key carries its anti-CSRF
 token and setup codes in a bounded POST body, not custom headers or URLs.
 Wi-Fi serves the web UI and HomeSpan even on
 KNX TP targets; it does not change the selected KNX transport.
-The REG1 TP and IP debug targets use `-Og` with full debug information to keep
+The REG1 TP/IP and XIAO Apple Home Key IP debug targets use `-Og` with full debug information to keep
 KNX IP, Home Key and the web UI inside the existing 3 MB application slot;
 the flash partition layout is unchanged.
 
@@ -500,17 +516,41 @@ retain their versions, parameters and object numbers. Full object/status tables,
 commissioning, retention and revocation details are in
 [OFM-HomeKey/Readme.md](lib/OFM-HomeKey/Readme.md).
 
-PN7161 SPI prototype pins: CS GPIO1 (D0), SCLK GPIO7 (D8), MISO GPIO8 (D9),
-MOSI GPIO9 (D10), IRQ GPIO3 (D2), VEN GPIO4 (D3). They conflict with the optional
-fingerprint/relay profile; the build rejects that combination. Lock feedback
-uses KO 11 (1=physically locked). Home app remote unlock is not enabled.
+Both XIAO Apple Home Key targets use the PN7161 I2C module with this wiring:
 
-The three XIAO environments (`debug_ESP32S3_HomeKey`,
-`debug_ESP32S3_PN7160_Peripherals`, `debug_ESP32S3_AppleHomeKey`) locally pin
+| PN7161 | XIAO pin | ESP32-S3 GPIO |
+| --- | --- | --- |
+| DWL | D1 | 2 |
+| SDA | D4 | 5 |
+| SCL | D5 | 6 |
+| IRQ | D2 | 3 |
+| VEN | D3 | 4 |
+| VDD | 3V3 | — |
+| VANT | 3V3 | — |
+| GND | GND | — |
+
+The address is 0x28 at 400 kHz. Both select `HOMEKEY_READER_I2C` and the
+`HOMEKEY_PN7161_FIXED_3V3` power preset; DWL is held low from application setup.
+The optional fingerprint/relay profile conflicts with these control pins and
+cannot be combined with Apple Home Key. Lock feedback uses KO 11
+(1=physically locked). Home app remote unlock is not enabled.
+
+REG1 TP/IP/TPIP already select the same I2C transport and 3.3 V preset, using
+SDA21/SCL22/IRQ14/VEN13/DWL19. The earlier SPI selection affected only the XIAO
+Apple Home Key targets. SPI-target binaries produced before this correction
+must be replaced before connecting the I2C reader.
+
+The four XIAO environments (`debug_ESP32S3_HomeKey`,
+`debug_ESP32S3_PN7160_Peripherals`, `debug_ESP32S3_AppleHomeKey`,
+`debug_ESP32S3_AppleHomeKey_IP`) locally pin
 PioArduino 55.03.38-1 (Arduino 3.3.8 / ESP-IDF 5.5.4) through their shared
 HomeKey environment. The OGM-Common ESP32 platform selection and RP2040
-configuration are unchanged. HomeSpan is pinned to 2.1.8. All three
+configuration are unchanged. HomeSpan is pinned to 2.1.8. The original three
 profiles compiled and linked successfully with this platform pin on 2026-10-09.
+The XIAO Apple Home Key IP target was built and its effective IP/PSRAM flags
+verified on 2026-11-03 using OFM-HomeKey `0edf05c` and OFM-Network `9c46cb8`.
+This is compile/link validation; physical NFC, Wi-Fi and HomeKit operation
+on the XIAO still require device testing.
 
 The Arduino-only integration builds without an IDF project conversion. Exact
 local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.8 is

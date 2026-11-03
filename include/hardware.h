@@ -57,16 +57,21 @@
     #define NFC_VEN_PIN 4
 
     #ifdef OPENKNX_HOMEKEY_ENABLED
-        // PN7161 SPI prototype, mutually exclusive with the peripheral test profile.
+        // PN7161 I2C; DWL on D1 must stay low for normal NCI operation.
         #ifdef OPENKNX_ACC_TEST_PERIPHERALS
-            #error Home Key SPI pins conflict with the optional peripheral profile
+            #error Home Key I2C control pins conflict with the optional peripheral profile
         #endif
-        #define HOMEKEY_SPI_CS 1
-        #define HOMEKEY_SPI_SCLK 7
-        #define HOMEKEY_SPI_MISO 8
-        #define HOMEKEY_SPI_MOSI 9
-        #define HOMEKEY_IRQ_PIN 3
-        #define HOMEKEY_VEN_PIN 4
+        #define NFC_DWL_REQ_PIN 2
+        #define HOMEKEY_READER_I2C
+        #define HOMEKEY_I2C_SDA OPENKNX_GPIO_SDA
+        #define HOMEKEY_I2C_SCL OPENKNX_GPIO_SCL
+        #define HOMEKEY_I2C_ADDRESS NFC_PN7160_ADDR
+        #define HOMEKEY_I2C_CLOCK OPENKNX_GPIO_CLOCK
+        #define HOMEKEY_IRQ_PIN NFC_IRQ_PIN
+        #define HOMEKEY_VEN_PIN NFC_VEN_PIN
+        #define HOMEKEY_DWL_PIN NFC_DWL_REQ_PIN
+        #define HOMEKEY_PN7161_FIXED_3V3
+        #define HOMEKEY_DEVICE_MODEL "XIAO ESP32-S3 PN7161 I2C"
     #endif
 
     #ifdef OPENKNX_ACC_TEST_PERIPHERALS
