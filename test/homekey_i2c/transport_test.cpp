@@ -1,6 +1,8 @@
 #include "Pn7161I2cTransport.h"
 #include <Arduino.h>
 #include <freertos/task.h>
+#include <esp32-hal-i2c.h>
+#include <esp_idf_version.h>
 #include <cassert>
 #include <iostream>
 
@@ -31,21 +33,56 @@ int main()
     assert(reader.write(command, sizeof(command)) == ESP_ERR_TIMEOUT);
     assert(wire.transmissions == 0 && ticks - before == 20);
     levels[14] = LOW;
-    wire.statuses = {2, 0}; // Standby address NACK may be retried.
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
+    constexpr auto nack = ESP_ERR_INVALID_RESPONSE;
+#elif ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 4, 0)
+    constexpr auto nack = ESP_ERR_INVALID_STATE;
+#else
+    constexpr auto nack = ESP_FAIL;
+#endif
+    wire.statuses = {nack, ESP_OK}; // Standby NACK resends the complete frame.
     assert(reader.write(command, sizeof(command)) == ESP_OK);
     assert(wire.transmissions == 2 && wire.address == 0x28);
-    assert(wire.sent.back() == std::vector<uint8_t>(command, command + sizeof(command)));
-    wire.statuses = {3, 0}; // Data NACK must never duplicate a partial command.
-    assert(reader.write(command, sizeof(command)) == ESP_FAIL);
-    assert(wire.transmissions == 3 && wire.statuses.size() == 1);
-    wire.statuses.clear();
-    wire.shortWrite = 1;
-    assert(reader.write(command, sizeof(command)) == ESP_FAIL);
-    wire.shortWrite = 0;
-    wire.statuses = {2, 2, 2, 0};
+    assert(wire.sent[0] == std::vector<uint8_t>(command, command + sizeof(command)));
+    assert(wire.sent[1] == wire.sent[0]);
+    assert(ticks - before == 25); // Initial IRQ timeout plus one 5 ms wake-up delay.
+
+    // A timeout could follow an accepted packet: never replay it or other errors.
+    for (auto error : {ESP_ERR_TIMEOUT, ESP_ERR_INVALID_ARG, ESP_ERR_NO_MEM})
+    {
+        wire.statuses = {error, ESP_OK};
+        const auto attempts = wire.transmissions;
+        assert(reader.write(command, sizeof(command)) == error);
+        assert(wire.transmissions == attempts + 1 && wire.statuses.size() == 1);
+    }
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
+    wire.statuses = {ESP_ERR_INVALID_STATE, ESP_OK};
+    const auto invalidStateAttempts = wire.transmissions;
+    assert(reader.write(command, sizeof(command)) == ESP_ERR_INVALID_STATE);
+    assert(wire.transmissions == invalidStateAttempts + 1); // No longer a NACK on IDF 6.
+#endif
+    wire.statuses = {nack, nack, nack, ESP_OK};
     const auto attempts = wire.transmissions;
-    assert(reader.write(command, sizeof(command)) == ESP_FAIL);
-    assert(wire.transmissions - attempts == 3);
+    assert(reader.write(command, sizeof(command)) == nack);
+    assert(wire.transmissions - attempts == 3 && wire.statuses.size() == 1);
+
+    wire.statuses.clear();
+    wire.busInitialized = false;
+    assert(reader.write(command, sizeof(command)) == ESP_ERR_INVALID_STATE);
+    assert(wire.transmissions - attempts == 3); // An uninitialized bus is not a NACK.
+    wire.busInitialized = true;
+
+    // NXP allows IRQ to rise during a successful write (a response is waiting).
+    afterWrite = [] { levels[14] = HIGH; };
+    assert(reader.write(command, sizeof(command)) == ESP_OK);
+    levels[14] = LOW;
+    wire.statuses = {nack, ESP_OK};
+    const auto blocked = wire.transmissions;
+    assert(reader.write(command, sizeof(command)) == ESP_ERR_TIMEOUT);
+    assert(wire.transmissions == blocked + 1); // Pending inbound data blocks retries.
+    afterWrite = {};
+    levels[14] = LOW;
+    wire.statuses.clear();
 
     ticks = UINT32_MAX - 2;
     assert(reader.wait_for_irq(true, 5) == ESP_ERR_TIMEOUT); // Tick wrap.

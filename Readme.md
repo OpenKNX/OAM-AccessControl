@@ -232,7 +232,12 @@ These are runtime memory limits; flash partition sizes do not add RAM.
 REG1 uses a 2 KiB web-console ring instead of 4 KiB, saving 2 KiB of static
 RAM. Long log bursts can overwrite older buffered output sooner. Other
 profiles keep their existing defaults. The 16 KiB web admission threshold
-and Home Key task stack sizes remain unchanged.
+remains enabled. REG1 reserves 8 KiB each for the Home Key NFC and HAP tasks
+instead of 12 KiB, releasing another 8 KiB of heap once both tasks are running.
+The NFC task is created after HAP initialization finishes, avoiding overlap of
+its idle stack with temporary startup crypto allocations. `hk memory` reports
+minimum remaining stack space against the configured size; pairing and actual
+Home Key authentication still need on-device stack-margin checks.
 
 Use `hk memory` on the serial console after boot, web access, pairing and a
 Home Key authentication. It reports internal free/minimum heap, largest block,
@@ -257,7 +262,7 @@ Configured page loading still needs a device test; the separately reported
 PN7161 I2C health-check failures are not explained by this web allocation trace.
 
 Native I2C transport checks (header/payload framing, transfer failures, standby
-NACK retry, IRQ timeout/tick wrap and reset):
+full-frame NACK retries, timeout/no-replay behavior, IRQ timeout/tick wrap and reset):
 
 ```sh
 c++ -std=c++17 -DOPENKNX_HOMEKEY_ENABLED -DARDUINO_ARCH_ESP32 \

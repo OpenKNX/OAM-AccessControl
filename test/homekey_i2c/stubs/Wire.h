@@ -3,9 +3,12 @@
 #include <cstdint>
 #include <deque>
 #include <vector>
+#include <esp_err.h>
 class TwoWire
 {
   public:
+    inline static TwoWire* active = nullptr;
+    bool busInitialized = false;
     size_t capacity = 258;
     bool beginOk = true;
     int sda = -1, scl = -1, timeout = 0;
@@ -13,12 +16,14 @@ class TwoWire
     unsigned transmissions = 0;
     size_t shortWrite = 0;
     uint8_t address = 0;
-    std::deque<uint8_t> statuses;
+    std::deque<esp_err_t> statuses;
     std::deque<std::vector<uint8_t>> incoming;
     std::deque<uint8_t> rx;
     std::vector<std::vector<uint8_t>> sent;
     size_t setBufferSize(size_t) { return capacity; }
-    bool begin(int a, int b, uint32_t c) { sda = a; scl = b; clock = c; return beginOk; }
+    bool begin(int a, int b, uint32_t c) { active = this; sda = a; scl = b; clock = c; busInitialized = beginOk; return beginOk; }
+    uint8_t getBusNum() { return 1; }
+    uint16_t getTimeOut() { return timeout; }
     void setTimeOut(int t) { timeout = t; }
     size_t requestFrom(uint8_t a, size_t)
     {
