@@ -277,8 +277,18 @@ deferred file cleanup. The IP firmware build is the firmware validation target.
 Configured page loading still needs a device test; the separately reported
 PN7161 I2C health-check failures are not explained by this web allocation trace.
 
+The PN7161's ten-second health check can meet the reader in standby. A NACK
+then requests a full-frame retry; with the bundled ESP-IDF 5.5.4 this appears
+as `ESP_ERR_INVALID_STATE`. Arduino's `i2cWrite()` used to log each attempt as
+an error even when the retry succeeded. The Home Key transport now writes
+through a synchronous ESP-IDF device handle on the existing Wire bus, keeping
+ACK checks and bounded retries while reporting only final failures as errors.
+Recovered retries are debug messages. This does not change ETS authorization:
+`accessId=65535` still means the credential has no active NFC-Tag-ID mapping.
+
 Native I2C transport checks (header/payload framing, transfer failures, standby
-full-frame NACK retries, timeout/no-replay behavior, IRQ timeout/tick wrap and reset):
+full-frame NACK retries, error reporting, device-handle cleanup, timeout/no-replay
+behavior, IRQ timeout/tick wrap and reset):
 
 ```sh
 c++ -std=c++17 -DOPENKNX_HOMEKEY_ENABLED -DARDUINO_ARCH_ESP32 \
