@@ -414,6 +414,25 @@ an NFC scanner rather than **Kein NFC**. The development application also includ
 and Wi-Fi commissioning parameters. R503/R503Pro release applications remain
 unchanged.
 
+### NFC assignment IDs and Home Key information
+
+Home Key permissions use **NFC-Tag-ID** (formerly **Logische
+NFC-Aktions-ID**). This ID matches **Tag** in the NFC assignment table, not
+**Aktion**. For example, permission ID **100** needs **Tag 100 → Aktion 1**;
+configure action 1 and connect its switching object to the KNX actuator group
+address, then download parameters. ETS help includes the complete workflow.
+
+ETS checks duplicate IDs and identities between active Home Key permission
+rows and names the conflicting rows. The firmware independently rejects the
+entire Home Key table on duplicates. Ordinary UID tags must use separate IDs.
+Repeating a tag ID in the NFC action table is valid and selects multiple actions.
+
+**Info holen** now resolves Home Key names from the current ETS project, checks
+provisioning online and reports UID-slot conflicts. The 80-character information
+field shows a shortened result; the progress dialog shows the full text. Names
+and assignments still require an ETS download; this lookup grants no access.
+Legacy UID-tag lookup remains available without the Home Key module.
+
 ### ETS names and endpoint removal
 
 Every Home Key permission row now includes a 32-character **Bezeichnung**.
