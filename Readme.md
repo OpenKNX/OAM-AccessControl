@@ -702,6 +702,12 @@ Home Key upstream dependencies were checked on 2026-10-30:
 The updated DigitalDoorKey wrapper lives in
 `../DigitalDoorKey` and is linked through `lib/DigitalDoorKey`.
 Its exact local revision is pinned in `dependencies.txt`.
+The private TLV class is named `DdkTlv8` to avoid a linker collision with
+HomeSpan's incompatible global `TLV8`. The collision caused `LoadProhibited`
+in HomeSpan's `TLV8::add` while DigitalDoorKey composed NFC provisioning
+responses. The wire format is unchanged. The native coexistence/serialization
+regression and `debug_REG1_ESP_PN7161_IP` build pass with distinct linked
+symbols; the corrected firmware still requires physical provisioning validation.
 The local OFM-HomeKey implementation retains its PN7161 I2C, Wi-Fi console and
 commissioning changes. Other OpenKNX dependencies were not updated.
 
