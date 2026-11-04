@@ -1,5 +1,11 @@
 #include <HardwareConfig.h>
 
+#ifdef OPENKNX_NFC_ST25R3916_I2C
+    #ifndef OPENKNX_ST25R3916_I2C_ADDRESS
+        #define OPENKNX_ST25R3916_I2C_ADDRESS 0x50
+    #endif
+#endif
+
 #ifdef DEVICE_DEV_REG1_LAN_TP_Base_V00_11
     // PN7161 I2C is owned exclusively by the Home Key reader.
     // GPIO19/21/22 overlap RMII: do not connect/enable Ethernet.
@@ -24,7 +30,11 @@
         #ifndef HOMEKEY_PN7161_VANT_MV
             #define HOMEKEY_PN7161_VANT_MV 3300
         #endif
-        #define HOMEKEY_DEVICE_MODEL "REG1 ESP v00.11 PN7161"
+        #ifdef OPENKNX_NFC_ST25R3916_I2C
+            #define HOMEKEY_DEVICE_MODEL "REG1 ESP v00.11 ST25R3916 I2C"
+        #else
+            #define HOMEKEY_DEVICE_MODEL "REG1 ESP v00.11 PN7161"
+        #endif
     #endif
 
     #define OPENKNX_SWA_CHANNEL_COUNT 0
@@ -75,7 +85,11 @@
         #ifndef HOMEKEY_PN7161_VANT_MV
             #define HOMEKEY_PN7161_VANT_MV 3300
         #endif
-        #define HOMEKEY_DEVICE_MODEL "XIAO ESP32-S3 PN7161 I2C"
+        #ifdef OPENKNX_NFC_ST25R3916_I2C
+            #define HOMEKEY_DEVICE_MODEL "XIAO ESP32-S3 ST25R3916 I2C"
+        #else
+            #define HOMEKEY_DEVICE_MODEL "XIAO ESP32-S3 PN7161 I2C"
+        #endif
     #endif
 
     #ifdef OPENKNX_ACC_TEST_PERIPHERALS

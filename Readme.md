@@ -99,6 +99,52 @@ development checkout is not used or modified. The ETS configuration uses Common 
 requires OpenKNXproducer 4.3.12 or newer. The checked-in R503 header was
 regenerated from `src/AccessControl-ReleaseR503.xml`.
 
+### Elechouse ST25R3916 I2C
+
+The Elechouse I2C reader is available as an alternative backend, using the same
+ETS NFC-Tag-ID storage and action mapping as PN7161. No SPI interface is used.
+
+| Target | KNX connection |
+| --- | --- |
+| `debug_REG1_ESP_ST25R3916_TP` | TP |
+| `debug_REG1_ESP_ST25R3916_IP` | Wi-Fi/IP |
+| `debug_REG1_ESP_ST25R3916_TPIP` | TP for KNX, Wi-Fi for HomeKey |
+| `debug_ESP32S3_ST25R3916_TP` | XIAO TP |
+| `debug_ESP32S3_ST25R3916_IP` | XIAO Wi-Fi/IP |
+
+| Elechouse signal | REG1 v00.11 | XIAO ESP32-S3 |
+| --- | --- | --- |
+| SDA | GPIO21 | GPIO5 / D4 |
+| SCL | GPIO22 | GPIO6 / D5 |
+| 5V | Regulated 5 V supply | Regulated 5 V supply |
+| GND | GND | GND |
+
+Default I2C address is **0x50** at **400 kHz**. The reader polls its internal
+interrupt registers; IRQ is not required, and PN7161 VEN/DWL must not be wired
+for this backend. Use the module's documented 5 V input and ESP32-compatible
+logic levels. PN7161 profiles retain their existing wiring. The exact Elechouse
+board revision/supply still needs a hardware check before use.
+The Gira BS8116 keypad also uses address 0x50; it cannot share this I2C bus
+with the reader at its default address.
+
+In ETS select the external NFC scanner. For ordinary tags, keep **Konventionelle
+UID-Tags zulassen = Ja**; **Apple Home Key aktivieren** may be **Nein**. For mixed
+operation enable HomeKey too. For HomeKey-only operation disable conventional
+UID tags. This uses the existing ETS application 11.4 parameters; no new fields
+or tag IDs are introduced. HomeSpan does not start in UID-only mode. Profiles
+still include the HomeKey module in the binary, with an independent reader
+lifecycle. ECP is emitted only with HomeKey active and a provisioned group ID.
+
+The standalone driver and protocol tests live in the private
+[u20p17/ST25R3916](https://github.com/u20p17/ST25R3916) repository, checked out
+at `../ST25R3916` and linked through
+`lib/ST25R3916`. OFM-HomeKey contains only its `INfcReader` adapter; it generates
+ECP frames and handles authentication and authorization. Integration tests are
+in `test/homekey_st25`; hardware validation
+of iPhone/Watch, Express Mode and range is still pending. The reference and
+implementation decisions are recorded in
+[the integration plan](docs/ST25R3916-integration-plan.md).
+
 ### REG1-ipTpControllerESP-Devboard v00.11 with PN7161
 
 Choose a target with `pio run -e <environment>`:

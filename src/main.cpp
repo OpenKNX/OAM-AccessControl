@@ -18,14 +18,16 @@
 
 void setup()
 {
-#if defined(BOARD_XIAO_ESP32S3_HOMEKEY) && defined(OPENKNX_HOMEKEY_ENABLED)
+#if defined(BOARD_XIAO_ESP32S3_HOMEKEY) && defined(OPENKNX_HOMEKEY_ENABLED) && !defined(OPENKNX_NFC_ST25R3916_I2C)
     pinMode(HOMEKEY_DWL_PIN, OUTPUT);
     digitalWrite(HOMEKEY_DWL_PIN, LOW);
 #endif
 #ifdef DEVICE_DEV_REG1_LAN_TP_Base_V00_11
+#ifndef OPENKNX_NFC_ST25R3916_I2C
     // Keep the PN7161 in normal NCI mode before reader initialization.
     pinMode(NFC_DWL_REQ_PIN, OUTPUT);
     digitalWrite(NFC_DWL_REQ_PIN, LOW);
+#endif
     #if defined(KNX_IP_WIFI) && !defined(OPENKNX_HOMEKEY_WEB)
     WiFi.mode(WIFI_STA);
     WiFi.setAutoReconnect(true);
