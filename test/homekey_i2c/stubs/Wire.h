@@ -14,6 +14,9 @@ class TwoWire
     int sda = -1, scl = -1, timeout = 0;
     uint32_t clock = 0;
     unsigned transmissions = 0;
+    unsigned halWrites = 0, deviceAdds = 0, deviceRemoves = 0, liveDevices = 0;
+    bool busHandleAvailable = true;
+    esp_err_t deviceAddStatus = ESP_OK;
     size_t shortWrite = 0;
     uint8_t address = 0;
     std::deque<esp_err_t> statuses;
