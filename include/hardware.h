@@ -21,7 +21,9 @@
         #define HOMEKEY_IRQ_PIN NFC_IRQ_PIN
         #define HOMEKEY_VEN_PIN NFC_VEN_PIN
         #define HOMEKEY_DWL_PIN NFC_DWL_REQ_PIN
-        #define HOMEKEY_PN7161_FIXED_3V3
+        #ifndef HOMEKEY_PN7161_VANT_MV
+            #define HOMEKEY_PN7161_VANT_MV 3300
+        #endif
         #define HOMEKEY_DEVICE_MODEL "REG1 ESP v00.11 PN7161"
     #endif
 
@@ -70,7 +72,9 @@
         #define HOMEKEY_IRQ_PIN NFC_IRQ_PIN
         #define HOMEKEY_VEN_PIN NFC_VEN_PIN
         #define HOMEKEY_DWL_PIN NFC_DWL_REQ_PIN
-        #define HOMEKEY_PN7161_FIXED_3V3
+        #ifndef HOMEKEY_PN7161_VANT_MV
+            #define HOMEKEY_PN7161_VANT_MV 3300
+        #endif
         #define HOMEKEY_DEVICE_MODEL "XIAO ESP32-S3 PN7161 I2C"
     #endif
 

@@ -7,7 +7,7 @@
             (time & 0xC000) == 0x4000 ? (time & 0x3FFF) * 60000 : \
             (time & 0xC000) == 0x8000 ? ((time & 0x3FFF) > 1000 ? 3600000 : \
                                          (time & 0x3FFF) * 3600000 ) : 0 )
-                                             
+
 #define ETS_ModuleId_NONE 0
 #define ETS_ModuleId_BASE 1
 #define ETS_ModuleId_UCT 2
@@ -22,10 +22,10 @@
 #define MAIN_FirmwareName "Zutrittskontrolle (Dev)"
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 178
+#define MAIN_ApplicationVersion 179
 #define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
-#define MAIN_ParameterSize 11756
+#define MAIN_ParameterSize 12268
 #define MAIN_MaxKoNumber 949
 #define MAIN_OrderNumber "OpenKnxAccessControl"
 #define BASE_ModuleVersion 25
@@ -36,7 +36,7 @@
 #define BTN_ModuleVersion 7
 #define BI_ModuleVersion 4
 #define BUZZ_ModuleVersion 3
-#define HK_ModuleVersion 3
+#define HK_ModuleVersion 4
 #define NET_ModuleVersion 8
 // Parameter with single occurrence
 
@@ -180,9 +180,9 @@
 #define ParamBASE_Info2LedFunc                        (knx.paramWord(BASE_Info2LedFunc))
 // Info3
 #define ParamBASE_Info3LedFunc                        (knx.paramWord(BASE_Info3LedFunc))
-// 
+//
 #define ParamBASE_DefaultLedFunc                      ((bool)(knx.paramByte(BASE_DefaultLedFunc) & BASE_DefaultLedFuncMask))
-// 
+//
 #define ParamBASE_Dummy                               (knx.paramByte(BASE_Dummy))
 // UCT
 #define ParamBASE_ModuleEnabled_UCT                   ((bool)(knx.paramByte(BASE_ModuleEnabled_UCT) & BASE_ModuleEnabled_UCTMask))
@@ -2619,33 +2619,33 @@
 #define ParamLOG_fE1Low6Valid                        ((bool)(knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low6Valid)) & LOG_fE1Low6ValidMask))
 // Eingang ist EIN, wenn Wert gleich
 #define ParamLOG_fE1Low0Dpt2                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low0Dpt2)))
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE1Low1Dpt2                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low1Dpt2)))
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE1Low2Dpt2                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low2Dpt2)))
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE1Low3Dpt2                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low3Dpt2)))
 // Eingang ist konstant
 #define ParamLOG_fE1LowDpt2Fix                       (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1LowDpt2Fix)))
 // Eingang ist EIN, wenn Wert gleich
 #define ParamLOG_fE1Low0Dpt3Dir                      ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low0Dpt3Dir)) & LOG_fE1Low0Dpt3DirMask) >> LOG_fE1Low0Dpt3DirShift)
-// 
+//
 #define ParamLOG_fE1Low0Dpt3Dim                      (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low0Dpt3Dim)) & LOG_fE1Low0Dpt3DimMask)
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE1Low1Dpt3Dir                      ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low1Dpt3Dir)) & LOG_fE1Low1Dpt3DirMask) >> LOG_fE1Low1Dpt3DirShift)
-// 
+//
 #define ParamLOG_fE1Low1Dpt3Dim                      (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low1Dpt3Dim)) & LOG_fE1Low1Dpt3DimMask)
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE1Low2Dpt3Dir                      ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low2Dpt3Dir)) & LOG_fE1Low2Dpt3DirMask) >> LOG_fE1Low2Dpt3DirShift)
-// 
+//
 #define ParamLOG_fE1Low2Dpt3Dim                      (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low2Dpt3Dim)) & LOG_fE1Low2Dpt3DimMask)
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE1Low3Dpt3Dir                      ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low3Dpt3Dir)) & LOG_fE1Low3Dpt3DirMask) >> LOG_fE1Low3Dpt3DirShift)
-// 
+//
 #define ParamLOG_fE1Low3Dpt3Dim                      (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1Low3Dpt3Dim)) & LOG_fE1Low3Dpt3DimMask)
 // Eingang ist konstant
 #define ParamLOG_fE1LowDpt3FixDir                    ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE1LowDpt3FixDir)) & LOG_fE1LowDpt3FixDirMask) >> LOG_fE1LowDpt3FixDirShift)
-// 
+//
 #define ParamLOG_fE1LowDpt3FixDim                    (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1LowDpt3FixDim)) & LOG_fE1LowDpt3FixDimMask)
 // Von-Wert
 #define ParamLOG_fE1LowDpt5                          (knx.paramByte(LOG_ParamCalcIndex(LOG_fE1LowDpt5)))
@@ -2841,33 +2841,33 @@
 #define ParamLOG_fE2Low6Valid                        ((bool)(knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low6Valid)) & LOG_fE2Low6ValidMask))
 // Eingang ist EIN, wenn Wert gleich
 #define ParamLOG_fE2Low0Dpt2                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low0Dpt2)))
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE2Low1Dpt2                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low1Dpt2)))
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE2Low2Dpt2                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low2Dpt2)))
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE2Low3Dpt2                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low3Dpt2)))
 // Eingang ist konstant
 #define ParamLOG_fE2LowDpt2Fix                       (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2LowDpt2Fix)))
 // Eingang ist EIN, wenn Wert gleich
 #define ParamLOG_fE2Low0Dpt3Dir                      ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low0Dpt3Dir)) & LOG_fE2Low0Dpt3DirMask) >> LOG_fE2Low0Dpt3DirShift)
-// 
+//
 #define ParamLOG_fE2Low0Dpt3Dim                      (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low0Dpt3Dim)) & LOG_fE2Low0Dpt3DimMask)
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE2Low1Dpt3Dir                      ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low1Dpt3Dir)) & LOG_fE2Low1Dpt3DirMask) >> LOG_fE2Low1Dpt3DirShift)
-// 
+//
 #define ParamLOG_fE2Low1Dpt3Dim                      (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low1Dpt3Dim)) & LOG_fE2Low1Dpt3DimMask)
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE2Low2Dpt3Dir                      ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low2Dpt3Dir)) & LOG_fE2Low2Dpt3DirMask) >> LOG_fE2Low2Dpt3DirShift)
-// 
+//
 #define ParamLOG_fE2Low2Dpt3Dim                      (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low2Dpt3Dim)) & LOG_fE2Low2Dpt3DimMask)
-// ... oder wenn Wert gleich 
+// ... oder wenn Wert gleich
 #define ParamLOG_fE2Low3Dpt3Dir                      ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low3Dpt3Dir)) & LOG_fE2Low3Dpt3DirMask) >> LOG_fE2Low3Dpt3DirShift)
-// 
+//
 #define ParamLOG_fE2Low3Dpt3Dim                      (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2Low3Dpt3Dim)) & LOG_fE2Low3Dpt3DimMask)
 // Eingang ist konstant
 #define ParamLOG_fE2LowDpt3FixDir                    ((knx.paramByte(LOG_ParamCalcIndex(LOG_fE2LowDpt3FixDir)) & LOG_fE2LowDpt3FixDirMask) >> LOG_fE2LowDpt3FixDirShift)
-// 
+//
 #define ParamLOG_fE2LowDpt3FixDim                    (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2LowDpt3FixDim)) & LOG_fE2LowDpt3FixDimMask)
 // Von-Wert
 #define ParamLOG_fE2LowDpt5                          (knx.paramByte(LOG_ParamCalcIndex(LOG_fE2LowDpt5)))
@@ -3359,9 +3359,9 @@
 #define ParamLOG_fOOnDpt2                            (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnDpt2)))
 //     Wert für EIN senden als
 #define ParamLOG_fOOnDpt3Dir                         ((knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnDpt3Dir)) & LOG_fOOnDpt3DirMask) >> LOG_fOOnDpt3DirShift)
-// 
+//
 #define ParamLOG_fOOnDpt3Dim                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnDpt3Dim)) & LOG_fOOnDpt3DimMask)
-//     Wert für EIN senden als 
+//     Wert für EIN senden als
 #define ParamLOG_fOOnDpt5                            (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnDpt5)))
 //     Wert für EIN senden als
 #define ParamLOG_fOOnDpt5001                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnDpt5001)))
@@ -3379,10 +3379,10 @@
 #define ParamLOG_fOOnDpt13                           ((int32_t)knx.paramInt(LOG_ParamCalcIndex(LOG_fOOnDpt13)))
 //     Wert für EIN senden als
 #define ParamLOG_fOOnDpt14                           (knx.paramFloat(LOG_ParamCalcIndex(LOG_fOOnDpt14), Float_Enc_IEEE754Single))
-//     Wert für EIN senden als 
+//     Wert für EIN senden als
 #define ParamLOG_fOOnDpt16                           (knx.paramData(LOG_ParamCalcIndex(LOG_fOOnDpt16)))
 #define ParamLOG_fOOnDpt16Str                        (knx.paramString(LOG_ParamCalcIndex(LOG_fOOnDpt16), LOG_fOOnDpt16Length))
-//     Wert für EIN senden als 
+//     Wert für EIN senden als
 #define ParamLOG_fOOnDpt17                           (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnDpt17)))
 //     Wert für EIN senden als (3-Byte-RGB)
 #define ParamLOG_fOOnRGB                             ((knx.paramInt(LOG_ParamCalcIndex(LOG_fOOnRGB)) & LOG_fOOnRGBMask) >> LOG_fOOnRGBShift)
@@ -3392,11 +3392,11 @@
 #define ParamLOG_fOOnLedEffect                       (PT_StatusLedEffect)(knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnLedEffect)) & LOG_fOOnLedEffectMask)
 //     Status-LED Effektdauer
 #define ParamLOG_fOOnLedDuration                     (knx.paramWord(LOG_ParamCalcIndex(LOG_fOOnLedDuration)))
-// 
+//
 #define ParamLOG_fOOnPAArea                          ((knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnPAArea)) & LOG_fOOnPAAreaMask) >> LOG_fOOnPAAreaShift)
-// 
+//
 #define ParamLOG_fOOnPALine                          (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnPALine)) & LOG_fOOnPALineMask)
-// 
+//
 #define ParamLOG_fOOnPADevice                        (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnPADevice)))
 //     Wert für EIN ermitteln als
 #define ParamLOG_fOOnFunction                        (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOnFunction)))
@@ -3422,7 +3422,7 @@
 #define ParamLOG_fOOffDpt2                           (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffDpt2)))
 //     Wert für AUS senden als
 #define ParamLOG_fOOffDpt3Dir                        ((knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffDpt3Dir)) & LOG_fOOffDpt3DirMask) >> LOG_fOOffDpt3DirShift)
-// 
+//
 #define ParamLOG_fOOffDpt3Dim                        (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffDpt3Dim)) & LOG_fOOffDpt3DimMask)
 //     Wert für AUS senden als
 #define ParamLOG_fOOffDpt5                           (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffDpt5)))
@@ -3445,7 +3445,7 @@
 //     Wert für AUS senden als
 #define ParamLOG_fOOffDpt16                          (knx.paramData(LOG_ParamCalcIndex(LOG_fOOffDpt16)))
 #define ParamLOG_fOOffDpt16Str                       (knx.paramString(LOG_ParamCalcIndex(LOG_fOOffDpt16), LOG_fOOffDpt16Length))
-//     Wert für AUS senden als 
+//     Wert für AUS senden als
 #define ParamLOG_fOOffDpt17                          (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffDpt17)))
 //     Wert für AUS senden als (3-Byte-RGB)
 #define ParamLOG_fOOffRGB                            ((knx.paramInt(LOG_ParamCalcIndex(LOG_fOOffRGB)) & LOG_fOOffRGBMask) >> LOG_fOOffRGBShift)
@@ -3455,11 +3455,11 @@
 #define ParamLOG_fOOffLedEffect                      (PT_StatusLedEffect)(knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffLedEffect)) & LOG_fOOffLedEffectMask)
 //     Status-LED Effektdauer
 #define ParamLOG_fOOffLedDuration                    (knx.paramWord(LOG_ParamCalcIndex(LOG_fOOffLedDuration)))
-// 
+//
 #define ParamLOG_fOOffPAArea                         ((knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffPAArea)) & LOG_fOOffPAAreaMask) >> LOG_fOOffPAAreaShift)
-// 
+//
 #define ParamLOG_fOOffPALine                         (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffPALine)) & LOG_fOOffPALineMask)
-// 
+//
 #define ParamLOG_fOOffPADevice                       (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffPADevice)))
 //     Wert für AUS ermitteln als
 #define ParamLOG_fOOffFunction                       (knx.paramByte(LOG_ParamCalcIndex(LOG_fOOffFunction)))
@@ -3767,205 +3767,205 @@
 #define ParamBTN_bOutExtraLong_T2_Active_Press       ((bool)(knx.paramByte(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Active_Press)) & BTN_bOutExtraLong_T2_Active_PressMask))
 // Wert beim Loslassen
 #define ParamBTN_bOutExtraLong_T2_Active_Release     ((bool)(knx.paramByte(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Active_Release)) & BTN_bOutExtraLong_T2_Active_ReleaseMask))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt1_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt1_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt1_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt1_Release)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt1_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt1_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt1_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt1_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt1_Press              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt1_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt1_Release            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt1_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt1_Press              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt1_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt1_Release            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt1_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt1_Press         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt1_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt1_Release       (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt1_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt1_Press         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt1_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt1_Release       (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt1_Release)))
-// 
+//
 #define ParamBTN_bOutMulti_Click1_Dpt1               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click1_Dpt1)))
-// 
+//
 #define ParamBTN_bOutMulti_Click2_Dpt1               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click2_Dpt1)))
-// 
+//
 #define ParamBTN_bOutMulti_Click3_Dpt1               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click3_Dpt1)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt2_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt2_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt2_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt2_Release)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt2_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt2_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt2_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt2_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt2_Press              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt2_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt2_Release            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt2_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt2_Press              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt2_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt2_Release            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt2_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt2_Press         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt2_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt2_Release       (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt2_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt2_Press         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt2_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt2_Release       (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt2_Release)))
-// 
+//
 #define ParamBTN_bOutMulti_Click1_Dpt2               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click1_Dpt2)))
-// 
+//
 #define ParamBTN_bOutMulti_Click2_Dpt2               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click2_Dpt2)))
-// 
+//
 #define ParamBTN_bOutMulti_Click3_Dpt2               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click3_Dpt2)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt5_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt5_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt5_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt5_Release)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt5_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt5_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt5_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt5_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt5_Press              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt5_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt5_Release            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt5_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt5_Press              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt5_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt5_Release            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt5_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt5_Press         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt5_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt5_Release       (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt5_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt5_Press         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt5_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt5_Release       (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt5_Release)))
-// 
+//
 #define ParamBTN_bOutMulti_Click1_Dpt5               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click1_Dpt5)))
-// 
+//
 #define ParamBTN_bOutMulti_Click2_Dpt5               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click2_Dpt5)))
-// 
+//
 #define ParamBTN_bOutMulti_Click3_Dpt5               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click3_Dpt5)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt5001_Press          (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt5001_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt5001_Release        (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt5001_Release)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt5001_Press          (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt5001_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt5001_Release        (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt5001_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt5001_Press           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt5001_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt5001_Release         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt5001_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt5001_Press           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt5001_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt5001_Release         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt5001_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt5001_Press      (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt5001_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt5001_Release    (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt5001_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt5001_Press      (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt5001_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt5001_Release    (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt5001_Release)))
-// 
+//
 #define ParamBTN_bOutMulti_Click1_Dpt5001            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click1_Dpt5001)))
-// 
+//
 #define ParamBTN_bOutMulti_Click2_Dpt5001            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click2_Dpt5001)))
-// 
+//
 #define ParamBTN_bOutMulti_Click3_Dpt5001            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click3_Dpt5001)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt7_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt7_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt7_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt7_Release)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt7_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt7_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt7_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt7_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt7_Press              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt7_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt7_Release            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt7_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt7_Press              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt7_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt7_Release            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt7_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt7_Press         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt7_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt7_Release       (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt7_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt7_Press         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt7_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt7_Release       (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt7_Release)))
-// 
+//
 #define ParamBTN_bOutMulti_Click1_Dpt7               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click1_Dpt7)))
-// 
+//
 #define ParamBTN_bOutMulti_Click2_Dpt7               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click2_Dpt7)))
-// 
+//
 #define ParamBTN_bOutMulti_Click3_Dpt7               (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click3_Dpt7)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt18_Press            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt18_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T1_Dpt18_Release          (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T1_Dpt18_Release)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt18_Press            (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt18_Press)))
-// 
+//
 #define ParamBTN_bOutShort_T2_Dpt18_Release          (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutShort_T2_Dpt18_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt18_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt18_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt18_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt18_Release)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt18_Press             (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt18_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt18_Release           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt18_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt18_Press        (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt18_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T1_Dpt18_Release      (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T1_Dpt18_Release)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt18_Press        (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt18_Press)))
-// 
+//
 #define ParamBTN_bOutExtraLong_T2_Dpt18_Release      (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutExtraLong_T2_Dpt18_Release)))
-// 
+//
 #define ParamBTN_bOutMulti_Click1_Dpt18              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click1_Dpt18)))
-// 
+//
 #define ParamBTN_bOutMulti_Click2_Dpt18              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click2_Dpt18)))
-// 
+//
 #define ParamBTN_bOutMulti_Click3_Dpt18              (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutMulti_Click3_Dpt18)))
 // Wert beim Drücken
 #define ParamBTN_bOutLong_T1_Dpt3007_Press           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt3007_Press)))
 // Wert beim Drücken
 #define ParamBTN_bOutLong_T1_Dpt3007_PressSingle     (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt3007_PressSingle)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt3007_Release         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt3007_Release)))
 // Wert beim Drücken
 #define ParamBTN_bOutLong_T2_Dpt3007_Press           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt3007_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt3007_Release         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt3007_Release)))
 // Wert beim Drücken
 #define ParamBTN_bOutLong_T1_Dpt3008_Press           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt3008_Press)))
 // Wert beim Drücken
 #define ParamBTN_bOutLong_T1_Dpt3008_PressSingle     (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt3008_PressSingle)))
-// 
+//
 #define ParamBTN_bOutLong_T1_Dpt3008_Release         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T1_Dpt3008_Release)))
 // Wert beim Drücken
 #define ParamBTN_bOutLong_T2_Dpt3008_Press           (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt3008_Press)))
-// 
+//
 #define ParamBTN_bOutLong_T2_Dpt3008_Release         (knx.paramWord(BTN_ParamCalcIndex(BTN_bOutLong_T2_Dpt3008_Release)))
 // Zusatzausgang (DPT1 beim Loslassen)
 #define ParamBTN_bOut2Short_T1                       ((knx.paramByte(BTN_ParamCalcIndex(BTN_bOut2Short_T1)) & BTN_bOut2Short_T1Mask) >> BTN_bOut2Short_T1Shift)
@@ -4010,29 +4010,29 @@
 #define BTN_KoOut5 10
 #define BTN_KoOut6 11
 
-// 
+//
 #define KoBTN_Lock                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoLock)))
-// 
+//
 #define KoBTN_In1                                 (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoIn1)))
-// 
+//
 #define KoBTN_In2                                 (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoIn2)))
-// 
+//
 #define KoBTN_Out1Status                          (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut1Status)))
-// 
+//
 #define KoBTN_Out2Status                          (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut2Status)))
-// 
+//
 #define KoBTN_Out3Status                          (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut3Status)))
-// 
+//
 #define KoBTN_Out1                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut1)))
-// 
+//
 #define KoBTN_Out2                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut2)))
-// 
+//
 #define KoBTN_Out3                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut3)))
-// 
+//
 #define KoBTN_Out4                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut4)))
-// 
+//
 #define KoBTN_Out5                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut5)))
-// 
+//
 #define KoBTN_Out6                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut6)))
 
 #define BI_ChannelCount 4
@@ -4092,7 +4092,7 @@
 
 #define BI_KoChannelOutput 0
 
-// 
+//
 #define KoBI_ChannelOutput                       (knx.getGroupObject(BI_KoCalcNumber(BI_KoChannelOutput)))
 
 #define BUZZ_BuzzerInstalled                     10813      // 1 Bit, Bit 7
@@ -4366,6 +4366,38 @@
 #define HK_Authorization16AccessId             11356      // uint16_t
 #define HK_OnlineStatus                        11358      // char*, 200 Byte
 #define     HK_OnlineStatusLength 200
+#define HK_Authorization01Description          11558      // char*, 32 Byte
+#define     HK_Authorization01DescriptionLength 32
+#define HK_Authorization02Description          11590      // char*, 32 Byte
+#define     HK_Authorization02DescriptionLength 32
+#define HK_Authorization03Description          11622      // char*, 32 Byte
+#define     HK_Authorization03DescriptionLength 32
+#define HK_Authorization04Description          11654      // char*, 32 Byte
+#define     HK_Authorization04DescriptionLength 32
+#define HK_Authorization05Description          11686      // char*, 32 Byte
+#define     HK_Authorization05DescriptionLength 32
+#define HK_Authorization06Description          11718      // char*, 32 Byte
+#define     HK_Authorization06DescriptionLength 32
+#define HK_Authorization07Description          11750      // char*, 32 Byte
+#define     HK_Authorization07DescriptionLength 32
+#define HK_Authorization08Description          11782      // char*, 32 Byte
+#define     HK_Authorization08DescriptionLength 32
+#define HK_Authorization09Description          11814      // char*, 32 Byte
+#define     HK_Authorization09DescriptionLength 32
+#define HK_Authorization10Description          11846      // char*, 32 Byte
+#define     HK_Authorization10DescriptionLength 32
+#define HK_Authorization11Description          11878      // char*, 32 Byte
+#define     HK_Authorization11DescriptionLength 32
+#define HK_Authorization12Description          11910      // char*, 32 Byte
+#define     HK_Authorization12DescriptionLength 32
+#define HK_Authorization13Description          11942      // char*, 32 Byte
+#define     HK_Authorization13DescriptionLength 32
+#define HK_Authorization14Description          11974      // char*, 32 Byte
+#define     HK_Authorization14DescriptionLength 32
+#define HK_Authorization15Description          12006      // char*, 32 Byte
+#define     HK_Authorization15DescriptionLength 32
+#define HK_Authorization16Description          12038      // char*, 32 Byte
+#define     HK_Authorization16DescriptionLength 32
 
 // Apple Home Key aktivieren
 #define ParamHK_Enabled                             ((bool)(knx.paramByte(HK_Enabled) & HK_EnabledMask))
@@ -4538,6 +4570,54 @@
 // Letzte Online-Abfrage
 #define ParamHK_OnlineStatus                        (knx.paramData(HK_OnlineStatus))
 #define ParamHK_OnlineStatusStr                     (knx.paramString(HK_OnlineStatus, HK_OnlineStatusLength))
+// Bezeichnung
+#define ParamHK_Authorization01Description          (knx.paramData(HK_Authorization01Description))
+#define ParamHK_Authorization01DescriptionStr       (knx.paramString(HK_Authorization01Description, HK_Authorization01DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization02Description          (knx.paramData(HK_Authorization02Description))
+#define ParamHK_Authorization02DescriptionStr       (knx.paramString(HK_Authorization02Description, HK_Authorization02DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization03Description          (knx.paramData(HK_Authorization03Description))
+#define ParamHK_Authorization03DescriptionStr       (knx.paramString(HK_Authorization03Description, HK_Authorization03DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization04Description          (knx.paramData(HK_Authorization04Description))
+#define ParamHK_Authorization04DescriptionStr       (knx.paramString(HK_Authorization04Description, HK_Authorization04DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization05Description          (knx.paramData(HK_Authorization05Description))
+#define ParamHK_Authorization05DescriptionStr       (knx.paramString(HK_Authorization05Description, HK_Authorization05DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization06Description          (knx.paramData(HK_Authorization06Description))
+#define ParamHK_Authorization06DescriptionStr       (knx.paramString(HK_Authorization06Description, HK_Authorization06DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization07Description          (knx.paramData(HK_Authorization07Description))
+#define ParamHK_Authorization07DescriptionStr       (knx.paramString(HK_Authorization07Description, HK_Authorization07DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization08Description          (knx.paramData(HK_Authorization08Description))
+#define ParamHK_Authorization08DescriptionStr       (knx.paramString(HK_Authorization08Description, HK_Authorization08DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization09Description          (knx.paramData(HK_Authorization09Description))
+#define ParamHK_Authorization09DescriptionStr       (knx.paramString(HK_Authorization09Description, HK_Authorization09DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization10Description          (knx.paramData(HK_Authorization10Description))
+#define ParamHK_Authorization10DescriptionStr       (knx.paramString(HK_Authorization10Description, HK_Authorization10DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization11Description          (knx.paramData(HK_Authorization11Description))
+#define ParamHK_Authorization11DescriptionStr       (knx.paramString(HK_Authorization11Description, HK_Authorization11DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization12Description          (knx.paramData(HK_Authorization12Description))
+#define ParamHK_Authorization12DescriptionStr       (knx.paramString(HK_Authorization12Description, HK_Authorization12DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization13Description          (knx.paramData(HK_Authorization13Description))
+#define ParamHK_Authorization13DescriptionStr       (knx.paramString(HK_Authorization13Description, HK_Authorization13DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization14Description          (knx.paramData(HK_Authorization14Description))
+#define ParamHK_Authorization14DescriptionStr       (knx.paramString(HK_Authorization14Description, HK_Authorization14DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization15Description          (knx.paramData(HK_Authorization15Description))
+#define ParamHK_Authorization15DescriptionStr       (knx.paramString(HK_Authorization15Description, HK_Authorization15DescriptionLength))
+// Bezeichnung
+#define ParamHK_Authorization16Description          (knx.paramData(HK_Authorization16Description))
+#define ParamHK_Authorization16DescriptionStr       (knx.paramString(HK_Authorization16Description, HK_Authorization16DescriptionLength))
 
 #define HK_KoLockFeedback 11
 #define HK_KoCommissioningControl 12
@@ -4568,51 +4648,51 @@
 // Inbetriebnahme: Befehlsergebnis
 #define KoHK_CommissioningResult                 (knx.getGroupObject(HK_KoCommissioningResult))
 
-#define NET_HostAddress                         11558      // IP address, 4 Byte
-#define NET_SubnetMask                          11562      // IP address, 4 Byte
-#define NET_GatewayAddress                      11566      // IP address, 4 Byte
-#define NET_NameserverAddress                   11570      // IP address, 4 Byte
-#define NET_CustomHostname                      11574      // 1 Bit, Bit 7
+#define NET_HostAddress                         12070      // IP address, 4 Byte
+#define NET_SubnetMask                          12074      // IP address, 4 Byte
+#define NET_GatewayAddress                      12078      // IP address, 4 Byte
+#define NET_NameserverAddress                   12082      // IP address, 4 Byte
+#define NET_CustomHostname                      12086      // 1 Bit, Bit 7
 #define     NET_CustomHostnameMask 0x80
 #define     NET_CustomHostnameShift 7
-#define NET_StaticIP                            11574      // 1 Bit, Bit 6
+#define NET_StaticIP                            12086      // 1 Bit, Bit 6
 #define     NET_StaticIPMask 0x40
 #define     NET_StaticIPShift 6
-#define NET_mDNS                                11575      // 1 Bit, Bit 7
+#define NET_mDNS                                12087      // 1 Bit, Bit 7
 #define     NET_mDNSMask 0x80
 #define     NET_mDNSShift 7
-#define NET_HTTP                                11575      // 1 Bit, Bit 6
+#define NET_HTTP                                12087      // 1 Bit, Bit 6
 #define     NET_HTTPMask 0x40
 #define     NET_HTTPShift 6
-#define NET_NTP                                 11575      // 1 Bit, Bit 5
+#define NET_NTP                                 12087      // 1 Bit, Bit 5
 #define     NET_NTPMask 0x20
 #define     NET_NTPShift 5
-#define NET_OTAUpdate                           11575      // 2 Bits, Bit 4-3
+#define NET_OTAUpdate                           12087      // 2 Bits, Bit 4-3
 #define     NET_OTAUpdateMask 0x18
 #define     NET_OTAUpdateShift 3
-#define NET_MQTT                                11575      // 1 Bit, Bit 2
+#define NET_MQTT                                12087      // 1 Bit, Bit 2
 #define     NET_MQTTMask 0x04
 #define     NET_MQTTShift 2
-#define NET_HostName                            11576      // char*, 24 Byte
+#define NET_HostName                            12088      // char*, 24 Byte
 #define     NET_HostNameLength 24
-#define NET_LanMode                             11617      // 4 Bits, Bit 7-4
+#define NET_LanMode                             12129      // 4 Bits, Bit 7-4
 #define     NET_LanModeMask 0xF0
 #define     NET_LanModeShift 4
-#define NET_NTPServer                           11618      // char*, 50 Byte
+#define NET_NTPServer                           12130      // char*, 50 Byte
 #define     NET_NTPServerLength 50
-#define NET_MQTTServer                          11669      // char*, 20 Byte
+#define NET_MQTTServer                          12181      // char*, 20 Byte
 #define     NET_MQTTServerLength 20
-#define NET_MQTTUsername                        11690      // char*, 20 Byte
+#define NET_MQTTUsername                        12202      // char*, 20 Byte
 #define     NET_MQTTUsernameLength 20
-#define NET_MQTTPassword                        11711      // char*, 20 Byte
+#define NET_MQTTPassword                        12223      // char*, 20 Byte
 #define     NET_MQTTPasswordLength 20
-#define NET_MQTTPrefix                          11732      // char*, 20 Byte
+#define NET_MQTTPrefix                          12244      // char*, 20 Byte
 #define     NET_MQTTPrefixLength 20
-#define NET_MQTTPort                            11753      // uint16_t
-#define NET_MQTTTPRawData                       11755      // 1 Bit, Bit 7
+#define NET_MQTTPort                            12265      // uint16_t
+#define NET_MQTTTPRawData                       12267      // 1 Bit, Bit 7
 #define     NET_MQTTTPRawDataMask 0x80
 #define     NET_MQTTTPRawDataShift 7
-#define NET_MQTTMode                            11755      // 1 Bit, Bit 6
+#define NET_MQTTMode                            12267      // 1 Bit, Bit 6
 #define     NET_MQTTModeMask 0x40
 #define     NET_MQTTModeShift 6
 

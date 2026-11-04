@@ -414,13 +414,34 @@ an NFC scanner rather than **Kein NFC**. The development application also includ
 and Wi-Fi commissioning parameters. R503/R503Pro release applications remain
 unchanged.
 
+### ETS names and endpoint removal
+
+Every Home Key permission row now includes a 32-character **Bezeichnung**.
+Imported entries preserve existing names and permissions. **Gerät löschen
+(Prog-Modus)** revokes the row's endpoint persistently in the reader and clears
+matching ETS rows, including names. It requires programming mode; other devices
+and the HomeKit controller are preserved. The active commissioning window is
+closed on revocation. Stale lists, missing programming mode and reader storage
+failures leave ETS rights intact. Save the project and download the updated
+parameters after removal.
+
+The new fields require development application **11.3 / Home Key 0.4** and a
+fresh ETS application download. OpenKNXproducer 4.3.12 generates and checks the
+header/expanded XML locally; producing the signed `.knxprod` still requires
+running the existing OpenKNXproducer task on a machine with ETS installed.
+Common remains 1.9.1 and Network remains 0.8 on the original dependency branches.
+
 ### Home Key web page
 
 The page uses OAM-NeoPixel Studio-style tabs and cards: **Setup-Code**,
 **Apple Home**, and **Status**. It supports keyboard tab navigation and a
-stacked mobile layout. Missing ETS commissioning permission and programming-mode
-requirements are shown beside the setup form. QR codes are cleared when leaving
-the Apple Home tab; code validation and commissioning gates are preserved.
+stacked mobile layout. The selected tab survives reload through a URL fragment.
+Missing ETS commissioning permission and programming-mode requirements are
+shown beside the setup form. In Apple Home, a typed code stays in the open page
+while commissioning/pairing is blocked; an amber notice explains the required
+ETS setting or pairing action. QR codes are hidden immediately when permission
+is lost and cleared when leaving the tab. Setup codes are never stored in the
+URL or browser storage.
 
 Home Key-enabled REG1 and XIAO targets include the private OFM-Network `v1dev`
 checkout with the bounded web-memory fix at `9c46cb8`. Its checkout under the
@@ -516,8 +537,9 @@ table validity, pending endpoints and UID collisions. Local `hk map` /
 `hk unmap` is available when ETS authorization is off. An invalid/empty ETS
 policy cannot use a saved local mapping as fallback.
 
-The Home Key application/header is now version 0.3; regenerate and use the
-matching ETS product for this firmware. All existing RP2040/legacy applications
+The Home Key application/header is now version 0.4 and the development
+application is 11.3. Regenerate and use the matching ETS product for this
+firmware. All existing RP2040/legacy applications
 retain their versions, parameters and object numbers. Full object/status tables,
 commissioning, retention and revocation details are in
 [OFM-HomeKey/Readme.md](lib/OFM-HomeKey/Readme.md).
@@ -536,7 +558,7 @@ Both XIAO Apple Home Key targets use the PN7161 I2C module with this wiring:
 | GND | GND | — |
 
 The address is 0x28 at 400 kHz. Both select `HOMEKEY_READER_I2C` and the
-`HOMEKEY_PN7161_FIXED_3V3` power preset; DWL is held low from application setup.
+`HOMEKEY_PN7161_VANT_MV=3300` power preset; DWL is held low from application setup.
 The optional fingerprint/relay profile conflicts with these control pins and
 cannot be combined with Apple Home Key. Lock feedback uses KO 11
 (1=physically locked). Home app remote unlock is not enabled.

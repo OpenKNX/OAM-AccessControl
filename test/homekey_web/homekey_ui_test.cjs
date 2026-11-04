@@ -28,11 +28,14 @@ async function main() {
     let generatedPayload;
     let statusUnavailable = false;
     const windowEvents = {};
+    const location = { hash: '' };
+    const history = { replaceState(state, title, hash) { location.hash = hash; } };
     const script = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'OFM-HomeKey',
         'web', 'assets', 'homekey.js'), 'utf8');
-    vm.runInNewContext(script, {
+    const browserContext = {
         document: { getElementById: element },
         window: {
+            location, history,
             setTimeout(callback) { timer = callback; },
             addEventListener(event, callback) { windowEvents[event] = callback; }
         },
@@ -51,7 +54,8 @@ async function main() {
             status.codeState = 1;
             return { ok: true, json: async () => ({ queued: true }) };
         }
-    });
+    };
+    vm.runInNewContext(script, browserContext);
     await new Promise(resolve => setImmediate(resolve));
     const previous = element('homekey-previous');
     const code = element('homekey-code');
@@ -70,6 +74,7 @@ async function main() {
     assert.equal(element('homekey-tab-pairing').tabIndex, 0);
     assert.equal(element('homekey-tab-setup').tabIndex, -1);
     assert.equal(focused, 'homekey-tab-pairing');
+    assert.equal(location.hash, '#apple-home');
     key('pairing', 'Home');
     assert.equal(focused, 'homekey-tab-setup');
     key('setup', 'ArrowLeft');
@@ -194,20 +199,39 @@ async function main() {
     status.codeState = 0;
     await poll();
     qrInput.value = '24681357'; qrSubmit();
+    qrInput.value = '24681357';
     status.commissioning = false;
     await poll();
+    assert.equal(qrInput.value, '24681357');
+    assert.equal(element('homekey-qr-result').dataset.state, 'blocked');
+    assert.match(element('homekey-qr-result').textContent, /NFC-Inbetriebnahme über USB\/KNX erlauben/);
     assert.match(element('homekey-permission').textContent, /NFC-Inbetriebnahme über USB\/KNX erlauben/);
     assert.equal(element('homekey-commissioning').dataset.state, 'off');
     assert.equal(element('homekey-qr-show').disabled, true);
     assert.equal(element('homekey-qr').innerHTML, '');
     status.commissioning = true;
+    status.pairing = false;
     await poll();
-    qrInput.value = '24681357'; qrSubmit();
+    assert.equal(qrInput.value, '24681357');
+    assert.match(element('homekey-qr-result').textContent, /Pairing öffnen/);
+    status.pairing = true;
+    await poll();
+    assert.equal(element('homekey-qr-show').disabled, false);
     statusUnavailable = true;
     await poll();
     assert.equal(element('homekey-qr-show').disabled, true);
     assert.equal(element('homekey-qr').innerHTML, '');
     assert.equal(element('homekey-connection').dataset.state, 'offline');
+    assert.equal(qrInput.value, '24681357');
+    location.hash = '#apple-home';
+    vm.runInNewContext(script, browserContext); // A reload keeps the URL fragment.
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(element('homekey-panel-pairing').hidden, false);
+    assert.equal(element('homekey-panel-setup').hidden, true);
+    location.hash = '#status'; windowEvents.hashchange();
+    assert.equal(element('homekey-panel-status').hidden, false);
+    location.hash = '#not-a-tab'; windowEvents.hashchange();
+    assert.equal(element('homekey-panel-setup').hidden, false);
     console.log('Home Key tabs, form, cooldown and locally generated/scannable HomeKit QR checks passed');
 }
 
