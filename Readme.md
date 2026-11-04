@@ -462,8 +462,11 @@ Common remains 1.9.1 and Network remains 0.8 on the original dependency branches
 
 ### Home Key web page
 
-The page uses OAM-NeoPixel Studio-style tabs and cards: **Setup-Code**,
-**Apple Home**, and **Status**. It supports keyboard tab navigation and a
+The page uses OAM-NeoPixel Studio-style tabs and cards: **Setup-Code** and
+**Apple Home**. A shared status bar above both tabs shows activation, NFC
+commissioning permission and the pairing window, using the NeoPixel toolbar
+style. Offline status values are marked unknown. The former Status tab is
+removed; old `#status` links open Setup-Code. It supports keyboard tab navigation and a
 stacked mobile layout. The selected tab survives reload through a URL fragment.
 Missing ETS commissioning permission and programming-mode requirements are
 shown beside the setup form. In Apple Home, a typed code stays in the open page

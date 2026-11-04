@@ -6,9 +6,14 @@ const qrcode = require('../../lib/OFM-HomeKey/web/assets/qrcode.js');
 const jsQR = require(process.argv[2] || 'jsqr');
 
 async function main() {
+    const html = fs.readFileSync(path.join(__dirname, '../../lib/OFM-HomeKey/src/HomeKeyWeb.cpp'), 'utf8');
+    const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]));
+    assert(!ids.has('homekey-panel-status') && !ids.has('homekey-tab-status'));
+    assert(html.indexOf('id="homekey-statusbar"') < html.indexOf('class="homekey-tabs"'));
     const elements = new Map();
     let focused;
     const element = id => {
+        assert(ids.has(id), `Element ${id} must exist in the rendered page`);
         if (!elements.has(id)) elements.set(id, {
             value: '', disabled: true, hidden: false, required: false, dataset: {}, textContent: '',
             innerHTML: '', attributes: {},
@@ -64,7 +69,9 @@ async function main() {
     const poll = async () => { await timer(); };
     assert.equal(element('homekey-panel-setup').hidden, false);
     assert.equal(element('homekey-panel-pairing').hidden, true);
-    assert.equal(element('homekey-panel-status').hidden, true);
+    assert.equal(element('homekey-enabled').textContent, 'Aktiviert');
+    assert.equal(element('homekey-commissioning').textContent, 'Erlaubt');
+    assert.equal(element('homekey-pairing').textContent, 'Geschlossen');
     const key = (tab, value) => element('homekey-tab-' + tab).keydown({
         key: value, preventDefault() {}
     });
@@ -78,9 +85,9 @@ async function main() {
     key('pairing', 'Home');
     assert.equal(focused, 'homekey-tab-setup');
     key('setup', 'ArrowLeft');
-    assert.equal(focused, 'homekey-tab-status');
-    key('status', 'End');
-    assert.equal(focused, 'homekey-tab-status');
+    assert.equal(focused, 'homekey-tab-pairing');
+    key('pairing', 'End');
+    assert.equal(focused, 'homekey-tab-pairing');
     element('homekey-tab-setup').click();
     assert.equal(element('homekey-previous-row').hidden, true);
     assert.equal(previous.required, false);
@@ -166,7 +173,7 @@ async function main() {
         assert.equal(decoded.data, generatedPayload);
     }
     assert.equal(posts.length, postsBeforeQr); // QR code/setup code never sent to a server.
-    element('homekey-tab-status').click();
+    element('homekey-tab-setup').click();
     assert.equal(element('homekey-qr').hidden, true);
     assert.equal(element('homekey-qr').innerHTML, '');
     assert.equal(element('homekey-qr-placeholder').hidden, false);
@@ -222,6 +229,10 @@ async function main() {
     assert.equal(element('homekey-qr-show').disabled, true);
     assert.equal(element('homekey-qr').innerHTML, '');
     assert.equal(element('homekey-connection').dataset.state, 'offline');
+    for (const id of ['homekey-enabled', 'homekey-commissioning', 'homekey-pairing']) {
+        assert.equal(element(id).textContent, 'Unbekannt');
+        assert.equal(element(id).dataset.state, 'unknown');
+    }
     assert.equal(qrInput.value, '24681357');
     location.hash = '#apple-home';
     vm.runInNewContext(script, browserContext); // A reload keeps the URL fragment.
@@ -229,7 +240,14 @@ async function main() {
     assert.equal(element('homekey-panel-pairing').hidden, false);
     assert.equal(element('homekey-panel-setup').hidden, true);
     location.hash = '#status'; windowEvents.hashchange();
-    assert.equal(element('homekey-panel-status').hidden, false);
+    assert.equal(element('homekey-panel-setup').hidden, false);
+    assert.equal(location.hash, '#setup-code');
+    statusUnavailable = false;
+    await poll();
+    assert.equal(element('homekey-connection').dataset.state, 'ready');
+    assert.equal(element('homekey-enabled').textContent, 'Aktiviert');
+    assert.equal(element('homekey-commissioning').textContent, 'Erlaubt');
+    assert.equal(element('homekey-pairing').textContent, 'Geöffnet');
     location.hash = '#not-a-tab'; windowEvents.hashchange();
     assert.equal(element('homekey-panel-setup').hidden, false);
     console.log('Home Key tabs, form, cooldown and locally generated/scannable HomeKit QR checks passed');
