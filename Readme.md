@@ -227,7 +227,7 @@ implementations with:
 The regression and IP firmware build passed, and the flashed fix passed
 configured fingerprint initialization. With browser clients closed, a 95-second
 boot test stayed running with about 39.5 KiB free heap after Wi-Fi connected.
-The logger fix is included in the pinned private Common dependency revision.
+The logger fix is included in the pinned private Common dependency revision. The supplied Windows ELF `48831b951` still contains the old `sprintf` implementation and identifies Common as `1.9.1+f099eb9`. Home Key builds now reject that unsafe source before compilation; update the private Common checkout to `73bd379` or later and clean/rebuild the Windows firmware.
 
 The subsequent web reset was decoded with the matching Windows ELF (SHA-256
 prefix `802fa396b`): `operator new` → `std::string::_M_append` →
@@ -443,6 +443,33 @@ field shows a shortened result; the progress dialog shows the full text. Names
 and assignments still require an ETS download; this lookup grants no access.
 Legacy UID-tag lookup remains available without the Home Key module.
 
+### Home Key / NFC diagnostics (development application 11.4)
+
+NFC-Tag-ID **0** is valid. An imported permission does not select a KNX action:
+add **Tag 0 → Aktion 1** (or another configured action) and connect the action's
+switching object to the actuator group address. Empty action rows are ignored;
+references to hidden/unallocated channels are rejected safely. Accepted
+credentials with no executed action are reported separately from rejected
+credentials. Rejected Home Keys now log the scanned issuer/endpoint and explain
+whether the ETS table is invalid, empty or lacks that device.
+
+Read-side PN7161 address NACKs are retried up to three times while IRQ remains
+high. The same NCI header/payload chunk is retried because an address NACK
+consumes no bytes. A dropped IRQ is treated as an idle read; timeouts and other
+errors are not replayed, and failed output buffers are cleared. Synchronous
+reads and writes share the existing bus/device handle.
+
+**Info holen** probes UID-slot occupancy quietly before resolving Home Key
+information, so an empty UID slot does not print a misleading “Not found”
+diagnostic. Import the newly generated **11.4** ETS product and update the
+application on the existing device; changing firmware alone cannot replace the
+ETS project's button scripts. Regenerate/sign the `.knxprod` on the ETS machine.
+The parameter layout is unchanged. The zero-channel relay flash writer also
+now respects its six-byte reservation during downloads/restarts.
+
+Run `python test/homekey_nfc/native_regression.py` and
+`python test/logger/build_guard_test.py` for the related native/build checks.
+
 ### ETS names and endpoint removal
 
 Every Home Key permission row now includes a 32-character **Bezeichnung**.
@@ -562,7 +589,7 @@ locally configured code; KO 12/13/64 remain available for Group Monitor control.
 Enable the ETS authorization table, then press `Provisionierte Geräte-IDs
 importieren`. The script adds full public issuer/endpoint IDs to completely
 empty rows, preserves existing rows and rights, and leaves new rows disabled.
-Assign unused NFC action IDs 0..1499, configure the corresponding NFCACT actions,
+Assign unused NFC-Tag-IDs 0..1499, configure the corresponding NFCACT actions,
 enable the rows and download. Importing IDs alone grants no access. The script
 checks snapshot consistency and available capacity before writing. KO 14 reports
 table validity, pending endpoints and UID collisions. Local `hk map` /
@@ -570,7 +597,7 @@ table validity, pending endpoints and UID collisions. Local `hk map` /
 policy cannot use a saved local mapping as fallback.
 
 The Home Key application/header is now version 0.4 and the development
-application is 11.3. Regenerate and use the matching ETS product for this
+application is 11.4. Regenerate and use the matching ETS product for this
 firmware. All existing RP2040/legacy applications
 retain their versions, parameters and object numbers. Full object/status tables,
 commissioning, retention and revocation details are in

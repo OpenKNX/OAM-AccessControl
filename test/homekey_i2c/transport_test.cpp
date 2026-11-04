@@ -24,6 +24,7 @@ int main()
     assert(levels[13] == HIGH);
 
     // Exercise the actual NCI header/payload split and maximum-size frame.
+    levels[14] = HIGH;
     wire.incoming = {{0x60, 0x05, 255}, std::vector<uint8_t>(255, 0xA5)};
     assert(reader.read(buffer, 3) == ESP_OK && buffer[2] == 255);
     assert(reader.read(buffer + 3, 255) == ESP_OK && buffer[257] == 0xA5);
@@ -31,6 +32,7 @@ int main()
     assert(reader.read(buffer, 3) == ESP_FAIL && buffer[0] == 0);
     assert(reader.read(nullptr, 3) == ESP_ERR_INVALID_ARG);
     assert(reader.read(buffer, 259) == ESP_ERR_INVALID_ARG);
+    errorLogs.clear();
 
     const uint8_t command[] = {0x20, 0, 1, 1};
     levels[14] = HIGH;
@@ -45,12 +47,42 @@ int main()
 #else
     constexpr auto nack = ESP_FAIL;
 #endif
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 4, 0)
+    levels[14] = HIGH;
+    wire.incoming = {{0x60, 0x05, 2}, {0xA5, 0x5A}};
+    wire.readStatuses = {nack, ESP_OK, nack, ESP_OK};
+    const auto readsBefore = wire.receives;
+    assert(reader.read(buffer, 3) == ESP_OK && buffer[2] == 2);
+    assert(reader.read(buffer + 3, 2) == ESP_OK && buffer[3] == 0xA5 && buffer[4] == 0x5A);
+    assert(wire.receives == readsBefore + 4 && wire.incoming.empty());
+    assert(errorLogs.empty());
+    for (auto error : {ESP_ERR_TIMEOUT, ESP_ERR_NO_MEM, ESP_ERR_INVALID_ARG}) {
+        wire.readStatuses = {error, ESP_OK};
+        const auto reads = wire.receives;
+        assert(reader.read(buffer, 3) == error && buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0);
+        assert(wire.receives == reads + 1 && wire.readStatuses.size() == 1);
+    }
+    // A stale IRQ is not an invitation to read a sleeping/empty controller.
+    wire.readStatuses = {nack};
+    afterRead = [] { levels[14] = LOW; };
+    const auto reads = wire.receives;
+    const auto errorsBefore = errorLogs.size();
+    assert(reader.read(buffer, 3) == ESP_ERR_TIMEOUT && wire.receives == reads + 1);
+    assert(errorLogs.size() == errorsBefore);
+    assert(reader.read(buffer, 3) == ESP_ERR_TIMEOUT && wire.receives == reads + 1);
+    afterRead = {}; levels[14] = HIGH;
+    wire.readStatuses = {nack, nack, nack};
+    assert(reader.read(buffer, 3) == nack && wire.receives == reads + 4);
+    assert(errorLogs.size() == errorsBefore + 1);
+    errorLogs.clear(); debugLogs.clear(); levels[14] = LOW;
+#endif
     wire.statuses = {nack, ESP_OK}; // Standby NACK resends the complete frame.
+    const auto beforeWrite = ticks;
     assert(reader.write(command, sizeof(command)) == ESP_OK);
     assert(wire.transmissions == 2 && wire.address == 0x28);
     assert(wire.sent[0] == std::vector<uint8_t>(command, command + sizeof(command)));
     assert(wire.sent[1] == wire.sent[0]);
-    assert(ticks - before == 25); // Initial IRQ timeout plus one 5 ms wake-up delay.
+    assert(ticks - beforeWrite == 5); // One wake-up delay; no extra traffic.
     assert(errorLogs.empty()); // Recovered standby NACKs are not errors.
     assert(debugLogs.size() == 1 && debugLogs.back().find("recovered") != std::string::npos);
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 4, 0)

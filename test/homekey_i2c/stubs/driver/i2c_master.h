@@ -1,5 +1,8 @@
 #pragma once
 #include <esp32-hal-i2c.h>
+#include <algorithm>
+#include <cstring>
+inline std::function<void()> afterRead;
 
 using i2c_master_bus_handle_t = TwoWire*;
 struct TestI2cDevice { TwoWire* bus; uint16_t address; };
@@ -36,4 +39,20 @@ inline esp_err_t i2c_master_transmit(i2c_master_dev_handle_t handle,
 {
     assert(handle && handle->bus->liveDevices == 1);
     return recordI2cWrite(*handle->bus, handle->address, buffer, length, timeout);
+}
+inline esp_err_t i2c_master_receive(i2c_master_dev_handle_t handle,
+    uint8_t* buffer, size_t length, int timeout)
+{
+    assert(handle && handle->bus->liveDevices == 1 && timeout == 20);
+    auto& wire = *handle->bus;
+    ++wire.receives;
+    if (afterRead) afterRead();
+    if (!wire.readStatuses.empty()) {
+        const auto status = wire.readStatuses.front(); wire.readStatuses.pop_front();
+        if (status != ESP_OK) { buffer[0] = 0xEE; return status; }
+    }
+    if (wire.incoming.empty()) return ESP_FAIL;
+    const auto data = wire.incoming.front(); wire.incoming.pop_front();
+    std::memcpy(buffer, data.data(), std::min(length, data.size()));
+    return data.size() == length ? ESP_OK : ESP_FAIL;
 }

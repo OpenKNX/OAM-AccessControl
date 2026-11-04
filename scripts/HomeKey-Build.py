@@ -1,7 +1,24 @@
 from pathlib import Path
 import re
 Import("env")
-header = Path(env.subst("$PROJECT_DIR")) / "include" / "knxprod.h"
+project = Path(env.subst("$PROJECT_DIR"))
+# A stale Windows checkout built the old 23-byte sprintf prefix and rebooted
+# at FlashDriver<fingerprint> before Home Key could start. The fixed Common
+# revision is already pinned; reject the known unsafe implementation explicitly.
+logger = project / "lib" / "OGM-Common" / "src" / "OpenKNX" / "Log" / "Logger.cpp"
+logger_text = logger.read_text()
+prefix_start = logger_text.find("std::string Logger::buildPrefix(")
+prefix_end = logger_text.find("void Logger::beforeLog()", prefix_start)
+if prefix_start < 0 or prefix_end < 0:
+    raise RuntimeError("Cannot verify Common logger prefix safety: " + str(logger.resolve()))
+prefix_code = re.sub(r"/\*.*?\*/|//[^\n]*", "", logger_text[prefix_start:prefix_end], flags=re.S)
+if re.search(r"\b(?:sprintf|vsprintf)\s*\(", prefix_code):
+    raise RuntimeError(
+        "Unsafe OGM-Common logger: FlashDriver<fingerprint> overflows the old prefix buffer. "
+        "Update lib/OGM-Common from private u20p17/OGM-Common, branch v1dev_HomeKey "
+        "(fix 73bd379, pinned in dependencies.txt), then clean and rebuild. Checked: " + str(logger.resolve()))
+
+header = project / "include" / "knxprod.h"
 if not header.exists():
     raise RuntimeError("Generate the development ETS header from src/AccessControl.xml first")
 

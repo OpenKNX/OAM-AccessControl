@@ -32,7 +32,7 @@ function fixture(homekey = true) {
         f.calls.push({ object, property, data: Array.from(data) });
         if (f.failure) throw new Error(f.failure);
         if (object === 160) {
-            assert.deepEqual(Array.from(data), [111, 0, 100]);
+            assert.deepEqual(Array.from(data), [111, 0, 100, 1]);
             return f.uid === null ? [1] : [0, ...Array(10).fill(1), ...Buffer.from(f.uid), 0];
         }
         assert.equal(object, 165); assert.equal(property, 3);
