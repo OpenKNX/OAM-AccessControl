@@ -823,7 +823,7 @@ for the newer PN7161 and ST25R3916 targets. Use external NFC for a cabled reader
 With NFC selected and HomeKey off, PN7161 and ST25R3916 read ordinary UIDs
 without HomeKey SELECT/authentication, HAP startup or ECP. ISO-DEP UIDs are
 handled just like other conventional UIDs. OFM-AccessControl now hosts the worker. Combined profiles attach the optional
-HomeKey extension; the NFC-only profiles omit OFM-HomeKey entirely. The classic PN7160 targets use the legacy UID worker.
+HomeKey extension; the NFC-only profiles omit OFM-HomeKey entirely. PN7160 uses the same service through its legacy-NCI adapter.
 A requested HomeKey-only configuration remains UID-disabled if storage or
 HomeKey startup fails. No failed HomeKey exchange falls back to UID access.
 
@@ -832,6 +832,7 @@ HomeKey startup fails. No failed HomeKey exchange falls back to UID access.
 
 | Environment | Reader | KNX |
 | --- | --- | --- |
+| `debug_REG1_ESP_PN7160_NFC_IP` | PN7160 I2C through the common service | IP over Wi-Fi |
 | `debug_REG1_ESP_PN7161_NFC_IP` | PN7161 I2C, SDA 21 / SCL 22 / IRQ 14 / VEN 13 / DWL 19 | IP over Wi-Fi |
 | `debug_REG1_ESP_ST25R3916_NFC_IP` | ST25R3916 I2C, SDA 21 / SCL 22, 0x50 | IP over Wi-Fi |
 
@@ -845,4 +846,22 @@ Wi-Fi settings. The UID-only profiles do not include the HomeKey web console.
 The shared worker lives in OFM-AccessControl; HomeKey is an optional extension
 for authentication, ECP and policy reservations. The PN7161 driver and transport
 live in the PN7161 library, and ST25R3916 remains a separate standalone driver.
-The legacy PN7160 targets keep their original driver/worker path.
+PN7160 now shares this service through an adapter, retaining its existing NCI
+engine. RP2040 uses cooperative polling and ESP32 uses the NFC task.
+
+
+### PN7160 shared-service migration
+
+The PN7160, PN7161 and ST25R3916 targets share reader interfaces, bounded event
+delivery, UID enrollment/storage/action handling, and policy/lifecycle checks.
+The PN7160 facade wraps the existing NCI state machine; no duplicate UID lookup
+or enrollment loop remains in AccessControl. The existing front-panel LEDs,
+external-reader GPIO initialization and hardware-test mode are preserved.
+Hardware-test tag detection never grants access or enrolls a credential.
+
+Existing PN7160 profiles select the service automatically. ESP32 uses the
+existing RTOS worker; RP2040 advances one NCI step per main-loop iteration,
+without blocking for RF or requiring FreeRTOS. PN7160 remains standard UID-only;
+only PN7161/ST25 currently supply the APDU/ECP capabilities used by HomeKey.
+Native checks exercise both real transport branches plus the cooperative
+service. Physical reader tests remain required.

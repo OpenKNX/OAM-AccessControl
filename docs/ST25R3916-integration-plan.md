@@ -261,3 +261,14 @@ extension. OFM-HomeKey no longer owns a reader or NFC task. PN7161's reader and
 I2C transport have moved into its standalone private library; ST25R3916 keeps
 its standalone driver. REG1 IP NFC-only profiles compile without OFM-HomeKey,
 HomeSpan or DigitalDoorKey. Legacy PN7160 and RP2040 paths remain separate.
+
+
+## PN7160 migration completed
+
+The separate legacy access-control scan loop is now replaced by the same NFC
+service and UID authorization/enrollment path. A PN7160 facade retains the
+legacy NCI engine and asynchronous discovery behavior; its common adapter is
+UID-only. ESP32 uses the task execution path, while RP2040 uses cooperative
+steps and a fixed event ring with no FreeRTOS dependency. Both platform branches
+are covered by native adapter tests. Front-panel setup and diagnostic tag tests
+remain supported without granting access during hardware tests.

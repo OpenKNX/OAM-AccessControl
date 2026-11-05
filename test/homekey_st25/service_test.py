@@ -65,7 +65,7 @@ int sharedWire;
 #define NFC_VEN_PIN 13
 #define NFC_PN7160_ADDR 0x28
 struct Pn7161Reader {struct Config {int* wire;int sda,scl,irq,ven,dwl;uint8_t address;uint32_t clock;uint16_t vantMv;};};
-unsigned inits=0,stops=0,polls=0,updates=0;bool initOk=true;
+unsigned inits=0,stops=0,polls=0,updates=0;bool initOk=true,healthOk=true;
 void(*onPoll)()=nullptr;
 class Pn7161ReaderAdapter:public INfcReader {
 public:
@@ -83,7 +83,7 @@ public:
     void releaseTag()override{}
     void endDiscovery()override{}
     bool exchangeApdu(const std::vector<uint8_t>&,std::vector<uint8_t>&,uint32_t)override{assert(false);return false;}
-    bool healthCheck()override{return true;}
+    bool healthCheck()override{return healthOk;}
     bool updateECP()override{++updates;return true;}
 };
 '''+cpp+r'''
@@ -99,7 +99,7 @@ struct Extension:public NfcReaderExtension {
 };
 void reset(){
     openknxNfc.~NfcReaderService();new(&openknxNfc)NfcReaderService;
-    ticks=0;tasks=0;taskOk=queueOk=initOk=true;worker=nullptr;onPoll=nullptr;
+    ticks=0;tasks=0;taskOk=queueOk=initOk=healthOk=true;worker=nullptr;onPoll=nullptr;
     inits=stops=polls=updates=0;ParamACC_NfcScanner=2;knx.configuredValue=true;
     openknxAccessControl.uidCalls=openknxAccessControl.rejected=0;
     openknxAccessControl.grant=true;
@@ -114,9 +114,12 @@ int main(){
     }
     reset();ParamACC_NfcScanner=0;openknxNfc.setup();openknxNfc.loop();assert(!openknxNfc.active()&&tasks==0);
     reset();knx.configuredValue=false;openknxNfc.setup();openknxNfc.loop();assert(tasks==0);
+    reset();ParamACC_NfcScanner=0;openknxNfc.setup();openknxNfc.beginTest();openknxNfc.loop();run();openknxNfc.loop();
+    assert(openknxNfc.testTagFound()&&openknxAccessControl.uidCalls==0);openknxNfc.endTest();openknxNfc.loop();assert(!openknxNfc.active());
     reset();queueOk=false;openknxNfc.setup();openknxNfc.loop();assert(!openknxNfc.active()&&tasks==0);
     reset();taskOk=false;openknxNfc.setup();openknxNfc.loop();assert(!openknxNfc.active());
     reset();openknxNfc.setup();openknxNfc.loop();run();openknxNfc.suspend();openknxNfc.loop();assert(openknxAccessControl.uidCalls==0);
+    reset();healthOk=false;polls=1;openknxNfc.setup();openknxNfc.loop();run();openknxNfc.loop();assert(stops==1&&inits==1&&openknxAccessControl.uidCalls==0);
     reset();initOk=false;openknxNfc.setup();openknxNfc.loop();run();openknxNfc.loop();assert(stops==1&&openknxAccessControl.uidCalls==0);
     reset();{openknxNfc.setup();openknxNfc.loop();run();
         DelayLoop access;openknxAccessControl.grant=false;access.loop();

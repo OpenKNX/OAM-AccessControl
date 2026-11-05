@@ -1,0 +1,58 @@
+#include "Pn7160ReaderAdapter.hpp"
+#include "nci/nci.hpp"
+#include <Arduino.h>
+#include <Wire.h>
+#include <algorithm>
+#include <cassert>
+#include <iostream>
+
+static void packet(const std::vector<uint8_t>& data) {
+    Wire.responses.emplace_back(data.begin(),data.begin()+3);
+    if(data.size()>3)Wire.responses.emplace_back(data.begin()+3,data.end());
+    pinValues[3]=HIGH;
+}
+static void activation(const std::vector<uint8_t>& uid) {
+    nci::state=nciState::waitForRfInterfaceActivatedNotification;
+    std::vector<uint8_t> data(13+uid.size(),0);
+    data[0]=0x61;data[1]=0x05;data[2]=data.size()-3;data[12]=uid.size();
+    std::copy(uid.begin(),uid.end(),data.begin()+13);packet(data);
+}
+int main() {
+    PN7160Reader::Config config;config.wire=&Wire;config.irq=3;config.ven=4;
+    config.sda=5;config.scl=6;
+    std::array<uint8_t,18> ecp{};
+    Pn7160ReaderAdapter reader(config,ecp);
+    std::vector<uint8_t> uid,response;std::array<uint8_t,2> atqa{};uint8_t sak=255;
+    assert(reader.init()&&reader.beginDiscovery()&&!reader.discoveryReady());
+    assert(!reader.pollForTag(uid,atqa,sak,0)&&pinValues[4]==LOW);
+    delayMs+=4;reader.pollForTag(uid,atqa,sak,0);assert(pinValues[4]==HIGH);
+    delayMs+=4;reader.pollForTag(uid,atqa,sak,0);
+    assert(Wire.transmitted==std::vector<uint8_t>({0x20,0,1,0}));
+    packet({0x40,0,1,0});reader.pollForTag(uid,atqa,sak,0);pinValues[3]=LOW;
+    assert(nci::getState()==nciState::waitForCoreResetNotification);
+    nci::state=nciState::waitForDiscoverResponse;packet({0x41,3,1,0});
+    assert(!reader.pollForTag(uid,atqa,sak,0)&&reader.discoveryReady());pinValues[3]=LOW;
+    for(size_t length:{4,7,10}) {
+        std::vector<uint8_t> expected(length,static_cast<uint8_t>(length));
+        activation(expected);assert(reader.pollForTag(uid,atqa,sak,0)&&uid==expected&&sak==0);
+        pinValues[3]=LOW;assert(reader.isTagStillPresent());
+        activation(expected);assert(!reader.pollForTag(uid,atqa,sak,0));pinValues[3]=LOW;
+        expected[0]^=0x10;activation(expected);
+        assert(!reader.isTagStillPresent());pinValues[3]=LOW;
+        assert(reader.pollForTag(uid,atqa,sak,0)&&uid==expected); // Pending replacement tag is preserved.
+        nci::state=nciState::waitForRfInterfaceActivatedNotification;
+        nci::noTagFoundTimeoutTimer.start(1);delayMs+=2;
+        assert(!reader.isTagStillPresent());
+    }
+    activation({});assert(!reader.pollForTag(uid,atqa,sak,0));pinValues[3]=LOW;
+    response={0x90,0};assert(!reader.exchangeApdu({0xa4},response,1000)&&response.empty());
+    ecp[0]=0x6a;assert(!reader.updateECP());ecp.fill(0);assert(reader.updateECP());
+    nci::state=nciState::error;assert(!reader.healthCheck()&&!reader.isTagStillPresent());reader.stop();
+    assert(!reader.isConnected()&&pinValues[4]==LOW&&nci::tagData.getUniqueIdLength()==0);
+    assert(reader.init());activation({1,2,3,4});assert(reader.pollForTag(uid,atqa,sak,0));pinValues[3]=LOW;
+    reader.stop();
+    auto invalid=config;invalid.irq=-1;
+    Pn7160ReaderAdapter absent(invalid,ecp);const auto calls=gpioCalls;
+    assert(!absent.init()&&gpioCalls==calls);
+    std::cout<<"PN7160 real adapter/NCI: UID sizes, pending tags, removal, reset, unavailable APDU/ECP and shared-bus ownership passed\n";
+}
