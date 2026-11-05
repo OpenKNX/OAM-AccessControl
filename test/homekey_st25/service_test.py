@@ -48,6 +48,8 @@ source=r'''
 #define logInfo(...) ((void)0)
 #define logError(...) ((void)0)
 #define logWarning(...) ((void)0)
+#define HK_Enabled 1
+bool ParamHK_Enabled=false;
 int ParamACC_NfcScanner=2;
 struct {bool configuredValue=true;bool configured()const{return configuredValue;}} knx;
 struct {
@@ -66,14 +68,15 @@ int sharedWire;
 #define NFC_VEN_PIN 13
 #define NFC_PN7160_ADDR 0x28
 struct Pn7161Reader {struct Config {int* wire;int sda,scl,irq,ven,dwl;uint8_t address;uint32_t clock;uint16_t vantMv;};};
-unsigned inits=0,stops=0,polls=0,updates=0;bool initOk=true,healthOk=true,held=false,repeat=false;
+unsigned inits=0,stops=0,polls=0,updates=0;bool initOk=true,healthOk=true,held=false,repeat=false,pollError=false,homeKeyCapable=true;
 void(*onPoll)()=nullptr;
 class Pn7161ReaderAdapter:public INfcReader {
 public:
     Pn7161ReaderAdapter(const Pn7161Reader::Config& c,const std::array<uint8_t,18>&){assert(c.sda==21&&c.scl==22);}
+    NfcReaderCapabilities capabilities()const override{return {true,homeKeyCapable,homeKeyCapable};}
     bool init()override{++inits;return initOk;}
     void stop()override{++stops;}
-    bool isConnected()const override{return true;}
+    bool isConnected()const override{return !pollError;}
     uint8_t getFwMajor()const override{return 1;}
     uint8_t getFwMinor()const override{return 0;}
     bool beginDiscovery()override{return true;}
@@ -100,7 +103,7 @@ struct Extension:public NfcReaderExtension {
 };
 void reset(){
     openknxNfc.~NfcReaderService();new(&openknxNfc)NfcReaderService;
-    ticks=0;budget=60;held=repeat=false;tasks=0;taskOk=queueOk=initOk=healthOk=true;worker=nullptr;onPoll=nullptr;
+    ticks=0;budget=60;ParamHK_Enabled=false;pollError=false;homeKeyCapable=true;held=repeat=false;tasks=0;taskOk=queueOk=initOk=healthOk=true;worker=nullptr;onPoll=nullptr;
     inits=stops=polls=updates=0;ParamACC_NfcScanner=2;knx.configuredValue=true;
     openknxAccessControl.uidCalls=openknxAccessControl.rejected=0;
     openknxAccessControl.grant=true;
@@ -134,6 +137,10 @@ int main(){
     reset();{Extension ext;openknxNfc.attach(&ext);openknxNfc.setup();openknxNfc.loop();run();++ext.token;openknxNfc.loop();assert(ext.uidCalls==1&&openknxAccessControl.rejected==1);}
     reset();{Extension ext;openknxNfc.attach(&ext);openknxNfc.setup();openknxNfc.loop();run();ext.allow=false;openknxNfc.loop();assert(openknxAccessControl.rejected==1);}
     reset();{Extension ext;changingExtension=&ext;onPoll=changeEcp;openknxNfc.attach(&ext);openknxNfc.setup();openknxNfc.loop();run();assert(inits==1&&updates==1);}
+    reset();pollError=true;openknxNfc.setup();openknxNfc.loop();run();openknxNfc.loop();
+    assert(stops==1&&openknxAccessControl.uidCalls==0); // Poll fault cannot authorize a returned UID.
+    reset();ParamHK_Enabled=true;openknxNfc.setup();openknxNfc.loop();assert(tasks==0); // No authentication extension.
+    reset();{Extension ext;ParamHK_Enabled=true;homeKeyCapable=false;openknxNfc.attach(&ext);openknxNfc.setup();openknxNfc.loop();assert(tasks==0);}
     reset();held=true;budget=12000;openknxNfc.setup();openknxNfc.loop();run();openknxNfc.loop();
     assert(polls==1&&openknxAccessControl.uidCalls==1); // Still held after ten seconds, no release/regrant.
     reset();repeat=true;budget=2000;openknxNfc.setup();openknxNfc.loop();run();openknxNfc.loop();

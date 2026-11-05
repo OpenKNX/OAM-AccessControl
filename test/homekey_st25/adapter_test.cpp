@@ -8,6 +8,7 @@ int main() {
     std::array<uint8_t,18> frame{};
     St25r3916Reader adapter(wire,21,22,frame);
     INfcReader& reader=adapter;
+    assert(reader.capabilities().homeKey()&&reader.capabilities().uid);
     assert(reader.init() && reader.beginDiscovery());
     std::vector<uint8_t> uid; std::array<uint8_t,2> atqa{}; uint8_t sak=0;
     reader.pollForTag(uid,atqa,sak,20);
@@ -22,6 +23,11 @@ int main() {
     start=sentFrames.size();
     reader.pollForTag(uid,atqa,sak,20);
     for(auto i=start;i<sentFrames.size();++i)assert(sentFrames[i].empty()||sentFrames[i][0]!=0x6a);
+    replies.clear();assert(reader.pollTag(uid,atqa,sak,20)==NfcPollResult::NoTag);
+    replies={{{4,0}},{{1,2,3,4,4}},{{0}}};
+    assert(reader.pollTag(uid,atqa,sak,20)==NfcPollResult::TagFound);
+    busFails=true;assert(reader.pollTag(uid,atqa,sak,20)==NfcPollResult::ReaderError&&uid.empty());
+    busFails=false;assert(!reader.isConnected()&&!reader.healthCheck()); // Fault stays sticky until reinitialization.
     reader.stop();
     assert(wire.liveDevices==0);
     std::cout << "HomeKey adapter: ECP enable/disable and shared-bus cleanup passed\n";
