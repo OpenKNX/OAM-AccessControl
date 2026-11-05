@@ -68,7 +68,8 @@ int sharedWire;
 #define NFC_VEN_PIN 13
 #define NFC_PN7160_ADDR 0x28
 struct Pn7161Reader {struct Config {int* wire;int sda,scl,irq,ven,dwl;uint8_t address;uint32_t clock;uint16_t vantMv;};};
-unsigned inits=0,stops=0,polls=0,updates=0;bool initOk=true,healthOk=true,held=false,repeat=false,pollError=false,homeKeyCapable=true;
+unsigned inits=0,stops=0,polls=0,updates=0,healthChecks=0;
+const uint8_t* uidStorage=nullptr;bool initOk=true,healthOk=true,held=false,repeat=false,pollError=false,homeKeyCapable=true,failProbe=false;
 void(*onPoll)()=nullptr;
 class Pn7161ReaderAdapter:public INfcReader {
 public:
@@ -81,13 +82,13 @@ public:
     uint8_t getFwMinor()const override{return 0;}
     bool beginDiscovery()override{return true;}
     bool pollForTag(std::vector<uint8_t>& uid,std::array<uint8_t,2>&,uint8_t& sak,uint32_t)override{
-        ++polls;if(onPoll)onPoll();uid={1,2,3,4};sak=0;return polls==1||repeat;
+        ++polls;assert(uid.capacity()>=10);if(!uidStorage)uidStorage=uid.data();assert(uidStorage==uid.data());if(onPoll)onPoll();uid={1,2,3,4};sak=0;return polls==1||repeat;
     }
-    bool isTagStillPresent()override{return held;}
+    bool isTagStillPresent()override{if(failProbe&&ticks>=10000)healthOk=false;return held;}
     void releaseTag()override{}
     void endDiscovery()override{}
     bool exchangeApdu(const std::vector<uint8_t>&,std::vector<uint8_t>&,uint32_t)override{assert(false);return false;}
-    bool healthCheck()override{return healthOk;}
+    bool healthCheck()override{++healthChecks;return healthOk;}
     bool updateECP()override{++updates;return true;}
 };
 '''+cpp+r'''
@@ -103,8 +104,8 @@ struct Extension:public NfcReaderExtension {
 };
 void reset(){
     openknxNfc.~NfcReaderService();new(&openknxNfc)NfcReaderService;
-    ticks=0;budget=60;ParamHK_Enabled=false;pollError=false;homeKeyCapable=true;held=repeat=false;tasks=0;taskOk=queueOk=initOk=healthOk=true;worker=nullptr;onPoll=nullptr;
-    inits=stops=polls=updates=0;ParamACC_NfcScanner=2;knx.configuredValue=true;
+    ticks=0;budget=60;ParamHK_Enabled=false;pollError=false;homeKeyCapable=true;failProbe=false;held=repeat=false;tasks=0;taskOk=queueOk=initOk=healthOk=true;worker=nullptr;onPoll=nullptr;
+    inits=stops=polls=updates=healthChecks=0;uidStorage=nullptr;ParamACC_NfcScanner=2;knx.configuredValue=true;
     openknxAccessControl.uidCalls=openknxAccessControl.rejected=0;
     openknxAccessControl.grant=true;
 }
@@ -142,9 +143,11 @@ int main(){
     reset();ParamHK_Enabled=true;openknxNfc.setup();openknxNfc.loop();assert(tasks==0); // No authentication extension.
     reset();{Extension ext;ParamHK_Enabled=true;homeKeyCapable=false;openknxNfc.attach(&ext);openknxNfc.setup();openknxNfc.loop();assert(tasks==0);}
     reset();held=true;budget=12000;openknxNfc.setup();openknxNfc.loop();run();openknxNfc.loop();
-    assert(polls==1&&openknxAccessControl.uidCalls==1); // Still held after ten seconds, no release/regrant.
+    assert(polls==1&&openknxAccessControl.uidCalls==1&&healthChecks==2); // Still held after ten seconds, no release/regrant.
+    reset();held=failProbe=true;budget=12000;openknxNfc.setup();openknxNfc.loop();run();
+    assert(stops==1&&inits==1&&healthChecks==2); // Failed periodic probe recovers even when isConnected still reports true.
     reset();repeat=true;budget=2000;openknxNfc.setup();openknxNfc.loop();run();openknxNfc.loop();
-    assert(polls>50&&openknxAccessControl.uidCalls==1); // Repeated ordinary UID activations are suppressed.
+    assert(polls>50&&openknxAccessControl.uidCalls==1&&healthChecks==1); // Repeated ordinary UID activations are suppressed.
     reset();std::cout<<"Shared NFC service: no-extension UID, consumed authentication, readiness, stale epochs/tokens and allocation/retry failures passed\n";
 }
 '''

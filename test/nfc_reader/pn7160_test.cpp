@@ -22,6 +22,7 @@ int main() {
     config.sda=5;config.scl=6;
     std::array<uint8_t,18> ecp{};
     Pn7160ReaderAdapter reader(config,ecp);
+    assert(reader.capabilities().uid&&!reader.capabilities().homeKey());
     std::vector<uint8_t> uid,response;std::array<uint8_t,2> atqa{};uint8_t sak=255;
     assert(reader.init()&&reader.beginDiscovery()&&!reader.discoveryReady());
     assert(!reader.pollForTag(uid,atqa,sak,0)&&pinValues[4]==LOW);
@@ -47,7 +48,7 @@ int main() {
     activation({});assert(!reader.pollForTag(uid,atqa,sak,0));pinValues[3]=LOW;
     response={0x90,0};assert(!reader.exchangeApdu({0xa4},response,1000)&&response.empty());
     ecp[0]=0x6a;assert(!reader.updateECP());ecp.fill(0);assert(reader.updateECP());
-    nci::state=nciState::error;assert(!reader.healthCheck()&&!reader.isTagStillPresent());reader.stop();
+    nci::state=nciState::error;assert(reader.pollTag(uid,atqa,sak,0)==NfcPollResult::ReaderError&&uid.empty());assert(!reader.healthCheck()&&!reader.isTagStillPresent());reader.stop();
     assert(!reader.isConnected()&&pinValues[4]==LOW&&nci::tagData.getUniqueIdLength()==0);
     assert(reader.init());activation({1,2,3,4});assert(reader.pollForTag(uid,atqa,sak,0));pinValues[3]=LOW;
     reader.stop();
