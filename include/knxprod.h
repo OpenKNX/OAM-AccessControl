@@ -4619,15 +4619,15 @@
 #define ParamHK_Authorization16Description          (knx.paramData(HK_Authorization16Description))
 #define ParamHK_Authorization16DescriptionStr       (knx.paramString(HK_Authorization16Description, HK_Authorization16DescriptionLength))
 
-#define HK_KoLockFeedback 11
-#define HK_KoCommissioningControl 12
-#define HK_KoCommissioningOpen 13
-#define HK_KoAuthorizationStatus 14
-#define HK_KoEndpointIndex 60
-#define HK_KoIssuerHigh 61
-#define HK_KoIssuerLow 62
-#define HK_KoEndpointId 63
-#define HK_KoCommissioningResult 64
+#define HK_KoLockFeedback 300
+#define HK_KoCommissioningControl 301
+#define HK_KoCommissioningOpen 302
+#define HK_KoAuthorizationStatus 303
+#define HK_KoEndpointIndex 304
+#define HK_KoIssuerHigh 305
+#define HK_KoIssuerLow 306
+#define HK_KoEndpointId 307
+#define HK_KoCommissioningResult 308
 
 // HomeKey Verriegelungsstatus
 #define KoHK_LockFeedback                        (knx.getGroupObject(HK_KoLockFeedback))

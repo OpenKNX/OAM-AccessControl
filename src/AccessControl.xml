@@ -146,7 +146,7 @@
   </op:define>
 
   <op:define prefix="HK" ModuleType="7"
-    share="../lib/OFM-HomeKey/src/HomeKey.share.xml" KoSingleOffset="11">
+    share="../lib/OFM-HomeKey/src/HomeKey.share.xml" KoSingleOffset="300">
     <op:verify File="../lib/OFM-HomeKey/library.json" ModuleVersion="0.4" />
   </op:define>
 
