@@ -18,7 +18,7 @@ repeat suppression and cooperative execution.
 The UID buffer is reserved once for ten bytes. Active health probes run after
 initialization and at ten-second intervals, including during presence monitoring.
 Connection/transport failures bypass that interval and recover with a five-second
-backoff. The 8 KB NFC task stack is retained: use `hk status` stack headroom on
+backoff. The 8 KB NFC task stack is retained: use `hk memory` stack headroom on
 hardware before reducing it.
 
 Run from the application root:
@@ -27,6 +27,7 @@ Run from the application root:
 python3 test/nfc_reader/run.py
 python3 test/nfc_reader/cooperative_test.py
 python3 test/nfc_reader/ecp_adapter_test.py
+python3 test/nfc_reader/pn7161_presence_test.py
 python3 test/nfc_reader/st25_adapter_test.py
 python3 test/homekey_st25/service_test.py
 python3 test/homekey_st25/uid_mode_test.py
