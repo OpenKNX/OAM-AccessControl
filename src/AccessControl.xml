@@ -14,7 +14,7 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="11.4.0"
+    ApplicationVersion="11.5.0"
     ReplacesVersionsDownTo="4.0"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"

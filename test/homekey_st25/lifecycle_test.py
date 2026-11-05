@@ -54,6 +54,7 @@ struct {
     bool processHomeKeyCredential(uint16_t) {++hk;return true;}
     void rejectExternalCredential(){++rejected;}
 }openknxAccessControl;
+struct {bool running=true;bool active()const{return running;}}openknxNfc;
 struct Provisioning {void begin(){}void poll(){}};
 class HomeKeyModule {
 public:
@@ -66,18 +67,17 @@ public:
     std::deque<Event> queue;
     void* events=&queue;
     Provisioning instance;Provisioning* provisioning=&instance;
-    bool enabled=false,readerEnabled=false,readerFatal=false,fatal=false,policyLoaded=true;
+    bool enabled=false,homeKeyConfigured=false,fatal=false,policyLoaded=true;
     bool webCodeAllowed=false,etsAuthorization=false,etsTableValid=true,endpointDirty=false;
     bool allowUid=false,pairingPermitted=false,started=false,provisioningReady=false;
     int reportedAuthorization=0,reportedCommissioning=0,reportedResult=0;
-    TaskHandle_t readerHandle=nullptr,hapHandle=nullptr;
+    TaskHandle_t hapHandle=nullptr;
     std::vector<HomeKey::Mapping> etsMappings;
     std::atomic<uint32_t> pairingUntil=0;
     const auto& activeMappings() const {return etsAuthorization?etsMappings:store.mappings;}
     uint16_t lookupAccessId(const HomeKey::IssuerId&,const HomeKey::EndpointId&) {return 0;}
     void cancelCommissioning() {pairingUntil=0;}
     void updateStatus() {}
-    void readerTask() {}
     void loop();void enqueue(const Event&);
 };
 __ACTUAL__
@@ -85,36 +85,29 @@ void reset(){hapTasks=nfcTasks=0;openknxAccessControl.uid=openknxAccessControl.h
     ParamHK_Enabled=false;ParamHK_AllowUid=true;ParamACC_NfcScanner=2;}
 int main(){
     reset();{
-        HomeKeyModule m;HomeKeyModule::Event e;e.kind=EventKind::Uid;
-        m.loop();m.enqueue(e);m.loop();
-        assert(nfcTasks==1&&hapTasks==0&&openknxAccessControl.uid==1&&!m.enabled);
+        HomeKeyModule m;ParamHK_AllowUid=false;m.loop();
+        assert(hapTasks==0&&nfcTasks==0&&!m.enabled&&m.allowUid&&!m.homeKeyConfigured);
     }
     reset();{
-        HomeKeyModule m;m.store.healthy=false;ParamHK_Enabled=true;
-        m.loop();TestEvent e;e.kind=EventKind::Uid;m.enqueue(e);m.loop();
-        assert(nfcTasks==1&&hapTasks==0&&openknxAccessControl.uid==1&&!m.enabled);
-    }
-    reset();{
-        HomeKeyModule m;ParamHK_Enabled=true;m.loop();
-        assert(hapTasks==1&&nfcTasks==0);
-        m.provisioningReady=true;m.loop();assert(nfcTasks==1);
+        HomeKeyModule m;ParamHK_Enabled=true;ParamHK_AllowUid=false;m.loop();
+        assert(hapTasks==1&&nfcTasks==0&&m.enabled&&!m.allowUid&&m.homeKeyConfigured);
+        m.provisioningReady=true;m.loop();assert(nfcTasks==0); // AccessControl owns the worker.
         TestEvent e;e.kind=EventKind::Authenticated;m.enqueue(e);m.loop();assert(openknxAccessControl.hk==1);
-        ParamHK_Enabled=false;m.enqueue(e);m.loop();
-        assert(openknxAccessControl.hk==1&&openknxAccessControl.rejected==1); // No queued grant after disable.
-        e.kind=EventKind::Uid;m.enqueue(e);m.loop();assert(openknxAccessControl.uid==1); // UID reader survives.
+        ParamHK_Enabled=false;m.enqueue(e);m.loop();assert(openknxAccessControl.hk==1&&openknxAccessControl.rejected==1);
     }
     reset();{
-        HomeKeyModule m;ParamACC_NfcScanner=0;m.loop();TestEvent e;e.kind=EventKind::Uid;m.enqueue(e);
-        assert(nfcTasks==0&&m.queue.empty());
+        HomeKeyModule m;ParamHK_Enabled=true;ParamHK_AllowUid=false;m.store.healthy=false;m.loop();
+        assert(!m.enabled&&m.homeKeyConfigured&&!m.allowUid&&hapTasks==0);
+        m.store.healthy=true;m.fatal=true;m.loop();assert(!m.enabled&&!m.allowUid);
     }
     reset();{
-        HomeKeyModule m;m.loop();TestEvent e;e.kind=EventKind::Uid;
-        ParamHK_AllowUid=false;m.enqueue(e);m.loop();assert(openknxAccessControl.uid==0);
-        ParamHK_AllowUid=true;e.generation=0;m.enqueue(e);m.loop();assert(openknxAccessControl.uid==0);
-        e.generation=1;HomeKey::Mapping slot;slot.accessId=100;m.store.mappings.push_back(slot);
-        m.enqueue(e);m.loop();assert(openknxAccessControl.uid==1&&openknxAccessControl.reserved==std::vector<uint16_t>({100}));
+        HomeKeyModule m;ParamHK_Enabled=true;m.loop();TestEvent e;e.kind=EventKind::Authenticated;e.generation=0;
+        m.enqueue(e);m.loop();assert(openknxAccessControl.hk==0&&openknxAccessControl.rejected==1);
     }
-    std::cout<<"Actual NFC lifecycle: standalone UID, HAP gating, storage failure, disable/re-enable and stale-event checks passed\n";
+    reset();{
+        HomeKeyModule m;m.loop();openknxNfc.running=false;TestEvent e;m.enqueue(e);assert(m.queue.empty());openknxNfc.running=true;
+    }
+    std::cout<<"Actual HomeKey loop: optional HAP task only, UID policy, fault handling and stale authentication rejection passed\n";
 }
 '''
 source=source.replace('__ACTUAL__',method('void HomeKeyModule::loop()')+'\n'+method('void HomeKeyModule::enqueue('))

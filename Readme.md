@@ -127,13 +127,12 @@ board revision/supply still needs a hardware check before use.
 The Gira BS8116 keypad also uses address 0x50; it cannot share this I2C bus
 with the reader at its default address.
 
-In ETS select the external NFC scanner. For ordinary tags, keep **Konventionelle
-UID-Tags zulassen = Ja**; **Apple Home Key aktivieren** may be **Nein**. For mixed
-operation enable HomeKey too. For HomeKey-only operation disable conventional
+In ETS select the external NFC scanner. With **Apple Home Key aktivieren = Nein**,
+ordinary UID tags are always enabled. For mixed operation enable HomeKey and
+keep **Konventionelle UID-Tags zulassen = Ja** (the default). For HomeKey-only operation disable conventional
 UID tags. This uses the existing ETS application 11.4 parameters; no new fields
-or tag IDs are introduced. HomeSpan does not start in UID-only mode. Profiles
-still include the HomeKey module in the binary, with an independent reader
-lifecycle. ECP is emitted only with HomeKey active and a provisioned group ID.
+or tag IDs are introduced. HomeSpan does not start in UID-only mode. Combined profiles include HomeKey; the separate NFC-only profiles omit it.
+OFM-AccessControl owns the common reader lifecycle. ECP is emitted only with HomeKey active and a provisioned group ID.
 
 The standalone driver and protocol tests live in the private
 [u20p17/ST25R3916](https://github.com/u20p17/ST25R3916) repository, checked out
@@ -337,9 +336,9 @@ full-frame NACK retries, error reporting, device-handle cleanup, timeout/no-repl
 behavior, IRQ timeout/tick wrap and reset):
 
 ```sh
-c++ -std=c++17 -DOPENKNX_HOMEKEY_ENABLED -DARDUINO_ARCH_ESP32 \
-  -Itest/homekey_i2c/stubs -Ilib/OFM-HomeKey/src -Ilib/PN7161/include \
-  test/homekey_i2c/transport_test.cpp lib/OFM-HomeKey/src/Pn7161I2cTransport.cpp \
+c++ -std=c++17 -DARDUINO_ARCH_ESP32 \
+  -Itest/homekey_i2c/stubs -Ilib/PN7161/include \
+  test/homekey_i2c/transport_test.cpp lib/PN7161/src/Pn7161I2cTransport.cpp \
   -o /tmp/oam-homekey-i2c-test
 /tmp/oam-homekey-i2c-test
 ```
@@ -790,3 +789,60 @@ option warning; PlatformIO's firmware size check and image generation succeed.
 The Apple Home Key target also compiled and linked with HomeSpan 2.1.8 and
 PioArduino 55.03.38-1 on 2026-10-09; no integration code changes were needed.
 Pairing/provisioning on physical hardware remains unverified.
+
+
+### HomeKey ETS visibility (development application 11.5)
+
+Without HomeKey, conventional UID handling is always enabled, including when
+the stored UID-permission value is No. With HomeKey enabled, the UID switch
+is shown and defaults to Yes. UID access still requires an enrolled UID plus
+an NFC action mapping. Set the switch to No for HomeKey-only operation; UID matching is not a
+cryptographic identity check. Failed HomeKey authentication never falls back
+to ordinary UID authorization.
+
+With HomeKey enabled, **HomeKey Verriegelungsstatus** remains visible for normal Apple
+Home operation. The eight commissioning/status/endpoint diagnostic objects
+appear only when **Rohdaten auf den Bus senden = Ja**. The firmware also gates
+their inputs and outputs with that setting. ETS online buttons for pairing,
+status and importing devices work independently of these group objects.
+Regenerate/import development ETS application 11.5 for the visibility change;
+parameter offsets and communication object numbers remain compatible.
+
+All nine HomeKey communication objects use the **HomeKey** name prefix. Their
+function labels describe values, device selection and the two Issuer-ID parts.
+
+
+### NFC scanner selection and UID-only mode
+
+The NFC scanner dropdown selects connection/front-panel handling, not the chip.
+The legacy path uses PN7160 for both nonzero options; option 1 selects direct
+front-panel touch/LED handling, option 2 selects external handling and its
+expander initialization. The build profile selects the chip, pins and driver
+for the newer PN7161 and ST25R3916 targets. Use external NFC for a cabled reader.
+
+With NFC selected and HomeKey off, PN7161 and ST25R3916 read ordinary UIDs
+without HomeKey SELECT/authentication, HAP startup or ECP. ISO-DEP UIDs are
+handled just like other conventional UIDs. OFM-AccessControl now hosts the worker. Combined profiles attach the optional
+HomeKey extension; the NFC-only profiles omit OFM-HomeKey entirely. The classic PN7160 targets use the legacy UID worker.
+A requested HomeKey-only configuration remains UID-disabled if storage or
+HomeKey startup fails. No failed HomeKey exchange falls back to UID access.
+
+
+### NFC-only firmware without HomeKey
+
+| Environment | Reader | KNX |
+| --- | --- | --- |
+| `debug_REG1_ESP_PN7161_NFC_IP` | PN7161 I2C, SDA 21 / SCL 22 / IRQ 14 / VEN 13 / DWL 19 | IP over Wi-Fi |
+| `debug_REG1_ESP_ST25R3916_NFC_IP` | ST25R3916 I2C, SDA 21 / SCL 22, 0x50 | IP over Wi-Fi |
+
+These images compile no OFM-HomeKey, HomeSpan or DigitalDoorKey. Select external
+NFC and **Apple Home Key aktivieren = Nein** in ETS. A downloaded HomeKey=Ja
+configuration disables NFC in the UID-only image rather than bypassing policy.
+UID enrollment, stored credentials and existing NFC action mappings are reused.
+Wi-Fi uses credentials already stored on the ESP32, or the existing build-time
+Wi-Fi settings. The UID-only profiles do not include the HomeKey web console.
+
+The shared worker lives in OFM-AccessControl; HomeKey is an optional extension
+for authentication, ECP and policy reservations. The PN7161 driver and transport
+live in the PN7161 library, and ST25R3916 remains a separate standalone driver.
+The legacy PN7160 targets keep their original driver/worker path.

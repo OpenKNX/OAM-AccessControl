@@ -251,3 +251,13 @@ application-specific ECP generation/authentication/authorization logic.
 The physical reader task remains in OFM-HomeKey; extracting that service is
 separate future work. App tests now cover the adapter and module lifecycle;
 chip/protocol tests run from the standalone repository.
+
+
+## Shared worker extraction implemented
+
+The former future ReaderService cleanup is now implemented in OFM-AccessControl.
+It owns reader lifecycle and UID delivery, with an optional authentication/ECP
+extension. OFM-HomeKey no longer owns a reader or NFC task. PN7161's reader and
+I2C transport have moved into its standalone private library; ST25R3916 keeps
+its standalone driver. REG1 IP NFC-only profiles compile without OFM-HomeKey,
+HomeSpan or DigitalDoorKey. Legacy PN7160 and RP2040 paths remain separate.

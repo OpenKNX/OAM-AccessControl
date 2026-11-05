@@ -22,7 +22,7 @@
 #define MAIN_FirmwareName "Zutrittskontrolle (Dev)"
 #define MAIN_OpenKnxId 0xA6
 #define MAIN_ApplicationNumber 1
-#define MAIN_ApplicationVersion 180
+#define MAIN_ApplicationVersion 181
 #define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
 #define MAIN_ParameterSize 12268
@@ -4629,23 +4629,23 @@
 #define HK_KoEndpointId 63
 #define HK_KoCommissioningResult 64
 
-// Physische Verriegelung
+// HomeKey Verriegelungsstatus
 #define KoHK_LockFeedback                        (knx.getGroupObject(HK_KoLockFeedback))
-// Inbetriebnahme: 1=5 Minuten öffnen, 0=schließen
+// HomeKey Pairingsteuerung
 #define KoHK_CommissioningControl                (knx.getGroupObject(HK_KoCommissioningControl))
-// Inbetriebnahme geöffnet
+// HomeKey Pairingstatus
 #define KoHK_CommissioningOpen                   (knx.getGroupObject(HK_KoCommissioningOpen))
-// Berechtigungstabelle: Status
+// HomeKey Berechtigungsstatus
 #define KoHK_AuthorizationStatus                 (knx.getGroupObject(HK_KoAuthorizationStatus))
-// Provisionierten Endpoint auswählen (0..63)
+// HomeKey Geräteauswahl
 #define KoHK_EndpointIndex                       (knx.getGroupObject(HK_KoEndpointIndex))
-// Issuer-ID: erste 8 Hex-Zeichen
+// HomeKey Issuer-ID (Teil 1)
 #define KoHK_IssuerHigh                          (knx.getGroupObject(HK_KoIssuerHigh))
-// Issuer-ID: letzte 8 Hex-Zeichen
+// HomeKey Issuer-ID (Teil 2)
 #define KoHK_IssuerLow                           (knx.getGroupObject(HK_KoIssuerLow))
-// Endpoint-ID: 12 Hex-Zeichen
+// HomeKey Geräte-ID
 #define KoHK_EndpointId                          (knx.getGroupObject(HK_KoEndpointId))
-// Inbetriebnahme: Befehlsergebnis
+// HomeKey Pairing-Befehlsergebnis
 #define KoHK_CommissioningResult                 (knx.getGroupObject(HK_KoCommissioningResult))
 
 #define NET_HostAddress                         12070      // IP address, 4 Byte
