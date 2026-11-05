@@ -13,8 +13,8 @@ static void packet(const std::vector<uint8_t>& data) {
 }
 static void activation(const std::vector<uint8_t>& uid) {
     nci::state=nciState::waitForRfInterfaceActivatedNotification;
-    std::vector<uint8_t> data(13+uid.size(),0);
-    data[0]=0x61;data[1]=0x05;data[2]=data.size()-3;data[12]=uid.size();
+    std::vector<uint8_t> data(14+uid.size(),0);
+    data[0]=0x61;data[1]=0x05;data[2]=data.size()-3;data[12]=uid.size();data[9]=4+uid.size();
     std::copy(uid.begin(),uid.end(),data.begin()+13);packet(data);
 }
 int main() {
