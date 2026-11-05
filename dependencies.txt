@@ -5,7 +5,7 @@ b0311cfb8ff05a81a94d3e6f418fc86f3330a653 v1dev_HomeKey lib/OFM-AccessControl htt
 6ee3377 v1dev lib/OFM-ConfigTransfer https://github.com/OpenKNX/OFM-ConfigTransfer
 3fa76cd v1 lib/OFM-Feedback https://github.com/OpenKNX/OFM-Feedback.git
 bdf6a2e v1dev_HomeKey lib/OFM-FileTransferModule https://github.com/u20p17/OFM-FileTransferModule.git
-ad02129 v1dev lib/OFM-LogicModule https://github.com/OpenKNX/OFM-LogicModule
+1b88946b1479f4033791b6718d73ee221711fa6d v1dev lib/OFM-LogicModule https://github.com/OpenKNX/OFM-LogicModule
 b9988a8f90d46923ec9d27edc909cd42f1acd4df v1dev_HomeKey lib/OFM-SwitchActuator https://github.com/u20p17/OFM-SwitchActuator.git
 f822931 HEAD lib/OFM-VirtualButton https://github.com/OpenKNX/OFM-VirtualButton.git
 73bd37998243f320858d49d3ddb6a9d02e3e7759 v1dev_HomeKey lib/OGM-Common https://github.com/u20p17/OGM-Common.git
