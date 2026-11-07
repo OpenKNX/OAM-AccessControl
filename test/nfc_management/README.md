@@ -99,6 +99,13 @@ devices in different slots and verify both still authenticate. Also check that
 disabling one slot and downloading from another slot revokes the disabled slot.
 The actual ETS download round trip requires hardware testing.
 
+Deleting an incomplete HomeKey slot (missing or malformed issuer/endpoint)
+clears and disables only that ETS draft. It sends no reader revocation command
+and explicitly requests a parameter download to remove the device-side
+permission. Complete identities retain acknowledged persistent revocation before
+ETS fields are cleared. Tests cover incomplete slots alongside another device,
+cancellation, failed/successful revocation, and execution under ES3 restrictions.
+
 The bulk-deletion control explicitly says Alle UID-Tags löschen? and appears
 only for UID-Tag. It clears UID records, not HomeKey keys, permission slots or
 revocations. Individual HomeKey revocation uses Gerät löschen. Each operation

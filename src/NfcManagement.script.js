@@ -171,7 +171,7 @@ function NFCUI_identity(fields) {
 }
 function NFCUI_deleteHomeKey(device,online,progress,context) {
     HK_deleteAuthorization(Number(NFCUI_value(device,"Slot")),device,online,progress,context);
-    NFCUI_status(device,"Gerät dauerhaft gesperrt und ETS-Platz geleert. Aktionszuordnungen bleiben bestehen. Wallet-Eintrag wird nicht entfernt.");
+    NFCUI_status(device,device.getParameterByName("HK_OnlineStatus").value);
 }
 function NFCUI_restoreHomeKey(device,online,progress,context) {
     var fields=NFCUI_selected(device), identity=NFCUI_identity(fields);

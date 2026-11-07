@@ -31,4 +31,34 @@ test('Stale, malformed, duplicate and canceled snapshots preserve previous cache
 test('Identify a revoked phone without granting it; existing names preserved',()=>{let f=fixture(),wait=HK_wait;HK_wait=()=>{};try{f.revoked=true;NFCUI_identify(f.device,f.online,f.progress,{});assert.equal(f.p.HK_Authorization01Enabled.value,0);assert.equal(f.p.HK_Authorization01Endpoint.value,'112233445501');assert(f.p.NFCUI_Status.value.includes('GESPERRT'));assert(f.requests.some(r=>r[1]===7));f.p.HK_Authorization01Description.value='My phone';f.p.HK_Authorization01AccessId.value=123;NFCUI_identify(f.device,f.online,f.progress,{});assert.equal(f.p.HK_Authorization01Description.value,'My phone');assert.equal(f.p.HK_Authorization01AccessId.value,123);}finally{HK_wait=wait;}});
 test('Canceled identification sends token cancellation and leaves slots empty',()=>{let f=fixture(),wait=HK_wait;HK_wait=()=>{throw Error('Canceled');};try{assert.throws(()=>NFCUI_identify(f.device,f.online,f.progress,{}));assert(f.requests.some(r=>r[1]===7));assert.equal(f.p.HK_Authorization01Issuer.value,'');assert.equal(f.closed,1);}finally{HK_wait=wait;}});
 test('UID writes reject a Tag-ID reserved in the current ETS draft before calling backend',()=>{let f=fixture();f.p.ACC_EnrollNfcId={value:42};f.p.HK_Authorization01Enabled.value=1;f.p.HK_Authorization01Issuer.value='0011223344556677';f.p.HK_Authorization01Endpoint.value='112233445501';f.p.HK_Authorization01AccessId.value=42;let called=false;assert.throws(()=>NFCUI_uidWrite(f.device,f.online,f.progress,{},()=>called=true,true));assert(!called);assert.equal(f.requests.length,0);});
+test('Deleting an incomplete slot clears only the ETS draft and never revokes another device',()=>{
+ for(let identity of [['',''],['0011223344556677',''],['bad','112233445501']]){
+  let f=fixture();f.p.HK_Authorization01Enabled.value=1;f.p.HK_Authorization01Description.value='iphone Franz';
+  f.p.HK_Authorization01Issuer.value=identity[0];f.p.HK_Authorization01Endpoint.value=identity[1];
+  f.p.HK_Authorization02Issuer.value='0011223344556677';f.p.HK_Authorization02Endpoint.value='112233445501';
+  let other=JSON.stringify(Object.fromEntries(Object.entries(f.p).filter(([k])=>k.startsWith('HK_Authorization02'))));
+  f.online.connect=()=>{throw Error('Incomplete-slot cleanup must not connect');};
+  NFCUI_deleteHomeKey(f.device,f.online,f.progress,{});
+  assert.equal(f.requests.length,0);assert.equal(f.p.HK_Authorization01Enabled.value,0);
+  for(let field of ['Issuer','Endpoint','Description'])assert.equal(f.p['HK_Authorization01'+field].value,'');
+  assert.equal(f.p.HK_Authorization01AccessId.value,0);
+  assert.equal(JSON.stringify(Object.fromEntries(Object.entries(f.p).filter(([k])=>k.startsWith('HK_Authorization02')))),other);
+  assert(f.p.NFCUI_Status.value.includes('Kein Gerät im Reader gelöscht oder gesperrt'));
+  assert(f.p.NFCUI_Status.value.includes('Parameter herunterladen'));
+ }
+});
+test('Canceled incomplete-slot deletion leaves all fields untouched',()=>{
+ let f=fixture();f.p.HK_Authorization01Enabled.value=1;f.p.HK_Authorization01Description.value='draft';
+ f.canceled=true;let before=JSON.stringify(f.p);assert.throws(()=>NFCUI_deleteHomeKey(f.device,f.online,f.progress,{}));
+ assert.equal(JSON.stringify(f.p),before);assert.equal(f.requests.length,0);
+});
+test('Complete device deletion requires acknowledged revocation before clearing ETS',()=>{
+ for(let fail of [true,false]){
+  let f=fixture();f.p.HK_Authorization01Enabled.value=1;f.p.HK_Authorization01Issuer.value='0011223344556677';
+  f.p.HK_Authorization01Endpoint.value='112233445501';f.override=(object,data)=>data[0]===8?(fail?[7,1]:[0,1]):undefined;
+  if(fail){assert.throws(()=>NFCUI_deleteHomeKey(f.device,f.online,f.progress,{}));assert.equal(f.p.HK_Authorization01Enabled.value,1);assert.equal(f.p.HK_Authorization01Endpoint.value,'112233445501');}
+  else{NFCUI_deleteHomeKey(f.device,f.online,f.progress,{});assert.equal(f.p.HK_Authorization01Issuer.value,'');assert(f.p.NFCUI_Status.value.includes('Gerät gelöscht und gesperrt'));}
+  assert(f.requests.some(r=>r[1]===8));assert.equal(f.closed,1);
+ }
+});
 console.log(tests+' unified NFC ETS tests passed');

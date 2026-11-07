@@ -87,4 +87,15 @@ function fixture() {
     assert.throws(()=>f.context.NFCUI_checkHomeKey(f.device,f.online,f.progress,{}),/Gerät ist gesperrt/);
     assert.equal(f.state.connects,f.state.disconnects);
 }
-console.log('ETS scripts with ES5+ APIs disabled: full assignment check, action deduplication, overview, collisions and revoked devices passed');
+{
+    const f=fixture();
+    f.parameters.HK_Authorization01Issuer.value='';f.parameters.HK_Authorization01Endpoint.value='';
+    f.context.NFCUI_deleteHomeKey(f.device,f.online,f.progress,{});
+    assert.equal(f.parameters.HK_Authorization01Enabled.value,0);
+    assert.equal(f.parameters.HK_Authorization01Description.value,'');
+    assert.equal(f.state.connects,0);assert.equal(f.state.calls.length,0);
+    assert.match(f.parameters.NFCUI_Status.value,/Kein Gerät im Reader gelöscht oder gesperrt/);
+    assert.match(f.parameters.NFCUI_Status.value,/Parameter herunterladen/);
+    assert(f.parameters.NFCUI_Status.value.length<=199);
+}
+console.log('ETS scripts with ES5+ APIs disabled: assignment checks, overview, conflicts, revocation and incomplete-slot cleanup passed');
