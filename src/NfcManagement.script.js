@@ -1,4 +1,5 @@
 // ETS-only model: no overview cache is downloaded to the ESP.
+// Keep this script compatible with ETS Windows Active Scripting (JScript/ES3).
 function NFCUI_parameter(device, name) {
     var p = device.getParameterByName("NFCUI_" + name);
     if (!p) throw new Error("Passende ETS-Anwendung erforderlich: " + name);
@@ -14,7 +15,11 @@ function NFCUI_rows(input) {
         var action = Number(input["Action" + i + "Action"]), id = Number(input["Action" + i + "Id"]);
         if (action > 0 && id >= 0 && id < 1500) {
             if (!actions[id]) actions[id] = [];
-            if (actions[id].indexOf(action) < 0) actions[id].push(action);
+            var assigned = false;
+            for (var a = 0; a < actions[id].length; a++) {
+                if (actions[id][a] == action) { assigned = true; break; }
+            }
+            if (!assigned) actions[id].push(action);
         }
     }
     for (var i = 0; i < 16; i++) cache += String(input["Cache" + i] || "");
@@ -38,7 +43,12 @@ function NFCUI_rows(input) {
             identity: issuer + "+" + endpoint, active: active, state: "ETS Platz " + i + (active ? ": aktiv (Entwurf)" : ": deaktiviert"), conflict: false });
     }
     for (var i = 0; i < rows.length; i++) {
-        var row = rows[i]; row.actions = (actions[row.id] || []).map(function(action) { return action + (action > visibleActions ? " (nicht konfiguriert)" : ""); }).join(", ");
+        var row = rows[i], assignedActions = actions[row.id] || [], actionNames = [];
+        for (var a = 0; a < assignedActions.length; a++) {
+            var action = assignedActions[a];
+            actionNames.push(action + (action > visibleActions ? " (nicht konfiguriert)" : ""));
+        }
+        row.actions = actionNames.join(", ");
         if (!row.active) continue;
         if (row.id < 0 || row.id > 1499 || row.id % 1 || (row.type == "HomeKey" && !/^[0-9a-f]{16}\+[0-9a-f]{12}$/.test(row.identity))) {
             row.conflict = true; row.state += "; ungültige ID"; continue;

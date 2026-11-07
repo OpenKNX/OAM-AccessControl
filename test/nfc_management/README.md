@@ -8,6 +8,7 @@ Validation:
 
 ```sh
 node test/nfc_management/ets_test.cjs
+node test/nfc_management/jscript_test.cjs
 python3 test/nfc_management/backend_test.py
 python3 test/nfc_management/commissioning_test.py
 python3 test/nfc_management/xml_test.py
@@ -71,3 +72,16 @@ require NFC commissioning permission; device deletion remains available with
 commissioning disabled. `commissioning_test.py` exercises the actual handlers
 and credential persistence for those rules. Web setup-code changes continue
 to require programming mode.
+
+ETS runs these parameter scripts with Windows Active Scripting JScript. Keep
+`src/NfcManagement.script.js` and its HomeKey helpers compatible with ES3;
+use plain loops instead of modern array methods. `jscript_test.cjs` executes
+the actual assignment check and overview in an isolated realm with ES5+ APIs
+removed, including `Array.map` and `Array.indexOf`. It covers action-list
+formatting/deduplication, UID collisions, blocked credentials and connection
+cleanup. String `indexOf` remains available.
+
+Parameter scripts are embedded in the ETS product, not the ESP firmware.
+After changing them, regenerate the knxprod and update the application's scripts
+in the ETS project using that product. Flashing the ESP alone cannot replace
+the script already stored in the ETS project.
