@@ -11,8 +11,8 @@ f822931 HEAD lib/OFM-VirtualButton https://github.com/OpenKNX/OFM-VirtualButton.
 73bd37998243f320858d49d3ddb6a9d02e3e7759 v1dev_HomeKey lib/OGM-Common https://github.com/u20p17/OGM-Common.git
 0c5a94d HEAD lib/OGM-HardwareConfig https://github.com/OpenKNX/OGM-HardwareConfig
 1358ad72b9029ce17aa57b4ff43521c4d4ddcac8 v1dev_HomeKey lib/PN7160 https://github.com/u20p17/PN7160.git
-c74c30ca7338222e6e47bc0bf0aada2128895406 v1dev_HomeKey lib/DigitalDoorKey https://github.com/u20p17/DigitalDoorKey.git
-1a1492fce210c6baadbcaf2d8ae35c1b5d7b14e8 v1dev_HomeKey lib/PN7161 https://github.com/u20p17/PN7161.git
+78ec7dc49f4edc4158ccba855d275e5f3f6a38b7 v1dev_HomeKey lib/DigitalDoorKey https://github.com/u20p17/DigitalDoorKey.git
+d028288250fc732667ff9b228aaf7d6ff8ac50af v1dev_HomeKey lib/PN7161 https://github.com/u20p17/PN7161.git
 94590a6a1b456f7b49ec1a52558d48dd1b9622ed fix/esp32-web-memory lib/OFM-HomeKey https://github.com/u20p17/OFM-HomeKey.git
 9c46cb8db6fad74312dcb73cec90d719dd11d7ac v1dev lib/OFM-Network https://github.com/u20p17/OFM-Network.git
 b6f3634ec4c9591aa95ce9254e0ba2c0beb5dffd main lib/ST25R3916 https://github.com/u20p17/ST25R3916.git
