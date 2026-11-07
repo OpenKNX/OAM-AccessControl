@@ -85,3 +85,8 @@ Parameter scripts are embedded in the ETS product, not the ESP firmware.
 After changing them, regenerate the knxprod and update the application's scripts
 in the ETS project using that product. Flashing the ESP alone cannot replace
 the script already stored in the ETS project.
+
+The bulk-deletion control explicitly says Alle UID-Tags löschen? and appears
+only for UID-Tag. It clears UID records, not HomeKey keys, permission slots or
+revocations. Individual HomeKey revocation uses Gerät löschen. Each operation
+button has a help topic describing its effect and the next commissioning step.

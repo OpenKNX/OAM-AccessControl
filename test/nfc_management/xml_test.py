@@ -112,3 +112,12 @@ assert len(notices)==2
 assert all('deaktiviert' in n.attrib.get('Text','') or 'ETS-Berechtigungstabelle' in n.attrib.get('Text','') for n in notices)
 assert not any(n.attrib.get('UIHint')=='Information' for n in homekey.iter(ns+'ParameterSeparator'))
 print('ETS help: every field/button linked, complete German topics, routine instruction boxes removed')
+
+# UID bulk deletion never appears as a HomeKey device reset.
+assert parameters['ACC_ResetNfc'].attrib['Text']=='Alle UID-Tags löschen?'
+for kind in (0,1):
+ nodes=visible(nfc,{'NFCUI_Type':kind,'ACC_NfcEdit':2,'HK_Enabled':1,'HK_EtsAuthorization':1,'ACC_ResetNfc':1})
+ resets=[node for node in nodes if node.tag==ns+'Button' and node.attrib.get('EventHandler')=='NFCUI_resetUid']
+ assert len(resets)==(1 if kind==0 else 0)
+ if resets:assert resets[0].attrib['Text']=='UID-Tags löschen'
+print('UID-only bulk deletion: explicit label and visibility separate from HomeKey devices passed')

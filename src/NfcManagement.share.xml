@@ -1071,16 +1071,16 @@
                         </Columns>
                           <choose ParamRefId="%AID%_P-2000037_R-200003701">
                           <when test="0">
-                            <Button Id="%AID%_B-%TT%00101" Text="Anlernen" Cell="1,2" Name="enrollNfc" EventHandler="NFCUI_enrollUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Tag" />
+                            <Button Id="%AID%_B-%TT%00101" Text="Anlernen" Cell="1,2" Name="enrollNfc" EventHandler="NFCUI_enrollUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Anlernen" />
                           </when>
                           <when test="1">
-                            <Button Id="%AID%_B-%TT%00102" Text="Ändern" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Tag" />
+                            <Button Id="%AID%_B-%TT%00102" Text="Ändern" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Aendern" />
                           </when>
                           <when test="2">
-                            <Button Id="%AID%_B-%TT%00103" Text="Löschen" Cell="1,2" Name="deleteNfc" EventHandler="NFCUI_deleteUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Tag" />
+                            <Button Id="%AID%_B-%TT%00103" Text="Löschen" Cell="1,2" Name="deleteNfc" EventHandler="NFCUI_deleteUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Loeschen" />
                           </when>
                           <when test="3">
-                            <Button Id="%AID%_B-%TT%00104" Text="Anlegen" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Tag" />
+                            <Button Id="%AID%_B-%TT%00104" Text="Anlegen" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Anlegen" />
                           </when>
                         </choose>
                       </ParameterBlock>
@@ -1097,12 +1097,12 @@
                       </choose>
 
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Gefährliche Funktionen" UIHint="Headline" HelpContext="ACC-NFC-Tag" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Gefährliche Funktionen" UIHint="Headline" HelpContext="ACC-Alle-NFC-Tags-loeschen" />
                       <ParameterRefRef RefId="%AID%_P-2000035_R-200003501" IndentLevel="1" HelpContext="ACC-Alle-NFC-Tags-loeschen" />
                       <choose ParamRefId="%AID%_P-2000035_R-200003501">
                         <when test="1">
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="Wenn Sie diese Funktion ausführen, werden alle gespeicherten UID-Tags (keine HomeKey-Geräte) gelöscht und müssen neu angelernt werden." UIHint="Error" />
-                          <Button Id="%AID%_B-%TT%00106" Text="Jetzt löschen" Name="resetNfcScanner" EventHandler="NFCUI_resetUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-Alle-NFC-Tags-loeschen" />
+                          <Button Id="%AID%_B-%TT%00106" Text="UID-Tags löschen" Name="resetNfcScanner" EventHandler="NFCUI_resetUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-Alle-NFC-Tags-loeschen" />
                         </when>
                       </choose>
 
@@ -1125,10 +1125,7 @@
 <Button Id="%AID%_B-%TT%00001" Name="NFCUI_import" Text="Geräte einlesen" HelpContext="HK-Importieren" EventHandler="NFCUI_import" EventHandlerOnline="ConnectionOriented" />
 </when></choose>
 <ParameterRefRef RefId="%AID%_P-%TT%00002_R-%TT%0000201" HelpContext="HK-Speicherplatz" />
-<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0">
 
-<Button Id="%AID%_B-%TT%00002" Name="NFCUI_identify" Text="Gerät scannen" HelpContext="HK-Geraet-Scannen" EventHandler="NFCUI_identify" EventHandlerOnline="ConnectionOriented" />
-</when></choose>
 <choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 
 </when></choose>
@@ -1404,6 +1401,10 @@
 </when></choose>
 </ParameterBlock>
 </when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0">
+
+<Button Id="%AID%_B-%TT%00002" Name="NFCUI_identify" Text="Gerät scannen" HelpContext="HK-Geraet-Scannen" EventHandler="NFCUI_identify" EventHandlerOnline="ConnectionOriented" />
+</when></choose>
 <choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <Button Id="%AID%_B-%TT%00003" Name="NFCUI_checkHomeKey" Text="Zuordnung prüfen" EventHandler="NFCUI_checkHomeKey" EventHandlerOnline="ConnectionOriented" HelpContext="HK-Zuordnung-Pruefen" />
 </when></choose>
@@ -1441,8 +1442,9 @@
                         </when>
                       </choose>
 <ParameterRefRef RefId="%AID%_P-%TT%00007_R-%TT%0000701" HelpContext="HK-Bearbeitungsstatus" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 <ParameterSeparator Id="%AID%_PS-nnn" Text="Zugänge und Aktionszuordnungen" UIHint="Headline" HelpContext="HK-Uebersicht" />
-<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="UID-Tags einlesen" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" HelpContext="HK-UID-Snapshot" />
+<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="UID-Tags einlesen" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" HelpContext="HK-UID-Tags-Einlesen" />
 <ParameterRefRef RefId="%AID%_P-%TT%00006_R-%TT%0000601" HelpContext="HK-UID-Snapshot" />
 
 <ParameterRefRef RefId="%AID%_P-%TT%00003_R-%TT%0000301" HelpContext="HK-Anzeige" />
