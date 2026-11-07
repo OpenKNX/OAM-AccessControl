@@ -4,6 +4,12 @@ The shared service owns presentation suppression, recovery and UID actions.
 PN7161 and ST25R3916 use the same ISO-DEP adapter, with PN7161 additionally
 applying live ECP changes through NCI. PN7160 retains its cooperative UID engine.
 
+OFM-AccessControl owns the PN7161 reader facade and Wire-to-native bus bridge.
+PN7161 I2C always uses the native transport; no Wire transaction fallback remains.
+The separate PN7161 library contains only the native
+ESP-IDF NCI engine and SPI/I2C transports. Its native I2C tests remain in
+`lib/PN7161/test/native_i2c`.
+
 `capabilities()` reports UID, ISO-DEP and ECP support. ETS HomeKey mode requires
 an attached authentication extension and ISO-DEP/ECP support. `pollTag()` returns
 `NoTag`, `TagFound` or `ReaderError`; transport faults cannot become UID grants.

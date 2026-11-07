@@ -3,7 +3,7 @@ from pathlib import Path
 import re,subprocess,tempfile
 root=Path(__file__).resolve().parents[2]
 cpp=(root/'lib/OFM-AccessControl/src/NfcReaderService.cpp').read_text()
-cpp=re.sub(r'^#include "(?:AccessControl.h|Pn7161ReaderAdapter.hpp|St25r3916Reader.hpp)"\n','',cpp,flags=re.M)
+cpp=re.sub(r'^#include "(?:AccessControl.h|Pn7161ReaderAdapter.hpp|St25r3916Reader.hpp|Pn7161NativeI2cBridge.hpp)"\n','',cpp,flags=re.M)
 access=(root/'lib/OFM-AccessControl/src/AccessControl.cpp').read_text()
 loop_start=access.index('void AccessControl::loop()')
 loop_start=access.index('{',loop_start)+1
@@ -50,7 +50,7 @@ source=r'''
 #define logWarning(...) ((void)0)
 #define HK_Enabled 1
 bool ParamHK_Enabled=false;
-int ParamACC_NfcScanner=2;
+int ParamACC_NfcScanner=2,ParamACC_Keypad=0;
 struct {bool configuredValue=true;bool configured()const{return configuredValue;}} knx;
 struct {
     unsigned uidCalls=0,rejected=0;bool grant=true;
@@ -67,13 +67,21 @@ int sharedWire;
 #define NFC_IRQ_PIN 14
 #define NFC_VEN_PIN 13
 #define NFC_PN7160_ADDR 0x28
-struct Pn7161Reader {struct Config {int* wire;int sda,scl,irq,ven,dwl;uint8_t address;uint32_t clock;uint16_t vantMv;};};
+using gpio_num_t=int;
+struct PN7160_I2C_Config {uint8_t address=0;uint32_t clock_hz=0;int irq=-1,ven=-1,dwl_req=-1;};
+bool nativeBusReady=true;
+int* preparePn7161NativeI2c(int& bus,int sda,int scl,const PN7160_I2C_Config& config,bool owned){
+    assert(&bus==&sharedWire&&sda==21&&scl==22&&!owned);
+    assert(config.address==0x28&&config.clock_hz==400000&&config.irq==14&&config.ven==13);
+    return nativeBusReady?&sharedWire:nullptr;
+}
+struct Pn7161Reader {struct Config {int* transport=nullptr;uint16_t vantMv=0;};};
 unsigned inits=0,stops=0,polls=0,updates=0,healthChecks=0;
 const uint8_t* uidStorage=nullptr;bool initOk=true,healthOk=true,held=false,repeat=false,pollError=false,homeKeyCapable=true,failProbe=false;
 void(*onPoll)()=nullptr;
 class Pn7161ReaderAdapter:public INfcReader {
 public:
-    Pn7161ReaderAdapter(const Pn7161Reader::Config& c,const std::array<uint8_t,18>&){assert(c.sda==21&&c.scl==22);}
+    Pn7161ReaderAdapter(const Pn7161Reader::Config&,const std::array<uint8_t,18>&){}
     NfcReaderCapabilities capabilities()const override{return {true,homeKeyCapable,homeKeyCapable};}
     bool init()override{++inits;return initOk;}
     void stop()override{++stops;}
@@ -105,7 +113,7 @@ struct Extension:public NfcReaderExtension {
 void reset(){
     openknxNfc.~NfcReaderService();new(&openknxNfc)NfcReaderService;
     ticks=0;budget=60;ParamHK_Enabled=false;pollError=false;homeKeyCapable=true;failProbe=false;held=repeat=false;tasks=0;taskOk=queueOk=initOk=healthOk=true;worker=nullptr;onPoll=nullptr;
-    inits=stops=polls=updates=healthChecks=0;uidStorage=nullptr;ParamACC_NfcScanner=2;knx.configuredValue=true;
+    inits=stops=polls=updates=healthChecks=0;uidStorage=nullptr;ParamACC_NfcScanner=2;ParamACC_Keypad=0;nativeBusReady=true;knx.configuredValue=true;
     openknxAccessControl.uidCalls=openknxAccessControl.rejected=0;
     openknxAccessControl.grant=true;
 }
@@ -113,6 +121,8 @@ void run(){try{assert(worker);worker(argument);}catch(Stop&){} }
 Extension* changingExtension=nullptr;
 void changeEcp(){if(polls==1)changingExtension->advertise=true;}
 int main(){
+    reset();nativeBusReady=false;openknxNfc.setup();openknxNfc.loop();assert(tasks==0&&inits==0);
+    reset();ParamACC_Keypad=1;openknxNfc.setup();openknxNfc.loop();assert(tasks==0&&inits==0);
     for(int scanner:{1,2}) {
         reset();ParamACC_NfcScanner=scanner;openknxNfc.setup();openknxNfc.loop();run();openknxNfc.loop();
         assert(inits==1&&openknxAccessControl.uidCalls==1&&updates==0&&tasks==1);

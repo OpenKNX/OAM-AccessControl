@@ -2,7 +2,7 @@
 from pathlib import Path
 import subprocess,tempfile
 root=Path(__file__).resolve().parents[2]
-source=(root/'lib/PN7161/src/Pn7161Reader.cpp').read_text()
+source=(root/'lib/OFM-AccessControl/src/Pn7161Reader.cpp').read_text()
 method=source[source.index('bool Pn7161Reader::isTagStillPresent()'):source.index('void Pn7161Reader::releaseTag()')]
 cpp=r'''
 #include <cstdint>

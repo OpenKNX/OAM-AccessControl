@@ -28,6 +28,6 @@ physical lock feedback, and actual firmware diagnostic input/output gating.
 The service test exercises the actual worker and main-thread queue with no
 HomeKey extension, optional authentication consumption and stale epochs/tokens.
 The HomeKey tests cover only its optional hooks and HAP lifecycle. Native
-transport checks now compile `lib/PN7161/src/Pn7161I2cTransport.cpp` without the
-HomeKey feature macro. UID-only firmware builds provide an additional check
+transport checks compile `lib/PN7161/src/i2c.cpp` without Arduino or the
+HomeKey feature macro (see `lib/PN7161/docs/native-i2c.md`). UID-only firmware builds provide an additional check
 that OFM-HomeKey, HomeSpan and DigitalDoorKey are excluded.

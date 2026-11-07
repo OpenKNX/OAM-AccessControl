@@ -328,7 +328,8 @@ as `ESP_ERR_INVALID_STATE`. Arduino's `i2cWrite()` used to log each attempt as
 an error even when the retry succeeded. The Home Key transport now writes
 through a synchronous ESP-IDF device handle on the existing Wire bus, keeping
 ACK checks and bounded retries while reporting only final failures as errors.
-Recovered retries are debug messages. This does not change ETS authorization:
+Recovered NACKs are handled within the bounded native transport retry loop.
+This does not change ETS authorization:
 `accessId=65535` still means the credential has no active NFC-Tag-ID mapping.
 
 Native I2C transport checks (header/payload framing, transfer failures, standby
@@ -336,9 +337,9 @@ full-frame NACK retries, error reporting, device-handle cleanup, timeout/no-repl
 behavior, IRQ timeout/tick wrap and reset):
 
 ```sh
-c++ -std=c++17 -DARDUINO_ARCH_ESP32 \
-  -Itest/homekey_i2c/stubs -Ilib/PN7161/include \
-  test/homekey_i2c/transport_test.cpp lib/PN7161/src/Pn7161I2cTransport.cpp \
+c++ -std=c++17 \
+  -Ilib/PN7161/test/native_i2c/stubs -Ilib/PN7161/include \
+  lib/PN7161/test/native_i2c/transport_test.cpp lib/PN7161/src/i2c.cpp \
   -o /tmp/oam-homekey-i2c-test
 /tmp/oam-homekey-i2c-test
 ```
