@@ -224,6 +224,25 @@ async function main() {
     status.pairing = true;
     await poll();
     assert.equal(element('homekey-qr-show').disabled, false);
+    // The server remains reachable when the firmware requires a fresh ETS download.
+    status.configured = false;
+    status.applicationVersion = '11.7';
+    await poll();
+    assert.equal(element('homekey-save').disabled, true);
+    assert.equal(element('homekey-qr-show').disabled, true);
+    assert.equal(element('homekey-qr').innerHTML, '');
+    assert.equal(qrInput.value, '24681357');
+    assert.equal(element('homekey-connection').dataset.state, 'waiting');
+    assert.match(element('homekey-summary').textContent, /ETS-Anwendung 11\.7 vollständig programmieren/);
+    assert.match(element('homekey-permission').textContent, /Programmiermodus allein reicht nicht/);
+    assert.match(element('homekey-qr-result').textContent, /ETS-Anwendung 11\.7/);
+    const postsBeforeUnconfigured = posts.length;
+    await submit();
+    assert.equal(posts.length, postsBeforeUnconfigured);
+    status.configured = true;
+    await poll();
+    assert.equal(element('homekey-connection').dataset.state, 'ready');
+    assert.equal(element('homekey-qr-show').disabled, false);
     statusUnavailable = true;
     await poll();
     assert.equal(element('homekey-qr-show').disabled, true);
