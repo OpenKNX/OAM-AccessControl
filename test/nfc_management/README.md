@@ -9,6 +9,7 @@ Validation:
 ```sh
 node test/nfc_management/ets_test.cjs
 python3 test/nfc_management/backend_test.py
+python3 test/nfc_management/commissioning_test.py
 python3 test/nfc_management/xml_test.py
 python3 test/nfc_management/producer_test.py /path/to/OpenKNXproducer
 ```
@@ -36,8 +37,8 @@ On-device/ETS acceptance:
    firmware. Upgrade preserves permission memory offsets and existing keys.
 2. Import paired devices under Allgemein → NFC-Scanner → Apple HomeKey,
    Vorgang → anlegen, using Geräte einlesen; new
-   rows must remain disabled. Identify an iPhone by scanning with programming
-   mode and commissioning permission enabled; no access action should run.
+   rows must remain disabled. Identify an iPhone by scanning with commissioning permission enabled and
+   programming mode off; no access action should run.
 3. Set its name, unused Tag ID and enabled flag. Check the assignment, configure
    Tag ID → action in the NFC action table, then download. Scan to confirm access.
 4. Change a Tag ID/action in ETS: the overview must update immediately. A shared
@@ -45,7 +46,8 @@ On-device/ETS acceptance:
 5. Select Vorgang → löschen and delete the selected HomeKey device. Confirm keys/permission are removed, its
    ETS slot is empty, other devices still work and action references remain.
    Reboot and try an old ETS download/reprovisioning: this identity stays denied.
-6. Identify that device again, explicitly restore, assign a permission and
+6. Identify that device again, explicitly restore with commissioning permission
+   enabled and programming mode off, assign a permission and
    download. Verify restoration and the correct action. Check the Wallet entry
    independently; local deletion cannot remove it.
 7. Exercise UID learn/create/edit/delete with HomeKey both enabled and disabled.
@@ -63,3 +65,9 @@ button labels keep commissioning instructions in the relevant German ETS help.
 Every visible field and operation, including the overview cells, has a help
 context. Only blocked configurations and the bulk-UID deletion warning remain
 as inline notices. `xml_test.py` verifies help coverage and topic completeness.
+
+ETS operations work with programming mode off. Scanning and explicit restoration
+require NFC commissioning permission; device deletion remains available with
+commissioning disabled. `commissioning_test.py` exercises the actual handlers
+and credential persistence for those rules. Web setup-code changes continue
+to require programming mode.

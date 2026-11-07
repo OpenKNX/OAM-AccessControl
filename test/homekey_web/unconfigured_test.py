@@ -129,6 +129,11 @@ int main(){
     status=openknxNetwork.webserver.request(WEB_GET,"/homekey/status");
     assert(status.body.find("\"configured\":true")!=std::string::npos);
     assert(status.body.find("\"canSetCode\":true")!=std::string::npos);
+    // ETS administration changes must not remove the separate web code-change guard.
+    knx.prog=false;module.loopWeb();assert(!module.webCodeAllowed);
+    assert(openknxNetwork.webserver.request(WEB_POST,"/homekey/code",module.webToken+"\n\n24681357").status==403);
+    assert(queued==0);
+    knx.prog=true;module.loopWeb();assert(module.webCodeAllowed);
     assert(openknxNetwork.webserver.request(WEB_POST,"/homekey/code",module.webToken+"\n\n24681357").status==202);
     assert(queued==1);
     // Queue allocation failure must leave diagnostics reachable and code writes rejected.
