@@ -59,4 +59,7 @@ Persistent revocations are capped at 128 identities and never silently evicted.
 The UID and HomeKey editors share the existing `ACC_NfcEdit` dropdown. HomeKey
 shows scanning/restoration for anlernen, import/manual device IDs for anlegen,
 permission fields for ändern, and read-only confirmation for löschen. Short
-button labels keep commissioning instructions in the relevant information text.
+button labels keep commissioning instructions in the relevant German ETS help.
+Every visible field and operation, including the overview cells, has a help
+context. Only blocked configurations and the bulk-UID deletion warning remain
+as inline notices. `xml_test.py` verifies help coverage and topic completeness.

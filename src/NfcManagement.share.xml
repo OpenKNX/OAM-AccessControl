@@ -1039,26 +1039,26 @@
 </Script>
 </Static>
 <Dynamic>
-<ParameterBlock Id="%AID%_PB-nnn" Name="NfcScanner" Text="NFC-Scanner" Icon="nfc-variant" ShowInComObjectTree="true">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag-ID verbindet eine UID bzw. ein HomeKey-Gerät mit den Aktionen im NFC-Tab. Beispiel: NFC-Tag-ID 100 → Tag 100 / Aktion 1. Mehrere Aktionen für denselben Tag sind erlaubt. Beim Löschen bleiben Aktionszuordnungen bestehen; bei Wiederverwendung der ID gelten diese auch für das neue Gerät." UIHint="Information" />
-<ParameterRefRef RefId="%AID%_P-%TT%00001_R-%TT%0000101" />
-<ParameterRefRef RefId="%AID%_P-2000037_R-200003701" IndentLevel="1" />
+<ParameterBlock Id="%AID%_PB-nnn" Name="NfcScanner" HelpContext="HK-NFC-Verwaltung" Text="NFC-Scanner" Icon="nfc-variant" ShowInComObjectTree="true">
+
+<ParameterRefRef RefId="%AID%_P-%TT%00001_R-%TT%0000101" HelpContext="HK-Zugangstyp" />
+<ParameterRefRef RefId="%AID%_P-2000037_R-200003701" IndentLevel="1" HelpContext="HK-Vorgang" />
 <choose ParamRefId="%AID%_P-%TT%00001_R-%TT%0000101">
 <when test="0">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag bearbeiten" UIHint="Headline" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag bearbeiten" UIHint="Headline" HelpContext="ACC-NFC-Tag" />
                       <choose ParamRefId="%AID%_P-2000037_R-200003701">
                         <when test="0">
-                          <ParameterRefRef RefId="%AID%_P-2000032_R-200003201" IndentLevel="2" />
-                          <ParameterRefRef RefId="%AID%_P-2000030_R-200003001" IndentLevel="2" />
-                          <ParameterRefRef RefId="%AID%_P-2000031_R-200003101" IndentLevel="2" />
+                          <ParameterRefRef RefId="%AID%_P-2000032_R-200003201" IndentLevel="2" HelpContext="ACC-Tag-Name" />
+                          <ParameterRefRef RefId="%AID%_P-2000030_R-200003001" IndentLevel="2" HelpContext="ACC-Tag-ID" />
+                          <ParameterRefRef RefId="%AID%_P-2000031_R-200003101" IndentLevel="2" HelpContext="ACC-Tag-Schluessel-UID" />
                         </when>
                         <when test="1 3">
-                          <ParameterRefRef RefId="%AID%_P-2000032_R-200003201" IndentLevel="2" />
-                          <ParameterRefRef RefId="%AID%_P-2000030_R-200003001" IndentLevel="2" />
-                          <ParameterRefRef RefId="%AID%_P-2000038_R-200003801" IndentLevel="2" />
+                          <ParameterRefRef RefId="%AID%_P-2000032_R-200003201" IndentLevel="2" HelpContext="ACC-Tag-Name" />
+                          <ParameterRefRef RefId="%AID%_P-2000030_R-200003001" IndentLevel="2" HelpContext="ACC-Tag-ID" />
+                          <ParameterRefRef RefId="%AID%_P-2000038_R-200003801" IndentLevel="2" HelpContext="ACC-Tag-Schluessel-UID" />
                         </when>
                         <when test="2">
-                          <ParameterRefRef RefId="%AID%_P-2000029_R-200002901" IndentLevel="2" />
+                          <ParameterRefRef RefId="%AID%_P-2000029_R-200002901" IndentLevel="2" HelpContext="ACC-Tag-ID" />
                         </when>
                       </choose>
                       <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
@@ -1071,16 +1071,16 @@
                         </Columns>
                           <choose ParamRefId="%AID%_P-2000037_R-200003701">
                           <when test="0">
-                            <Button Id="%AID%_B-%TT%00101" Text="Anlernen" Cell="1,2" Name="enrollNfc" EventHandler="NFCUI_enrollUid" EventHandlerOnline="ConnectionOriented" />
+                            <Button Id="%AID%_B-%TT%00101" Text="Anlernen" Cell="1,2" Name="enrollNfc" EventHandler="NFCUI_enrollUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Tag" />
                           </when>
                           <when test="1">
-                            <Button Id="%AID%_B-%TT%00102" Text="Ändern" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" />
+                            <Button Id="%AID%_B-%TT%00102" Text="Ändern" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Tag" />
                           </when>
                           <when test="2">
-                            <Button Id="%AID%_B-%TT%00103" Text="Löschen" Cell="1,2" Name="deleteNfc" EventHandler="NFCUI_deleteUid" EventHandlerOnline="ConnectionOriented" />
+                            <Button Id="%AID%_B-%TT%00103" Text="Löschen" Cell="1,2" Name="deleteNfc" EventHandler="NFCUI_deleteUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Tag" />
                           </when>
                           <when test="3">
-                            <Button Id="%AID%_B-%TT%00104" Text="Anlegen" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" />
+                            <Button Id="%AID%_B-%TT%00104" Text="Anlegen" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-NFC-Tag" />
                           </when>
                         </choose>
                       </ParameterBlock>
@@ -1089,48 +1089,48 @@
                       <choose ParamRefId="%AID%_UP-2000012_R-200001201">
                         <when test="1">
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-                          <ParameterSeparator Id="%AID%_PS-nnn" Text="UID-Tag synchronisieren" UIHint="Headline" />
-                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Nach jedem Anlernvorgang wird der neue Tag automatisch synchronisiert. Zusätzlich kann hier die Synchronisation eines bestimmten Tags auch manuell angestoßen werden." UIHint="Information" />
-                          <ParameterRefRef RefId="%AID%_P-2000033_R-200003301" IndentLevel="2" />
-                          <Button Id="%AID%_B-%TT%00105" Text="Synchronisieren" Name="syncNfc" EventHandler="ACC_syncNfc" EventHandlerOnline="ConnectionOriented" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="UID-Tag synchronisieren" UIHint="Headline" HelpContext="ACC-NFC-Tag" />
+
+                          <ParameterRefRef RefId="%AID%_P-2000033_R-200003301" IndentLevel="2" HelpContext="ACC-Tag-ID-synchronisieren" />
+                          <Button Id="%AID%_B-%TT%00105" Text="Synchronisieren" Name="syncNfc" EventHandler="ACC_syncNfc" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-Tag-ID-synchronisieren" />
                         </when>
                       </choose>
 
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Gefährliche Funktionen" UIHint="Headline" />
-                      <ParameterRefRef RefId="%AID%_P-2000035_R-200003501" IndentLevel="1" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Gefährliche Funktionen" UIHint="Headline" HelpContext="ACC-NFC-Tag" />
+                      <ParameterRefRef RefId="%AID%_P-2000035_R-200003501" IndentLevel="1" HelpContext="ACC-Alle-NFC-Tags-loeschen" />
                       <choose ParamRefId="%AID%_P-2000035_R-200003501">
                         <when test="1">
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="Wenn Sie diese Funktion ausführen, werden alle gespeicherten UID-Tags (keine HomeKey-Geräte) gelöscht und müssen neu angelernt werden." UIHint="Error" />
-                          <Button Id="%AID%_B-%TT%00106" Text="Jetzt löschen" Name="resetNfcScanner" EventHandler="NFCUI_resetUid" EventHandlerOnline="ConnectionOriented" />
+                          <Button Id="%AID%_B-%TT%00106" Text="Jetzt löschen" Name="resetNfcScanner" EventHandler="NFCUI_resetUid" EventHandlerOnline="ConnectionOriented" HelpContext="ACC-Alle-NFC-Tags-loeschen" />
                         </when>
                       </choose>
 
-                      
-                      
 
-                      
-                      
+
+
+
+
                     </when>
 <when test="1">
 <choose ParamRefId="%AID%_UP-7000001_R-700000101">
 <when test="0">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Apple Home Key ist deaktiviert. Für normale NFC-Tags Zugangstyp UID-Tag wählen." UIHint="Information" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Apple Home Key ist deaktiviert." UIHint="Information" HelpContext="HK-Aktivieren" />
 </when>
 <when test="1">
 <choose ParamRefId="%AID%_UP-7000004_R-700000401">
 <when test="1">
 <choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Bereits gekoppelte Geräte einlesen oder Issuer- und Endpoint-ID manuell eintragen. Neue Einträge bleiben deaktiviert." UIHint="Information" />
+
 <Button Id="%AID%_B-%TT%00001" Name="NFCUI_import" Text="Geräte einlesen" HelpContext="HK-Importieren" EventHandler="NFCUI_import" EventHandlerOnline="ConnectionOriented" />
 </when></choose>
-<ParameterRefRef RefId="%AID%_P-%TT%00002_R-%TT%0000201" />
+<ParameterRefRef RefId="%AID%_P-%TT%00002_R-%TT%0000201" HelpContext="HK-Speicherplatz" />
 <choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Programmiermodus und NFC-Inbetriebnahme freigeben, dann iPhone oder Watch scannen. Dabei wird keine Zutrittsaktion ausgelöst." UIHint="Information" />
-<Button Id="%AID%_B-%TT%00002" Name="NFCUI_identify" Text="Gerät scannen" HelpContext="HK-Bezeichnung" EventHandler="NFCUI_identify" EventHandlerOnline="ConnectionOriented" />
+
+<Button Id="%AID%_B-%TT%00002" Name="NFCUI_identify" Text="Gerät scannen" HelpContext="HK-Geraet-Scannen" EventHandler="NFCUI_identify" EventHandlerOnline="ConnectionOriented" />
 </when></choose>
 <choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Bezeichnung, NFC-Tag-ID und Berechtigung bearbeiten. Änderungen werden mit dem Parameterdownload wirksam." UIHint="Information" />
+
 </when></choose>
 <choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="1">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
@@ -1405,19 +1405,19 @@
 </ParameterBlock>
 </when></choose>
 <choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
-<Button Id="%AID%_B-%TT%00003" Name="NFCUI_checkHomeKey" Text="Zuordnung prüfen" EventHandler="NFCUI_checkHomeKey" EventHandlerOnline="ConnectionOriented" />
+<Button Id="%AID%_B-%TT%00003" Name="NFCUI_checkHomeKey" Text="Zuordnung prüfen" EventHandler="NFCUI_checkHomeKey" EventHandlerOnline="ConnectionOriented" HelpContext="HK-Zuordnung-Pruefen" />
 </when></choose>
 <choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Ein gesperrtes Gerät erst scannen und anschließend ausdrücklich erneut zulassen. Dies aktiviert keine Berechtigung." UIHint="Information" />
-<Button Id="%AID%_B-%TT%00005" Name="NFCUI_restoreHomeKey" Text="Erneut zulassen" HelpContext="HK-Geraet-Entfernen" EventHandler="NFCUI_restoreHomeKey" EventHandlerOnline="ConnectionOriented" />
+
+<Button Id="%AID%_B-%TT%00005" Name="NFCUI_restoreHomeKey" Text="Erneut zulassen" HelpContext="HK-Erneut-Zulassen" EventHandler="NFCUI_restoreHomeKey" EventHandlerOnline="ConnectionOriented" />
 </when></choose>
 <choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Löschen entfernt die Geräteschlüssel, sperrt das Gerät und leert den Platz. Der Wallet-Eintrag und Aktionszuordnungen bleiben bestehen. Programmiermodus einschalten." UIHint="Information" />
+
 <Button Id="%AID%_B-%TT%00004" Name="NFCUI_deleteHomeKey" Text="Gerät löschen" HelpContext="HK-Geraet-Entfernen" EventHandler="NFCUI_deleteHomeKey" EventHandlerOnline="ConnectionOriented" />
 </when></choose>
 </when>
 <when test="0">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="ETS-Berechtigungstabelle unter Apple Home Key aktivieren." UIHint="Information" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="ETS-Berechtigungstabelle ist deaktiviert." UIHint="Information" HelpContext="HK-ETS-Berechtigungen" />
 </when>
 </choose>
 </when>
@@ -1426,29 +1426,29 @@
 </choose>
 <choose ParamRefId="%AID%_UP-2000011_R-200001101">
                         <when test="1">
-                          
+
                           <ComObjectRefRef RefId="%AID%_O-2000010_R-200001001" />
-                          
+
                           <ComObjectRefRef RefId="%AID%_O-2000014_R-200001401" />
                         </when>
                       </choose>
 <choose ParamRefId="%AID%_UP-2000013_R-200001301">
                         <when test="1">
-                          
+
                           <ComObjectRefRef RefId="%AID%_O-2000015_R-200001501" />
-                          
+
                           <ComObjectRefRef RefId="%AID%_O-2000028_R-200002801" />
                         </when>
                       </choose>
-<ParameterRefRef RefId="%AID%_P-%TT%00007_R-%TT%0000701" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Zugänge und Aktionszuordnungen" UIHint="Headline" />
-<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="UID-Tags einlesen" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" />
-<ParameterRefRef RefId="%AID%_P-%TT%00006_R-%TT%0000601" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="HomeKey und Aktionen: aktueller ETS-Entwurf, noch nicht zwingend im Gerät. UID-Tags: letzter vollständiger Reader-Snapshot; nach Änderungen durch USB, KNX oder andere Projekte erneut einlesen." UIHint="Information" />
-<ParameterRefRef RefId="%AID%_P-%TT%00003_R-%TT%0000301" />
-<ParameterRefRef RefId="%AID%_P-%TT%00004_R-%TT%0000401" />
-<ParameterRefRef RefId="%AID%_P-%TT%00005_R-%TT%0000501" />
-<ParameterRefRef RefId="%AID%_P-%TT%00008_R-%TT%0000801" />
+<ParameterRefRef RefId="%AID%_P-%TT%00007_R-%TT%0000701" HelpContext="HK-Bearbeitungsstatus" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Zugänge und Aktionszuordnungen" UIHint="Headline" HelpContext="HK-Uebersicht" />
+<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="UID-Tags einlesen" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" HelpContext="HK-UID-Snapshot" />
+<ParameterRefRef RefId="%AID%_P-%TT%00006_R-%TT%0000601" HelpContext="HK-UID-Snapshot" />
+
+<ParameterRefRef RefId="%AID%_P-%TT%00003_R-%TT%0000301" HelpContext="HK-Anzeige" />
+<ParameterRefRef RefId="%AID%_P-%TT%00004_R-%TT%0000401" HelpContext="HK-Suche" />
+<ParameterRefRef RefId="%AID%_P-%TT%00005_R-%TT%0000501" HelpContext="HK-Seite" />
+<ParameterRefRef RefId="%AID%_P-%TT%00008_R-%TT%0000801" HelpContext="HK-Uebersicht" />
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
 <Rows>
 <Row Id="%AID%_PB-nnn_R-1" />
@@ -1471,72 +1471,72 @@
 <Column Id="%AID%_PB-nnn_C-5" Width="23%" />
 <Column Id="%AID%_PB-nnn_C-6" Width="15%" />
 </Columns>
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Tag-ID" Cell="1,1" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Typ" Cell="1,2" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Bezeichnung" Cell="1,3" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="UID / Issuer + Endpoint" Cell="1,4" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Status" Cell="1,5" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Aktionen" Cell="1,6" />
-<ParameterRefRef RefId="%AID%_P-%TT%00025_R-%TT%0002501" Cell="2,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00026_R-%TT%0002601" Cell="2,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00027_R-%TT%0002701" Cell="2,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00028_R-%TT%0002801" Cell="2,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00029_R-%TT%0002901" Cell="2,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00030_R-%TT%0003001" Cell="2,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00031_R-%TT%0003101" Cell="3,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00032_R-%TT%0003201" Cell="3,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00033_R-%TT%0003301" Cell="3,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00034_R-%TT%0003401" Cell="3,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00035_R-%TT%0003501" Cell="3,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00036_R-%TT%0003601" Cell="3,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00037_R-%TT%0003701" Cell="4,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00038_R-%TT%0003801" Cell="4,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00039_R-%TT%0003901" Cell="4,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00040_R-%TT%0004001" Cell="4,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00041_R-%TT%0004101" Cell="4,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00042_R-%TT%0004201" Cell="4,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00043_R-%TT%0004301" Cell="5,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00044_R-%TT%0004401" Cell="5,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00045_R-%TT%0004501" Cell="5,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00046_R-%TT%0004601" Cell="5,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00047_R-%TT%0004701" Cell="5,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00048_R-%TT%0004801" Cell="5,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00049_R-%TT%0004901" Cell="6,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00050_R-%TT%0005001" Cell="6,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00051_R-%TT%0005101" Cell="6,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00052_R-%TT%0005201" Cell="6,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00053_R-%TT%0005301" Cell="6,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00054_R-%TT%0005401" Cell="6,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00055_R-%TT%0005501" Cell="7,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00056_R-%TT%0005601" Cell="7,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00057_R-%TT%0005701" Cell="7,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00058_R-%TT%0005801" Cell="7,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00059_R-%TT%0005901" Cell="7,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00060_R-%TT%0006001" Cell="7,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00061_R-%TT%0006101" Cell="8,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00062_R-%TT%0006201" Cell="8,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00063_R-%TT%0006301" Cell="8,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00064_R-%TT%0006401" Cell="8,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00065_R-%TT%0006501" Cell="8,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00066_R-%TT%0006601" Cell="8,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00067_R-%TT%0006701" Cell="9,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00068_R-%TT%0006801" Cell="9,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00069_R-%TT%0006901" Cell="9,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00070_R-%TT%0007001" Cell="9,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00071_R-%TT%0007101" Cell="9,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00072_R-%TT%0007201" Cell="9,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00073_R-%TT%0007301" Cell="10,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00074_R-%TT%0007401" Cell="10,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00075_R-%TT%0007501" Cell="10,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00076_R-%TT%0007601" Cell="10,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00077_R-%TT%0007701" Cell="10,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00078_R-%TT%0007801" Cell="10,6"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00079_R-%TT%0007901" Cell="11,1"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00080_R-%TT%0008001" Cell="11,2"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00081_R-%TT%0008101" Cell="11,3"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00082_R-%TT%0008201" Cell="11,4"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00083_R-%TT%0008301" Cell="11,5"/>
-<ParameterRefRef RefId="%AID%_P-%TT%00084_R-%TT%0008401" Cell="11,6"/>
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Tag-ID" Cell="1,1" HelpContext="HK-Uebersicht" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Typ" Cell="1,2" HelpContext="HK-Uebersicht" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Bezeichnung" Cell="1,3" HelpContext="HK-Uebersicht" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="UID / Issuer + Endpoint" Cell="1,4" HelpContext="HK-Uebersicht" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Status" Cell="1,5" HelpContext="HK-Uebersicht" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Aktionen" Cell="1,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00025_R-%TT%0002501" Cell="2,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00026_R-%TT%0002601" Cell="2,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00027_R-%TT%0002701" Cell="2,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00028_R-%TT%0002801" Cell="2,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00029_R-%TT%0002901" Cell="2,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00030_R-%TT%0003001" Cell="2,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00031_R-%TT%0003101" Cell="3,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00032_R-%TT%0003201" Cell="3,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00033_R-%TT%0003301" Cell="3,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00034_R-%TT%0003401" Cell="3,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00035_R-%TT%0003501" Cell="3,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00036_R-%TT%0003601" Cell="3,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00037_R-%TT%0003701" Cell="4,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00038_R-%TT%0003801" Cell="4,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00039_R-%TT%0003901" Cell="4,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00040_R-%TT%0004001" Cell="4,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00041_R-%TT%0004101" Cell="4,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00042_R-%TT%0004201" Cell="4,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00043_R-%TT%0004301" Cell="5,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00044_R-%TT%0004401" Cell="5,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00045_R-%TT%0004501" Cell="5,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00046_R-%TT%0004601" Cell="5,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00047_R-%TT%0004701" Cell="5,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00048_R-%TT%0004801" Cell="5,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00049_R-%TT%0004901" Cell="6,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00050_R-%TT%0005001" Cell="6,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00051_R-%TT%0005101" Cell="6,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00052_R-%TT%0005201" Cell="6,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00053_R-%TT%0005301" Cell="6,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00054_R-%TT%0005401" Cell="6,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00055_R-%TT%0005501" Cell="7,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00056_R-%TT%0005601" Cell="7,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00057_R-%TT%0005701" Cell="7,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00058_R-%TT%0005801" Cell="7,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00059_R-%TT%0005901" Cell="7,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00060_R-%TT%0006001" Cell="7,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00061_R-%TT%0006101" Cell="8,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00062_R-%TT%0006201" Cell="8,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00063_R-%TT%0006301" Cell="8,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00064_R-%TT%0006401" Cell="8,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00065_R-%TT%0006501" Cell="8,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00066_R-%TT%0006601" Cell="8,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00067_R-%TT%0006701" Cell="9,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00068_R-%TT%0006801" Cell="9,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00069_R-%TT%0006901" Cell="9,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00070_R-%TT%0007001" Cell="9,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00071_R-%TT%0007101" Cell="9,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00072_R-%TT%0007201" Cell="9,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00073_R-%TT%0007301" Cell="10,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00074_R-%TT%0007401" Cell="10,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00075_R-%TT%0007501" Cell="10,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00076_R-%TT%0007601" Cell="10,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00077_R-%TT%0007701" Cell="10,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00078_R-%TT%0007801" Cell="10,6" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00079_R-%TT%0007901" Cell="11,1" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00080_R-%TT%0008001" Cell="11,2" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00081_R-%TT%0008101" Cell="11,3" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00082_R-%TT%0008201" Cell="11,4" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00083_R-%TT%0008301" Cell="11,5" HelpContext="HK-Uebersicht" />
+<ParameterRefRef RefId="%AID%_P-%TT%00084_R-%TT%0008401" Cell="11,6" HelpContext="HK-Uebersicht" />
 </ParameterBlock>
 </ParameterBlock>
 </Dynamic>

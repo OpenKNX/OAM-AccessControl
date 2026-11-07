@@ -12,7 +12,7 @@
 #define MODULE_LogicModule_Version_Minor 5
 #define MODULE_LogicModule_Version_Revision 0
 #define MODULE_LogicModule_ETS 69
-#define MODULE_AccessControl_Version "0.14.8+10201bd"
+#define MODULE_AccessControl_Version "0.14.8+979b04b"
 #define MODULE_AccessControl_Version_Major 0
 #define MODULE_AccessControl_Version_Minor 14
 #define MODULE_AccessControl_Version_Revision 8
@@ -37,7 +37,7 @@
 #define MODULE_BinaryInput_Version_Minor 4
 #define MODULE_BinaryInput_Version_Revision 0
 #define MODULE_BinaryInput_ETS 4
-#define MODULE_HomeKey_Version "0.4.4+b6c0733"
+#define MODULE_HomeKey_Version "0.4.4+3f253cb"
 #define MODULE_HomeKey_Version_Major 0
 #define MODULE_HomeKey_Version_Minor 4
 #define MODULE_HomeKey_Version_Revision 4

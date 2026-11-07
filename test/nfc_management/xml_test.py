@@ -95,3 +95,20 @@ for kind in (0,1):
      if name in (prefix+'Description',prefix+'AccessId'):assert reference.attrib['Access']=='Read'
 assert not any('Geräte-IDs können mit der ETS-Schaltfläche importiert werden.' in n.attrib.get('Text','') for n in xml.iter())
 print('Compact NFC editor: shared dropdown, operation/slot visibility, read-only deletion and short buttons passed')
+
+# Every visible field and operation has a real help topic, including read-only table cells.
+help_topics={path.stem:path for folder in (root/'lib/OFM-HomeKey/src/Baggages/Help_de',root/'lib/OFM-AccessControl/src/Baggages/Help_de') for path in folder.glob('*.md')}
+homekey=next(b for b in blocks if b.attrib.get('Text')=='Apple Home Key')
+for block in (nfc,homekey):
+ for node in block.iter():
+  if node.tag not in (ns+'ParameterRefRef',ns+'Button'):continue
+  topic=node.attrib.get('HelpContext')
+  assert topic in help_topics,(node.attrib,'Missing help topic')
+  text=help_topics[topic].read_text(encoding='utf-8-sig')
+  assert text.startswith('### ') and len(text)>80,(topic,'Incomplete help topic')
+# Only blocked configurations and the destructive bulk-UID reset still need inline notices.
+notices=[n for n in nfc.iter(ns+'ParameterSeparator') if n.attrib.get('UIHint')=='Information']
+assert len(notices)==2
+assert all('deaktiviert' in n.attrib.get('Text','') or 'ETS-Berechtigungstabelle' in n.attrib.get('Text','') for n in notices)
+assert not any(n.attrib.get('UIHint')=='Information' for n in homekey.iter(ns+'ParameterSeparator'))
+print('ETS help: every field/button linked, complete German topics, routine instruction boxes removed')
