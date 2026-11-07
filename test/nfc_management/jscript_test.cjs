@@ -35,6 +35,9 @@ function fixture() {
             }
             assert.equal(object,165);
             if(data[0]===0)return [0,1,1,1,0,0,2,1,0,0,0,1];
+            if(data[0]===5)return [0,1,0,0,0,77];
+            if(data[0]===6)return [0,1,1,0,0,0,0,77,...Buffer.from('0011223344556677112233445501','hex')];
+            if(data[0]===7){if(state.finishFailure)throw Error('Network finish failed');return [0,1];}
             assert.equal(data[0],10);
             return [0,1,state.revoked?1:0,1];
         }
@@ -98,4 +101,20 @@ function fixture() {
     assert.match(f.parameters.NFCUI_Status.value,/Parameter herunterladen/);
     assert(f.parameters.NFCUI_Status.value.length<=199);
 }
-console.log('ETS scripts with ES5+ APIs disabled: assignment checks, overview, conflicts, revocation and incomplete-slot cleanup passed');
+for(const failure of [false,true]){
+    const f=fixture();f.state.finishFailure=failure;f.context.HK_wait=function(){};
+    for(const [name,value] of Object.entries({Enabled:0,Issuer:'',Endpoint:'',AccessId:0,Description:''}))
+        f.parameters['HK_Authorization01'+name].value=value;
+    if(failure){
+        assert.throws(()=>f.context.NFCUI_identify(f.device,f.online,f.progress,{}),/Network finish failed/);
+        assert.equal(f.parameters.HK_Authorization01Issuer.value,'');
+        assert.equal(f.parameters.HK_Authorization01Endpoint.value,'');
+    }else{
+        f.context.NFCUI_identify(f.device,f.online,f.progress,{});
+        assert.equal(f.parameters.HK_Authorization01Issuer.value,'0011223344556677');
+        assert.equal(f.parameters.HK_Authorization01Endpoint.value,'112233445501');
+    }
+    assert.equal(f.parameters.HK_Authorization01Enabled.value,0);
+    assert.equal(f.state.connects,f.state.disconnects);
+}
+console.log('ETS scripts with ES5+ APIs disabled: assignments, deletion and transactional identification passed');

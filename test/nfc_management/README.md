@@ -106,6 +106,14 @@ permission. Complete identities retain acknowledged persistent revocation before
 ETS fields are cleared. Tests cover incomplete slots alongside another device,
 cancellation, failed/successful revocation, and execution under ES3 restrictions.
 
+HomeKey identification stages a scan result until the reader has acknowledged
+session completion and the online connection has closed. No permission fields
+are changed while network operations are pending. The final ETS writes restore
+their previous values if a setter, cancellation or progress callback fails;
+existing device names, active rights and Tag IDs are preserved. Tests inject
+polling/finish/disconnect failures, refused replies, cancelled scans and partial
+parameter-write failures. Edits made while waiting are detected before commit.
+
 The bulk-deletion control explicitly says Alle UID-Tags löschen? and appears
 only for UID-Tag. It clears UID records, not HomeKey keys, permission slots or
 revocations. Individual HomeKey revocation uses Gerät löschen. Each operation

@@ -61,4 +61,57 @@ test('Complete device deletion requires acknowledged revocation before clearing 
   assert(f.requests.some(r=>r[1]===8));assert.equal(f.closed,1);
  }
 });
+function homeKeyDraft(f){return JSON.stringify(Object.fromEntries(Object.entries(f.p).filter(([name])=>name.startsWith('HK_Authorization')||name==='NFCUI_Slot')));}
+test('Identification never commits a slot before reader acknowledgement and disconnect',()=>{
+ let f=fixture(),wait=HK_wait;HK_wait=()=>{};
+ try{
+  let before=homeKeyDraft(f);f.override=(object,data)=>{if(data[0]===7)assert.equal(homeKeyDraft(f),before);};
+  f.online.disconnect=()=>{assert.equal(homeKeyDraft(f),before);f.closed++;};
+  NFCUI_identify(f.device,f.online,f.progress,{});
+  assert.equal(f.p.HK_Authorization01Issuer.value,'0011223344556677');
+  assert.equal(f.p.HK_Authorization01Enabled.value,0);assert.equal(f.closed,1);
+ }finally{HK_wait=wait;}
+});
+test('Identification failures preserve every slot and selection, including late network failures',()=>{
+ let wait=HK_wait;HK_wait=()=>{};
+ try{for(let failure of ['poll','malformed','finish','finish-refused','disconnect','cancel-after-result','progress']){
+  let f=fixture();f.p.NFCUI_Slot.value=2;
+  let before=homeKeyDraft(f);
+  f.override=(object,data)=>{
+   if(data[0]===6){if(failure==='poll')throw Error('Network poll failed');if(failure==='malformed')return [0,1,1];if(failure==='cancel-after-result')f.canceled=true;}
+   if(data[0]===7){if(failure==='finish')throw Error('Network finish failed');if(failure==='finish-refused')return [7,1];}
+  };
+  if(failure==='disconnect')f.online.disconnect=()=>{f.closed++;throw Error('Network disconnect failed');};
+  if(failure==='progress')f.progress.setProgress=()=>{throw Error('Progress callback failed');};
+  assert.throws(()=>NFCUI_identify(f.device,f.online,f.progress,{}),failure);
+  assert.equal(homeKeyDraft(f),before,failure);assert(f.p.NFCUI_Status.value.includes('Anlernen fehlgeschlagen'));
+ }}finally{HK_wait=wait;}
+});
+test('Failed parameter setters roll back partial identification writes and the slot selection',()=>{
+ let wait=HK_wait;HK_wait=()=>{};
+ try{for(let key of ['HK_Authorization01Enabled','HK_Authorization01Issuer','HK_Authorization01Endpoint','HK_Authorization01AccessId','NFCUI_Slot']){
+  let f=fixture();f.p.NFCUI_Slot.value=2;let before=homeKeyDraft(f),value=f.p[key].value,fail=true;
+  Object.defineProperty(f.p[key],'value',{enumerable:true,get(){return value;},set(next){if(fail){fail=false;throw Error('Setter failed');}value=next;}});
+  assert.throws(()=>NFCUI_identify(f.device,f.online,f.progress,{}));assert.equal(homeKeyDraft(f),before,key);
+ }}finally{HK_wait=wait;}
+});
+test('A failed completion restores existing names, Tag IDs and active rights',()=>{
+ let f=fixture(),wait=HK_wait;HK_wait=()=>{};
+ try{
+  Object.assign(f.p.HK_Authorization01Enabled,{value:1});f.p.HK_Authorization01Issuer.value='0011223344556677';
+  f.p.HK_Authorization01Endpoint.value='112233445501';f.p.HK_Authorization01AccessId.value=42;
+  f.p.HK_Authorization01Description.value='My phone';f.revoked=true;let before=homeKeyDraft(f);
+  f.progress.setProgress=()=>{throw Error('Progress callback failed');};
+  assert.throws(()=>NFCUI_identify(f.device,f.online,f.progress,{}));assert.equal(homeKeyDraft(f),before);
+ }finally{HK_wait=wait;}
+});
+test('Identification does not overwrite edits made during the online phase',()=>{
+ let f=fixture(),wait=HK_wait;HK_wait=()=>{};
+ try{
+  f.override=(object,data)=>{if(data[0]===7)f.p.HK_Authorization01Description.value='Edited while waiting';};
+  assert.throws(()=>NFCUI_identify(f.device,f.online,f.progress,{}),/während des Anlernens geändert/);
+  assert.equal(f.p.HK_Authorization01Description.value,'Edited while waiting');
+  assert.equal(f.p.HK_Authorization01Issuer.value,'');assert.equal(f.p.HK_Authorization01Enabled.value,0);
+ }finally{HK_wait=wait;}
+});
 console.log(tests+' unified NFC ETS tests passed');

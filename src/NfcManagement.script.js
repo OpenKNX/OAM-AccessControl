@@ -183,35 +183,69 @@ function NFCUI_restoreHomeKey(device,online,progress,context) {
     });
 }
 function NFCUI_identify(device,online,progress,context) {
-    HK_run(device,online,progress,function(){
-        var token=null;
-        try {
-            var response=HK_call(device,online,progress,[5]);HK_requireOk(response);
-            if(response.length!=6)throw new Error("Ungültige Identifizierungsantwort");
-            token=response.slice(2,6);var until=new Date().getTime()+60000;
-            progress.setText("Gekoppeltes iPhone / Watch an den Reader halten. Zutrittsaktionen sind währenddessen gesperrt.");
-            do {
-                HK_wait(progress,250);response=HK_call(device,online,progress,[6].concat(token));
-                if(response[0]==1)continue;HK_requireOk(response);
-                if(response.length!=22 || HK_hex(response,4,4)!=HK_hex(token,0,4))throw new Error("Ungültige Identifizierungsantwort");
-                if(!response[2])continue;
-                var issuer=HK_hex(response,8,8),endpoint=HK_hex(response,16,6),slot=0,free=0;
-                for(var i=1;i<=16;i++){
-                    var f=HK_authorizationFields(device,i);
-                    if(String(f.issuer.value).toLowerCase()==issuer&&String(f.endpoint.value).toLowerCase()==endpoint)slot=i;
-                    if(!free&&!String(f.issuer.value)&&!String(f.endpoint.value)&&!String(f.description.value)&&!Number(f.enabled.value)&&!Number(f.action.value))free=i;
-                }
-                slot=slot||free;if(!slot)throw new Error("Alle 16 HomeKey-Plätze belegt; zuerst ein altes Gerät löschen.");
-                var f=HK_authorizationFields(device,slot);
-                if(!String(f.issuer.value)){f.enabled.value=0;f.issuer.value=issuer;f.endpoint.value=endpoint;f.action.value=0;}
-                if(response[3])f.enabled.value=0; // A revoked identity is never shown as an enabled permission.
-                NFCUI_parameter(device,"Slot").value=slot;
-                NFCUI_status(device,"Gerät identifiziert, Platz "+slot+(response[3]?": GESPERRT. Nur über Erneut zulassen freigeben.":". Bezeichnung und freie Tag-ID vergeben; Berechtigung aktivieren und herunterladen."));
-                return;
-            }while(new Date().getTime()<until);
-            throw new Error("Kein HomeKey-Gerät innerhalb von 60 Sekunden identifiziert");
-        } finally { if(token) { try{HK_requireOk(HK_call(device,online,progress,[7].concat(token)));}catch(ignored){} } }
-    });
+    var token=null,connected=false,plan=null,previous=null,touched=false;
+    var selected=NFCUI_parameter(device,"Slot"),oldSlot=selected.value;
+    try {
+        connected=true;online.connect();
+        var response=HK_call(device,online,progress,[5]);HK_requireOk(response);
+        if(response.length!=6)throw new Error("Ungültige Identifizierungsantwort");
+        token=response.slice(2,6);var until=new Date().getTime()+60000;
+        progress.setText("Gekoppeltes iPhone / Watch an den Reader halten. Zutrittsaktionen sind währenddessen gesperrt.");
+        do {
+            HK_wait(progress,250);response=HK_call(device,online,progress,[6].concat(token));
+            if(response[0]==1)continue;HK_requireOk(response);
+            if(response.length!=22 || HK_hex(response,4,4)!=HK_hex(token,0,4))throw new Error("Ungültige Identifizierungsantwort");
+            if(!response[2])continue;
+            var issuer=HK_hex(response,8,8),endpoint=HK_hex(response,16,6),slot=0,free=0;
+            for(var i=1;i<=16;i++){
+                var f=HK_authorizationFields(device,i);
+                if(String(f.issuer.value).toLowerCase()==issuer&&String(f.endpoint.value).toLowerCase()==endpoint)slot=i;
+                if(!free&&!String(f.issuer.value)&&!String(f.endpoint.value)&&!String(f.description.value)&&!Number(f.enabled.value)&&!Number(f.action.value))free=i;
+            }
+            slot=slot||free;if(!slot)throw new Error("Alle 16 HomeKey-Plätze belegt; zuerst ein altes Gerät löschen.");
+            // Stage only. A failed finish/disconnect must not consume a slot.
+            var f=HK_authorizationFields(device,slot);
+            plan={fields:f,slot:slot,issuer:issuer,endpoint:endpoint,revoked:response[3],
+                values:[f.enabled.value,f.issuer.value,f.endpoint.value,f.action.value,f.description.value]};
+            break;
+        }while(new Date().getTime()<until);
+        if(!plan)throw new Error("Kein HomeKey-Gerät innerhalb von 60 Sekunden identifiziert");
+        if(progress.isCanceled())throw new Error("Home Key: Abgebrochen");
+        HK_requireOk(HK_call(device,online,progress,[7].concat(token)));token=null;
+        online.disconnect();connected=false;
+        if(progress.isCanceled())throw new Error("Home Key: Abgebrochen");
+
+        // All network work has succeeded. Do not overwrite edits made while
+        // waiting for the reader. Preserve every field for rollback as well.
+        var f=plan.fields,fields=[f.enabled,f.issuer,f.endpoint,f.action,f.description];
+        for(var i=0;i<fields.length;i++)if(fields[i].value!==plan.values[i])
+            throw new Error("ETS-Platz wurde während des Anlernens geändert; erneut versuchen");
+        if(selected.value!==oldSlot)throw new Error("HomeKey-Auswahl wurde während des Anlernens geändert; erneut versuchen");
+        previous=[];for(var i=0;i<fields.length;i++)previous.push(fields[i].value);
+        touched=true;
+        if(!String(f.issuer.value)){
+            f.enabled.value=0;f.issuer.value=plan.issuer;f.endpoint.value=plan.endpoint;f.action.value=0;
+        }
+        if(plan.revoked)f.enabled.value=0;
+        selected.value=plan.slot;
+        NFCUI_status(device,"Gerät identifiziert, Platz "+plan.slot+(plan.revoked?": GESPERRT. Nur über Erneut zulassen freigeben.":". Bezeichnung und freie Tag-ID vergeben; Berechtigung aktivieren und herunterladen."));
+        if(progress.isCanceled())throw new Error("Home Key: Abgebrochen");
+        progress.setProgress(100);
+    } catch(error) {
+        var rollbackFailed=false;
+        if(touched){
+            for(var i=0;i<fields.length;i++){
+                try{fields[i].value=previous[i];}catch(restoreError){rollbackFailed=true;}
+            }
+            try{selected.value=oldSlot;}catch(restoreError){rollbackFailed=true;}
+        }
+        var text="Anlernen fehlgeschlagen: "+error.message+(rollbackFailed?"; ETS-Werte konnten nicht vollständig zurückgesetzt werden. Projekt prüfen.":"; keine HomeKey-Zuordnung übernommen.");
+        try{HK_setOnlineStatus(device,text);NFCUI_status(device,text);}catch(ignored){}
+        throw error;
+    } finally {
+        if(token){try{HK_requireOk(HK_call(device,online,progress,[7].concat(token)));}catch(ignored){}}
+        if(connected){try{online.disconnect();}catch(ignored){}}
+    }
 }
 function NFCUI_checkHomeKey(device,online,progress,context) {
     NFCUI_refresh(device,online,progress,context);
