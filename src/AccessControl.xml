@@ -14,7 +14,7 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="11.6.0"
+    ApplicationVersion="11.7.0"
     ReplacesVersionsDownTo="4.0"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
@@ -155,12 +155,20 @@
     <op:verify File="../lib/OFM-Network/library.json" ModuleVersion="0.8" />
   </op:define>
 
+  <op:define prefix="NFCUI" ModuleType="90" noConfigTransfer="true" share="NfcManagement.share.xml" />
+
     <generate base="SecureApplication.xml">
       <Dynamic>
         <op:include href="../lib/OGM-Common/src/Common.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BASE" />
         <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
         <Channel Id="%AID%_CH-ACC" Name="BasicChannel" Number="ACC" Text="Zutrittskontrolle" Icon="shield-lock-outline" HelpContext="ACC-Dokumentation">
-          <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*" prefix="ACC" />
+          <ParameterBlock Id="%AID%_PB-nnn" Name="Basic" Text="Allgemein" Icon="cog-outline" HelpContext="ACC-Dokumentation" ShowInComObjectTree="true">
+            <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/ParameterBlock[@Name='Basic']/*[not(self::choose[when/ParameterBlock[@Name='NfcScanner']])]" prefix="ACC" />
+            <choose ParamRefId="%AID%_UP-2000034_R-200003401"><when test="!=0">
+              <op:include href="NfcManagement.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="NFCUI" />
+            </when></choose>
+          </ParameterBlock>
+          <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*[not(self::ParameterBlock[@Name='Basic'])]" prefix="ACC" />
           <choose ParamRefId="%AID%_UP-2000034_R-200003401">
             <when test="!=0">
               <op:include href="../lib/OFM-HomeKey/src/HomeKey.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*" prefix="HK" />

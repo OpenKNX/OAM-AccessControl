@@ -27,7 +27,7 @@ for enabled in (0, 1):
         assert sum(n.tag == ns+'ParameterRefRef' and n.attrib['RefId']==uid_ref for n in nodes)==enabled
         if enabled:
             assert objects[0].endswith('00001_R-%TT%0000101')
-            assert any(n.attrib.get('Name')=='importEndpoints' for n in nodes)
+            assert not any(n.attrib.get('Name')=='importEndpoints' for n in nodes) # Moved to the unified NFC page.
         print(f'ETS HomeKey={enabled}, raw={raw}: UID default/mode controls correct, {len(objects)} HomeKey objects')
 # The external reference must resolve to the ACC raw-data parameter, not another switch.
 acc = ET.parse(root/'lib/OFM-AccessControl/src/AccessControl.share.xml').getroot()

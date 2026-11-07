@@ -12,11 +12,14 @@ def method(text,signature):
     return text[start:end]
 source=r'''
 #include "HomeKeyPolicy.h"
+#include "HomeKeyIdentification.h"
 #include <array>
 #include <algorithm>
 #include <cassert>
 #include <mutex>
 #include <iostream>
+uint32_t millis(){return 100;}
+template<typename T> void xQueueOverwrite(void*,const T*){}
 struct Reader {
     unsigned exchanges=0;bool success=false;std::vector<uint8_t> response;
     bool exchangeApdu(const std::vector<uint8_t>&,std::vector<uint8_t>& out,uint32_t){++exchanges;out=response;return success;}
@@ -27,12 +30,27 @@ struct {unsigned calls=0;std::vector<uint16_t> reserved;
     bool processExternalNfcUid(const uint8_t*,uint8_t,const uint16_t* ids,size_t count){++calls;reserved.assign(ids,ids+count);return true;}
 }openknxAccessControl;
 struct HomeKeyModule {
+    struct NfcDiagnostic
+    {
+        std::array<uint8_t, 64> response{};
+        std::array<uint8_t, 14> version{};
+        HomeKey::CardVersionDiagnostic versionDiagnostic{};
+        size_t responseLength = 0;
+        uint16_t status = 0;
+        bool exchanged = false;
+        bool versionAttempted = false;
+        bool versionValid = false;
+    };
+    void* diagnostics=nullptr;
+    HomeKeyIdentification identification;
     enum class EventKind {Denied,Authenticated};
     struct Event {EventKind kind=EventKind::Denied;const char* reason=nullptr;uint32_t generation=0;};
     bool homeKeyConfigured=false,enabled=false,allowUid=true,provisioningReady=false,policyLoaded=true;
     struct {std::recursive_mutex mutex;uint32_t generation=7;bool healthy=true;
         struct {std::vector<uint8_t> group_identifier;}identity;
         std::vector<HomeKey::Mapping> mappings;
+        bool revoked=false;
+        bool isRevoked(const HomeKey::IssuerId&,const HomeKey::EndpointId&)const{return revoked;}
     }store;
     Reader instance;unsigned authentications=0;std::vector<Event> events;
     void authenticate(INfcReader&,const std::vector<uint8_t>&){++authentications;}
@@ -83,6 +101,15 @@ int main(){
         m.enabled=false;assert(m.prepareNfc(frame,token));
         assert((frame==std::array<uint8_t,18>{}));
         m.enabled=true;m.store.healthy=false;assert(m.prepareNfc(frame,token)&&frame[0]==0);
+    }
+    {
+        HomeKeyModule m;m.homeKeyConfigured=true;m.identification.start(77,100);
+        m.instance.success=true;m.instance.response={0x6a,0x82};
+        assert(m.processNfcTag(m.instance,uid,0x20)); // UID cannot escape a HomeKey identification session.
+        assert(!m.authorizeNfcUid(uid.data(),4,7));
+        m.identification.cancel();assert(m.authorizeNfcUid(uid.data(),4,7));
+        HomeKey::Mapping reserved;reserved.accessId=42;m.store.mappings.push_back(reserved);m.store.revoked=true;
+        assert(m.authorizeNfcUid(uid.data(),4,7)&&openknxAccessControl.reserved.empty());
     }
     std::cout<<"Actual HomeKey hooks: optional selection, UID policy/reservations, stale tokens, ECP gating and startup readiness passed\n";
 }

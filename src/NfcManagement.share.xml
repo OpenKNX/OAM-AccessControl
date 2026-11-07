@@ -1,0 +1,1405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
+<ManufacturerData>
+<Manufacturer RefId="M-00FA">
+<ApplicationPrograms>
+<ApplicationProgram Id="%AID%">
+<Static>
+<ParameterTypes>
+<ParameterType Id="%AID%_PT-NfcUiText" Name="NfcUiText">
+<TypeText SizeInBit="2048" />
+</ParameterType>
+<ParameterType Id="%AID%_PT-NfcUiCache" Name="NfcUiCache">
+<TypeText SizeInBit="65536" />
+</ParameterType>
+<ParameterType Id="%AID%_PT-NfcUiSearch" Name="NfcUiSearch">
+<TypeText SizeInBit="256" />
+</ParameterType>
+<ParameterType Id="%AID%_PT-NfcUiPage" Name="NfcUiPage">
+<TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="1" maxInclusive="152" />
+</ParameterType>
+<ParameterType Id="%AID%_PT-NfcUiSlot" Name="NfcUiSlot">
+<TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="1" maxInclusive="16" />
+</ParameterType>
+<ParameterType Id="%AID%_PT-NfcUiType" Name="NfcUiType">
+<TypeRestriction Base="Value" SizeInBit="8">
+<Enumeration Id="%ENID%" Text="UID-Tag" Value="0" />
+<Enumeration Id="%ENID%" Text="Apple HomeKey" Value="1" />
+</TypeRestriction>
+</ParameterType>
+<ParameterType Id="%AID%_PT-NfcUiFilter" Name="NfcUiFilter">
+<TypeRestriction Base="Value" SizeInBit="8">
+<Enumeration Id="%ENID%" Text="Alle" Value="0" />
+<Enumeration Id="%ENID%" Text="UID-Tags" Value="1" />
+<Enumeration Id="%ENID%" Text="HomeKey" Value="2" />
+<Enumeration Id="%ENID%" Text="Konflikte" Value="3" />
+</TypeRestriction>
+</ParameterType>
+</ParameterTypes>
+<Parameters>
+<Parameter Id="%AID%_P-%TT%00001" Name="Type" ParameterType="%AID%_PT-NfcUiType" Text="Zugangstyp" Value="0" />
+<Parameter Id="%AID%_P-%TT%00002" Name="Slot" ParameterType="%AID%_PT-NfcUiSlot" Text="HomeKey-Speicherplatz" Value="1" />
+<Parameter Id="%AID%_P-%TT%00003" Name="Filter" ParameterType="%AID%_PT-NfcUiFilter" Text="Anzeige" Value="0" />
+<Parameter Id="%AID%_P-%TT%00004" Name="Search" ParameterType="%AID%_PT-NfcUiSearch" Text="Suche (ID / Bezeichnung / Geräte-ID)" Value="" />
+<Parameter Id="%AID%_P-%TT%00005" Name="Page" ParameterType="%AID%_PT-NfcUiPage" Text="Seite (10 Einträge)" Value="1" />
+<Parameter Id="%AID%_P-%TT%00006" Name="Snapshot" ParameterType="%AID%_PT-NfcUiText" Text="UID-Snapshot" Value="Noch nicht eingelesen" />
+<Parameter Id="%AID%_P-%TT%00007" Name="Status" ParameterType="%AID%_PT-NfcUiText" Text="Vorgang" Value="" />
+<Parameter Id="%AID%_P-%TT%00008" Name="Summary" ParameterType="%AID%_PT-NfcUiText" Text="Übersicht" Value="" />
+<Parameter Id="%AID%_P-%TT%00009" Name="Cache0" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00010" Name="Cache1" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00011" Name="Cache2" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00012" Name="Cache3" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00013" Name="Cache4" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00014" Name="Cache5" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00015" Name="Cache6" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00016" Name="Cache7" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00017" Name="Cache8" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00018" Name="Cache9" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00019" Name="Cache10" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00020" Name="Cache11" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00021" Name="Cache12" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00022" Name="Cache13" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00023" Name="Cache14" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00024" Name="Cache15" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00025" Name="View0Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00026" Name="View0Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00027" Name="View0Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00028" Name="View0Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00029" Name="View0State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00030" Name="View0Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00031" Name="View1Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00032" Name="View1Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00033" Name="View1Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00034" Name="View1Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00035" Name="View1State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00036" Name="View1Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00037" Name="View2Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00038" Name="View2Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00039" Name="View2Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00040" Name="View2Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00041" Name="View2State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00042" Name="View2Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00043" Name="View3Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00044" Name="View3Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00045" Name="View3Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00046" Name="View3Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00047" Name="View3State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00048" Name="View3Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00049" Name="View4Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00050" Name="View4Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00051" Name="View4Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00052" Name="View4Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00053" Name="View4State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00054" Name="View4Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00055" Name="View5Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00056" Name="View5Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00057" Name="View5Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00058" Name="View5Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00059" Name="View5State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00060" Name="View5Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00061" Name="View6Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00062" Name="View6Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00063" Name="View6Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00064" Name="View6Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00065" Name="View6State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00066" Name="View6Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00067" Name="View7Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00068" Name="View7Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00069" Name="View7Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00070" Name="View7Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00071" Name="View7State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00072" Name="View7Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00073" Name="View8Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00074" Name="View8Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00075" Name="View8Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00076" Name="View8Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00077" Name="View8State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00078" Name="View8Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00079" Name="View9Id" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00080" Name="View9Type" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00081" Name="View9Description" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00082" Name="View9Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00083" Name="View9State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00084" Name="View9Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+</Parameters>
+<ParameterRefs>
+<ParameterRef Id="%AID%_P-%TT%00001_R-%TT%0000101" RefId="%AID%_P-%TT%00001" />
+<ParameterRef Id="%AID%_P-%TT%00002_R-%TT%0000201" RefId="%AID%_P-%TT%00002" />
+<ParameterRef Id="%AID%_P-%TT%00003_R-%TT%0000301" RefId="%AID%_P-%TT%00003" />
+<ParameterRef Id="%AID%_P-%TT%00004_R-%TT%0000401" RefId="%AID%_P-%TT%00004" />
+<ParameterRef Id="%AID%_P-%TT%00005_R-%TT%0000501" RefId="%AID%_P-%TT%00005" />
+<ParameterRef Id="%AID%_P-%TT%00006_R-%TT%0000601" RefId="%AID%_P-%TT%00006" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00007_R-%TT%0000701" RefId="%AID%_P-%TT%00007" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00008_R-%TT%0000801" RefId="%AID%_P-%TT%00008" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00009_R-%TT%0000901" RefId="%AID%_P-%TT%00009" />
+<ParameterRef Id="%AID%_P-%TT%00010_R-%TT%0001001" RefId="%AID%_P-%TT%00010" />
+<ParameterRef Id="%AID%_P-%TT%00011_R-%TT%0001101" RefId="%AID%_P-%TT%00011" />
+<ParameterRef Id="%AID%_P-%TT%00012_R-%TT%0001201" RefId="%AID%_P-%TT%00012" />
+<ParameterRef Id="%AID%_P-%TT%00013_R-%TT%0001301" RefId="%AID%_P-%TT%00013" />
+<ParameterRef Id="%AID%_P-%TT%00014_R-%TT%0001401" RefId="%AID%_P-%TT%00014" />
+<ParameterRef Id="%AID%_P-%TT%00015_R-%TT%0001501" RefId="%AID%_P-%TT%00015" />
+<ParameterRef Id="%AID%_P-%TT%00016_R-%TT%0001601" RefId="%AID%_P-%TT%00016" />
+<ParameterRef Id="%AID%_P-%TT%00017_R-%TT%0001701" RefId="%AID%_P-%TT%00017" />
+<ParameterRef Id="%AID%_P-%TT%00018_R-%TT%0001801" RefId="%AID%_P-%TT%00018" />
+<ParameterRef Id="%AID%_P-%TT%00019_R-%TT%0001901" RefId="%AID%_P-%TT%00019" />
+<ParameterRef Id="%AID%_P-%TT%00020_R-%TT%0002001" RefId="%AID%_P-%TT%00020" />
+<ParameterRef Id="%AID%_P-%TT%00021_R-%TT%0002101" RefId="%AID%_P-%TT%00021" />
+<ParameterRef Id="%AID%_P-%TT%00022_R-%TT%0002201" RefId="%AID%_P-%TT%00022" />
+<ParameterRef Id="%AID%_P-%TT%00023_R-%TT%0002301" RefId="%AID%_P-%TT%00023" />
+<ParameterRef Id="%AID%_P-%TT%00024_R-%TT%0002401" RefId="%AID%_P-%TT%00024" />
+<ParameterRef Id="%AID%_P-%TT%00025_R-%TT%0002501" RefId="%AID%_P-%TT%00025" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00026_R-%TT%0002601" RefId="%AID%_P-%TT%00026" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00027_R-%TT%0002701" RefId="%AID%_P-%TT%00027" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00028_R-%TT%0002801" RefId="%AID%_P-%TT%00028" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00029_R-%TT%0002901" RefId="%AID%_P-%TT%00029" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00030_R-%TT%0003001" RefId="%AID%_P-%TT%00030" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00031_R-%TT%0003101" RefId="%AID%_P-%TT%00031" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00032_R-%TT%0003201" RefId="%AID%_P-%TT%00032" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00033_R-%TT%0003301" RefId="%AID%_P-%TT%00033" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00034_R-%TT%0003401" RefId="%AID%_P-%TT%00034" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00035_R-%TT%0003501" RefId="%AID%_P-%TT%00035" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00036_R-%TT%0003601" RefId="%AID%_P-%TT%00036" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00037_R-%TT%0003701" RefId="%AID%_P-%TT%00037" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00038_R-%TT%0003801" RefId="%AID%_P-%TT%00038" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00039_R-%TT%0003901" RefId="%AID%_P-%TT%00039" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00040_R-%TT%0004001" RefId="%AID%_P-%TT%00040" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00041_R-%TT%0004101" RefId="%AID%_P-%TT%00041" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00042_R-%TT%0004201" RefId="%AID%_P-%TT%00042" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00043_R-%TT%0004301" RefId="%AID%_P-%TT%00043" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00044_R-%TT%0004401" RefId="%AID%_P-%TT%00044" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00045_R-%TT%0004501" RefId="%AID%_P-%TT%00045" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00046_R-%TT%0004601" RefId="%AID%_P-%TT%00046" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00047_R-%TT%0004701" RefId="%AID%_P-%TT%00047" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00048_R-%TT%0004801" RefId="%AID%_P-%TT%00048" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00049_R-%TT%0004901" RefId="%AID%_P-%TT%00049" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00050_R-%TT%0005001" RefId="%AID%_P-%TT%00050" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00051_R-%TT%0005101" RefId="%AID%_P-%TT%00051" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00052_R-%TT%0005201" RefId="%AID%_P-%TT%00052" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00053_R-%TT%0005301" RefId="%AID%_P-%TT%00053" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00054_R-%TT%0005401" RefId="%AID%_P-%TT%00054" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00055_R-%TT%0005501" RefId="%AID%_P-%TT%00055" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00056_R-%TT%0005601" RefId="%AID%_P-%TT%00056" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00057_R-%TT%0005701" RefId="%AID%_P-%TT%00057" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00058_R-%TT%0005801" RefId="%AID%_P-%TT%00058" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00059_R-%TT%0005901" RefId="%AID%_P-%TT%00059" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00060_R-%TT%0006001" RefId="%AID%_P-%TT%00060" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00061_R-%TT%0006101" RefId="%AID%_P-%TT%00061" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00062_R-%TT%0006201" RefId="%AID%_P-%TT%00062" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00063_R-%TT%0006301" RefId="%AID%_P-%TT%00063" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00064_R-%TT%0006401" RefId="%AID%_P-%TT%00064" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00065_R-%TT%0006501" RefId="%AID%_P-%TT%00065" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00066_R-%TT%0006601" RefId="%AID%_P-%TT%00066" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00067_R-%TT%0006701" RefId="%AID%_P-%TT%00067" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00068_R-%TT%0006801" RefId="%AID%_P-%TT%00068" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00069_R-%TT%0006901" RefId="%AID%_P-%TT%00069" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00070_R-%TT%0007001" RefId="%AID%_P-%TT%00070" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00071_R-%TT%0007101" RefId="%AID%_P-%TT%00071" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00072_R-%TT%0007201" RefId="%AID%_P-%TT%00072" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00073_R-%TT%0007301" RefId="%AID%_P-%TT%00073" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00074_R-%TT%0007401" RefId="%AID%_P-%TT%00074" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00075_R-%TT%0007501" RefId="%AID%_P-%TT%00075" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00076_R-%TT%0007601" RefId="%AID%_P-%TT%00076" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00077_R-%TT%0007701" RefId="%AID%_P-%TT%00077" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00078_R-%TT%0007801" RefId="%AID%_P-%TT%00078" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00079_R-%TT%0007901" RefId="%AID%_P-%TT%00079" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00080_R-%TT%0008001" RefId="%AID%_P-%TT%00080" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00081_R-%TT%0008101" RefId="%AID%_P-%TT%00081" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00082_R-%TT%0008201" RefId="%AID%_P-%TT%00082" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00083_R-%TT%0008301" RefId="%AID%_P-%TT%00083" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00084_R-%TT%0008401" RefId="%AID%_P-%TT%00084" Access="Read" />
+</ParameterRefs>
+<ParameterCalculations>
+<ParameterCalculation Id="%AID%_PC-%TT%00001" Name="NFCUI_Overview" Language="JavaScript" LRTransformationFunc="BASE_Nop" RLTransformationFunc="NFCUI_calculate">
+<LParameters>
+<ParameterRefRef RefId="%AID%_P-%TT%00008_R-%TT%0000801" AliasName="Summary" />
+<ParameterRefRef RefId="%AID%_P-%TT%00025_R-%TT%0002501" AliasName="View0Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00026_R-%TT%0002601" AliasName="View0Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00027_R-%TT%0002701" AliasName="View0Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00028_R-%TT%0002801" AliasName="View0Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00029_R-%TT%0002901" AliasName="View0State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00030_R-%TT%0003001" AliasName="View0Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00031_R-%TT%0003101" AliasName="View1Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00032_R-%TT%0003201" AliasName="View1Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00033_R-%TT%0003301" AliasName="View1Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00034_R-%TT%0003401" AliasName="View1Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00035_R-%TT%0003501" AliasName="View1State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00036_R-%TT%0003601" AliasName="View1Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00037_R-%TT%0003701" AliasName="View2Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00038_R-%TT%0003801" AliasName="View2Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00039_R-%TT%0003901" AliasName="View2Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00040_R-%TT%0004001" AliasName="View2Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00041_R-%TT%0004101" AliasName="View2State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00042_R-%TT%0004201" AliasName="View2Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00043_R-%TT%0004301" AliasName="View3Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00044_R-%TT%0004401" AliasName="View3Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00045_R-%TT%0004501" AliasName="View3Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00046_R-%TT%0004601" AliasName="View3Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00047_R-%TT%0004701" AliasName="View3State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00048_R-%TT%0004801" AliasName="View3Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00049_R-%TT%0004901" AliasName="View4Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00050_R-%TT%0005001" AliasName="View4Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00051_R-%TT%0005101" AliasName="View4Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00052_R-%TT%0005201" AliasName="View4Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00053_R-%TT%0005301" AliasName="View4State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00054_R-%TT%0005401" AliasName="View4Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00055_R-%TT%0005501" AliasName="View5Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00056_R-%TT%0005601" AliasName="View5Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00057_R-%TT%0005701" AliasName="View5Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00058_R-%TT%0005801" AliasName="View5Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00059_R-%TT%0005901" AliasName="View5State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00060_R-%TT%0006001" AliasName="View5Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00061_R-%TT%0006101" AliasName="View6Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00062_R-%TT%0006201" AliasName="View6Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00063_R-%TT%0006301" AliasName="View6Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00064_R-%TT%0006401" AliasName="View6Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00065_R-%TT%0006501" AliasName="View6State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00066_R-%TT%0006601" AliasName="View6Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00067_R-%TT%0006701" AliasName="View7Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00068_R-%TT%0006801" AliasName="View7Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00069_R-%TT%0006901" AliasName="View7Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00070_R-%TT%0007001" AliasName="View7Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00071_R-%TT%0007101" AliasName="View7State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00072_R-%TT%0007201" AliasName="View7Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00073_R-%TT%0007301" AliasName="View8Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00074_R-%TT%0007401" AliasName="View8Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00075_R-%TT%0007501" AliasName="View8Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00076_R-%TT%0007601" AliasName="View8Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00077_R-%TT%0007701" AliasName="View8State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00078_R-%TT%0007801" AliasName="View8Actions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00079_R-%TT%0007901" AliasName="View9Id" />
+<ParameterRefRef RefId="%AID%_P-%TT%00080_R-%TT%0008001" AliasName="View9Type" />
+<ParameterRefRef RefId="%AID%_P-%TT%00081_R-%TT%0008101" AliasName="View9Description" />
+<ParameterRefRef RefId="%AID%_P-%TT%00082_R-%TT%0008201" AliasName="View9Identity" />
+<ParameterRefRef RefId="%AID%_P-%TT%00083_R-%TT%0008301" AliasName="View9State" />
+<ParameterRefRef RefId="%AID%_P-%TT%00084_R-%TT%0008401" AliasName="View9Actions" />
+</LParameters>
+<RParameters>
+<ParameterRefRef RefId="%AID%_UP-2920001_R-292000101" AliasName="ActionCount" />
+<ParameterRefRef RefId="%AID%_UP-2000001_R-200000101" AliasName="VisibleActions" />
+<ParameterRefRef RefId="%AID%_P-%TT%00003_R-%TT%0000301" AliasName="Filter" />
+<ParameterRefRef RefId="%AID%_P-%TT%00004_R-%TT%0000401" AliasName="Search" />
+<ParameterRefRef RefId="%AID%_P-%TT%00005_R-%TT%0000501" AliasName="Page" />
+<ParameterRefRef RefId="%AID%_P-%TT%00006_R-%TT%0000601" AliasName="Snapshot" />
+<ParameterRefRef RefId="%AID%_P-%TT%00009_R-%TT%0000901" AliasName="Cache0" />
+<ParameterRefRef RefId="%AID%_P-%TT%00010_R-%TT%0001001" AliasName="Cache1" />
+<ParameterRefRef RefId="%AID%_P-%TT%00011_R-%TT%0001101" AliasName="Cache2" />
+<ParameterRefRef RefId="%AID%_P-%TT%00012_R-%TT%0001201" AliasName="Cache3" />
+<ParameterRefRef RefId="%AID%_P-%TT%00013_R-%TT%0001301" AliasName="Cache4" />
+<ParameterRefRef RefId="%AID%_P-%TT%00014_R-%TT%0001401" AliasName="Cache5" />
+<ParameterRefRef RefId="%AID%_P-%TT%00015_R-%TT%0001501" AliasName="Cache6" />
+<ParameterRefRef RefId="%AID%_P-%TT%00016_R-%TT%0001601" AliasName="Cache7" />
+<ParameterRefRef RefId="%AID%_P-%TT%00017_R-%TT%0001701" AliasName="Cache8" />
+<ParameterRefRef RefId="%AID%_P-%TT%00018_R-%TT%0001801" AliasName="Cache9" />
+<ParameterRefRef RefId="%AID%_P-%TT%00019_R-%TT%0001901" AliasName="Cache10" />
+<ParameterRefRef RefId="%AID%_P-%TT%00020_R-%TT%0002001" AliasName="Cache11" />
+<ParameterRefRef RefId="%AID%_P-%TT%00021_R-%TT%0002101" AliasName="Cache12" />
+<ParameterRefRef RefId="%AID%_P-%TT%00022_R-%TT%0002201" AliasName="Cache13" />
+<ParameterRefRef RefId="%AID%_P-%TT%00023_R-%TT%0002301" AliasName="Cache14" />
+<ParameterRefRef RefId="%AID%_P-%TT%00024_R-%TT%0002401" AliasName="Cache15" />
+<ParameterRefRef RefId="%AID%_UP-7000001_R-700000101" AliasName="HomeKeyEnabled" />
+<ParameterRefRef RefId="%AID%_UP-7000004_R-700000401" AliasName="EtsAuthorization" />
+<ParameterRefRef RefId="%AID%_P-7000100_R-700010001" AliasName="Row01Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000101_R-700010101" AliasName="Row01Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000102_R-700010201" AliasName="Row01Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000103_R-700010301" AliasName="Row01AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000500_R-700050001" AliasName="Row01Description" />
+<ParameterRefRef RefId="%AID%_P-7000104_R-700010401" AliasName="Row02Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000105_R-700010501" AliasName="Row02Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000106_R-700010601" AliasName="Row02Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000107_R-700010701" AliasName="Row02AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000501_R-700050101" AliasName="Row02Description" />
+<ParameterRefRef RefId="%AID%_P-7000108_R-700010801" AliasName="Row03Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000109_R-700010901" AliasName="Row03Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000110_R-700011001" AliasName="Row03Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000111_R-700011101" AliasName="Row03AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000502_R-700050201" AliasName="Row03Description" />
+<ParameterRefRef RefId="%AID%_P-7000112_R-700011201" AliasName="Row04Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000113_R-700011301" AliasName="Row04Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000114_R-700011401" AliasName="Row04Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000115_R-700011501" AliasName="Row04AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000503_R-700050301" AliasName="Row04Description" />
+<ParameterRefRef RefId="%AID%_P-7000116_R-700011601" AliasName="Row05Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000117_R-700011701" AliasName="Row05Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000118_R-700011801" AliasName="Row05Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000119_R-700011901" AliasName="Row05AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000504_R-700050401" AliasName="Row05Description" />
+<ParameterRefRef RefId="%AID%_P-7000120_R-700012001" AliasName="Row06Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000121_R-700012101" AliasName="Row06Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000122_R-700012201" AliasName="Row06Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000123_R-700012301" AliasName="Row06AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000505_R-700050501" AliasName="Row06Description" />
+<ParameterRefRef RefId="%AID%_P-7000124_R-700012401" AliasName="Row07Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000125_R-700012501" AliasName="Row07Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000126_R-700012601" AliasName="Row07Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000127_R-700012701" AliasName="Row07AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000506_R-700050601" AliasName="Row07Description" />
+<ParameterRefRef RefId="%AID%_P-7000128_R-700012801" AliasName="Row08Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000129_R-700012901" AliasName="Row08Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000130_R-700013001" AliasName="Row08Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000131_R-700013101" AliasName="Row08AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000507_R-700050701" AliasName="Row08Description" />
+<ParameterRefRef RefId="%AID%_P-7000132_R-700013201" AliasName="Row09Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000133_R-700013301" AliasName="Row09Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000134_R-700013401" AliasName="Row09Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000135_R-700013501" AliasName="Row09AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000508_R-700050801" AliasName="Row09Description" />
+<ParameterRefRef RefId="%AID%_P-7000136_R-700013601" AliasName="Row10Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000137_R-700013701" AliasName="Row10Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000138_R-700013801" AliasName="Row10Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000139_R-700013901" AliasName="Row10AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000509_R-700050901" AliasName="Row10Description" />
+<ParameterRefRef RefId="%AID%_P-7000140_R-700014001" AliasName="Row11Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000141_R-700014101" AliasName="Row11Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000142_R-700014201" AliasName="Row11Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000143_R-700014301" AliasName="Row11AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000510_R-700051001" AliasName="Row11Description" />
+<ParameterRefRef RefId="%AID%_P-7000144_R-700014401" AliasName="Row12Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000145_R-700014501" AliasName="Row12Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000146_R-700014601" AliasName="Row12Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000147_R-700014701" AliasName="Row12AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000511_R-700051101" AliasName="Row12Description" />
+<ParameterRefRef RefId="%AID%_P-7000148_R-700014801" AliasName="Row13Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000149_R-700014901" AliasName="Row13Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000150_R-700015001" AliasName="Row13Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000151_R-700015101" AliasName="Row13AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000512_R-700051201" AliasName="Row13Description" />
+<ParameterRefRef RefId="%AID%_P-7000152_R-700015201" AliasName="Row14Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000153_R-700015301" AliasName="Row14Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000154_R-700015401" AliasName="Row14Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000155_R-700015501" AliasName="Row14AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000513_R-700051301" AliasName="Row14Description" />
+<ParameterRefRef RefId="%AID%_P-7000156_R-700015601" AliasName="Row15Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000157_R-700015701" AliasName="Row15Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000158_R-700015801" AliasName="Row15Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000159_R-700015901" AliasName="Row15AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000514_R-700051401" AliasName="Row15Description" />
+<ParameterRefRef RefId="%AID%_P-7000160_R-700016001" AliasName="Row16Enabled" />
+<ParameterRefRef RefId="%AID%_P-7000161_R-700016101" AliasName="Row16Issuer" />
+<ParameterRefRef RefId="%AID%_P-7000162_R-700016201" AliasName="Row16Endpoint" />
+<ParameterRefRef RefId="%AID%_P-7000163_R-700016301" AliasName="Row16AccessId" />
+<ParameterRefRef RefId="%AID%_P-7000515_R-700051501" AliasName="Row16Description" />
+<ParameterRefRef RefId="%AID%_UP-2450101_R-245010101" AliasName="Action1Action" />
+<ParameterRefRef RefId="%AID%_UP-2450102_R-245010201" AliasName="Action1Id" />
+<ParameterRefRef RefId="%AID%_UP-2450201_R-245020101" AliasName="Action2Action" />
+<ParameterRefRef RefId="%AID%_UP-2450202_R-245020201" AliasName="Action2Id" />
+<ParameterRefRef RefId="%AID%_UP-2450301_R-245030101" AliasName="Action3Action" />
+<ParameterRefRef RefId="%AID%_UP-2450302_R-245030201" AliasName="Action3Id" />
+<ParameterRefRef RefId="%AID%_UP-2450401_R-245040101" AliasName="Action4Action" />
+<ParameterRefRef RefId="%AID%_UP-2450402_R-245040201" AliasName="Action4Id" />
+<ParameterRefRef RefId="%AID%_UP-2450501_R-245050101" AliasName="Action5Action" />
+<ParameterRefRef RefId="%AID%_UP-2450502_R-245050201" AliasName="Action5Id" />
+<ParameterRefRef RefId="%AID%_UP-2450601_R-245060101" AliasName="Action6Action" />
+<ParameterRefRef RefId="%AID%_UP-2450602_R-245060201" AliasName="Action6Id" />
+<ParameterRefRef RefId="%AID%_UP-2450701_R-245070101" AliasName="Action7Action" />
+<ParameterRefRef RefId="%AID%_UP-2450702_R-245070201" AliasName="Action7Id" />
+<ParameterRefRef RefId="%AID%_UP-2450801_R-245080101" AliasName="Action8Action" />
+<ParameterRefRef RefId="%AID%_UP-2450802_R-245080201" AliasName="Action8Id" />
+<ParameterRefRef RefId="%AID%_UP-2450901_R-245090101" AliasName="Action9Action" />
+<ParameterRefRef RefId="%AID%_UP-2450902_R-245090201" AliasName="Action9Id" />
+<ParameterRefRef RefId="%AID%_UP-2451001_R-245100101" AliasName="Action10Action" />
+<ParameterRefRef RefId="%AID%_UP-2451002_R-245100201" AliasName="Action10Id" />
+<ParameterRefRef RefId="%AID%_UP-2451101_R-245110101" AliasName="Action11Action" />
+<ParameterRefRef RefId="%AID%_UP-2451102_R-245110201" AliasName="Action11Id" />
+<ParameterRefRef RefId="%AID%_UP-2451201_R-245120101" AliasName="Action12Action" />
+<ParameterRefRef RefId="%AID%_UP-2451202_R-245120201" AliasName="Action12Id" />
+<ParameterRefRef RefId="%AID%_UP-2451301_R-245130101" AliasName="Action13Action" />
+<ParameterRefRef RefId="%AID%_UP-2451302_R-245130201" AliasName="Action13Id" />
+<ParameterRefRef RefId="%AID%_UP-2451401_R-245140101" AliasName="Action14Action" />
+<ParameterRefRef RefId="%AID%_UP-2451402_R-245140201" AliasName="Action14Id" />
+<ParameterRefRef RefId="%AID%_UP-2451501_R-245150101" AliasName="Action15Action" />
+<ParameterRefRef RefId="%AID%_UP-2451502_R-245150201" AliasName="Action15Id" />
+<ParameterRefRef RefId="%AID%_UP-2451601_R-245160101" AliasName="Action16Action" />
+<ParameterRefRef RefId="%AID%_UP-2451602_R-245160201" AliasName="Action16Id" />
+<ParameterRefRef RefId="%AID%_UP-2451701_R-245170101" AliasName="Action17Action" />
+<ParameterRefRef RefId="%AID%_UP-2451702_R-245170201" AliasName="Action17Id" />
+<ParameterRefRef RefId="%AID%_UP-2451801_R-245180101" AliasName="Action18Action" />
+<ParameterRefRef RefId="%AID%_UP-2451802_R-245180201" AliasName="Action18Id" />
+<ParameterRefRef RefId="%AID%_UP-2451901_R-245190101" AliasName="Action19Action" />
+<ParameterRefRef RefId="%AID%_UP-2451902_R-245190201" AliasName="Action19Id" />
+<ParameterRefRef RefId="%AID%_UP-2452001_R-245200101" AliasName="Action20Action" />
+<ParameterRefRef RefId="%AID%_UP-2452002_R-245200201" AliasName="Action20Id" />
+<ParameterRefRef RefId="%AID%_UP-2452101_R-245210101" AliasName="Action21Action" />
+<ParameterRefRef RefId="%AID%_UP-2452102_R-245210201" AliasName="Action21Id" />
+<ParameterRefRef RefId="%AID%_UP-2452201_R-245220101" AliasName="Action22Action" />
+<ParameterRefRef RefId="%AID%_UP-2452202_R-245220201" AliasName="Action22Id" />
+<ParameterRefRef RefId="%AID%_UP-2452301_R-245230101" AliasName="Action23Action" />
+<ParameterRefRef RefId="%AID%_UP-2452302_R-245230201" AliasName="Action23Id" />
+<ParameterRefRef RefId="%AID%_UP-2452401_R-245240101" AliasName="Action24Action" />
+<ParameterRefRef RefId="%AID%_UP-2452402_R-245240201" AliasName="Action24Id" />
+<ParameterRefRef RefId="%AID%_UP-2452501_R-245250101" AliasName="Action25Action" />
+<ParameterRefRef RefId="%AID%_UP-2452502_R-245250201" AliasName="Action25Id" />
+<ParameterRefRef RefId="%AID%_UP-2452601_R-245260101" AliasName="Action26Action" />
+<ParameterRefRef RefId="%AID%_UP-2452602_R-245260201" AliasName="Action26Id" />
+<ParameterRefRef RefId="%AID%_UP-2452701_R-245270101" AliasName="Action27Action" />
+<ParameterRefRef RefId="%AID%_UP-2452702_R-245270201" AliasName="Action27Id" />
+<ParameterRefRef RefId="%AID%_UP-2452801_R-245280101" AliasName="Action28Action" />
+<ParameterRefRef RefId="%AID%_UP-2452802_R-245280201" AliasName="Action28Id" />
+<ParameterRefRef RefId="%AID%_UP-2452901_R-245290101" AliasName="Action29Action" />
+<ParameterRefRef RefId="%AID%_UP-2452902_R-245290201" AliasName="Action29Id" />
+<ParameterRefRef RefId="%AID%_UP-2453001_R-245300101" AliasName="Action30Action" />
+<ParameterRefRef RefId="%AID%_UP-2453002_R-245300201" AliasName="Action30Id" />
+<ParameterRefRef RefId="%AID%_UP-2453101_R-245310101" AliasName="Action31Action" />
+<ParameterRefRef RefId="%AID%_UP-2453102_R-245310201" AliasName="Action31Id" />
+<ParameterRefRef RefId="%AID%_UP-2453201_R-245320101" AliasName="Action32Action" />
+<ParameterRefRef RefId="%AID%_UP-2453202_R-245320201" AliasName="Action32Id" />
+<ParameterRefRef RefId="%AID%_UP-2453301_R-245330101" AliasName="Action33Action" />
+<ParameterRefRef RefId="%AID%_UP-2453302_R-245330201" AliasName="Action33Id" />
+<ParameterRefRef RefId="%AID%_UP-2453401_R-245340101" AliasName="Action34Action" />
+<ParameterRefRef RefId="%AID%_UP-2453402_R-245340201" AliasName="Action34Id" />
+<ParameterRefRef RefId="%AID%_UP-2453501_R-245350101" AliasName="Action35Action" />
+<ParameterRefRef RefId="%AID%_UP-2453502_R-245350201" AliasName="Action35Id" />
+<ParameterRefRef RefId="%AID%_UP-2453601_R-245360101" AliasName="Action36Action" />
+<ParameterRefRef RefId="%AID%_UP-2453602_R-245360201" AliasName="Action36Id" />
+<ParameterRefRef RefId="%AID%_UP-2453701_R-245370101" AliasName="Action37Action" />
+<ParameterRefRef RefId="%AID%_UP-2453702_R-245370201" AliasName="Action37Id" />
+<ParameterRefRef RefId="%AID%_UP-2453801_R-245380101" AliasName="Action38Action" />
+<ParameterRefRef RefId="%AID%_UP-2453802_R-245380201" AliasName="Action38Id" />
+<ParameterRefRef RefId="%AID%_UP-2453901_R-245390101" AliasName="Action39Action" />
+<ParameterRefRef RefId="%AID%_UP-2453902_R-245390201" AliasName="Action39Id" />
+<ParameterRefRef RefId="%AID%_UP-2454001_R-245400101" AliasName="Action40Action" />
+<ParameterRefRef RefId="%AID%_UP-2454002_R-245400201" AliasName="Action40Id" />
+<ParameterRefRef RefId="%AID%_UP-2454101_R-245410101" AliasName="Action41Action" />
+<ParameterRefRef RefId="%AID%_UP-2454102_R-245410201" AliasName="Action41Id" />
+<ParameterRefRef RefId="%AID%_UP-2454201_R-245420101" AliasName="Action42Action" />
+<ParameterRefRef RefId="%AID%_UP-2454202_R-245420201" AliasName="Action42Id" />
+<ParameterRefRef RefId="%AID%_UP-2454301_R-245430101" AliasName="Action43Action" />
+<ParameterRefRef RefId="%AID%_UP-2454302_R-245430201" AliasName="Action43Id" />
+<ParameterRefRef RefId="%AID%_UP-2454401_R-245440101" AliasName="Action44Action" />
+<ParameterRefRef RefId="%AID%_UP-2454402_R-245440201" AliasName="Action44Id" />
+<ParameterRefRef RefId="%AID%_UP-2454501_R-245450101" AliasName="Action45Action" />
+<ParameterRefRef RefId="%AID%_UP-2454502_R-245450201" AliasName="Action45Id" />
+<ParameterRefRef RefId="%AID%_UP-2454601_R-245460101" AliasName="Action46Action" />
+<ParameterRefRef RefId="%AID%_UP-2454602_R-245460201" AliasName="Action46Id" />
+<ParameterRefRef RefId="%AID%_UP-2454701_R-245470101" AliasName="Action47Action" />
+<ParameterRefRef RefId="%AID%_UP-2454702_R-245470201" AliasName="Action47Id" />
+<ParameterRefRef RefId="%AID%_UP-2454801_R-245480101" AliasName="Action48Action" />
+<ParameterRefRef RefId="%AID%_UP-2454802_R-245480201" AliasName="Action48Id" />
+<ParameterRefRef RefId="%AID%_UP-2454901_R-245490101" AliasName="Action49Action" />
+<ParameterRefRef RefId="%AID%_UP-2454902_R-245490201" AliasName="Action49Id" />
+<ParameterRefRef RefId="%AID%_UP-2455001_R-245500101" AliasName="Action50Action" />
+<ParameterRefRef RefId="%AID%_UP-2455002_R-245500201" AliasName="Action50Id" />
+<ParameterRefRef RefId="%AID%_UP-2455101_R-245510101" AliasName="Action51Action" />
+<ParameterRefRef RefId="%AID%_UP-2455102_R-245510201" AliasName="Action51Id" />
+<ParameterRefRef RefId="%AID%_UP-2455201_R-245520101" AliasName="Action52Action" />
+<ParameterRefRef RefId="%AID%_UP-2455202_R-245520201" AliasName="Action52Id" />
+<ParameterRefRef RefId="%AID%_UP-2455301_R-245530101" AliasName="Action53Action" />
+<ParameterRefRef RefId="%AID%_UP-2455302_R-245530201" AliasName="Action53Id" />
+<ParameterRefRef RefId="%AID%_UP-2455401_R-245540101" AliasName="Action54Action" />
+<ParameterRefRef RefId="%AID%_UP-2455402_R-245540201" AliasName="Action54Id" />
+<ParameterRefRef RefId="%AID%_UP-2455501_R-245550101" AliasName="Action55Action" />
+<ParameterRefRef RefId="%AID%_UP-2455502_R-245550201" AliasName="Action55Id" />
+<ParameterRefRef RefId="%AID%_UP-2455601_R-245560101" AliasName="Action56Action" />
+<ParameterRefRef RefId="%AID%_UP-2455602_R-245560201" AliasName="Action56Id" />
+<ParameterRefRef RefId="%AID%_UP-2455701_R-245570101" AliasName="Action57Action" />
+<ParameterRefRef RefId="%AID%_UP-2455702_R-245570201" AliasName="Action57Id" />
+<ParameterRefRef RefId="%AID%_UP-2455801_R-245580101" AliasName="Action58Action" />
+<ParameterRefRef RefId="%AID%_UP-2455802_R-245580201" AliasName="Action58Id" />
+<ParameterRefRef RefId="%AID%_UP-2455901_R-245590101" AliasName="Action59Action" />
+<ParameterRefRef RefId="%AID%_UP-2455902_R-245590201" AliasName="Action59Id" />
+<ParameterRefRef RefId="%AID%_UP-2456001_R-245600101" AliasName="Action60Action" />
+<ParameterRefRef RefId="%AID%_UP-2456002_R-245600201" AliasName="Action60Id" />
+<ParameterRefRef RefId="%AID%_UP-2456101_R-245610101" AliasName="Action61Action" />
+<ParameterRefRef RefId="%AID%_UP-2456102_R-245610201" AliasName="Action61Id" />
+<ParameterRefRef RefId="%AID%_UP-2456201_R-245620101" AliasName="Action62Action" />
+<ParameterRefRef RefId="%AID%_UP-2456202_R-245620201" AliasName="Action62Id" />
+<ParameterRefRef RefId="%AID%_UP-2456301_R-245630101" AliasName="Action63Action" />
+<ParameterRefRef RefId="%AID%_UP-2456302_R-245630201" AliasName="Action63Id" />
+<ParameterRefRef RefId="%AID%_UP-2456401_R-245640101" AliasName="Action64Action" />
+<ParameterRefRef RefId="%AID%_UP-2456402_R-245640201" AliasName="Action64Id" />
+<ParameterRefRef RefId="%AID%_UP-2456501_R-245650101" AliasName="Action65Action" />
+<ParameterRefRef RefId="%AID%_UP-2456502_R-245650201" AliasName="Action65Id" />
+<ParameterRefRef RefId="%AID%_UP-2456601_R-245660101" AliasName="Action66Action" />
+<ParameterRefRef RefId="%AID%_UP-2456602_R-245660201" AliasName="Action66Id" />
+<ParameterRefRef RefId="%AID%_UP-2456701_R-245670101" AliasName="Action67Action" />
+<ParameterRefRef RefId="%AID%_UP-2456702_R-245670201" AliasName="Action67Id" />
+<ParameterRefRef RefId="%AID%_UP-2456801_R-245680101" AliasName="Action68Action" />
+<ParameterRefRef RefId="%AID%_UP-2456802_R-245680201" AliasName="Action68Id" />
+<ParameterRefRef RefId="%AID%_UP-2456901_R-245690101" AliasName="Action69Action" />
+<ParameterRefRef RefId="%AID%_UP-2456902_R-245690201" AliasName="Action69Id" />
+<ParameterRefRef RefId="%AID%_UP-2457001_R-245700101" AliasName="Action70Action" />
+<ParameterRefRef RefId="%AID%_UP-2457002_R-245700201" AliasName="Action70Id" />
+<ParameterRefRef RefId="%AID%_UP-2457101_R-245710101" AliasName="Action71Action" />
+<ParameterRefRef RefId="%AID%_UP-2457102_R-245710201" AliasName="Action71Id" />
+<ParameterRefRef RefId="%AID%_UP-2457201_R-245720101" AliasName="Action72Action" />
+<ParameterRefRef RefId="%AID%_UP-2457202_R-245720201" AliasName="Action72Id" />
+<ParameterRefRef RefId="%AID%_UP-2457301_R-245730101" AliasName="Action73Action" />
+<ParameterRefRef RefId="%AID%_UP-2457302_R-245730201" AliasName="Action73Id" />
+<ParameterRefRef RefId="%AID%_UP-2457401_R-245740101" AliasName="Action74Action" />
+<ParameterRefRef RefId="%AID%_UP-2457402_R-245740201" AliasName="Action74Id" />
+<ParameterRefRef RefId="%AID%_UP-2457501_R-245750101" AliasName="Action75Action" />
+<ParameterRefRef RefId="%AID%_UP-2457502_R-245750201" AliasName="Action75Id" />
+<ParameterRefRef RefId="%AID%_UP-2457601_R-245760101" AliasName="Action76Action" />
+<ParameterRefRef RefId="%AID%_UP-2457602_R-245760201" AliasName="Action76Id" />
+<ParameterRefRef RefId="%AID%_UP-2457701_R-245770101" AliasName="Action77Action" />
+<ParameterRefRef RefId="%AID%_UP-2457702_R-245770201" AliasName="Action77Id" />
+<ParameterRefRef RefId="%AID%_UP-2457801_R-245780101" AliasName="Action78Action" />
+<ParameterRefRef RefId="%AID%_UP-2457802_R-245780201" AliasName="Action78Id" />
+<ParameterRefRef RefId="%AID%_UP-2457901_R-245790101" AliasName="Action79Action" />
+<ParameterRefRef RefId="%AID%_UP-2457902_R-245790201" AliasName="Action79Id" />
+<ParameterRefRef RefId="%AID%_UP-2458001_R-245800101" AliasName="Action80Action" />
+<ParameterRefRef RefId="%AID%_UP-2458002_R-245800201" AliasName="Action80Id" />
+<ParameterRefRef RefId="%AID%_UP-2458101_R-245810101" AliasName="Action81Action" />
+<ParameterRefRef RefId="%AID%_UP-2458102_R-245810201" AliasName="Action81Id" />
+<ParameterRefRef RefId="%AID%_UP-2458201_R-245820101" AliasName="Action82Action" />
+<ParameterRefRef RefId="%AID%_UP-2458202_R-245820201" AliasName="Action82Id" />
+<ParameterRefRef RefId="%AID%_UP-2458301_R-245830101" AliasName="Action83Action" />
+<ParameterRefRef RefId="%AID%_UP-2458302_R-245830201" AliasName="Action83Id" />
+<ParameterRefRef RefId="%AID%_UP-2458401_R-245840101" AliasName="Action84Action" />
+<ParameterRefRef RefId="%AID%_UP-2458402_R-245840201" AliasName="Action84Id" />
+<ParameterRefRef RefId="%AID%_UP-2458501_R-245850101" AliasName="Action85Action" />
+<ParameterRefRef RefId="%AID%_UP-2458502_R-245850201" AliasName="Action85Id" />
+<ParameterRefRef RefId="%AID%_UP-2458601_R-245860101" AliasName="Action86Action" />
+<ParameterRefRef RefId="%AID%_UP-2458602_R-245860201" AliasName="Action86Id" />
+<ParameterRefRef RefId="%AID%_UP-2458701_R-245870101" AliasName="Action87Action" />
+<ParameterRefRef RefId="%AID%_UP-2458702_R-245870201" AliasName="Action87Id" />
+<ParameterRefRef RefId="%AID%_UP-2458801_R-245880101" AliasName="Action88Action" />
+<ParameterRefRef RefId="%AID%_UP-2458802_R-245880201" AliasName="Action88Id" />
+<ParameterRefRef RefId="%AID%_UP-2458901_R-245890101" AliasName="Action89Action" />
+<ParameterRefRef RefId="%AID%_UP-2458902_R-245890201" AliasName="Action89Id" />
+<ParameterRefRef RefId="%AID%_UP-2459001_R-245900101" AliasName="Action90Action" />
+<ParameterRefRef RefId="%AID%_UP-2459002_R-245900201" AliasName="Action90Id" />
+<ParameterRefRef RefId="%AID%_UP-2459101_R-245910101" AliasName="Action91Action" />
+<ParameterRefRef RefId="%AID%_UP-2459102_R-245910201" AliasName="Action91Id" />
+<ParameterRefRef RefId="%AID%_UP-2459201_R-245920101" AliasName="Action92Action" />
+<ParameterRefRef RefId="%AID%_UP-2459202_R-245920201" AliasName="Action92Id" />
+<ParameterRefRef RefId="%AID%_UP-2459301_R-245930101" AliasName="Action93Action" />
+<ParameterRefRef RefId="%AID%_UP-2459302_R-245930201" AliasName="Action93Id" />
+<ParameterRefRef RefId="%AID%_UP-2459401_R-245940101" AliasName="Action94Action" />
+<ParameterRefRef RefId="%AID%_UP-2459402_R-245940201" AliasName="Action94Id" />
+<ParameterRefRef RefId="%AID%_UP-2459501_R-245950101" AliasName="Action95Action" />
+<ParameterRefRef RefId="%AID%_UP-2459502_R-245950201" AliasName="Action95Id" />
+<ParameterRefRef RefId="%AID%_UP-2459601_R-245960101" AliasName="Action96Action" />
+<ParameterRefRef RefId="%AID%_UP-2459602_R-245960201" AliasName="Action96Id" />
+<ParameterRefRef RefId="%AID%_UP-2459701_R-245970101" AliasName="Action97Action" />
+<ParameterRefRef RefId="%AID%_UP-2459702_R-245970201" AliasName="Action97Id" />
+<ParameterRefRef RefId="%AID%_UP-2459801_R-245980101" AliasName="Action98Action" />
+<ParameterRefRef RefId="%AID%_UP-2459802_R-245980201" AliasName="Action98Id" />
+<ParameterRefRef RefId="%AID%_UP-2459901_R-245990101" AliasName="Action99Action" />
+<ParameterRefRef RefId="%AID%_UP-2459902_R-245990201" AliasName="Action99Id" />
+<ParameterRefRef RefId="%AID%_UP-2460001_R-246000101" AliasName="Action100Action" />
+<ParameterRefRef RefId="%AID%_UP-2460002_R-246000201" AliasName="Action100Id" />
+<ParameterRefRef RefId="%AID%_UP-2460101_R-246010101" AliasName="Action101Action" />
+<ParameterRefRef RefId="%AID%_UP-2460102_R-246010201" AliasName="Action101Id" />
+<ParameterRefRef RefId="%AID%_UP-2460201_R-246020101" AliasName="Action102Action" />
+<ParameterRefRef RefId="%AID%_UP-2460202_R-246020201" AliasName="Action102Id" />
+<ParameterRefRef RefId="%AID%_UP-2460301_R-246030101" AliasName="Action103Action" />
+<ParameterRefRef RefId="%AID%_UP-2460302_R-246030201" AliasName="Action103Id" />
+<ParameterRefRef RefId="%AID%_UP-2460401_R-246040101" AliasName="Action104Action" />
+<ParameterRefRef RefId="%AID%_UP-2460402_R-246040201" AliasName="Action104Id" />
+<ParameterRefRef RefId="%AID%_UP-2460501_R-246050101" AliasName="Action105Action" />
+<ParameterRefRef RefId="%AID%_UP-2460502_R-246050201" AliasName="Action105Id" />
+<ParameterRefRef RefId="%AID%_UP-2460601_R-246060101" AliasName="Action106Action" />
+<ParameterRefRef RefId="%AID%_UP-2460602_R-246060201" AliasName="Action106Id" />
+<ParameterRefRef RefId="%AID%_UP-2460701_R-246070101" AliasName="Action107Action" />
+<ParameterRefRef RefId="%AID%_UP-2460702_R-246070201" AliasName="Action107Id" />
+<ParameterRefRef RefId="%AID%_UP-2460801_R-246080101" AliasName="Action108Action" />
+<ParameterRefRef RefId="%AID%_UP-2460802_R-246080201" AliasName="Action108Id" />
+<ParameterRefRef RefId="%AID%_UP-2460901_R-246090101" AliasName="Action109Action" />
+<ParameterRefRef RefId="%AID%_UP-2460902_R-246090201" AliasName="Action109Id" />
+<ParameterRefRef RefId="%AID%_UP-2461001_R-246100101" AliasName="Action110Action" />
+<ParameterRefRef RefId="%AID%_UP-2461002_R-246100201" AliasName="Action110Id" />
+<ParameterRefRef RefId="%AID%_UP-2461101_R-246110101" AliasName="Action111Action" />
+<ParameterRefRef RefId="%AID%_UP-2461102_R-246110201" AliasName="Action111Id" />
+<ParameterRefRef RefId="%AID%_UP-2461201_R-246120101" AliasName="Action112Action" />
+<ParameterRefRef RefId="%AID%_UP-2461202_R-246120201" AliasName="Action112Id" />
+<ParameterRefRef RefId="%AID%_UP-2461301_R-246130101" AliasName="Action113Action" />
+<ParameterRefRef RefId="%AID%_UP-2461302_R-246130201" AliasName="Action113Id" />
+<ParameterRefRef RefId="%AID%_UP-2461401_R-246140101" AliasName="Action114Action" />
+<ParameterRefRef RefId="%AID%_UP-2461402_R-246140201" AliasName="Action114Id" />
+<ParameterRefRef RefId="%AID%_UP-2461501_R-246150101" AliasName="Action115Action" />
+<ParameterRefRef RefId="%AID%_UP-2461502_R-246150201" AliasName="Action115Id" />
+<ParameterRefRef RefId="%AID%_UP-2461601_R-246160101" AliasName="Action116Action" />
+<ParameterRefRef RefId="%AID%_UP-2461602_R-246160201" AliasName="Action116Id" />
+<ParameterRefRef RefId="%AID%_UP-2461701_R-246170101" AliasName="Action117Action" />
+<ParameterRefRef RefId="%AID%_UP-2461702_R-246170201" AliasName="Action117Id" />
+<ParameterRefRef RefId="%AID%_UP-2461801_R-246180101" AliasName="Action118Action" />
+<ParameterRefRef RefId="%AID%_UP-2461802_R-246180201" AliasName="Action118Id" />
+<ParameterRefRef RefId="%AID%_UP-2461901_R-246190101" AliasName="Action119Action" />
+<ParameterRefRef RefId="%AID%_UP-2461902_R-246190201" AliasName="Action119Id" />
+<ParameterRefRef RefId="%AID%_UP-2462001_R-246200101" AliasName="Action120Action" />
+<ParameterRefRef RefId="%AID%_UP-2462002_R-246200201" AliasName="Action120Id" />
+<ParameterRefRef RefId="%AID%_UP-2462101_R-246210101" AliasName="Action121Action" />
+<ParameterRefRef RefId="%AID%_UP-2462102_R-246210201" AliasName="Action121Id" />
+<ParameterRefRef RefId="%AID%_UP-2462201_R-246220101" AliasName="Action122Action" />
+<ParameterRefRef RefId="%AID%_UP-2462202_R-246220201" AliasName="Action122Id" />
+<ParameterRefRef RefId="%AID%_UP-2462301_R-246230101" AliasName="Action123Action" />
+<ParameterRefRef RefId="%AID%_UP-2462302_R-246230201" AliasName="Action123Id" />
+<ParameterRefRef RefId="%AID%_UP-2462401_R-246240101" AliasName="Action124Action" />
+<ParameterRefRef RefId="%AID%_UP-2462402_R-246240201" AliasName="Action124Id" />
+<ParameterRefRef RefId="%AID%_UP-2462501_R-246250101" AliasName="Action125Action" />
+<ParameterRefRef RefId="%AID%_UP-2462502_R-246250201" AliasName="Action125Id" />
+<ParameterRefRef RefId="%AID%_UP-2462601_R-246260101" AliasName="Action126Action" />
+<ParameterRefRef RefId="%AID%_UP-2462602_R-246260201" AliasName="Action126Id" />
+<ParameterRefRef RefId="%AID%_UP-2462701_R-246270101" AliasName="Action127Action" />
+<ParameterRefRef RefId="%AID%_UP-2462702_R-246270201" AliasName="Action127Id" />
+<ParameterRefRef RefId="%AID%_UP-2462801_R-246280101" AliasName="Action128Action" />
+<ParameterRefRef RefId="%AID%_UP-2462802_R-246280201" AliasName="Action128Id" />
+<ParameterRefRef RefId="%AID%_UP-2462901_R-246290101" AliasName="Action129Action" />
+<ParameterRefRef RefId="%AID%_UP-2462902_R-246290201" AliasName="Action129Id" />
+<ParameterRefRef RefId="%AID%_UP-2463001_R-246300101" AliasName="Action130Action" />
+<ParameterRefRef RefId="%AID%_UP-2463002_R-246300201" AliasName="Action130Id" />
+<ParameterRefRef RefId="%AID%_UP-2463101_R-246310101" AliasName="Action131Action" />
+<ParameterRefRef RefId="%AID%_UP-2463102_R-246310201" AliasName="Action131Id" />
+<ParameterRefRef RefId="%AID%_UP-2463201_R-246320101" AliasName="Action132Action" />
+<ParameterRefRef RefId="%AID%_UP-2463202_R-246320201" AliasName="Action132Id" />
+<ParameterRefRef RefId="%AID%_UP-2463301_R-246330101" AliasName="Action133Action" />
+<ParameterRefRef RefId="%AID%_UP-2463302_R-246330201" AliasName="Action133Id" />
+<ParameterRefRef RefId="%AID%_UP-2463401_R-246340101" AliasName="Action134Action" />
+<ParameterRefRef RefId="%AID%_UP-2463402_R-246340201" AliasName="Action134Id" />
+<ParameterRefRef RefId="%AID%_UP-2463501_R-246350101" AliasName="Action135Action" />
+<ParameterRefRef RefId="%AID%_UP-2463502_R-246350201" AliasName="Action135Id" />
+<ParameterRefRef RefId="%AID%_UP-2463601_R-246360101" AliasName="Action136Action" />
+<ParameterRefRef RefId="%AID%_UP-2463602_R-246360201" AliasName="Action136Id" />
+<ParameterRefRef RefId="%AID%_UP-2463701_R-246370101" AliasName="Action137Action" />
+<ParameterRefRef RefId="%AID%_UP-2463702_R-246370201" AliasName="Action137Id" />
+<ParameterRefRef RefId="%AID%_UP-2463801_R-246380101" AliasName="Action138Action" />
+<ParameterRefRef RefId="%AID%_UP-2463802_R-246380201" AliasName="Action138Id" />
+<ParameterRefRef RefId="%AID%_UP-2463901_R-246390101" AliasName="Action139Action" />
+<ParameterRefRef RefId="%AID%_UP-2463902_R-246390201" AliasName="Action139Id" />
+<ParameterRefRef RefId="%AID%_UP-2464001_R-246400101" AliasName="Action140Action" />
+<ParameterRefRef RefId="%AID%_UP-2464002_R-246400201" AliasName="Action140Id" />
+<ParameterRefRef RefId="%AID%_UP-2464101_R-246410101" AliasName="Action141Action" />
+<ParameterRefRef RefId="%AID%_UP-2464102_R-246410201" AliasName="Action141Id" />
+<ParameterRefRef RefId="%AID%_UP-2464201_R-246420101" AliasName="Action142Action" />
+<ParameterRefRef RefId="%AID%_UP-2464202_R-246420201" AliasName="Action142Id" />
+<ParameterRefRef RefId="%AID%_UP-2464301_R-246430101" AliasName="Action143Action" />
+<ParameterRefRef RefId="%AID%_UP-2464302_R-246430201" AliasName="Action143Id" />
+<ParameterRefRef RefId="%AID%_UP-2464401_R-246440101" AliasName="Action144Action" />
+<ParameterRefRef RefId="%AID%_UP-2464402_R-246440201" AliasName="Action144Id" />
+<ParameterRefRef RefId="%AID%_UP-2464501_R-246450101" AliasName="Action145Action" />
+<ParameterRefRef RefId="%AID%_UP-2464502_R-246450201" AliasName="Action145Id" />
+<ParameterRefRef RefId="%AID%_UP-2464601_R-246460101" AliasName="Action146Action" />
+<ParameterRefRef RefId="%AID%_UP-2464602_R-246460201" AliasName="Action146Id" />
+<ParameterRefRef RefId="%AID%_UP-2464701_R-246470101" AliasName="Action147Action" />
+<ParameterRefRef RefId="%AID%_UP-2464702_R-246470201" AliasName="Action147Id" />
+<ParameterRefRef RefId="%AID%_UP-2464801_R-246480101" AliasName="Action148Action" />
+<ParameterRefRef RefId="%AID%_UP-2464802_R-246480201" AliasName="Action148Id" />
+<ParameterRefRef RefId="%AID%_UP-2464901_R-246490101" AliasName="Action149Action" />
+<ParameterRefRef RefId="%AID%_UP-2464902_R-246490201" AliasName="Action149Id" />
+<ParameterRefRef RefId="%AID%_UP-2465001_R-246500101" AliasName="Action150Action" />
+<ParameterRefRef RefId="%AID%_UP-2465002_R-246500201" AliasName="Action150Id" />
+<ParameterRefRef RefId="%AID%_UP-2465101_R-246510101" AliasName="Action151Action" />
+<ParameterRefRef RefId="%AID%_UP-2465102_R-246510201" AliasName="Action151Id" />
+<ParameterRefRef RefId="%AID%_UP-2465201_R-246520101" AliasName="Action152Action" />
+<ParameterRefRef RefId="%AID%_UP-2465202_R-246520201" AliasName="Action152Id" />
+<ParameterRefRef RefId="%AID%_UP-2465301_R-246530101" AliasName="Action153Action" />
+<ParameterRefRef RefId="%AID%_UP-2465302_R-246530201" AliasName="Action153Id" />
+<ParameterRefRef RefId="%AID%_UP-2465401_R-246540101" AliasName="Action154Action" />
+<ParameterRefRef RefId="%AID%_UP-2465402_R-246540201" AliasName="Action154Id" />
+<ParameterRefRef RefId="%AID%_UP-2465501_R-246550101" AliasName="Action155Action" />
+<ParameterRefRef RefId="%AID%_UP-2465502_R-246550201" AliasName="Action155Id" />
+<ParameterRefRef RefId="%AID%_UP-2465601_R-246560101" AliasName="Action156Action" />
+<ParameterRefRef RefId="%AID%_UP-2465602_R-246560201" AliasName="Action156Id" />
+<ParameterRefRef RefId="%AID%_UP-2465701_R-246570101" AliasName="Action157Action" />
+<ParameterRefRef RefId="%AID%_UP-2465702_R-246570201" AliasName="Action157Id" />
+<ParameterRefRef RefId="%AID%_UP-2465801_R-246580101" AliasName="Action158Action" />
+<ParameterRefRef RefId="%AID%_UP-2465802_R-246580201" AliasName="Action158Id" />
+<ParameterRefRef RefId="%AID%_UP-2465901_R-246590101" AliasName="Action159Action" />
+<ParameterRefRef RefId="%AID%_UP-2465902_R-246590201" AliasName="Action159Id" />
+<ParameterRefRef RefId="%AID%_UP-2466001_R-246600101" AliasName="Action160Action" />
+<ParameterRefRef RefId="%AID%_UP-2466002_R-246600201" AliasName="Action160Id" />
+<ParameterRefRef RefId="%AID%_UP-2466101_R-246610101" AliasName="Action161Action" />
+<ParameterRefRef RefId="%AID%_UP-2466102_R-246610201" AliasName="Action161Id" />
+<ParameterRefRef RefId="%AID%_UP-2466201_R-246620101" AliasName="Action162Action" />
+<ParameterRefRef RefId="%AID%_UP-2466202_R-246620201" AliasName="Action162Id" />
+<ParameterRefRef RefId="%AID%_UP-2466301_R-246630101" AliasName="Action163Action" />
+<ParameterRefRef RefId="%AID%_UP-2466302_R-246630201" AliasName="Action163Id" />
+<ParameterRefRef RefId="%AID%_UP-2466401_R-246640101" AliasName="Action164Action" />
+<ParameterRefRef RefId="%AID%_UP-2466402_R-246640201" AliasName="Action164Id" />
+<ParameterRefRef RefId="%AID%_UP-2466501_R-246650101" AliasName="Action165Action" />
+<ParameterRefRef RefId="%AID%_UP-2466502_R-246650201" AliasName="Action165Id" />
+<ParameterRefRef RefId="%AID%_UP-2466601_R-246660101" AliasName="Action166Action" />
+<ParameterRefRef RefId="%AID%_UP-2466602_R-246660201" AliasName="Action166Id" />
+<ParameterRefRef RefId="%AID%_UP-2466701_R-246670101" AliasName="Action167Action" />
+<ParameterRefRef RefId="%AID%_UP-2466702_R-246670201" AliasName="Action167Id" />
+<ParameterRefRef RefId="%AID%_UP-2466801_R-246680101" AliasName="Action168Action" />
+<ParameterRefRef RefId="%AID%_UP-2466802_R-246680201" AliasName="Action168Id" />
+<ParameterRefRef RefId="%AID%_UP-2466901_R-246690101" AliasName="Action169Action" />
+<ParameterRefRef RefId="%AID%_UP-2466902_R-246690201" AliasName="Action169Id" />
+<ParameterRefRef RefId="%AID%_UP-2467001_R-246700101" AliasName="Action170Action" />
+<ParameterRefRef RefId="%AID%_UP-2467002_R-246700201" AliasName="Action170Id" />
+<ParameterRefRef RefId="%AID%_UP-2467101_R-246710101" AliasName="Action171Action" />
+<ParameterRefRef RefId="%AID%_UP-2467102_R-246710201" AliasName="Action171Id" />
+<ParameterRefRef RefId="%AID%_UP-2467201_R-246720101" AliasName="Action172Action" />
+<ParameterRefRef RefId="%AID%_UP-2467202_R-246720201" AliasName="Action172Id" />
+<ParameterRefRef RefId="%AID%_UP-2467301_R-246730101" AliasName="Action173Action" />
+<ParameterRefRef RefId="%AID%_UP-2467302_R-246730201" AliasName="Action173Id" />
+<ParameterRefRef RefId="%AID%_UP-2467401_R-246740101" AliasName="Action174Action" />
+<ParameterRefRef RefId="%AID%_UP-2467402_R-246740201" AliasName="Action174Id" />
+<ParameterRefRef RefId="%AID%_UP-2467501_R-246750101" AliasName="Action175Action" />
+<ParameterRefRef RefId="%AID%_UP-2467502_R-246750201" AliasName="Action175Id" />
+<ParameterRefRef RefId="%AID%_UP-2467601_R-246760101" AliasName="Action176Action" />
+<ParameterRefRef RefId="%AID%_UP-2467602_R-246760201" AliasName="Action176Id" />
+<ParameterRefRef RefId="%AID%_UP-2467701_R-246770101" AliasName="Action177Action" />
+<ParameterRefRef RefId="%AID%_UP-2467702_R-246770201" AliasName="Action177Id" />
+<ParameterRefRef RefId="%AID%_UP-2467801_R-246780101" AliasName="Action178Action" />
+<ParameterRefRef RefId="%AID%_UP-2467802_R-246780201" AliasName="Action178Id" />
+<ParameterRefRef RefId="%AID%_UP-2467901_R-246790101" AliasName="Action179Action" />
+<ParameterRefRef RefId="%AID%_UP-2467902_R-246790201" AliasName="Action179Id" />
+<ParameterRefRef RefId="%AID%_UP-2468001_R-246800101" AliasName="Action180Action" />
+<ParameterRefRef RefId="%AID%_UP-2468002_R-246800201" AliasName="Action180Id" />
+<ParameterRefRef RefId="%AID%_UP-2468101_R-246810101" AliasName="Action181Action" />
+<ParameterRefRef RefId="%AID%_UP-2468102_R-246810201" AliasName="Action181Id" />
+<ParameterRefRef RefId="%AID%_UP-2468201_R-246820101" AliasName="Action182Action" />
+<ParameterRefRef RefId="%AID%_UP-2468202_R-246820201" AliasName="Action182Id" />
+<ParameterRefRef RefId="%AID%_UP-2468301_R-246830101" AliasName="Action183Action" />
+<ParameterRefRef RefId="%AID%_UP-2468302_R-246830201" AliasName="Action183Id" />
+<ParameterRefRef RefId="%AID%_UP-2468401_R-246840101" AliasName="Action184Action" />
+<ParameterRefRef RefId="%AID%_UP-2468402_R-246840201" AliasName="Action184Id" />
+<ParameterRefRef RefId="%AID%_UP-2468501_R-246850101" AliasName="Action185Action" />
+<ParameterRefRef RefId="%AID%_UP-2468502_R-246850201" AliasName="Action185Id" />
+<ParameterRefRef RefId="%AID%_UP-2468601_R-246860101" AliasName="Action186Action" />
+<ParameterRefRef RefId="%AID%_UP-2468602_R-246860201" AliasName="Action186Id" />
+<ParameterRefRef RefId="%AID%_UP-2468701_R-246870101" AliasName="Action187Action" />
+<ParameterRefRef RefId="%AID%_UP-2468702_R-246870201" AliasName="Action187Id" />
+<ParameterRefRef RefId="%AID%_UP-2468801_R-246880101" AliasName="Action188Action" />
+<ParameterRefRef RefId="%AID%_UP-2468802_R-246880201" AliasName="Action188Id" />
+<ParameterRefRef RefId="%AID%_UP-2468901_R-246890101" AliasName="Action189Action" />
+<ParameterRefRef RefId="%AID%_UP-2468902_R-246890201" AliasName="Action189Id" />
+<ParameterRefRef RefId="%AID%_UP-2469001_R-246900101" AliasName="Action190Action" />
+<ParameterRefRef RefId="%AID%_UP-2469002_R-246900201" AliasName="Action190Id" />
+<ParameterRefRef RefId="%AID%_UP-2469101_R-246910101" AliasName="Action191Action" />
+<ParameterRefRef RefId="%AID%_UP-2469102_R-246910201" AliasName="Action191Id" />
+<ParameterRefRef RefId="%AID%_UP-2469201_R-246920101" AliasName="Action192Action" />
+<ParameterRefRef RefId="%AID%_UP-2469202_R-246920201" AliasName="Action192Id" />
+<ParameterRefRef RefId="%AID%_UP-2469301_R-246930101" AliasName="Action193Action" />
+<ParameterRefRef RefId="%AID%_UP-2469302_R-246930201" AliasName="Action193Id" />
+<ParameterRefRef RefId="%AID%_UP-2469401_R-246940101" AliasName="Action194Action" />
+<ParameterRefRef RefId="%AID%_UP-2469402_R-246940201" AliasName="Action194Id" />
+<ParameterRefRef RefId="%AID%_UP-2469501_R-246950101" AliasName="Action195Action" />
+<ParameterRefRef RefId="%AID%_UP-2469502_R-246950201" AliasName="Action195Id" />
+<ParameterRefRef RefId="%AID%_UP-2469601_R-246960101" AliasName="Action196Action" />
+<ParameterRefRef RefId="%AID%_UP-2469602_R-246960201" AliasName="Action196Id" />
+<ParameterRefRef RefId="%AID%_UP-2469701_R-246970101" AliasName="Action197Action" />
+<ParameterRefRef RefId="%AID%_UP-2469702_R-246970201" AliasName="Action197Id" />
+<ParameterRefRef RefId="%AID%_UP-2469801_R-246980101" AliasName="Action198Action" />
+<ParameterRefRef RefId="%AID%_UP-2469802_R-246980201" AliasName="Action198Id" />
+<ParameterRefRef RefId="%AID%_UP-2469901_R-246990101" AliasName="Action199Action" />
+<ParameterRefRef RefId="%AID%_UP-2469902_R-246990201" AliasName="Action199Id" />
+<ParameterRefRef RefId="%AID%_UP-2470001_R-247000101" AliasName="Action200Action" />
+<ParameterRefRef RefId="%AID%_UP-2470002_R-247000201" AliasName="Action200Id" />
+<ParameterRefRef RefId="%AID%_UP-2470101_R-247010101" AliasName="Action201Action" />
+<ParameterRefRef RefId="%AID%_UP-2470102_R-247010201" AliasName="Action201Id" />
+<ParameterRefRef RefId="%AID%_UP-2470201_R-247020101" AliasName="Action202Action" />
+<ParameterRefRef RefId="%AID%_UP-2470202_R-247020201" AliasName="Action202Id" />
+<ParameterRefRef RefId="%AID%_UP-2470301_R-247030101" AliasName="Action203Action" />
+<ParameterRefRef RefId="%AID%_UP-2470302_R-247030201" AliasName="Action203Id" />
+<ParameterRefRef RefId="%AID%_UP-2470401_R-247040101" AliasName="Action204Action" />
+<ParameterRefRef RefId="%AID%_UP-2470402_R-247040201" AliasName="Action204Id" />
+<ParameterRefRef RefId="%AID%_UP-2470501_R-247050101" AliasName="Action205Action" />
+<ParameterRefRef RefId="%AID%_UP-2470502_R-247050201" AliasName="Action205Id" />
+<ParameterRefRef RefId="%AID%_UP-2470601_R-247060101" AliasName="Action206Action" />
+<ParameterRefRef RefId="%AID%_UP-2470602_R-247060201" AliasName="Action206Id" />
+<ParameterRefRef RefId="%AID%_UP-2470701_R-247070101" AliasName="Action207Action" />
+<ParameterRefRef RefId="%AID%_UP-2470702_R-247070201" AliasName="Action207Id" />
+<ParameterRefRef RefId="%AID%_UP-2470801_R-247080101" AliasName="Action208Action" />
+<ParameterRefRef RefId="%AID%_UP-2470802_R-247080201" AliasName="Action208Id" />
+<ParameterRefRef RefId="%AID%_UP-2470901_R-247090101" AliasName="Action209Action" />
+<ParameterRefRef RefId="%AID%_UP-2470902_R-247090201" AliasName="Action209Id" />
+<ParameterRefRef RefId="%AID%_UP-2471001_R-247100101" AliasName="Action210Action" />
+<ParameterRefRef RefId="%AID%_UP-2471002_R-247100201" AliasName="Action210Id" />
+<ParameterRefRef RefId="%AID%_UP-2471101_R-247110101" AliasName="Action211Action" />
+<ParameterRefRef RefId="%AID%_UP-2471102_R-247110201" AliasName="Action211Id" />
+<ParameterRefRef RefId="%AID%_UP-2471201_R-247120101" AliasName="Action212Action" />
+<ParameterRefRef RefId="%AID%_UP-2471202_R-247120201" AliasName="Action212Id" />
+<ParameterRefRef RefId="%AID%_UP-2471301_R-247130101" AliasName="Action213Action" />
+<ParameterRefRef RefId="%AID%_UP-2471302_R-247130201" AliasName="Action213Id" />
+<ParameterRefRef RefId="%AID%_UP-2471401_R-247140101" AliasName="Action214Action" />
+<ParameterRefRef RefId="%AID%_UP-2471402_R-247140201" AliasName="Action214Id" />
+<ParameterRefRef RefId="%AID%_UP-2471501_R-247150101" AliasName="Action215Action" />
+<ParameterRefRef RefId="%AID%_UP-2471502_R-247150201" AliasName="Action215Id" />
+<ParameterRefRef RefId="%AID%_UP-2471601_R-247160101" AliasName="Action216Action" />
+<ParameterRefRef RefId="%AID%_UP-2471602_R-247160201" AliasName="Action216Id" />
+<ParameterRefRef RefId="%AID%_UP-2471701_R-247170101" AliasName="Action217Action" />
+<ParameterRefRef RefId="%AID%_UP-2471702_R-247170201" AliasName="Action217Id" />
+<ParameterRefRef RefId="%AID%_UP-2471801_R-247180101" AliasName="Action218Action" />
+<ParameterRefRef RefId="%AID%_UP-2471802_R-247180201" AliasName="Action218Id" />
+<ParameterRefRef RefId="%AID%_UP-2471901_R-247190101" AliasName="Action219Action" />
+<ParameterRefRef RefId="%AID%_UP-2471902_R-247190201" AliasName="Action219Id" />
+<ParameterRefRef RefId="%AID%_UP-2472001_R-247200101" AliasName="Action220Action" />
+<ParameterRefRef RefId="%AID%_UP-2472002_R-247200201" AliasName="Action220Id" />
+<ParameterRefRef RefId="%AID%_UP-2472101_R-247210101" AliasName="Action221Action" />
+<ParameterRefRef RefId="%AID%_UP-2472102_R-247210201" AliasName="Action221Id" />
+<ParameterRefRef RefId="%AID%_UP-2472201_R-247220101" AliasName="Action222Action" />
+<ParameterRefRef RefId="%AID%_UP-2472202_R-247220201" AliasName="Action222Id" />
+<ParameterRefRef RefId="%AID%_UP-2472301_R-247230101" AliasName="Action223Action" />
+<ParameterRefRef RefId="%AID%_UP-2472302_R-247230201" AliasName="Action223Id" />
+<ParameterRefRef RefId="%AID%_UP-2472401_R-247240101" AliasName="Action224Action" />
+<ParameterRefRef RefId="%AID%_UP-2472402_R-247240201" AliasName="Action224Id" />
+<ParameterRefRef RefId="%AID%_UP-2472501_R-247250101" AliasName="Action225Action" />
+<ParameterRefRef RefId="%AID%_UP-2472502_R-247250201" AliasName="Action225Id" />
+<ParameterRefRef RefId="%AID%_UP-2472601_R-247260101" AliasName="Action226Action" />
+<ParameterRefRef RefId="%AID%_UP-2472602_R-247260201" AliasName="Action226Id" />
+<ParameterRefRef RefId="%AID%_UP-2472701_R-247270101" AliasName="Action227Action" />
+<ParameterRefRef RefId="%AID%_UP-2472702_R-247270201" AliasName="Action227Id" />
+<ParameterRefRef RefId="%AID%_UP-2472801_R-247280101" AliasName="Action228Action" />
+<ParameterRefRef RefId="%AID%_UP-2472802_R-247280201" AliasName="Action228Id" />
+<ParameterRefRef RefId="%AID%_UP-2472901_R-247290101" AliasName="Action229Action" />
+<ParameterRefRef RefId="%AID%_UP-2472902_R-247290201" AliasName="Action229Id" />
+<ParameterRefRef RefId="%AID%_UP-2473001_R-247300101" AliasName="Action230Action" />
+<ParameterRefRef RefId="%AID%_UP-2473002_R-247300201" AliasName="Action230Id" />
+<ParameterRefRef RefId="%AID%_UP-2473101_R-247310101" AliasName="Action231Action" />
+<ParameterRefRef RefId="%AID%_UP-2473102_R-247310201" AliasName="Action231Id" />
+<ParameterRefRef RefId="%AID%_UP-2473201_R-247320101" AliasName="Action232Action" />
+<ParameterRefRef RefId="%AID%_UP-2473202_R-247320201" AliasName="Action232Id" />
+<ParameterRefRef RefId="%AID%_UP-2473301_R-247330101" AliasName="Action233Action" />
+<ParameterRefRef RefId="%AID%_UP-2473302_R-247330201" AliasName="Action233Id" />
+<ParameterRefRef RefId="%AID%_UP-2473401_R-247340101" AliasName="Action234Action" />
+<ParameterRefRef RefId="%AID%_UP-2473402_R-247340201" AliasName="Action234Id" />
+<ParameterRefRef RefId="%AID%_UP-2473501_R-247350101" AliasName="Action235Action" />
+<ParameterRefRef RefId="%AID%_UP-2473502_R-247350201" AliasName="Action235Id" />
+<ParameterRefRef RefId="%AID%_UP-2473601_R-247360101" AliasName="Action236Action" />
+<ParameterRefRef RefId="%AID%_UP-2473602_R-247360201" AliasName="Action236Id" />
+<ParameterRefRef RefId="%AID%_UP-2473701_R-247370101" AliasName="Action237Action" />
+<ParameterRefRef RefId="%AID%_UP-2473702_R-247370201" AliasName="Action237Id" />
+<ParameterRefRef RefId="%AID%_UP-2473801_R-247380101" AliasName="Action238Action" />
+<ParameterRefRef RefId="%AID%_UP-2473802_R-247380201" AliasName="Action238Id" />
+<ParameterRefRef RefId="%AID%_UP-2473901_R-247390101" AliasName="Action239Action" />
+<ParameterRefRef RefId="%AID%_UP-2473902_R-247390201" AliasName="Action239Id" />
+<ParameterRefRef RefId="%AID%_UP-2474001_R-247400101" AliasName="Action240Action" />
+<ParameterRefRef RefId="%AID%_UP-2474002_R-247400201" AliasName="Action240Id" />
+<ParameterRefRef RefId="%AID%_UP-2474101_R-247410101" AliasName="Action241Action" />
+<ParameterRefRef RefId="%AID%_UP-2474102_R-247410201" AliasName="Action241Id" />
+<ParameterRefRef RefId="%AID%_UP-2474201_R-247420101" AliasName="Action242Action" />
+<ParameterRefRef RefId="%AID%_UP-2474202_R-247420201" AliasName="Action242Id" />
+<ParameterRefRef RefId="%AID%_UP-2474301_R-247430101" AliasName="Action243Action" />
+<ParameterRefRef RefId="%AID%_UP-2474302_R-247430201" AliasName="Action243Id" />
+<ParameterRefRef RefId="%AID%_UP-2474401_R-247440101" AliasName="Action244Action" />
+<ParameterRefRef RefId="%AID%_UP-2474402_R-247440201" AliasName="Action244Id" />
+<ParameterRefRef RefId="%AID%_UP-2474501_R-247450101" AliasName="Action245Action" />
+<ParameterRefRef RefId="%AID%_UP-2474502_R-247450201" AliasName="Action245Id" />
+<ParameterRefRef RefId="%AID%_UP-2474601_R-247460101" AliasName="Action246Action" />
+<ParameterRefRef RefId="%AID%_UP-2474602_R-247460201" AliasName="Action246Id" />
+<ParameterRefRef RefId="%AID%_UP-2474701_R-247470101" AliasName="Action247Action" />
+<ParameterRefRef RefId="%AID%_UP-2474702_R-247470201" AliasName="Action247Id" />
+<ParameterRefRef RefId="%AID%_UP-2474801_R-247480101" AliasName="Action248Action" />
+<ParameterRefRef RefId="%AID%_UP-2474802_R-247480201" AliasName="Action248Id" />
+<ParameterRefRef RefId="%AID%_UP-2474901_R-247490101" AliasName="Action249Action" />
+<ParameterRefRef RefId="%AID%_UP-2474902_R-247490201" AliasName="Action249Id" />
+<ParameterRefRef RefId="%AID%_UP-2475001_R-247500101" AliasName="Action250Action" />
+<ParameterRefRef RefId="%AID%_UP-2475002_R-247500201" AliasName="Action250Id" />
+<ParameterRefRef RefId="%AID%_UP-2475101_R-247510101" AliasName="Action251Action" />
+<ParameterRefRef RefId="%AID%_UP-2475102_R-247510201" AliasName="Action251Id" />
+<ParameterRefRef RefId="%AID%_UP-2475201_R-247520101" AliasName="Action252Action" />
+<ParameterRefRef RefId="%AID%_UP-2475202_R-247520201" AliasName="Action252Id" />
+<ParameterRefRef RefId="%AID%_UP-2475301_R-247530101" AliasName="Action253Action" />
+<ParameterRefRef RefId="%AID%_UP-2475302_R-247530201" AliasName="Action253Id" />
+<ParameterRefRef RefId="%AID%_UP-2475401_R-247540101" AliasName="Action254Action" />
+<ParameterRefRef RefId="%AID%_UP-2475402_R-247540201" AliasName="Action254Id" />
+<ParameterRefRef RefId="%AID%_UP-2475501_R-247550101" AliasName="Action255Action" />
+<ParameterRefRef RefId="%AID%_UP-2475502_R-247550201" AliasName="Action255Id" />
+<ParameterRefRef RefId="%AID%_UP-2475601_R-247560101" AliasName="Action256Action" />
+<ParameterRefRef RefId="%AID%_UP-2475602_R-247560201" AliasName="Action256Id" />
+<ParameterRefRef RefId="%AID%_UP-2475701_R-247570101" AliasName="Action257Action" />
+<ParameterRefRef RefId="%AID%_UP-2475702_R-247570201" AliasName="Action257Id" />
+<ParameterRefRef RefId="%AID%_UP-2475801_R-247580101" AliasName="Action258Action" />
+<ParameterRefRef RefId="%AID%_UP-2475802_R-247580201" AliasName="Action258Id" />
+<ParameterRefRef RefId="%AID%_UP-2475901_R-247590101" AliasName="Action259Action" />
+<ParameterRefRef RefId="%AID%_UP-2475902_R-247590201" AliasName="Action259Id" />
+<ParameterRefRef RefId="%AID%_UP-2476001_R-247600101" AliasName="Action260Action" />
+<ParameterRefRef RefId="%AID%_UP-2476002_R-247600201" AliasName="Action260Id" />
+<ParameterRefRef RefId="%AID%_UP-2476101_R-247610101" AliasName="Action261Action" />
+<ParameterRefRef RefId="%AID%_UP-2476102_R-247610201" AliasName="Action261Id" />
+<ParameterRefRef RefId="%AID%_UP-2476201_R-247620101" AliasName="Action262Action" />
+<ParameterRefRef RefId="%AID%_UP-2476202_R-247620201" AliasName="Action262Id" />
+<ParameterRefRef RefId="%AID%_UP-2476301_R-247630101" AliasName="Action263Action" />
+<ParameterRefRef RefId="%AID%_UP-2476302_R-247630201" AliasName="Action263Id" />
+<ParameterRefRef RefId="%AID%_UP-2476401_R-247640101" AliasName="Action264Action" />
+<ParameterRefRef RefId="%AID%_UP-2476402_R-247640201" AliasName="Action264Id" />
+<ParameterRefRef RefId="%AID%_UP-2476501_R-247650101" AliasName="Action265Action" />
+<ParameterRefRef RefId="%AID%_UP-2476502_R-247650201" AliasName="Action265Id" />
+<ParameterRefRef RefId="%AID%_UP-2476601_R-247660101" AliasName="Action266Action" />
+<ParameterRefRef RefId="%AID%_UP-2476602_R-247660201" AliasName="Action266Id" />
+<ParameterRefRef RefId="%AID%_UP-2476701_R-247670101" AliasName="Action267Action" />
+<ParameterRefRef RefId="%AID%_UP-2476702_R-247670201" AliasName="Action267Id" />
+<ParameterRefRef RefId="%AID%_UP-2476801_R-247680101" AliasName="Action268Action" />
+<ParameterRefRef RefId="%AID%_UP-2476802_R-247680201" AliasName="Action268Id" />
+<ParameterRefRef RefId="%AID%_UP-2476901_R-247690101" AliasName="Action269Action" />
+<ParameterRefRef RefId="%AID%_UP-2476902_R-247690201" AliasName="Action269Id" />
+<ParameterRefRef RefId="%AID%_UP-2477001_R-247700101" AliasName="Action270Action" />
+<ParameterRefRef RefId="%AID%_UP-2477002_R-247700201" AliasName="Action270Id" />
+<ParameterRefRef RefId="%AID%_UP-2477101_R-247710101" AliasName="Action271Action" />
+<ParameterRefRef RefId="%AID%_UP-2477102_R-247710201" AliasName="Action271Id" />
+<ParameterRefRef RefId="%AID%_UP-2477201_R-247720101" AliasName="Action272Action" />
+<ParameterRefRef RefId="%AID%_UP-2477202_R-247720201" AliasName="Action272Id" />
+<ParameterRefRef RefId="%AID%_UP-2477301_R-247730101" AliasName="Action273Action" />
+<ParameterRefRef RefId="%AID%_UP-2477302_R-247730201" AliasName="Action273Id" />
+<ParameterRefRef RefId="%AID%_UP-2477401_R-247740101" AliasName="Action274Action" />
+<ParameterRefRef RefId="%AID%_UP-2477402_R-247740201" AliasName="Action274Id" />
+<ParameterRefRef RefId="%AID%_UP-2477501_R-247750101" AliasName="Action275Action" />
+<ParameterRefRef RefId="%AID%_UP-2477502_R-247750201" AliasName="Action275Id" />
+<ParameterRefRef RefId="%AID%_UP-2477601_R-247760101" AliasName="Action276Action" />
+<ParameterRefRef RefId="%AID%_UP-2477602_R-247760201" AliasName="Action276Id" />
+<ParameterRefRef RefId="%AID%_UP-2477701_R-247770101" AliasName="Action277Action" />
+<ParameterRefRef RefId="%AID%_UP-2477702_R-247770201" AliasName="Action277Id" />
+<ParameterRefRef RefId="%AID%_UP-2477801_R-247780101" AliasName="Action278Action" />
+<ParameterRefRef RefId="%AID%_UP-2477802_R-247780201" AliasName="Action278Id" />
+<ParameterRefRef RefId="%AID%_UP-2477901_R-247790101" AliasName="Action279Action" />
+<ParameterRefRef RefId="%AID%_UP-2477902_R-247790201" AliasName="Action279Id" />
+<ParameterRefRef RefId="%AID%_UP-2478001_R-247800101" AliasName="Action280Action" />
+<ParameterRefRef RefId="%AID%_UP-2478002_R-247800201" AliasName="Action280Id" />
+<ParameterRefRef RefId="%AID%_UP-2478101_R-247810101" AliasName="Action281Action" />
+<ParameterRefRef RefId="%AID%_UP-2478102_R-247810201" AliasName="Action281Id" />
+<ParameterRefRef RefId="%AID%_UP-2478201_R-247820101" AliasName="Action282Action" />
+<ParameterRefRef RefId="%AID%_UP-2478202_R-247820201" AliasName="Action282Id" />
+<ParameterRefRef RefId="%AID%_UP-2478301_R-247830101" AliasName="Action283Action" />
+<ParameterRefRef RefId="%AID%_UP-2478302_R-247830201" AliasName="Action283Id" />
+<ParameterRefRef RefId="%AID%_UP-2478401_R-247840101" AliasName="Action284Action" />
+<ParameterRefRef RefId="%AID%_UP-2478402_R-247840201" AliasName="Action284Id" />
+<ParameterRefRef RefId="%AID%_UP-2478501_R-247850101" AliasName="Action285Action" />
+<ParameterRefRef RefId="%AID%_UP-2478502_R-247850201" AliasName="Action285Id" />
+<ParameterRefRef RefId="%AID%_UP-2478601_R-247860101" AliasName="Action286Action" />
+<ParameterRefRef RefId="%AID%_UP-2478602_R-247860201" AliasName="Action286Id" />
+<ParameterRefRef RefId="%AID%_UP-2478701_R-247870101" AliasName="Action287Action" />
+<ParameterRefRef RefId="%AID%_UP-2478702_R-247870201" AliasName="Action287Id" />
+<ParameterRefRef RefId="%AID%_UP-2478801_R-247880101" AliasName="Action288Action" />
+<ParameterRefRef RefId="%AID%_UP-2478802_R-247880201" AliasName="Action288Id" />
+<ParameterRefRef RefId="%AID%_UP-2478901_R-247890101" AliasName="Action289Action" />
+<ParameterRefRef RefId="%AID%_UP-2478902_R-247890201" AliasName="Action289Id" />
+<ParameterRefRef RefId="%AID%_UP-2479001_R-247900101" AliasName="Action290Action" />
+<ParameterRefRef RefId="%AID%_UP-2479002_R-247900201" AliasName="Action290Id" />
+<ParameterRefRef RefId="%AID%_UP-2479101_R-247910101" AliasName="Action291Action" />
+<ParameterRefRef RefId="%AID%_UP-2479102_R-247910201" AliasName="Action291Id" />
+<ParameterRefRef RefId="%AID%_UP-2479201_R-247920101" AliasName="Action292Action" />
+<ParameterRefRef RefId="%AID%_UP-2479202_R-247920201" AliasName="Action292Id" />
+<ParameterRefRef RefId="%AID%_UP-2479301_R-247930101" AliasName="Action293Action" />
+<ParameterRefRef RefId="%AID%_UP-2479302_R-247930201" AliasName="Action293Id" />
+<ParameterRefRef RefId="%AID%_UP-2479401_R-247940101" AliasName="Action294Action" />
+<ParameterRefRef RefId="%AID%_UP-2479402_R-247940201" AliasName="Action294Id" />
+<ParameterRefRef RefId="%AID%_UP-2479501_R-247950101" AliasName="Action295Action" />
+<ParameterRefRef RefId="%AID%_UP-2479502_R-247950201" AliasName="Action295Id" />
+<ParameterRefRef RefId="%AID%_UP-2479601_R-247960101" AliasName="Action296Action" />
+<ParameterRefRef RefId="%AID%_UP-2479602_R-247960201" AliasName="Action296Id" />
+<ParameterRefRef RefId="%AID%_UP-2479701_R-247970101" AliasName="Action297Action" />
+<ParameterRefRef RefId="%AID%_UP-2479702_R-247970201" AliasName="Action297Id" />
+<ParameterRefRef RefId="%AID%_UP-2479801_R-247980101" AliasName="Action298Action" />
+<ParameterRefRef RefId="%AID%_UP-2479802_R-247980201" AliasName="Action298Id" />
+<ParameterRefRef RefId="%AID%_UP-2479901_R-247990101" AliasName="Action299Action" />
+<ParameterRefRef RefId="%AID%_UP-2479902_R-247990201" AliasName="Action299Id" />
+<ParameterRefRef RefId="%AID%_UP-2480001_R-248000101" AliasName="Action300Action" />
+<ParameterRefRef RefId="%AID%_UP-2480002_R-248000201" AliasName="Action300Id" />
+<ParameterRefRef RefId="%AID%_UP-2480101_R-248010101" AliasName="Action301Action" />
+<ParameterRefRef RefId="%AID%_UP-2480102_R-248010201" AliasName="Action301Id" />
+<ParameterRefRef RefId="%AID%_UP-2480201_R-248020101" AliasName="Action302Action" />
+<ParameterRefRef RefId="%AID%_UP-2480202_R-248020201" AliasName="Action302Id" />
+<ParameterRefRef RefId="%AID%_UP-2480301_R-248030101" AliasName="Action303Action" />
+<ParameterRefRef RefId="%AID%_UP-2480302_R-248030201" AliasName="Action303Id" />
+<ParameterRefRef RefId="%AID%_UP-2480401_R-248040101" AliasName="Action304Action" />
+<ParameterRefRef RefId="%AID%_UP-2480402_R-248040201" AliasName="Action304Id" />
+<ParameterRefRef RefId="%AID%_UP-2480501_R-248050101" AliasName="Action305Action" />
+<ParameterRefRef RefId="%AID%_UP-2480502_R-248050201" AliasName="Action305Id" />
+<ParameterRefRef RefId="%AID%_UP-2480601_R-248060101" AliasName="Action306Action" />
+<ParameterRefRef RefId="%AID%_UP-2480602_R-248060201" AliasName="Action306Id" />
+<ParameterRefRef RefId="%AID%_UP-2480701_R-248070101" AliasName="Action307Action" />
+<ParameterRefRef RefId="%AID%_UP-2480702_R-248070201" AliasName="Action307Id" />
+<ParameterRefRef RefId="%AID%_UP-2480801_R-248080101" AliasName="Action308Action" />
+<ParameterRefRef RefId="%AID%_UP-2480802_R-248080201" AliasName="Action308Id" />
+<ParameterRefRef RefId="%AID%_UP-2480901_R-248090101" AliasName="Action309Action" />
+<ParameterRefRef RefId="%AID%_UP-2480902_R-248090201" AliasName="Action309Id" />
+<ParameterRefRef RefId="%AID%_UP-2481001_R-248100101" AliasName="Action310Action" />
+<ParameterRefRef RefId="%AID%_UP-2481002_R-248100201" AliasName="Action310Id" />
+</RParameters>
+</ParameterCalculation>
+</ParameterCalculations>
+
+<Script>
+<op:include href="NfcManagement.script.js" type="script" />
+</Script>
+</Static>
+<Dynamic>
+<ParameterBlock Id="%AID%_PB-nnn" Name="NfcScanner" Text="NFC-Scanner" Icon="nfc-variant" ShowInComObjectTree="true">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag-ID verbindet eine UID bzw. ein HomeKey-Gerät mit den Aktionen im NFC-Tab. Beispiel: NFC-Tag-ID 100 → Tag 100 / Aktion 1. Mehrere Aktionen für denselben Tag sind erlaubt. Beim Löschen bleiben Aktionszuordnungen bestehen; bei Wiederverwendung der ID gelten diese auch für das neue Gerät." UIHint="Information" />
+<ParameterRefRef RefId="%AID%_P-%TT%00001_R-%TT%0000101" />
+<choose ParamRefId="%AID%_P-%TT%00001_R-%TT%0000101">
+<when test="0">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag bearbeiten" UIHint="Headline" />
+                      <ParameterRefRef RefId="%AID%_P-2000037_R-200003701" IndentLevel="1" />
+                      <choose ParamRefId="%AID%_P-2000037_R-200003701">
+                        <when test="0">
+                          <ParameterRefRef RefId="%AID%_P-2000032_R-200003201" IndentLevel="2" />
+                          <ParameterRefRef RefId="%AID%_P-2000030_R-200003001" IndentLevel="2" />
+                          <ParameterRefRef RefId="%AID%_P-2000031_R-200003101" IndentLevel="2" />
+                        </when>
+                        <when test="1 3">
+                          <ParameterRefRef RefId="%AID%_P-2000032_R-200003201" IndentLevel="2" />
+                          <ParameterRefRef RefId="%AID%_P-2000030_R-200003001" IndentLevel="2" />
+                          <ParameterRefRef RefId="%AID%_P-2000038_R-200003801" IndentLevel="2" />
+                        </when>
+                        <when test="2">
+                          <ParameterRefRef RefId="%AID%_P-2000029_R-200002901" IndentLevel="2" />
+                        </when>
+                      </choose>
+                      <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                        <Rows>
+                          <Row Id="%AID%_PB-nnn_R-1" />
+                        </Rows>
+                        <Columns>
+                          <Column Id="%AID%_PB-nnn_C-1" Width="45%" />
+                          <Column Id="%AID%_PB-nnn_C-2" Width="27%" />
+                        </Columns>
+                          <choose ParamRefId="%AID%_P-2000037_R-200003701">
+                          <when test="0">
+                            <Button Id="%AID%_B-2920001" Text="Anlernen" Cell="1,2" Name="enrollNfc" EventHandler="NFCUI_enrollUid" EventHandlerOnline="ConnectionOriented" />
+                          </when>
+                          <when test="1">
+                            <Button Id="%AID%_B-2920002" Text="Ändern" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" />
+                          </when>
+                          <when test="2">
+                            <Button Id="%AID%_B-2920003" Text="Löschen" Cell="1,2" Name="deleteNfc" EventHandler="NFCUI_deleteUid" EventHandlerOnline="ConnectionOriented" />
+                          </when>
+                          <when test="3">
+                            <Button Id="%AID%_B-2920005" Text="Anlegen" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" />
+                          </when>
+                        </choose>
+                      </ParameterBlock>
+
+
+                      <choose ParamRefId="%AID%_UP-2000012_R-200001201">
+                        <when test="1">
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="UID-Tag synchronisieren" UIHint="Headline" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Nach jedem Anlernvorgang wird der neue Tag automatisch synchronisiert. Zusätzlich kann hier die Synchronisation eines bestimmten Tags auch manuell angestoßen werden." UIHint="Information" />
+                          <ParameterRefRef RefId="%AID%_P-2000033_R-200003301" IndentLevel="2" />
+                          <Button Id="%AID%_B-2930004" Text="Synchronisieren" Name="syncNfc" EventHandler="ACC_syncNfc" EventHandlerOnline="ConnectionOriented" />
+                        </when>
+                      </choose>
+
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Gefährliche Funktionen" UIHint="Headline" />
+                      <ParameterRefRef RefId="%AID%_P-2000035_R-200003501" IndentLevel="1" />
+                      <choose ParamRefId="%AID%_P-2000035_R-200003501">
+                        <when test="1">
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Wenn Sie diese Funktion ausführen, werden alle gespeicherten UID-Tags (keine HomeKey-Geräte) gelöscht und müssen neu angelernt werden." UIHint="Error" />
+                          <Button Id="%AID%_B-292007" Text="Jetzt löschen" Name="resetNfcScanner" EventHandler="NFCUI_resetUid" EventHandlerOnline="ConnectionOriented" />
+                        </when>
+                      </choose>
+
+                      
+                      
+
+                      
+                      
+                    </when>
+<when test="1">
+<choose ParamRefId="%AID%_UP-7000001_R-700000101">
+<when test="0">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Apple Home Key ist deaktiviert. Für normale NFC-Tags Zugangstyp UID-Tag wählen." UIHint="Information" />
+</when>
+<when test="1">
+<choose ParamRefId="%AID%_UP-7000004_R-700000401">
+<when test="1">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="HomeKey-Geräte" UIHint="Headline" />
+<Button Id="%AID%_B-%TT%00001" Name="NFCUI_import" Text="HomeKey-Geräte aus Reader einlesen" HelpContext="HK-Importieren" EventHandler="NFCUI_import" EventHandlerOnline="ConnectionOriented" />
+<ParameterRefRef RefId="%AID%_P-%TT%00002_R-%TT%0000201" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Anlernen identifiziert ein bereits gekoppeltes iPhone / eine Watch, ohne eine Zutrittsaktion auszuführen. Namen werden manuell vergeben. Änderungen der Berechtigung werden erst mit dem Parameterdownload wirksam." UIHint="Information" />
+<Button Id="%AID%_B-%TT%00002" Name="NFCUI_identify" Text="Anlernen / Gerät durch Scan identifizieren (Prog-Modus)" HelpContext="HK-Bezeichnung" EventHandler="NFCUI_identify" EventHandlerOnline="ConnectionOriented" />
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="1">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000500_R-700050001" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000100_R-700010001" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000103_R-700010301" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000101_R-700010101" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000102_R-700010201" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="2">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000501_R-700050101" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000104_R-700010401" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000107_R-700010701" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000105_R-700010501" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000106_R-700010601" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="3">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000502_R-700050201" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000108_R-700010801" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000111_R-700011101" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000109_R-700010901" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000110_R-700011001" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="4">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000503_R-700050301" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000112_R-700011201" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000115_R-700011501" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000113_R-700011301" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000114_R-700011401" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="5">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000504_R-700050401" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000116_R-700011601" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000119_R-700011901" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000117_R-700011701" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000118_R-700011801" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="6">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000505_R-700050501" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000120_R-700012001" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000123_R-700012301" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000121_R-700012101" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000122_R-700012201" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="7">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000506_R-700050601" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000124_R-700012401" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000127_R-700012701" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000125_R-700012501" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000126_R-700012601" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="8">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000507_R-700050701" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000128_R-700012801" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000131_R-700013101" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000129_R-700012901" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000130_R-700013001" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="9">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000508_R-700050801" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000132_R-700013201" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000135_R-700013501" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000133_R-700013301" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000134_R-700013401" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="10">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000509_R-700050901" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000136_R-700013601" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000139_R-700013901" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000137_R-700013701" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000138_R-700013801" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="11">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000510_R-700051001" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000140_R-700014001" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000143_R-700014301" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000141_R-700014101" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000142_R-700014201" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="12">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000511_R-700051101" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000144_R-700014401" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000147_R-700014701" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000145_R-700014501" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000146_R-700014601" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="13">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000512_R-700051201" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000148_R-700014801" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000151_R-700015101" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000149_R-700014901" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000150_R-700015001" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="14">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000513_R-700051301" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000152_R-700015201" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000155_R-700015501" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000153_R-700015301" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000154_R-700015401" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="15">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000514_R-700051401" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000156_R-700015601" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000159_R-700015901" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000157_R-700015701" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000158_R-700015801" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
+<when test="16">
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<ParameterRefRef RefId="%AID%_P-7000515_R-700051501" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000160_R-700016001" HelpContext="HK-Berechtigung-Aktiv" />
+<ParameterRefRef RefId="%AID%_P-7000163_R-700016301" HelpContext="HK-Aktions-ID" />
+<ParameterRefRef RefId="%AID%_P-7000161_R-700016101" HelpContext="HK-Issuer-ID" />
+<ParameterRefRef RefId="%AID%_P-7000162_R-700016201" HelpContext="HK-Endpoint-ID" />
+</ParameterBlock>
+</when>
+</choose>
+<Button Id="%AID%_B-%TT%00003" Name="NFCUI_checkHomeKey" Text="Anlegen / Ändern prüfen" EventHandler="NFCUI_checkHomeKey" EventHandlerOnline="ConnectionOriented" />
+<Button Id="%AID%_B-%TT%00004" Name="NFCUI_deleteHomeKey" Text="Gerät löschen und Speicherplatz leeren (Prog-Modus)" HelpContext="HK-Geraet-Entfernen" EventHandler="NFCUI_deleteHomeKey" EventHandlerOnline="ConnectionOriented" />
+<Button Id="%AID%_B-%TT%00005" Name="NFCUI_restoreHomeKey" Text="Gesperrtes Gerät erneut zulassen (Prog-Modus)" HelpContext="HK-Geraet-Entfernen" EventHandler="NFCUI_restoreHomeKey" EventHandlerOnline="ConnectionOriented" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Löschen entfernt die Geräteschlüssel im Reader und sperrt diese Geräte-ID dauerhaft. Der Schlüssel bleibt ggf. in Apple Wallet. Andere Geräte desselben Haushalts bleiben erhalten. Erneut zulassen hebt nur die Sperre auf; Berechtigung prüfen und Parameter herunterladen." UIHint="Information" />
+</when>
+<when test="0">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="ETS-Berechtigungstabelle unter Apple Home Key aktivieren." UIHint="Information" />
+</when>
+</choose>
+</when>
+</choose>
+</when>
+</choose>
+<choose ParamRefId="%AID%_UP-2000011_R-200001101">
+                        <when test="1">
+                          
+                          <ComObjectRefRef RefId="%AID%_O-2000010_R-200001001" />
+                          
+                          <ComObjectRefRef RefId="%AID%_O-2000014_R-200001401" />
+                        </when>
+                      </choose>
+<choose ParamRefId="%AID%_UP-2000013_R-200001301">
+                        <when test="1">
+                          
+                          <ComObjectRefRef RefId="%AID%_O-2000015_R-200001501" />
+                          
+                          <ComObjectRefRef RefId="%AID%_O-2000028_R-200002801" />
+                        </when>
+                      </choose>
+<ParameterRefRef RefId="%AID%_P-%TT%00007_R-%TT%0000701" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Zugänge und Aktionszuordnungen" UIHint="Headline" />
+<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="UID-Snapshot aus Reader aktualisieren" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" />
+<ParameterRefRef RefId="%AID%_P-%TT%00006_R-%TT%0000601" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="HomeKey und Aktionen: aktueller ETS-Entwurf, noch nicht zwingend im Gerät. UID-Tags: letzter vollständiger Reader-Snapshot; nach Änderungen durch USB, KNX oder andere Projekte erneut einlesen." UIHint="Information" />
+<ParameterRefRef RefId="%AID%_P-%TT%00003_R-%TT%0000301" />
+<ParameterRefRef RefId="%AID%_P-%TT%00004_R-%TT%0000401" />
+<ParameterRefRef RefId="%AID%_P-%TT%00005_R-%TT%0000501" />
+<ParameterRefRef RefId="%AID%_P-%TT%00008_R-%TT%0000801" />
+<ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+<Rows>
+<Row Id="%AID%_PB-nnn_R-1" />
+<Row Id="%AID%_PB-nnn_R-2" />
+<Row Id="%AID%_PB-nnn_R-3" />
+<Row Id="%AID%_PB-nnn_R-4" />
+<Row Id="%AID%_PB-nnn_R-5" />
+<Row Id="%AID%_PB-nnn_R-6" />
+<Row Id="%AID%_PB-nnn_R-7" />
+<Row Id="%AID%_PB-nnn_R-8" />
+<Row Id="%AID%_PB-nnn_R-9" />
+<Row Id="%AID%_PB-nnn_R-10" />
+<Row Id="%AID%_PB-nnn_R-11" />
+</Rows>
+<Columns>
+<Column Id="%AID%_PB-nnn_C-1" Width="7%" />
+<Column Id="%AID%_PB-nnn_C-2" Width="9%" />
+<Column Id="%AID%_PB-nnn_C-3" Width="18%" />
+<Column Id="%AID%_PB-nnn_C-4" Width="28%" />
+<Column Id="%AID%_PB-nnn_C-5" Width="23%" />
+<Column Id="%AID%_PB-nnn_C-6" Width="15%" />
+</Columns>
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Tag-ID" Cell="1,1" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Typ" Cell="1,2" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Bezeichnung" Cell="1,3" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="UID / Issuer + Endpoint" Cell="1,4" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Status" Cell="1,5" />
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Aktionen" Cell="1,6" />
+<ParameterRefRef RefId="%AID%_P-%TT%00025_R-%TT%0002501" Cell="2,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00026_R-%TT%0002601" Cell="2,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00027_R-%TT%0002701" Cell="2,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00028_R-%TT%0002801" Cell="2,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00029_R-%TT%0002901" Cell="2,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00030_R-%TT%0003001" Cell="2,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00031_R-%TT%0003101" Cell="3,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00032_R-%TT%0003201" Cell="3,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00033_R-%TT%0003301" Cell="3,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00034_R-%TT%0003401" Cell="3,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00035_R-%TT%0003501" Cell="3,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00036_R-%TT%0003601" Cell="3,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00037_R-%TT%0003701" Cell="4,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00038_R-%TT%0003801" Cell="4,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00039_R-%TT%0003901" Cell="4,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00040_R-%TT%0004001" Cell="4,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00041_R-%TT%0004101" Cell="4,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00042_R-%TT%0004201" Cell="4,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00043_R-%TT%0004301" Cell="5,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00044_R-%TT%0004401" Cell="5,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00045_R-%TT%0004501" Cell="5,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00046_R-%TT%0004601" Cell="5,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00047_R-%TT%0004701" Cell="5,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00048_R-%TT%0004801" Cell="5,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00049_R-%TT%0004901" Cell="6,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00050_R-%TT%0005001" Cell="6,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00051_R-%TT%0005101" Cell="6,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00052_R-%TT%0005201" Cell="6,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00053_R-%TT%0005301" Cell="6,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00054_R-%TT%0005401" Cell="6,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00055_R-%TT%0005501" Cell="7,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00056_R-%TT%0005601" Cell="7,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00057_R-%TT%0005701" Cell="7,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00058_R-%TT%0005801" Cell="7,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00059_R-%TT%0005901" Cell="7,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00060_R-%TT%0006001" Cell="7,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00061_R-%TT%0006101" Cell="8,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00062_R-%TT%0006201" Cell="8,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00063_R-%TT%0006301" Cell="8,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00064_R-%TT%0006401" Cell="8,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00065_R-%TT%0006501" Cell="8,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00066_R-%TT%0006601" Cell="8,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00067_R-%TT%0006701" Cell="9,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00068_R-%TT%0006801" Cell="9,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00069_R-%TT%0006901" Cell="9,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00070_R-%TT%0007001" Cell="9,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00071_R-%TT%0007101" Cell="9,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00072_R-%TT%0007201" Cell="9,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00073_R-%TT%0007301" Cell="10,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00074_R-%TT%0007401" Cell="10,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00075_R-%TT%0007501" Cell="10,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00076_R-%TT%0007601" Cell="10,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00077_R-%TT%0007701" Cell="10,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00078_R-%TT%0007801" Cell="10,6"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00079_R-%TT%0007901" Cell="11,1"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00080_R-%TT%0008001" Cell="11,2"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00081_R-%TT%0008101" Cell="11,3"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00082_R-%TT%0008201" Cell="11,4"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00083_R-%TT%0008301" Cell="11,5"/>
+<ParameterRefRef RefId="%AID%_P-%TT%00084_R-%TT%0008401" Cell="11,6"/>
+</ParameterBlock>
+</ParameterBlock>
+</Dynamic>
+</ApplicationProgram>
+</ApplicationPrograms>
+</Manufacturer>
+</ManufacturerData>
+</KNX>

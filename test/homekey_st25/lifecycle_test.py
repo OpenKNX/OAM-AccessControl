@@ -12,6 +12,7 @@ def method(signature):
     return cpp[start:end]
 source=r'''
 #include "HomeKeyPolicy.h"
+#include "HomeKeyIdentification.h"
 #include <atomic>
 #include <mutex>
 #include <deque>
@@ -39,6 +40,7 @@ int xQueueReceive(void* ptr,TestEvent* e,int) {
     auto& q=*static_cast<std::deque<TestEvent>*>(ptr);
     if(q.empty())return 0;*e=q.front();q.pop_front();return pdTRUE;
 }
+template<typename T> int xQueueReceive(void*,T*,int){return 0;}
 int xQueueSend(void* ptr,const TestEvent* e,int) {static_cast<std::deque<TestEvent>*>(ptr)->push_back(*e);return pdTRUE;}
 uint32_t millis() {return 100;}
 #define logInfoP(...) ((void)0)
@@ -58,6 +60,19 @@ struct {bool running=true;bool active()const{return running;}}openknxNfc;
 struct Provisioning {void begin(){}void poll(){}};
 class HomeKeyModule {
 public:
+    struct NfcDiagnostic
+    {
+        std::array<uint8_t, 64> response{};
+        std::array<uint8_t, 14> version{};
+        HomeKey::CardVersionDiagnostic versionDiagnostic{};
+        size_t responseLength = 0;
+        uint16_t status = 0;
+        bool exchanged = false;
+        bool versionAttempted = false;
+        bool versionValid = false;
+    };
+    void* diagnostics=nullptr;
+    HomeKeyIdentification identification;
     using Event=TestEvent;
     struct Store {
         bool healthy=true;uint32_t generation=1;std::recursive_mutex mutex;
@@ -106,6 +121,12 @@ int main(){
     }
     reset();{
         HomeKeyModule m;m.loop();openknxNfc.running=false;TestEvent e;m.enqueue(e);assert(m.queue.empty());openknxNfc.running=true;
+    }
+    reset();{
+        HomeKeyModule m;ParamHK_Enabled=true;m.loop();m.identification.start(9,100);
+        TestEvent e;e.kind=EventKind::Authenticated;m.enqueue(e);m.loop();
+        assert(openknxAccessControl.hk==0&&m.queue.empty());
+        m.policyLoaded=false;m.loop();assert(!m.identification.active(100)); // Download cancels identification.
     }
     std::cout<<"Actual HomeKey loop: optional HAP task only, UID policy, fault handling and stale authentication rejection passed\n";
 }
