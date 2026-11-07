@@ -11,6 +11,7 @@ node test/nfc_management/ets_test.cjs
 node test/nfc_management/jscript_test.cjs
 python3 test/nfc_management/backend_test.py
 python3 test/nfc_management/commissioning_test.py
+python3 test/nfc_management/download_test.py
 python3 test/nfc_management/xml_test.py
 python3 test/nfc_management/producer_test.py /path/to/OpenKNXproducer
 ```
@@ -85,6 +86,18 @@ Parameter scripts are embedded in the ETS product, not the ESP firmware.
 After changing them, regenerate the knxprod and update the application's scripts
 in the ETS project using that product. Flashing the ESP alone cannot replace
 the script already stored in the ETS project.
+
+All stored HomeKey policy flags and all 16 permission slots use
+`LegacyPatchAlways="true"`. The selected operation, slot and access type are
+editor state; they must not decide which permissions reach the device. In
+particular, issuer/endpoint controls appear only in `anlegen`, but their values
+must also download from `anlernen`, `ändern`, `löschen`, or another selected slot.
+`download_test.py` checks coverage and unchanged memory offsets; pass a generated
+debug XML path to check that the producer preserves the attributes as well.
+After updating the ETS product, download from each operation with two enabled
+devices in different slots and verify both still authenticate. Also check that
+disabling one slot and downloading from another slot revokes the disabled slot.
+The actual ETS download round trip requires hardware testing.
 
 The bulk-deletion control explicitly says Alle UID-Tags löschen? and appears
 only for UID-Tag. It clears UID records, not HomeKey keys, permission slots or

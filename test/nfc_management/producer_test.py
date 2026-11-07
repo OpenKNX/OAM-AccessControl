@@ -51,6 +51,8 @@ with tempfile.TemporaryDirectory(prefix='nfc-producer-compat-') as temporary:
     assert '- Integrity of script methods... OK' in result.stdout, result.stdout
     assert 'due to check errors' not in result.stdout, result.stdout
     xml = E.parse(temporary / 'src/AccessControl.debug.xml').getroot()
+    subprocess.run([sys.executable, str(root / 'test/nfc_management/download_test.py'),
+                    str(temporary / 'src/AccessControl.debug.xml')], check=True)
     ids = Counter(node.attrib['Id'] for node in xml.iter() if 'Id' in node.attrib)
     assert not [id for id, count in ids.items() if count > 1]
     blocks = [node for node in xml.iter(ns + 'ParameterBlock') if node.attrib.get('Text') == 'NFC-Scanner']
