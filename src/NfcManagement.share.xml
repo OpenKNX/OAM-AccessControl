@@ -1039,16 +1039,16 @@
                         </Columns>
                           <choose ParamRefId="%AID%_P-2000037_R-200003701">
                           <when test="0">
-                            <Button Id="%AID%_B-2920001" Text="Anlernen" Cell="1,2" Name="enrollNfc" EventHandler="NFCUI_enrollUid" EventHandlerOnline="ConnectionOriented" />
+                            <Button Id="%AID%_B-%TT%00101" Text="Anlernen" Cell="1,2" Name="enrollNfc" EventHandler="NFCUI_enrollUid" EventHandlerOnline="ConnectionOriented" />
                           </when>
                           <when test="1">
-                            <Button Id="%AID%_B-2920002" Text="Ändern" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" />
+                            <Button Id="%AID%_B-%TT%00102" Text="Ändern" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" />
                           </when>
                           <when test="2">
-                            <Button Id="%AID%_B-2920003" Text="Löschen" Cell="1,2" Name="deleteNfc" EventHandler="NFCUI_deleteUid" EventHandlerOnline="ConnectionOriented" />
+                            <Button Id="%AID%_B-%TT%00103" Text="Löschen" Cell="1,2" Name="deleteNfc" EventHandler="NFCUI_deleteUid" EventHandlerOnline="ConnectionOriented" />
                           </when>
                           <when test="3">
-                            <Button Id="%AID%_B-2920005" Text="Anlegen" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" />
+                            <Button Id="%AID%_B-%TT%00104" Text="Anlegen" Cell="1,2" Name="changeNfc" EventHandler="NFCUI_changeUid" EventHandlerOnline="ConnectionOriented" />
                           </when>
                         </choose>
                       </ParameterBlock>
@@ -1060,7 +1060,7 @@
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="UID-Tag synchronisieren" UIHint="Headline" />
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="Nach jedem Anlernvorgang wird der neue Tag automatisch synchronisiert. Zusätzlich kann hier die Synchronisation eines bestimmten Tags auch manuell angestoßen werden." UIHint="Information" />
                           <ParameterRefRef RefId="%AID%_P-2000033_R-200003301" IndentLevel="2" />
-                          <Button Id="%AID%_B-2930004" Text="Synchronisieren" Name="syncNfc" EventHandler="ACC_syncNfc" EventHandlerOnline="ConnectionOriented" />
+                          <Button Id="%AID%_B-%TT%00105" Text="Synchronisieren" Name="syncNfc" EventHandler="ACC_syncNfc" EventHandlerOnline="ConnectionOriented" />
                         </when>
                       </choose>
 
@@ -1070,7 +1070,7 @@
                       <choose ParamRefId="%AID%_P-2000035_R-200003501">
                         <when test="1">
                           <ParameterSeparator Id="%AID%_PS-nnn" Text="Wenn Sie diese Funktion ausführen, werden alle gespeicherten UID-Tags (keine HomeKey-Geräte) gelöscht und müssen neu angelernt werden." UIHint="Error" />
-                          <Button Id="%AID%_B-292007" Text="Jetzt löschen" Name="resetNfcScanner" EventHandler="NFCUI_resetUid" EventHandlerOnline="ConnectionOriented" />
+                          <Button Id="%AID%_B-%TT%00106" Text="Jetzt löschen" Name="resetNfcScanner" EventHandler="NFCUI_resetUid" EventHandlerOnline="ConnectionOriented" />
                         </when>
                       </choose>
 

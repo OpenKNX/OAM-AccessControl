@@ -10,9 +10,12 @@ Validation:
 node test/nfc_management/ets_test.cjs
 python3 test/nfc_management/backend_test.py
 python3 test/nfc_management/xml_test.py
+python3 test/nfc_management/producer_test.py /path/to/OpenKNXproducer
 ```
 
 `xml_test.py` requires a freshly generated `src/AccessControl.debug.xml`.
+`producer_test.py` checks ID uniqueness and function-warning suppression with an
+older AccessControl editor lacking the new NFC block-name marker.
 HomeKey's native store/online tests and ETS script tests additionally cover the
 revocation schema, migration, NVS failure, DDK pointer lifetime, identification
 expiry/cancellation and deletion acknowledgement. Existing lifecycle/UID tests

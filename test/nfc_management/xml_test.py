@@ -3,7 +3,11 @@ from pathlib import Path
 import re, subprocess, xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[2]
 ns='{http://knx.org/xml/project/20}'
+# Guard the entire document, including IDs copied from legacy editor fragments.
+from collections import Counter
 xml=E.parse(root/'src/AccessControl.debug.xml').getroot()
+id_counts=Counter(n.attrib['Id'] for n in xml.iter() if 'Id' in n.attrib)
+assert not [id for id,count in id_counts.items() if count>1], 'Duplicate expanded ETS IDs'
 parameters={p.attrib['Name']:p for p in xml.iter(ns+'Parameter')}
 refs={p.attrib['RefId']:p.attrib['Id'] for p in xml.iter(ns+'ParameterRef')}
 blocks=list(xml.iter(ns+'ParameterBlock'))

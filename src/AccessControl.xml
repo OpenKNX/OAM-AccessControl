@@ -11,6 +11,12 @@
   <op:config name="%NET_WifiTool%" value="1" />
 
   <op:nowarn id="1" regex="ACC_ApplicationVersion" />
+  <!-- These helpers are called by script handlers or retained for older ETS button bindings. -->
+  <op:nowarn id="3" regex="HK_(setOnlineStatus|call|requireOk|wait|status|statusText|run|hex|readEndpoints|importEndpoints|authorizationFields|deleteAuthorization([0-9]{2})?|nfcAssignmentInfo)\b" />
+  <op:nowarn id="3" regex="NFCUI_(parameter|value|status|rows|validate|input|uidWrite|selected|identity|search)\b" />
+  <op:nowarn id="3" regex="ACC_(enrollNfc|changeNfc|deleteNfc|resetNfcScanner)\b" />
+  <!-- The producer also detects anonymous JavaScript callbacks as an empty function name. -->
+  <op:nowarn id="3" regex="Function with name  was never called from xml" />
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
@@ -163,12 +169,12 @@
         <op:include href="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="UCT" />
         <Channel Id="%AID%_CH-ACC" Name="BasicChannel" Number="ACC" Text="Zutrittskontrolle" Icon="shield-lock-outline" HelpContext="ACC-Dokumentation">
           <ParameterBlock Id="%AID%_PB-nnn" Name="Basic" Text="Allgemein" Icon="cog-outline" HelpContext="ACC-Dokumentation" ShowInComObjectTree="true">
-            <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/ParameterBlock[@Name='Basic']/*[not(self::choose[when/ParameterBlock[@Name='NfcScanner']])]" prefix="ACC" />
+            <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/ParameterBlock[@Name='Basic']/*[not(contains(@ParamRefId, '000034'))]" prefix="ACC" />
             <choose ParamRefId="%AID%_UP-2000034_R-200003401"><when test="!=0">
               <op:include href="NfcManagement.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="NFCUI" />
             </when></choose>
           </ParameterBlock>
-          <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*[not(self::ParameterBlock[@Name='Basic'])]" prefix="ACC" />
+          <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*[not(@Name='Basic')]" prefix="ACC" />
           <choose ParamRefId="%AID%_UP-2000034_R-200003401">
             <when test="!=0">
               <op:include href="../lib/OFM-HomeKey/src/HomeKey.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*" prefix="HK" />
