@@ -9,7 +9,9 @@ xml=E.parse(root/'src/AccessControl.debug.xml').getroot()
 id_counts=Counter(n.attrib['Id'] for n in xml.iter() if 'Id' in n.attrib)
 assert not [id for id,count in id_counts.items() if count>1], 'Duplicate expanded ETS IDs'
 parameters={p.attrib['Name']:p for p in xml.iter(ns+'Parameter')}
-refs={p.attrib['RefId']:p.attrib['Id'] for p in xml.iter(ns+'ParameterRef')}
+refs={}
+for reference in xml.iter(ns+'ParameterRef'):
+ refs.setdefault(reference.attrib['RefId'],reference.attrib['Id'])
 blocks=list(xml.iter(ns+'ParameterBlock'))
 assert len([b for b in blocks if b.attrib.get('Text')=='NFC-Scanner'])==1
 assert not any(re.fullmatch(r'Berechtigung \d+',b.attrib.get('Text','')) for b in blocks)
@@ -40,3 +42,56 @@ new=(root/'include/knxprod.h').read_text()
 def definitions(text):return {m[0]:m[1].strip() for m in re.findall(r'^#define ((?:HK|ACC|NFCACT)_\w+)\s+([^\n]+)',text,re.M)}
 assert definitions(old)==definitions(new)
 print('Unified ETS layout, live dependencies, object visibility and unchanged firmware memory offsets passed')
+
+# The shared operation dropdown must expose only the selected credential workflow.
+reference_defs={node.attrib['Id']:node for node in xml.iter(ns+'ParameterRef')}
+parameter_defs={node.attrib['Id']:node for node in xml.iter(ns+'Parameter')}
+def visible(node, values):
+ if node.tag==ns+'choose':
+  reference=reference_defs[node.attrib['ParamRefId']]
+  parameter=parameter_defs[reference.attrib['RefId']]
+  value=int(values.get(parameter.attrib['Name'],reference.attrib.get('Value',parameter.attrib.get('Value','0'))))
+  selected=[]
+  for branch in node:
+   test=branch.attrib['test']
+   if test.startswith('!='):matches=value!=int(test[2:])
+   elif test.startswith('>='):matches=value>=int(test[2:])
+   else:matches=str(value) in test.split()
+   if matches:selected.extend(item for child in branch for item in visible(child,values))
+  return selected
+ return [node]+[item for child in node for item in visible(child,values)]
+
+def refnames(nodes):
+ return {parameter_defs[reference_defs[n.attrib['RefId']].attrib['RefId']].attrib['Name'] for n in nodes if n.tag==ns+'ParameterRefRef'}
+operation_ref=refs[parameters['ACC_NfcEdit'].attrib['Id']]
+operation_type=next(t for t in xml.iter(ns+'ParameterType') if t.attrib['Id']==parameters['ACC_NfcEdit'].attrib['ParameterType'])
+assert operation_type.find(ns+'TypeRestriction').attrib['UIHint']=='DropDown'
+assert all(len(b.attrib['Text'])<=20 for b in nfc.iter(ns+'Button'))
+for kind in (0,1):
+ for operation in range(4):
+  for slot in (1,16):
+   nodes=visible(nfc,{'NFCUI_Type':kind,'ACC_NfcEdit':operation,'NFCUI_Slot':slot,'HK_Enabled':1,'HK_EtsAuthorization':1})
+   assert sum(n.tag==ns+'ParameterRefRef' and n.attrib['RefId']==operation_ref for n in nodes)==1
+   handlers={n.attrib['EventHandler'] for n in nodes if n.tag==ns+'Button'}
+   if not kind:
+    expected={0:'NFCUI_enrollUid',1:'NFCUI_changeUid',2:'NFCUI_deleteUid',3:'NFCUI_changeUid'}[operation]
+    assert expected in handlers and not (handlers & {'NFCUI_identify','NFCUI_import','NFCUI_deleteHomeKey','NFCUI_restoreHomeKey'})
+    continue
+   expected={0:{'NFCUI_identify','NFCUI_restoreHomeKey','NFCUI_checkHomeKey'},1:{'NFCUI_checkHomeKey'},2:{'NFCUI_deleteHomeKey'},3:{'NFCUI_import','NFCUI_checkHomeKey'}}[operation]
+   assert handlers==expected|{'NFCUI_refresh'},(operation,handlers)
+   fields=refnames(nodes)
+   prefix=f'HK_Authorization{slot:02}'
+   assert (prefix+'Enabled' in fields)==(operation!=2)
+   assert (prefix+'Issuer' in fields)==(operation==3)
+   assert (prefix+'Endpoint' in fields)==(operation==3)
+   assert prefix+'Description' in fields and prefix+'AccessId' in fields
+   other='HK_Authorization'+('16' if slot==1 else '01')
+   assert not any(name.startswith(other) for name in fields)
+   if operation==2:
+    for node in nodes:
+     if node.tag!=ns+'ParameterRefRef':continue
+     reference=reference_defs[node.attrib['RefId']]
+     name=parameter_defs[reference.attrib['RefId']].attrib['Name']
+     if name in (prefix+'Description',prefix+'AccessId'):assert reference.attrib['Access']=='Read'
+assert not any('Geräte-IDs können mit der ETS-Schaltfläche importiert werden.' in n.attrib.get('Text','') for n in xml.iter())
+print('Compact NFC editor: shared dropdown, operation/slot visibility, read-only deletion and short buttons passed')

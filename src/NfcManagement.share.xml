@@ -38,12 +38,12 @@
 </ParameterTypes>
 <Parameters>
 <Parameter Id="%AID%_P-%TT%00001" Name="Type" ParameterType="%AID%_PT-NfcUiType" Text="Zugangstyp" Value="0" />
-<Parameter Id="%AID%_P-%TT%00002" Name="Slot" ParameterType="%AID%_PT-NfcUiSlot" Text="HomeKey-Speicherplatz" Value="1" />
+<Parameter Id="%AID%_P-%TT%00002" Name="Slot" ParameterType="%AID%_PT-NfcUiSlot" Text="HomeKey-Platz" Value="1" />
 <Parameter Id="%AID%_P-%TT%00003" Name="Filter" ParameterType="%AID%_PT-NfcUiFilter" Text="Anzeige" Value="0" />
 <Parameter Id="%AID%_P-%TT%00004" Name="Search" ParameterType="%AID%_PT-NfcUiSearch" Text="Suche (ID / Bezeichnung / Geräte-ID)" Value="" />
 <Parameter Id="%AID%_P-%TT%00005" Name="Page" ParameterType="%AID%_PT-NfcUiPage" Text="Seite (10 Einträge)" Value="1" />
 <Parameter Id="%AID%_P-%TT%00006" Name="Snapshot" ParameterType="%AID%_PT-NfcUiText" Text="UID-Snapshot" Value="Noch nicht eingelesen" />
-<Parameter Id="%AID%_P-%TT%00007" Name="Status" ParameterType="%AID%_PT-NfcUiText" Text="Vorgang" Value="" />
+<Parameter Id="%AID%_P-%TT%00007" Name="Status" ParameterType="%AID%_PT-NfcUiText" Text="Status" Value="" />
 <Parameter Id="%AID%_P-%TT%00008" Name="Summary" ParameterType="%AID%_PT-NfcUiText" Text="Übersicht" Value="" />
 <Parameter Id="%AID%_P-%TT%00009" Name="Cache0" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
 <Parameter Id="%AID%_P-%TT%00010" Name="Cache1" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
@@ -207,6 +207,38 @@
 <ParameterRef Id="%AID%_P-%TT%00082_R-%TT%0008201" RefId="%AID%_P-%TT%00082" Access="Read" />
 <ParameterRef Id="%AID%_P-%TT%00083_R-%TT%0008301" RefId="%AID%_P-%TT%00083" Access="Read" />
 <ParameterRef Id="%AID%_P-%TT%00084_R-%TT%0008401" RefId="%AID%_P-%TT%00084" Access="Read" />
+<ParameterRef Id="%AID%_P-7000500_R-700050002" RefId="%AID%_P-7000500" Access="Read" />
+<ParameterRef Id="%AID%_P-7000103_R-700010302" RefId="%AID%_P-7000103" Access="Read" />
+<ParameterRef Id="%AID%_P-7000501_R-700050102" RefId="%AID%_P-7000501" Access="Read" />
+<ParameterRef Id="%AID%_P-7000107_R-700010702" RefId="%AID%_P-7000107" Access="Read" />
+<ParameterRef Id="%AID%_P-7000502_R-700050202" RefId="%AID%_P-7000502" Access="Read" />
+<ParameterRef Id="%AID%_P-7000111_R-700011102" RefId="%AID%_P-7000111" Access="Read" />
+<ParameterRef Id="%AID%_P-7000503_R-700050302" RefId="%AID%_P-7000503" Access="Read" />
+<ParameterRef Id="%AID%_P-7000115_R-700011502" RefId="%AID%_P-7000115" Access="Read" />
+<ParameterRef Id="%AID%_P-7000504_R-700050402" RefId="%AID%_P-7000504" Access="Read" />
+<ParameterRef Id="%AID%_P-7000119_R-700011902" RefId="%AID%_P-7000119" Access="Read" />
+<ParameterRef Id="%AID%_P-7000505_R-700050502" RefId="%AID%_P-7000505" Access="Read" />
+<ParameterRef Id="%AID%_P-7000123_R-700012302" RefId="%AID%_P-7000123" Access="Read" />
+<ParameterRef Id="%AID%_P-7000506_R-700050602" RefId="%AID%_P-7000506" Access="Read" />
+<ParameterRef Id="%AID%_P-7000127_R-700012702" RefId="%AID%_P-7000127" Access="Read" />
+<ParameterRef Id="%AID%_P-7000507_R-700050702" RefId="%AID%_P-7000507" Access="Read" />
+<ParameterRef Id="%AID%_P-7000131_R-700013102" RefId="%AID%_P-7000131" Access="Read" />
+<ParameterRef Id="%AID%_P-7000508_R-700050802" RefId="%AID%_P-7000508" Access="Read" />
+<ParameterRef Id="%AID%_P-7000135_R-700013502" RefId="%AID%_P-7000135" Access="Read" />
+<ParameterRef Id="%AID%_P-7000509_R-700050902" RefId="%AID%_P-7000509" Access="Read" />
+<ParameterRef Id="%AID%_P-7000139_R-700013902" RefId="%AID%_P-7000139" Access="Read" />
+<ParameterRef Id="%AID%_P-7000510_R-700051002" RefId="%AID%_P-7000510" Access="Read" />
+<ParameterRef Id="%AID%_P-7000143_R-700014302" RefId="%AID%_P-7000143" Access="Read" />
+<ParameterRef Id="%AID%_P-7000511_R-700051102" RefId="%AID%_P-7000511" Access="Read" />
+<ParameterRef Id="%AID%_P-7000147_R-700014702" RefId="%AID%_P-7000147" Access="Read" />
+<ParameterRef Id="%AID%_P-7000512_R-700051202" RefId="%AID%_P-7000512" Access="Read" />
+<ParameterRef Id="%AID%_P-7000151_R-700015102" RefId="%AID%_P-7000151" Access="Read" />
+<ParameterRef Id="%AID%_P-7000513_R-700051302" RefId="%AID%_P-7000513" Access="Read" />
+<ParameterRef Id="%AID%_P-7000155_R-700015502" RefId="%AID%_P-7000155" Access="Read" />
+<ParameterRef Id="%AID%_P-7000514_R-700051402" RefId="%AID%_P-7000514" Access="Read" />
+<ParameterRef Id="%AID%_P-7000159_R-700015902" RefId="%AID%_P-7000159" Access="Read" />
+<ParameterRef Id="%AID%_P-7000515_R-700051502" RefId="%AID%_P-7000515" Access="Read" />
+<ParameterRef Id="%AID%_P-7000163_R-700016302" RefId="%AID%_P-7000163" Access="Read" />
 </ParameterRefs>
 <ParameterCalculations>
 <ParameterCalculation Id="%AID%_PC-%TT%00001" Name="NFCUI_Overview" Language="JavaScript" LRTransformationFunc="BASE_Nop" RLTransformationFunc="NFCUI_calculate">
@@ -1010,10 +1042,10 @@
 <ParameterBlock Id="%AID%_PB-nnn" Name="NfcScanner" Text="NFC-Scanner" Icon="nfc-variant" ShowInComObjectTree="true">
 <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag-ID verbindet eine UID bzw. ein HomeKey-Gerät mit den Aktionen im NFC-Tab. Beispiel: NFC-Tag-ID 100 → Tag 100 / Aktion 1. Mehrere Aktionen für denselben Tag sind erlaubt. Beim Löschen bleiben Aktionszuordnungen bestehen; bei Wiederverwendung der ID gelten diese auch für das neue Gerät." UIHint="Information" />
 <ParameterRefRef RefId="%AID%_P-%TT%00001_R-%TT%0000101" />
+<ParameterRefRef RefId="%AID%_P-2000037_R-200003701" IndentLevel="1" />
 <choose ParamRefId="%AID%_P-%TT%00001_R-%TT%0000101">
 <when test="0">
 <ParameterSeparator Id="%AID%_PS-nnn" Text="NFC-Tag bearbeiten" UIHint="Headline" />
-                      <ParameterRefRef RefId="%AID%_P-2000037_R-200003701" IndentLevel="1" />
                       <choose ParamRefId="%AID%_P-2000037_R-200003701">
                         <when test="0">
                           <ParameterRefRef RefId="%AID%_P-2000032_R-200003201" IndentLevel="2" />
@@ -1088,191 +1120,301 @@
 <when test="1">
 <choose ParamRefId="%AID%_UP-7000004_R-700000401">
 <when test="1">
-<ParameterSeparator Id="%AID%_PS-nnn" Text="HomeKey-Geräte" UIHint="Headline" />
-<Button Id="%AID%_B-%TT%00001" Name="NFCUI_import" Text="HomeKey-Geräte aus Reader einlesen" HelpContext="HK-Importieren" EventHandler="NFCUI_import" EventHandlerOnline="ConnectionOriented" />
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Bereits gekoppelte Geräte einlesen oder Issuer- und Endpoint-ID manuell eintragen. Neue Einträge bleiben deaktiviert." UIHint="Information" />
+<Button Id="%AID%_B-%TT%00001" Name="NFCUI_import" Text="Geräte einlesen" HelpContext="HK-Importieren" EventHandler="NFCUI_import" EventHandlerOnline="ConnectionOriented" />
+</when></choose>
 <ParameterRefRef RefId="%AID%_P-%TT%00002_R-%TT%0000201" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Anlernen identifiziert ein bereits gekoppeltes iPhone / eine Watch, ohne eine Zutrittsaktion auszuführen. Namen werden manuell vergeben. Änderungen der Berechtigung werden erst mit dem Parameterdownload wirksam." UIHint="Information" />
-<Button Id="%AID%_B-%TT%00002" Name="NFCUI_identify" Text="Anlernen / Gerät durch Scan identifizieren (Prog-Modus)" HelpContext="HK-Bezeichnung" EventHandler="NFCUI_identify" EventHandlerOnline="ConnectionOriented" />
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="1">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Programmiermodus und NFC-Inbetriebnahme freigeben, dann iPhone oder Watch scannen. Dabei wird keine Zutrittsaktion ausgelöst." UIHint="Information" />
+<Button Id="%AID%_B-%TT%00002" Name="NFCUI_identify" Text="Gerät scannen" HelpContext="HK-Bezeichnung" EventHandler="NFCUI_identify" EventHandlerOnline="ConnectionOriented" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Bezeichnung, NFC-Tag-ID und Berechtigung bearbeiten. Änderungen werden mit dem Parameterdownload wirksam." UIHint="Information" />
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="1">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000500_R-700050001" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000100_R-700010001" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000103_R-700010301" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000101_R-700010101" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000102_R-700010201" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000500_R-700050002" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000103_R-700010302" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="2">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="2">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000501_R-700050101" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000104_R-700010401" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000107_R-700010701" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000105_R-700010501" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000106_R-700010601" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000501_R-700050102" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000107_R-700010702" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="3">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="3">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000502_R-700050201" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000108_R-700010801" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000111_R-700011101" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000109_R-700010901" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000110_R-700011001" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000502_R-700050202" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000111_R-700011102" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="4">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="4">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000503_R-700050301" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000112_R-700011201" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000115_R-700011501" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000113_R-700011301" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000114_R-700011401" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000503_R-700050302" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000115_R-700011502" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="5">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="5">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000504_R-700050401" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000116_R-700011601" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000119_R-700011901" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000117_R-700011701" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000118_R-700011801" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000504_R-700050402" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000119_R-700011902" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="6">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="6">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000505_R-700050501" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000120_R-700012001" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000123_R-700012301" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000121_R-700012101" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000122_R-700012201" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000505_R-700050502" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000123_R-700012302" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="7">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="7">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000506_R-700050601" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000124_R-700012401" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000127_R-700012701" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000125_R-700012501" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000126_R-700012601" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000506_R-700050602" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000127_R-700012702" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="8">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="8">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000507_R-700050701" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000128_R-700012801" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000131_R-700013101" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000129_R-700012901" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000130_R-700013001" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000507_R-700050702" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000131_R-700013102" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="9">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="9">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000508_R-700050801" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000132_R-700013201" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000135_R-700013501" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000133_R-700013301" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000134_R-700013401" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000508_R-700050802" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000135_R-700013502" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="10">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="10">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000509_R-700050901" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000136_R-700013601" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000139_R-700013901" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000137_R-700013701" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000138_R-700013801" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000509_R-700050902" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000139_R-700013902" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="11">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="11">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000510_R-700051001" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000140_R-700014001" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000143_R-700014301" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000141_R-700014101" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000142_R-700014201" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000510_R-700051002" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000143_R-700014302" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="12">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="12">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000511_R-700051101" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000144_R-700014401" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000147_R-700014701" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000145_R-700014501" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000146_R-700014601" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000511_R-700051102" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000147_R-700014702" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="13">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="13">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000512_R-700051201" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000148_R-700014801" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000151_R-700015101" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000149_R-700014901" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000150_R-700015001" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000512_R-700051202" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000151_R-700015102" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="14">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="14">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000513_R-700051301" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000152_R-700015201" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000155_R-700015501" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000153_R-700015301" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000154_R-700015401" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000513_R-700051302" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000155_R-700015502" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="15">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="15">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000514_R-700051401" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000156_R-700015601" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000159_R-700015901" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000157_R-700015701" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000158_R-700015801" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000514_R-700051402" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000159_R-700015902" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201">
-<when test="16">
+</when></choose>
+<choose ParamRefId="%AID%_P-%TT%00002_R-%TT%0000201"><when test="16">
 <ParameterBlock Id="%AID%_PB-nnn" Inline="true">
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
 <ParameterRefRef RefId="%AID%_P-7000515_R-700051501" HelpContext="HK-Bezeichnung" />
 <ParameterRefRef RefId="%AID%_P-7000160_R-700016001" HelpContext="HK-Berechtigung-Aktiv" />
 <ParameterRefRef RefId="%AID%_P-7000163_R-700016301" HelpContext="HK-Aktions-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="3">
 <ParameterRefRef RefId="%AID%_P-7000161_R-700016101" HelpContext="HK-Issuer-ID" />
 <ParameterRefRef RefId="%AID%_P-7000162_R-700016201" HelpContext="HK-Endpoint-ID" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterRefRef RefId="%AID%_P-7000515_R-700051502" HelpContext="HK-Bezeichnung" />
+<ParameterRefRef RefId="%AID%_P-7000163_R-700016302" HelpContext="HK-Aktions-ID" />
+</when></choose>
 </ParameterBlock>
-</when>
-</choose>
-<Button Id="%AID%_B-%TT%00003" Name="NFCUI_checkHomeKey" Text="Anlegen / Ändern prüfen" EventHandler="NFCUI_checkHomeKey" EventHandlerOnline="ConnectionOriented" />
-<Button Id="%AID%_B-%TT%00004" Name="NFCUI_deleteHomeKey" Text="Gerät löschen und Speicherplatz leeren (Prog-Modus)" HelpContext="HK-Geraet-Entfernen" EventHandler="NFCUI_deleteHomeKey" EventHandlerOnline="ConnectionOriented" />
-<Button Id="%AID%_B-%TT%00005" Name="NFCUI_restoreHomeKey" Text="Gesperrtes Gerät erneut zulassen (Prog-Modus)" HelpContext="HK-Geraet-Entfernen" EventHandler="NFCUI_restoreHomeKey" EventHandlerOnline="ConnectionOriented" />
-<ParameterSeparator Id="%AID%_PS-nnn" Text="Löschen entfernt die Geräteschlüssel im Reader und sperrt diese Geräte-ID dauerhaft. Der Schlüssel bleibt ggf. in Apple Wallet. Andere Geräte desselben Haushalts bleiben erhalten. Erneut zulassen hebt nur die Sperre auf; Berechtigung prüfen und Parameter herunterladen." UIHint="Information" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0 1 3">
+<Button Id="%AID%_B-%TT%00003" Name="NFCUI_checkHomeKey" Text="Zuordnung prüfen" EventHandler="NFCUI_checkHomeKey" EventHandlerOnline="ConnectionOriented" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="0">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Ein gesperrtes Gerät erst scannen und anschließend ausdrücklich erneut zulassen. Dies aktiviert keine Berechtigung." UIHint="Information" />
+<Button Id="%AID%_B-%TT%00005" Name="NFCUI_restoreHomeKey" Text="Erneut zulassen" HelpContext="HK-Geraet-Entfernen" EventHandler="NFCUI_restoreHomeKey" EventHandlerOnline="ConnectionOriented" />
+</when></choose>
+<choose ParamRefId="%AID%_P-2000037_R-200003701"><when test="2">
+<ParameterSeparator Id="%AID%_PS-nnn" Text="Löschen entfernt die Geräteschlüssel, sperrt das Gerät und leert den Platz. Der Wallet-Eintrag und Aktionszuordnungen bleiben bestehen. Programmiermodus einschalten." UIHint="Information" />
+<Button Id="%AID%_B-%TT%00004" Name="NFCUI_deleteHomeKey" Text="Gerät löschen" HelpContext="HK-Geraet-Entfernen" EventHandler="NFCUI_deleteHomeKey" EventHandlerOnline="ConnectionOriented" />
+</when></choose>
 </when>
 <when test="0">
 <ParameterSeparator Id="%AID%_PS-nnn" Text="ETS-Berechtigungstabelle unter Apple Home Key aktivieren." UIHint="Information" />
@@ -1300,7 +1442,7 @@
                       </choose>
 <ParameterRefRef RefId="%AID%_P-%TT%00007_R-%TT%0000701" />
 <ParameterSeparator Id="%AID%_PS-nnn" Text="Zugänge und Aktionszuordnungen" UIHint="Headline" />
-<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="UID-Snapshot aus Reader aktualisieren" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" />
+<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="UID-Tags einlesen" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" />
 <ParameterRefRef RefId="%AID%_P-%TT%00006_R-%TT%0000601" />
 <ParameterSeparator Id="%AID%_PS-nnn" Text="HomeKey und Aktionen: aktueller ETS-Entwurf, noch nicht zwingend im Gerät. UID-Tags: letzter vollständiger Reader-Snapshot; nach Änderungen durch USB, KNX oder andere Projekte erneut einlesen." UIHint="Information" />
 <ParameterRefRef RefId="%AID%_P-%TT%00003_R-%TT%0000301" />

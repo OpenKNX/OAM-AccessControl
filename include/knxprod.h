@@ -4407,7 +4407,7 @@
 #define ParamHK_AllowUid                            ((bool)(knx.paramByte(HK_AllowUid) & HK_AllowUidMask))
 // Berechtigungen aus ETS-Tabelle (sonst USB)
 #define ParamHK_EtsAuthorization                    ((bool)(knx.paramByte(HK_EtsAuthorization) & HK_EtsAuthorizationMask))
-// Berechtigung 1 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization01Enabled              ((bool)(knx.paramByte(HK_Authorization01Enabled) & HK_Authorization01EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization01Issuer               (knx.paramData(HK_Authorization01Issuer))
@@ -4417,7 +4417,7 @@
 #define ParamHK_Authorization01EndpointStr          (knx.paramString(HK_Authorization01Endpoint, HK_Authorization01EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization01AccessId             (knx.paramWord(HK_Authorization01AccessId))
-// Berechtigung 2 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization02Enabled              ((bool)(knx.paramByte(HK_Authorization02Enabled) & HK_Authorization02EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization02Issuer               (knx.paramData(HK_Authorization02Issuer))
@@ -4427,7 +4427,7 @@
 #define ParamHK_Authorization02EndpointStr          (knx.paramString(HK_Authorization02Endpoint, HK_Authorization02EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization02AccessId             (knx.paramWord(HK_Authorization02AccessId))
-// Berechtigung 3 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization03Enabled              ((bool)(knx.paramByte(HK_Authorization03Enabled) & HK_Authorization03EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization03Issuer               (knx.paramData(HK_Authorization03Issuer))
@@ -4437,7 +4437,7 @@
 #define ParamHK_Authorization03EndpointStr          (knx.paramString(HK_Authorization03Endpoint, HK_Authorization03EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization03AccessId             (knx.paramWord(HK_Authorization03AccessId))
-// Berechtigung 4 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization04Enabled              ((bool)(knx.paramByte(HK_Authorization04Enabled) & HK_Authorization04EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization04Issuer               (knx.paramData(HK_Authorization04Issuer))
@@ -4447,7 +4447,7 @@
 #define ParamHK_Authorization04EndpointStr          (knx.paramString(HK_Authorization04Endpoint, HK_Authorization04EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization04AccessId             (knx.paramWord(HK_Authorization04AccessId))
-// Berechtigung 5 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization05Enabled              ((bool)(knx.paramByte(HK_Authorization05Enabled) & HK_Authorization05EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization05Issuer               (knx.paramData(HK_Authorization05Issuer))
@@ -4457,7 +4457,7 @@
 #define ParamHK_Authorization05EndpointStr          (knx.paramString(HK_Authorization05Endpoint, HK_Authorization05EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization05AccessId             (knx.paramWord(HK_Authorization05AccessId))
-// Berechtigung 6 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization06Enabled              ((bool)(knx.paramByte(HK_Authorization06Enabled) & HK_Authorization06EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization06Issuer               (knx.paramData(HK_Authorization06Issuer))
@@ -4467,7 +4467,7 @@
 #define ParamHK_Authorization06EndpointStr          (knx.paramString(HK_Authorization06Endpoint, HK_Authorization06EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization06AccessId             (knx.paramWord(HK_Authorization06AccessId))
-// Berechtigung 7 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization07Enabled              ((bool)(knx.paramByte(HK_Authorization07Enabled) & HK_Authorization07EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization07Issuer               (knx.paramData(HK_Authorization07Issuer))
@@ -4477,7 +4477,7 @@
 #define ParamHK_Authorization07EndpointStr          (knx.paramString(HK_Authorization07Endpoint, HK_Authorization07EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization07AccessId             (knx.paramWord(HK_Authorization07AccessId))
-// Berechtigung 8 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization08Enabled              ((bool)(knx.paramByte(HK_Authorization08Enabled) & HK_Authorization08EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization08Issuer               (knx.paramData(HK_Authorization08Issuer))
@@ -4487,7 +4487,7 @@
 #define ParamHK_Authorization08EndpointStr          (knx.paramString(HK_Authorization08Endpoint, HK_Authorization08EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization08AccessId             (knx.paramWord(HK_Authorization08AccessId))
-// Berechtigung 9 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization09Enabled              ((bool)(knx.paramByte(HK_Authorization09Enabled) & HK_Authorization09EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization09Issuer               (knx.paramData(HK_Authorization09Issuer))
@@ -4497,7 +4497,7 @@
 #define ParamHK_Authorization09EndpointStr          (knx.paramString(HK_Authorization09Endpoint, HK_Authorization09EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization09AccessId             (knx.paramWord(HK_Authorization09AccessId))
-// Berechtigung 10 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization10Enabled              ((bool)(knx.paramByte(HK_Authorization10Enabled) & HK_Authorization10EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization10Issuer               (knx.paramData(HK_Authorization10Issuer))
@@ -4507,7 +4507,7 @@
 #define ParamHK_Authorization10EndpointStr          (knx.paramString(HK_Authorization10Endpoint, HK_Authorization10EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization10AccessId             (knx.paramWord(HK_Authorization10AccessId))
-// Berechtigung 11 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization11Enabled              ((bool)(knx.paramByte(HK_Authorization11Enabled) & HK_Authorization11EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization11Issuer               (knx.paramData(HK_Authorization11Issuer))
@@ -4517,7 +4517,7 @@
 #define ParamHK_Authorization11EndpointStr          (knx.paramString(HK_Authorization11Endpoint, HK_Authorization11EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization11AccessId             (knx.paramWord(HK_Authorization11AccessId))
-// Berechtigung 12 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization12Enabled              ((bool)(knx.paramByte(HK_Authorization12Enabled) & HK_Authorization12EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization12Issuer               (knx.paramData(HK_Authorization12Issuer))
@@ -4527,7 +4527,7 @@
 #define ParamHK_Authorization12EndpointStr          (knx.paramString(HK_Authorization12Endpoint, HK_Authorization12EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization12AccessId             (knx.paramWord(HK_Authorization12AccessId))
-// Berechtigung 13 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization13Enabled              ((bool)(knx.paramByte(HK_Authorization13Enabled) & HK_Authorization13EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization13Issuer               (knx.paramData(HK_Authorization13Issuer))
@@ -4537,7 +4537,7 @@
 #define ParamHK_Authorization13EndpointStr          (knx.paramString(HK_Authorization13Endpoint, HK_Authorization13EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization13AccessId             (knx.paramWord(HK_Authorization13AccessId))
-// Berechtigung 14 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization14Enabled              ((bool)(knx.paramByte(HK_Authorization14Enabled) & HK_Authorization14EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization14Issuer               (knx.paramData(HK_Authorization14Issuer))
@@ -4547,7 +4547,7 @@
 #define ParamHK_Authorization14EndpointStr          (knx.paramString(HK_Authorization14Endpoint, HK_Authorization14EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization14AccessId             (knx.paramWord(HK_Authorization14AccessId))
-// Berechtigung 15 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization15Enabled              ((bool)(knx.paramByte(HK_Authorization15Enabled) & HK_Authorization15EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization15Issuer               (knx.paramData(HK_Authorization15Issuer))
@@ -4557,7 +4557,7 @@
 #define ParamHK_Authorization15EndpointStr          (knx.paramString(HK_Authorization15Endpoint, HK_Authorization15EndpointLength))
 // NFC-Tag-ID
 #define ParamHK_Authorization15AccessId             (knx.paramWord(HK_Authorization15AccessId))
-// Berechtigung 16 aktiv
+// Berechtigung aktiv
 #define ParamHK_Authorization16Enabled              ((bool)(knx.paramByte(HK_Authorization16Enabled) & HK_Authorization16EnabledMask))
 // Issuer-ID (16 Hex-Zeichen)
 #define ParamHK_Authorization16Issuer               (knx.paramData(HK_Authorization16Issuer))
