@@ -7,7 +7,7 @@ function fixture() {
     const parameters = {
         HK_Enabled: { value: 1 }, HK_EtsAuthorization: { value: 1 }, HK_OnlineStatus: { value: '' },
         NFCUI_Slot: { value: 1 }, NFCUI_Status: { value: '' }, NFCUI_Snapshot: { value: '' },
-        NFCUI_Page: { value: 1 }, NFCACT_NfcActionCount: { value: 3 }, ACC_VisibleActions: { value: 2 }
+        NFCUI_Source:{value:1},NFCUI_HomeKeyCache:{value:''},NFCUI_ActionsCache:{value:''},NFCUI_DeviceSnapshotReady:{value:0},NFCUI_Page: { value: 1 }, NFCACT_NfcActionCount: { value: 3 }, ACC_VisibleActions: { value: 2 }
     };
     for (let i=0;i<16;i++) parameters['NFCUI_Cache'+i] = { value: '' };
     for (let row=1;row<=16;row++) for (const [name,value] of Object.entries({
@@ -27,6 +27,17 @@ function fixture() {
     const context = vm.createContext({
         BASE_invokeFunctionPropertyWrapper(object,property,data) {
             assert.equal(property,3); state.calls.push([object,...data]);
+            if(object===160&&data[0]===114){
+                const cursor=data[1]*256+data[2],count=3,next=cursor===count?count:3;
+                let rows=[];if(cursor!==count)for(let i=1;i<=3;i++){let action=parameters['NFCACT_Fa'+i+'ActionId'].value,id=parameters['NFCACT_Fa'+i+'NfcId'].value;rows.push(action>>8,action&255,id>>8,id&255);}
+                return [0,1,0,0,0,1,0,next,rows.length/4,0,count,0,2,1,...rows];
+            }
+            if(object===165&&data[0]===11){
+                const index=data[1],header=[0,1,index,16,7,0,0,0,1];if(index===16)return header;
+                const pre='HK_Authorization'+String(index+1).padStart(2,'0'),issuer=parameters[pre+'Issuer'].value,endpoint=parameters[pre+'Endpoint'].value;
+                const valid=/^[0-9a-f]{16}$/.test(issuer)&&/^[0-9a-f]{12}$/.test(endpoint),id=parameters[pre+'AccessId'].value;
+                return [...header,(valid?10:0)|(parameters[pre+'Enabled'].value?1:0),id>>8,id&255,...(valid?Buffer.from(issuer+endpoint,'hex'):Buffer.alloc(14)),...Buffer.from(parameters[pre+'Description'].value.padEnd(32,'\0'),'latin1')];
+            }
             if (object===160) {
                 assert.equal(data[0],113);
                 const cursor=data[1]*256+data[2];

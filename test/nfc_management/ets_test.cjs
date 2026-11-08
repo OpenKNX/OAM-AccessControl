@@ -3,17 +3,28 @@ vm.runInThisContext(fs.readFileSync('lib/OFM-HomeKey/src/HomeKey.script.js','utf
 vm.runInThisContext(fs.readFileSync('src/NfcManagement.script.js','utf8'));
 let tests=0;
 function test(name,run){run();tests++;console.log('PASS:',name);}
-function input(){let v={HomeKeyEnabled:1,EtsAuthorization:1,Snapshot:'Gelesen: Test',Filter:0,Page:1};for(let i=0;i<16;i++)v['Cache'+i]='';return v;}
+function input(){let v={HomeKeyEnabled:1,EtsAuthorization:1,Snapshot:'Gelesen: Test',Source:1,Filter:0,Page:1};for(let i=0;i<16;i++)v['Cache'+i]='';return v;}
 function hk(v,row,id,enabled=1){let p='Row'+String(row).padStart(2,'0');Object.assign(v,{[p+'Issuer']:'0011223344556677',[p+'Endpoint']:'1122334455'+String(row).padStart(2,'0'),[p+'Enabled']:enabled,[p+'AccessId']:id,[p+'Description']:'Phone '+row});}
 function uid(id,name=''){return id+',11223344000000000000,'+Buffer.from(name,'latin1').toString('hex').padEnd(56,'0')+';';}
 function fixture(){let p={HK_Enabled:{value:1},HK_EtsAuthorization:{value:1},HK_OnlineStatus:{value:''}};
  for(let i=1;i<=16;i++){let pre='HK_Authorization'+String(i).padStart(2,'0');for(let f of ['Issuer','Endpoint','Description','Enabled','AccessId'])p[pre+f]={value:['Enabled','AccessId'].includes(f)?0:''};}
- for(let name of ['Type','Slot','Page','Status','Snapshot',...Array.from({length:16},(_,i)=>'Cache'+i)])p['NFCUI_'+name]={value:name==='Slot'?1:''};
+ for(let name of ['Type','Slot','Page','Status','Snapshot','Source','HomeKeyCache','ActionsCache','DeviceSnapshotReady',...Array.from({length:16},(_,i)=>'Cache'+i)])p['NFCUI_'+name]={value:['Slot','Source'].includes(name)?1:''};
  let f={p,closed:0,canceled:false,requests:[],generation:[0,0,0,1],records:[],token:[0,0,0,77],revoked:false};
  f.device={getParameterByName:name=>p[name]};f.online={connect(){},disconnect(){f.closed++;}};f.progress={isCanceled:()=>f.canceled,setText(){},setProgress(){}};
  global.BASE_invokeFunctionPropertyWrapper=(object,property,data)=>{f.requests.push([object,...data]);if(f.override){let r=f.override(object,data);if(r)return r;}
- if(object===160){let cursor=data[1]*256+data[2],rec=f.records.filter(r=>r.id>=cursor).slice(0,5),next=rec.length===5?rec.at(-1).id+1:1500;
+ if(object===160&&data[0]===113){let cursor=data[1]*256+data[2],rec=f.records.filter(r=>r.id>=cursor).slice(0,5),next=rec.length===5?rec.at(-1).id+1:1500;
  return [0,1,...f.generation,next>>8,next&255,rec.length,...rec.flatMap(r=>[r.id>>8,r.id&255,...Buffer.from(r.uid||'11223344000000000000','hex'),...Buffer.from((r.name||'').padEnd(28,'\0'),'latin1')])];}
+ if(object===160&&data[0]===114){let cursor=data[1]*256+data[2],all=f.deviceAssignments||[],records=all.slice(cursor,cursor+32),next=cursor+records.length;return [0,1,...f.generation,next>>8,next&255,records.length,all.length>>8,all.length&255,0,150,f.hasHomeKey===false?0:1,...records.flatMap(([action,id])=>[action>>8,action&255,id>>8,id&255])];}
+ if(data[0]===11){
+  let index=data[1],row=f.deviceRows?f.deviceRows[index]:null,count=f.deviceRows?f.deviceRows.length:16;
+  let header=[0,1,index,count,7,...f.generation];if(index===count)return header;
+  let pre='HK_Authorization'+String(index+1).padStart(2,'0');
+  let issuer=row?row.issuer:String(f.p[pre+'Issuer'].value),endpoint=row?row.endpoint:String(f.p[pre+'Endpoint'].value);
+  let valid=/^[0-9a-f]{16}$/.test(issuer)&&/^[0-9a-f]{12}$/.test(endpoint);
+  let enabled=row?row.enabled:f.p[pre+'Enabled'].value,id=row?row.id:f.p[pre+'AccessId'].value;
+  let description=row?row.description:f.p[pre+'Description'].value;
+  return [...header,(valid?10:0)|(enabled?1:0),id>>8,id&255,...(valid?Buffer.from(issuer+endpoint,'hex'):Buffer.alloc(14)),...Buffer.from(String(description||'').padEnd(32,'\0'),'latin1')];
+ }
  if(data[0]===0)return [0,1,1,1,0,0,2,0,...f.generation];
  if(data[0]===5)return [0,1,...f.token];
  if(data[0]===6)return [0,1,1,f.revoked?1:0,...f.token,...Buffer.from('0011223344556677112233445501','hex')];
@@ -113,5 +124,42 @@ test('Identification does not overwrite edits made during the online phase',()=>
   assert.equal(f.p.HK_Authorization01Description.value,'Edited while waiting');
   assert.equal(f.p.HK_Authorization01Issuer.value,'');assert.equal(f.p.HK_Authorization01Enabled.value,0);
  }finally{HK_wait=wait;}
+});
+test('Device view shows one learned phone, excludes named placeholders and ignores unprogrammed ETS edits',()=>{
+ let f=fixture();f.deviceRows=[{issuer:'',endpoint:'',description:'iPhone Franz',id:0,enabled:0},{issuer:'a8587854c92ce68c',endpoint:'f3d38447f0c2',description:'Downloaded phone',id:0,enabled:1}];
+ f.p.HK_Authorization01Description.value='iPhone Franz';f.p.HK_Authorization02Issuer.value='a8587854c92ce68c';f.p.HK_Authorization02Endpoint.value='f3d38447f0c2';
+ refresh(f);let data=NFCUI_input(f.device),model=NFCUI_deviceRows(data),output={};
+ assert.equal(data.Source,0);assert.equal(model.rows.length,1);assert.equal(model.rows[0].description,'Downloaded phone');
+ assert.equal(model.rows[0].identity,'a8587854c92ce68c+f3d38447f0c2');assert(model.rows[0].state.includes('ETS Platz 2'));
+ f.p.HK_Authorization03Description.value='Unprogrammed draft';f.p.HK_Authorization02Description.value='Renamed in ETS';
+ NFCUI_calculate(NFCUI_input(f.device),output);assert.equal(output.View0Description,'Downloaded phone');assert.equal(output.View1Type,'');
+ f.p.NFCUI_Source.value=1;NFCUI_calculate(NFCUI_input(f.device),output);assert(output.Summary.includes('ETS-Entwurf'));
+ assert.equal(NFCUI_rows(NFCUI_input(f.device)).rows.length,3);
+});
+test('Device readback failures retain the entire previous snapshot, including HomeKey names and action assignments',()=>{
+ for(let failure of ['homekey','actions','disconnect','setter']){
+  let f=fixture();refresh(f);let keys=['HomeKeyCache','ActionsCache','DeviceSnapshotReady','Snapshot','Source','Page',...Array.from({length:16},(_,i)=>'Cache'+i)];
+  let before=JSON.stringify(keys.map(k=>f.p['NFCUI_'+k].value));f.records=[{id:42,name:'new UID'}];
+  f.override=(object,data)=>{if(failure==='homekey'&&object===165&&data[0]===11)throw Error('HomeKey network failed');if(failure==='actions'&&object===160&&data[0]===114)return [8,1];};
+  if(failure==='disconnect')f.online.disconnect=()=>{throw Error('Disconnect failed');};
+  if(failure==='setter'){let value=f.p.NFCUI_HomeKeyCache.value,fail=true;Object.defineProperty(f.p.NFCUI_HomeKeyCache,'value',{enumerable:true,get(){return value;},set(next){if(fail){fail=false;throw Error('Write failed');}value=next;}});}
+  assert.throws(()=>refresh(f),failure);assert.equal(JSON.stringify(keys.map(k=>f.p['NFCUI_'+k].value)),before,failure);
+ }
+});
+test('Device view stays empty before its first readback even if the ETS project contains drafts',()=>{
+ let f=fixture(),out={};f.p.NFCUI_Source.value=0;f.p.HK_Authorization01Description.value='Just a name';
+ NFCUI_calculate(NFCUI_input(f.device),out);assert.equal(out.View0Type,'');assert(out.Summary.includes('Noch kein Gerätestand'));
+});
+test('Downloaded action pages are used in device view instead of edited ETS assignments',()=>{
+ let f=fixture();f.deviceRows=[{issuer:'0011223344556677',endpoint:'112233445501',description:'Phone',id:42,enabled:1}];
+ f.deviceAssignments=Array.from({length:310},(_,i)=>[i%150+1,i]);refresh(f);
+ f.p.NFCACT_Fa1ActionId={value:9};f.p.NFCACT_Fa1NfcId={value:42};
+ let model=NFCUI_deviceRows(NFCUI_input(f.device));assert.equal(model.rows[0].actions,'43');
+ assert(f.requests.some(r=>r[0]===160&&r[1]===114&&r[2]*256+r[3]===310));
+});
+test('UID-only firmware readback never queries an unavailable HomeKey module',()=>{
+ let f=fixture();f.hasHomeKey=false;f.records=[{id:7,name:'UID only'}];refresh(f);
+ assert(!f.requests.some(r=>r[0]===165));assert.equal(NFCUI_deviceRows(NFCUI_input(f.device)).rows.length,1);
+ assert.equal(f.p.NFCUI_HomeKeyCache.value,'');
 });
 console.log(tests+' unified NFC ETS tests passed');

@@ -1,11 +1,11 @@
 """Check the producer-expanded UI and preservation of downloaded parameter layout."""
 from pathlib import Path
-import re, subprocess, xml.etree.ElementTree as E
+import re, subprocess, sys, xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[2]
 ns='{http://knx.org/xml/project/20}'
 # Guard the entire document, including IDs copied from legacy editor fragments.
 from collections import Counter
-xml=E.parse(root/'src/AccessControl.debug.xml').getroot()
+xml=E.parse(Path(sys.argv[1]) if len(sys.argv)>1 else root/'src/AccessControl.debug.xml').getroot()
 id_counts=Counter(n.attrib['Id'] for n in xml.iter() if 'Id' in n.attrib)
 assert not [id for id,count in id_counts.items() if count>1], 'Duplicate expanded ETS IDs'
 parameters={p.attrib['Name']:p for p in xml.iter(ns+'Parameter')}
@@ -28,6 +28,11 @@ for i in range(1,311):
   assert refs[parameters[f'NFCACT_Fa{i}{field}'].attrib['Id']] in inputs
 for name,p in parameters.items():
  if name.startswith('NFCUI_'):assert p.find(ns+'Memory') is None
+assert parameters['NFCUI_Source'].attrib['Value']=='0'
+for field in ['Source','HomeKeyCache','ActionsCache','DeviceSnapshotReady']:
+ assert refs[parameters['NFCUI_'+field].attrib['Id']] in inputs
+read=next(b for b in nfc.iter(ns+'Button') if b.attrib.get('EventHandler')=='NFCUI_refresh')
+assert read.attrib['Text']=='Zugänge einlesen'
 # Editor selection must not hide/remove the raw-data/external-enrollment GAs.
 parents={child:parent for parent in nfc.iter() for child in parent}
 type_ref=refs[parameters['NFCUI_Type'].attrib['Id']]
@@ -38,7 +43,7 @@ for obj in nfc.iter(ns+'ComObjectRefRef'):
   assert node.attrib.get('ParamRefId')!=type_ref
 # No changed parameter offsets or channel allocation in the firmware header.
 old=subprocess.check_output(['git','show','HEAD:include/knxprod.h'],cwd=root,text=True)
-new=(root/'include/knxprod.h').read_text()
+new=(Path(sys.argv[2]) if len(sys.argv)>2 else root/'include/knxprod.h').read_text()
 def definitions(text):return {m[0]:m[1].strip() for m in re.findall(r'^#define ((?:HK|ACC|NFCACT)_\w+)\s+([^\n]+)',text,re.M)}
 assert definitions(old)==definitions(new)
 print('Unified ETS layout, live dependencies, object visibility and unchanged firmware memory offsets passed')

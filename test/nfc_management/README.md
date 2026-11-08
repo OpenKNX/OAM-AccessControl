@@ -10,6 +10,7 @@ Validation:
 node test/nfc_management/ets_test.cjs
 node test/nfc_management/jscript_test.cjs
 python3 test/nfc_management/backend_test.py
+python3 test/nfc_management/snapshot_backend_test.py
 python3 test/nfc_management/commissioning_test.py
 python3 test/nfc_management/download_test.py
 python3 test/nfc_management/xml_test.py
@@ -43,7 +44,9 @@ On-device/ETS acceptance:
    programming mode off; no access action should run.
 3. Set its name, unused Tag ID and enabled flag. Check the assignment, configure
    Tag ID → action in the NFC action table, then download. Scan to confirm access.
-4. Change a Tag ID/action in ETS: the overview must update immediately. A shared
+4. Select **ETS-Entwurf** and change a Tag ID/action: that view updates immediately.
+   **Gerätestand** retains the downloaded values until a new successful read.
+   A shared
    active ID must show a conflict; several actions for one credential are valid.
 5. Select Vorgang → löschen and delete the selected HomeKey device. Confirm keys/permission are removed, its
    ETS slot is empty, other devices still work and action references remain.
@@ -98,6 +101,29 @@ After updating the ETS product, download from each operation with two enabled
 devices in different slots and verify both still authenticate. Also check that
 disabling one slot and downloading from another slot revokes the disabled slot.
 The actual ETS download round trip requires hardware testing.
+
+The overview defaults to **Gerätestand**, not a mixture of UID readback and live
+HomeKey drafts. **Zugänge einlesen** stages UID tags, HomeKey permissions/names
+and downloaded action assignments before publishing the complete result. Named
+placeholders without a complete device identity are not device rows. They remain
+visible/editable in the explicit **ETS-Entwurf** view, which also drives draft
+collision checks. No keys or permissions are changed by readback. This feature
+requires updating both the firmware and ETS product; it does not move any
+existing downloaded parameter or credential storage offsets.
+
+Read-only protocols:
+
+- Object 160/property 3 command 114: request `114,cursorBE16,revisionBE32`;
+  reply `result,1,revisionBE32,nextBE16,count,totalBE16,visibleBE16,hasHomeKey`,
+  then up to 32 `actionBE16,tagIdBE16` records. The revision fingerprints the
+  downloaded assignments and visibility count. A final empty page validates it.
+- Object 165/property 3 command 11: request `11,index,generationBE32`;
+  reply `result,1,index,total,policyFlags,generationBE32`, followed (except at
+  the final index) by `rowFlags,tagIdBE16,issuer8,endpoint6,description32`.
+  Policy flags are enabled/ETS-source/table-valid; row flags are permission,
+  provisioned/revoked/valid-identity. ETS mode exposes 16 stored slots; USB mode
+  exposes local mappings. The revision includes public parameters and store
+  generation. These endpoints never return cryptographic keys.
 
 Deleting an incomplete HomeKey slot (missing or malformed issuer/endpoint)
 clears and disables only that ETS draft. It sends no reader revocation command

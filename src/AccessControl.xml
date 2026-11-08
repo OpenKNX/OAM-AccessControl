@@ -13,7 +13,7 @@
   <op:nowarn id="1" regex="ACC_ApplicationVersion" />
   <!-- These helpers are called by script handlers or retained for older ETS button bindings. -->
   <op:nowarn id="3" regex="HK_(setOnlineStatus|call|requireOk|wait|status|statusText|run|hex|readEndpoints|importEndpoints|authorizationFields|deleteAuthorization([0-9]{2})?|nfcAssignmentInfo)\b" />
-  <op:nowarn id="3" regex="NFCUI_(parameter|value|status|rows|validate|input|uidWrite|selected|identity|search)\b" />
+  <op:nowarn id="3" regex="NFCUI_(parameter|value|status|rows|validate|input|uidWrite|selected|identity|search|deviceRows|textFromHex|readActions|readHomeKeys)\b" />
   <op:nowarn id="3" regex="ACC_(enrollNfc|changeNfc|deleteNfc|resetNfcScanner)\b" />
   <!-- The producer also detects anonymous JavaScript callbacks as an empty function name. -->
   <op:nowarn id="3" regex="Function with name  was never called from xml" />

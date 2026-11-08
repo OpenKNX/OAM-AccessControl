@@ -38,6 +38,7 @@ struct HomeKeyModule {
  bool pairingAllowed(){return false;}uint8_t authorizationStatus(){return 2;}
  void cancelCommissioning(){++canceled;}
  uint8_t requestCommissioning(bool open){return open&&!ParamHK_PairingPermitted?HomeKeyOnline::NotPermitted:HomeKeyOnline::Ok;}
+ void readPermissionSnapshot(uint8_t,uint32_t,uint8_t* out,uint8_t& length){out[0]=HomeKeyOnline::Invalid;length=2;}
  bool processFunctionProperty(uint8_t,uint8_t,uint8_t,uint8_t*,uint8_t*,uint8_t&);
  bool processFunctionPropertyState(uint8_t,uint8_t,uint8_t,uint8_t*,uint8_t*,uint8_t&);
 };

@@ -6,6 +6,10 @@
 <ApplicationProgram Id="%AID%">
 <Static>
 <ParameterTypes>
+<ParameterType Id="%AID%_PT-NfcUiSource" Name="NfcUiSource"><TypeRestriction Base="Value" SizeInBit="8">
+<Enumeration Id="%ENID%" Text="Gerätestand" Value="0" /><Enumeration Id="%ENID%" Text="ETS-Entwurf" Value="1" />
+</TypeRestriction></ParameterType>
+<ParameterType Id="%AID%_PT-NfcUiReady" Name="NfcUiReady"><TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="0" maxInclusive="1" /></ParameterType>
 <ParameterType Id="%AID%_PT-NfcUiText" Name="NfcUiText">
 <TypeText SizeInBit="2048" />
 </ParameterType>
@@ -16,7 +20,7 @@
 <TypeText SizeInBit="256" />
 </ParameterType>
 <ParameterType Id="%AID%_PT-NfcUiPage" Name="NfcUiPage">
-<TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="1" maxInclusive="152" />
+<TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="1" maxInclusive="157" />
 </ParameterType>
 <ParameterType Id="%AID%_PT-NfcUiSlot" Name="NfcUiSlot">
 <TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="1" maxInclusive="16" />
@@ -42,7 +46,7 @@
 <Parameter Id="%AID%_P-%TT%00003" Name="Filter" ParameterType="%AID%_PT-NfcUiFilter" Text="Anzeige" Value="0" />
 <Parameter Id="%AID%_P-%TT%00004" Name="Search" ParameterType="%AID%_PT-NfcUiSearch" Text="Suche (ID / Bezeichnung / Geräte-ID)" Value="" />
 <Parameter Id="%AID%_P-%TT%00005" Name="Page" ParameterType="%AID%_PT-NfcUiPage" Text="Seite (10 Einträge)" Value="1" />
-<Parameter Id="%AID%_P-%TT%00006" Name="Snapshot" ParameterType="%AID%_PT-NfcUiText" Text="UID-Snapshot" Value="Noch nicht eingelesen" />
+<Parameter Id="%AID%_P-%TT%00006" Name="Snapshot" ParameterType="%AID%_PT-NfcUiText" Text="Geräte-Snapshot" Value="Noch nicht eingelesen" />
 <Parameter Id="%AID%_P-%TT%00007" Name="Status" ParameterType="%AID%_PT-NfcUiText" Text="Status" Value="" />
 <Parameter Id="%AID%_P-%TT%00008" Name="Summary" ParameterType="%AID%_PT-NfcUiText" Text="Übersicht" Value="" />
 <Parameter Id="%AID%_P-%TT%00009" Name="Cache0" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
@@ -121,6 +125,10 @@
 <Parameter Id="%AID%_P-%TT%00082" Name="View9Identity" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
 <Parameter Id="%AID%_P-%TT%00083" Name="View9State" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
 <Parameter Id="%AID%_P-%TT%00084" Name="View9Actions" ParameterType="%AID%_PT-NfcUiText" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00085" Name="Source" ParameterType="%AID%_PT-NfcUiSource" Text="Datenquelle" Value="0" />
+<Parameter Id="%AID%_P-%TT%00086" Name="HomeKeyCache" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00087" Name="ActionsCache" ParameterType="%AID%_PT-NfcUiCache" Text="" Value="" />
+<Parameter Id="%AID%_P-%TT%00088" Name="DeviceSnapshotReady" ParameterType="%AID%_PT-NfcUiReady" Text="" Value="0" />
 </Parameters>
 <ParameterRefs>
 <ParameterRef Id="%AID%_P-%TT%00001_R-%TT%0000101" RefId="%AID%_P-%TT%00001" />
@@ -239,6 +247,10 @@
 <ParameterRef Id="%AID%_P-7000159_R-700015902" RefId="%AID%_P-7000159" Access="Read" />
 <ParameterRef Id="%AID%_P-7000515_R-700051502" RefId="%AID%_P-7000515" Access="Read" />
 <ParameterRef Id="%AID%_P-7000163_R-700016302" RefId="%AID%_P-7000163" Access="Read" />
+<ParameterRef Id="%AID%_P-%TT%00085_R-%TT%0008501" RefId="%AID%_P-%TT%00085" />
+<ParameterRef Id="%AID%_P-%TT%00086_R-%TT%0008601" RefId="%AID%_P-%TT%00086" />
+<ParameterRef Id="%AID%_P-%TT%00087_R-%TT%0008701" RefId="%AID%_P-%TT%00087" />
+<ParameterRef Id="%AID%_P-%TT%00088_R-%TT%0008801" RefId="%AID%_P-%TT%00088" />
 </ParameterRefs>
 <ParameterCalculations>
 <ParameterCalculation Id="%AID%_PC-%TT%00001" Name="NFCUI_Overview" Language="JavaScript" LRTransformationFunc="BASE_Nop" RLTransformationFunc="NFCUI_calculate">
@@ -306,6 +318,10 @@
 <ParameterRefRef RefId="%AID%_P-%TT%00084_R-%TT%0008401" AliasName="View9Actions" />
 </LParameters>
 <RParameters>
+<ParameterRefRef RefId="%AID%_P-%TT%00085_R-%TT%0008501" AliasName="Source" />
+<ParameterRefRef RefId="%AID%_P-%TT%00086_R-%TT%0008601" AliasName="HomeKeyCache" />
+<ParameterRefRef RefId="%AID%_P-%TT%00087_R-%TT%0008701" AliasName="ActionsCache" />
+<ParameterRefRef RefId="%AID%_P-%TT%00088_R-%TT%0008801" AliasName="DeviceSnapshotReady" />
 <ParameterRefRef RefId="%AID%_UP-2920001_R-292000101" AliasName="ActionCount" />
 <ParameterRefRef RefId="%AID%_UP-2000001_R-200000101" AliasName="VisibleActions" />
 <ParameterRefRef RefId="%AID%_P-%TT%00003_R-%TT%0000301" AliasName="Filter" />
@@ -1444,9 +1460,10 @@
 <ParameterRefRef RefId="%AID%_P-%TT%00007_R-%TT%0000701" HelpContext="HK-Bearbeitungsstatus" />
 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
 <ParameterSeparator Id="%AID%_PS-nnn" Text="Zugänge und Aktionszuordnungen" UIHint="Headline" HelpContext="HK-Uebersicht" />
-<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="UID-Tags einlesen" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" HelpContext="HK-UID-Tags-Einlesen" />
+<Button Id="%AID%_B-%TT%00006" Name="NFCUI_refresh" Text="Zugänge einlesen" EventHandler="NFCUI_refresh" EventHandlerOnline="ConnectionOriented" HelpContext="HK-UID-Tags-Einlesen" />
 <ParameterRefRef RefId="%AID%_P-%TT%00006_R-%TT%0000601" HelpContext="HK-UID-Snapshot" />
 
+<ParameterRefRef RefId="%AID%_P-%TT%00085_R-%TT%0008501" HelpContext="HK-Datenquelle" />
 <ParameterRefRef RefId="%AID%_P-%TT%00003_R-%TT%0000301" HelpContext="HK-Anzeige" />
 <ParameterRefRef RefId="%AID%_P-%TT%00004_R-%TT%0000401" HelpContext="HK-Suche" />
 <ParameterRefRef RefId="%AID%_P-%TT%00005_R-%TT%0000501" HelpContext="HK-Seite" />
