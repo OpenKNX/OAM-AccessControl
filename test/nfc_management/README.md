@@ -36,7 +36,7 @@ not in downloaded ESP parameters.
 
 On-device/ETS acceptance:
 
-1. Generate and sign application 11.7 on the ETS machine and flash the matching
+1. Generate and sign application 11.9 on the ETS machine and flash the matching
    firmware. Upgrade preserves permission memory offsets and existing keys.
 2. Import paired devices under Allgemein → NFC-Scanner → Apple HomeKey,
    Vorgang → anlegen, using Geräte einlesen; new
@@ -144,3 +144,13 @@ The bulk-deletion control explicitly says Alle UID-Tags löschen? and appears
 only for UID-Tag. It clears UID records, not HomeKey keys, permission slots or
 revocations. Individual HomeKey revocation uses Gerät löschen. Each operation
 button has a help topic describing its effect and the next commissioning step.
+
+Online script robustness: changing snapshot revisions restart the complete read
+(up to three attempts) without publishing partial data. A successful UID write
+is reported separately from a failed subsequent readback. Imports stage all
+changes until disconnect and roll back ETS fields if completion fails. Active
+HomeKey rows require complete identities; the unified editor also registers an
+automatic UID/HomeKey collision validation against the latest UID snapshot.
+Refresh that snapshot after changes outside this project. Info holen compares
+the requested permission with the downloaded device data instead of assuming
+a pending download. Successful scans update both status fields.

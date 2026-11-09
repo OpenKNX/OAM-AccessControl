@@ -126,3 +126,11 @@ for kind in (0,1):
  assert len(resets)==(1 if kind==0 else 0)
  if resets:assert resets[0].attrib['Text']=='UID-Tags löschen'
 print('UID-only bulk deletion: explicit label and visibility separate from HomeKey devices passed')
+
+# Collision checks must be registered, not merely callable by a manual button.
+validation=next(node for node in xml.iter() if node.tag.endswith('ParameterValidation') and node.get('ValidationFunc')=='NFCUI_validateAssignments')
+aliases={node.get('AliasName') for node in validation.iter() if node.tag.endswith('ParameterRefRef')}
+assert {'HomeKeyEnabled','EtsAuthorization'} <= aliases
+assert {f'Cache{i}' for i in range(16)} <= aliases
+assert {f'Row{row:02d}{field}' for row in range(1,17) for field in ['Enabled','Issuer','Endpoint','AccessId']} <= aliases
+print('Automatic unified UID/HomeKey validation registered for all slots and UID cache pages')

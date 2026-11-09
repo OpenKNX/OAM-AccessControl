@@ -38,7 +38,7 @@ test('Hidden action assignments do not appear as usable routes',()=>{let v=input
 test('Overview search, conflict filter and pagination recalculate',()=>{let v=input();for(let i=1;i<=16;i++)hk(v,i,i);v.Page=2;let o={};NFCUI_calculate(v,o);assert.equal(o.View0Id,'11');v.Search='Phone 16';v.Page=1;NFCUI_calculate(v,o);assert.equal(o.View0Id,'16');assert.equal(o.View1Id,'');v.Search='';v.Row02AccessId=1;v.Filter=3;NFCUI_calculate(v,o);assert.equal(o.View0Id,'1');assert.equal(o.View1Id,'1');assert.equal(o.View2Id,'');});
 test('Full 1500-record UID snapshot includes unnamed first/last records',()=>{let f=fixture();f.records=Array.from({length:1500},(_,id)=>({id,name:id%2?'Tag '+id:''}));refresh(f);let cache=Array.from({length:16},(_,i)=>f.p['NFCUI_Cache'+i].value).join('');assert.equal(cache.split(';').length-1,1500);assert(cache.startsWith('0,'));assert(cache.includes(';1499,'));assert(f.p.NFCUI_Snapshot.value.startsWith('Gelesen:'));assert.equal(f.requests.at(-1)[2]*256+f.requests.at(-1)[3],1500);assert.equal(f.closed,1);});
 test('Empty UID snapshot clears previous cache',()=>{let f=fixture();f.p.NFCUI_Cache0.value=uid(3);refresh(f);assert.equal(f.p.NFCUI_Cache0.value,'');});
-test('Stale, malformed, duplicate and canceled snapshots preserve previous cache',()=>{for(let failure of ['stale','malformed','duplicate','cancel']){let f=fixture();f.p.NFCUI_Cache0.value=uid(42);f.records=[{id:1},{id:2}];f.override=(object,data)=>{if(object!==160)return;if(failure==='stale')return [8,1];if(failure==='malformed')return [0,1,0,0,0,1,5,220,3];if(failure==='duplicate')return [0,1,0,0,0,1,5,220,2,...[1,1].flatMap(id=>[0,id,...Array(38).fill(1)])];};f.canceled=failure==='cancel';assert.throws(()=>refresh(f));assert.equal(f.p.NFCUI_Cache0.value,uid(42));assert(!f.p.NFCUI_Snapshot.value.startsWith('Gelesen:'));assert.equal(f.closed,1);}});
+test('Stale, malformed, duplicate and canceled snapshots preserve previous cache',()=>{for(let failure of ['stale','malformed','duplicate','cancel']){let f=fixture();f.p.NFCUI_Cache0.value=uid(42);f.records=[{id:1},{id:2}];f.override=(object,data)=>{if(object!==160)return;if(failure==='stale')return [8,1];if(failure==='malformed')return [0,1,0,0,0,1,5,220,3];if(failure==='duplicate')return [0,1,0,0,0,1,5,220,2,...[1,1].flatMap(id=>[0,id,...Array(38).fill(1)])];};f.canceled=failure==='cancel';assert.throws(()=>refresh(f));assert.equal(f.p.NFCUI_Cache0.value,uid(42));assert(!f.p.NFCUI_Snapshot.value.startsWith('Gelesen:'));assert.equal(f.closed,failure==='stale'?3:1);}});
 test('Identify a revoked phone without granting it; existing names preserved',()=>{let f=fixture(),wait=HK_wait;HK_wait=()=>{};try{f.revoked=true;NFCUI_identify(f.device,f.online,f.progress,{});assert.equal(f.p.HK_Authorization01Enabled.value,0);assert.equal(f.p.HK_Authorization01Endpoint.value,'112233445501');assert(f.p.NFCUI_Status.value.includes('GESPERRT'));assert(f.requests.some(r=>r[1]===7));f.p.HK_Authorization01Description.value='My phone';f.p.HK_Authorization01AccessId.value=123;NFCUI_identify(f.device,f.online,f.progress,{});assert.equal(f.p.HK_Authorization01Description.value,'My phone');assert.equal(f.p.HK_Authorization01AccessId.value,123);}finally{HK_wait=wait;}});
 test('Canceled identification sends token cancellation and leaves slots empty',()=>{let f=fixture(),wait=HK_wait;HK_wait=()=>{throw Error('Canceled');};try{assert.throws(()=>NFCUI_identify(f.device,f.online,f.progress,{}));assert(f.requests.some(r=>r[1]===7));assert.equal(f.p.HK_Authorization01Issuer.value,'');assert.equal(f.closed,1);}finally{HK_wait=wait;}});
 test('UID writes reject a Tag-ID reserved in the current ETS draft before calling backend',()=>{let f=fixture();f.p.ACC_EnrollNfcId={value:42};f.p.HK_Authorization01Enabled.value=1;f.p.HK_Authorization01Issuer.value='0011223344556677';f.p.HK_Authorization01Endpoint.value='112233445501';f.p.HK_Authorization01AccessId.value=42;let called=false;assert.throws(()=>NFCUI_uidWrite(f.device,f.online,f.progress,{},()=>called=true,true));assert(!called);assert.equal(f.requests.length,0);});
@@ -161,5 +161,50 @@ test('UID-only firmware readback never queries an unavailable HomeKey module',()
  let f=fixture();f.hasHomeKey=false;f.records=[{id:7,name:'UID only'}];refresh(f);
  assert(!f.requests.some(r=>r[0]===165));assert.equal(NFCUI_deviceRows(NFCUI_input(f.device)).rows.length,1);
  assert.equal(f.p.NFCUI_HomeKeyCache.value,'');
+});
+test('Automatic validation rejects malformed active identities and UID collisions',()=>{
+ let v=input();hk(v,1,42);v.Row01Issuer='';assert.match(HK_validateAssignments(v),/vollständige/);
+ v.Row01Enabled=0;assert.equal(HK_validateAssignments(v),true);
+ hk(v,1,42);v.Cache0=uid(42);assert.match(NFCUI_validateAssignments(v),/Doppelte/);
+ v.Row01AccessId=43;assert.equal(NFCUI_validateAssignments(v),true);
+});
+test('Changed permission snapshot retries as a whole without publishing partial data',()=>{
+ let f=fixture(),stale=0,wait=HK_wait;HK_wait=()=>{};
+ f.override=(object,data)=>{if(object===165&&data[0]===11&&data[1]===3&&stale++===0)return [8,1];};
+ try{refresh(f);assert(f.p.NFCUI_Snapshot.value.startsWith('Gelesen:'));assert.equal(f.closed,2);}
+ finally{HK_wait=wait;}
+});
+test('Successful UID write survives a failed follow-up snapshot; backend errors remain errors',()=>{
+ let f=fixture(),committed=false;f.override=()=>{throw Error('Read network failure');};
+ NFCUI_uidWrite(f.device,f.online,f.progress,{},()=>committed=true,false);
+ assert(committed);assert.match(f.p.NFCUI_Status.value,/UID-Bearbeitung erfolgreich/);
+ assert.match(f.p.NFCUI_Snapshot.value,/Veraltet/);
+ assert.throws(()=>NFCUI_uidWrite(f.device,f.online,f.progress,{},()=>{throw Error('Write failure');},false),/Write failure/);
+});
+test('Successful identification clears the previous online error',()=>{
+ let f=fixture(),wait=HK_wait;HK_wait=()=>{};f.p.HK_OnlineStatus.value='old timeout';
+ try{NFCUI_identify(f.device,f.online,f.progress,{});assert.equal(f.p.HK_OnlineStatus.value,f.p.NFCUI_Status.value);assert.match(f.p.HK_OnlineStatus.value,/Gerät identifiziert/);}
+ finally{HK_wait=wait;}
+});
+test('Import commits only after disconnect and rolls back completion failures',()=>{
+ let read=HK_readEndpoints;HK_readEndpoints=()=>[{issuer:'0011223344556677',endpoint:'112233445501'}];
+ try{for(let failure of ['disconnect','progress','setter','cancel','none']){
+  let f=fixture(),before=homeKeyDraft(f);
+  f.online.disconnect=()=>{assert.equal(homeKeyDraft(f),before);f.closed++;if(failure==='disconnect')throw Error('Disconnect failed');};
+  f.progress.setProgress=()=>{if(failure==='progress')throw Error('Progress failed');};
+  if(failure==='cancel')f.canceled=true;
+  if(failure==='setter'){let value='',once=true;Object.defineProperty(f.p.HK_Authorization01Endpoint,'value',{get(){return value;},set(v){if(v&&once){once=false;throw Error('Setter failed');}value=v;}});}
+  if(failure==='none'){HK_importEndpoints(f.device,f.online,f.progress,{});assert.equal(f.p.HK_Authorization01Issuer.value,'0011223344556677');}
+  else{assert.throws(()=>HK_importEndpoints(f.device,f.online,f.progress,{}));assert.equal(homeKeyDraft(f),before);}
+ }}finally{HK_readEndpoints=read;}
+});
+test('Info holen distinguishes downloaded active permission from a changed ETS draft',()=>{
+ let f=fixture(),read=HK_readEndpoints;HK_readEndpoints=()=>[{issuer:'0011223344556677',endpoint:'112233445501'}];
+ f.p.HK_Authorization01Issuer.value='0011223344556677';f.p.HK_Authorization01Endpoint.value='112233445501';
+ f.p.HK_Authorization01Enabled.value=1;f.p.HK_Authorization01Description.value='Phone';f.p.HK_Authorization01AccessId.value=42;
+ f.deviceRows=[{issuer:'0011223344556677',endpoint:'112233445501',description:'Phone',enabled:1,id:42}];
+ try{assert.match(HK_nfcAssignmentInfo(f.device,f.online,f.progress,42,false),/ID 42 aktiv/);
+ f.deviceRows[0].enabled=0;assert.match(HK_nfcAssignmentInfo(f.device,f.online,f.progress,42,false),/abweichend.inaktiv/);}
+ finally{HK_readEndpoints=read;}
 });
 console.log(tests+' unified NFC ETS tests passed');

@@ -113,6 +113,7 @@ function NFCUI_readActions(device,online,progress,expected) {
     do{
         if(progress.isCanceled())throw new Error("NFC: Abgebrochen");
         var r=BASE_invokeFunctionPropertyWrapper(160,3,[114,cursor>>8,cursor&255].concat(generation),device,online,progress);
+        if(r && r[0]==8) HK_requireOk(r);
         if(!r||r.length<14||r[0]!=0||r[1]!=1)throw new Error("Aktions-Snapshot nicht verfügbar/geändert; passende Firmware erforderlich");
         var next=r[6]*256+r[7],count=Number(r[8]),size=r[9]*256+r[10],shown=r[11]*256+r[12],feature=Number(r[13]);
         if(count>32||size>310||r.length!=14+count*4||next!=cursor+count||next>size||feature>1||shown>150||
@@ -170,6 +171,10 @@ function NFCUI_validate(input, changed, prevValue, context) {
     try { return NFCUI_rows(input).conflicts ? "NFC: Doppelte Tag-ID / Geräte-ID. Konflikte in Allgemein → NFC-Scanner prüfen." : true; }
     catch (error) { return String(error.message); }
 }
+function NFCUI_validateAssignments(input, changed, prevValue, context) {
+    var result = HK_validateAssignments(input,changed,prevValue,context);
+    return result === true ? NFCUI_validate(input,changed,prevValue,context) : result;
+}
 function NFCUI_input(device) {
     var input = {};
     for (var i = 0; i < 16; i++) input["Cache" + i] = NFCUI_value(device, "Cache" + i);
@@ -192,6 +197,16 @@ function NFCUI_input(device) {
     return input;
 }
 function NFCUI_refresh(device, online, progress, context) {
+    for (var attempt = 0; attempt < 3; attempt++) {
+        try { NFCUI_refreshOnce(device,online,progress,context); return; }
+        catch (error) {
+            if (!error.snapshotChanged || attempt == 2 || progress.isCanceled()) throw error;
+            progress.setText("Gerätestand während des Lesens geändert; erneut lesen (" + (attempt+2) + "/3)");
+            HK_wait(progress,200);
+        }
+    }
+}
+function NFCUI_refreshOnce(device, online, progress, context) {
     var connected=false,targets=[],old=[],touched=false;
     try {
         connected=true;online.connect();
@@ -200,6 +215,7 @@ function NFCUI_refresh(device, online, progress, context) {
         do {
             if (progress.isCanceled()) throw new Error("NFC: Abgebrochen");
             var response = BASE_invokeFunctionPropertyWrapper(160,3,[113,cursor>>8,cursor&255].concat(generation),device,online,progress);
+            if(response && response[0]==8) HK_requireOk(response);
             if (!response || response.length < 9 || response[0] != 0 || response[1] != 1)
                 throw new Error("UID-Snapshot geändert / Firmware zu alt. Erneut lesen.");
             if (cursor > 0 && HK_hex(response,2,4) != HK_hex(generation,0,4)) throw new Error("UID-Snapshot geändert");
@@ -254,7 +270,11 @@ function NFCUI_uidWrite(device, online, progress, context, handler, checkId) {
     NFCUI_parameter(device,"Snapshot").value = "Veraltet: UID-Bearbeitung gestartet";
     try { handler(device,online,progress,context); }
     finally { try { online.disconnect(); } catch(ignored){} }
-    NFCUI_refresh(device,online,progress,context);
+    try { NFCUI_refresh(device,online,progress,context); }
+    catch (error) {
+        var text = "UID-Bearbeitung erfolgreich; Gerätestand nicht aktualisiert: " + error.message + ". Zugänge erneut einlesen.";
+        NFCUI_status(device,text); progress.setText(text);
+    }
 }
 function NFCUI_enrollUid(d,o,p,c){NFCUI_uidWrite(d,o,p,c,ACC_enrollNfc,true);}
 function NFCUI_changeUid(d,o,p,c){NFCUI_uidWrite(d,o,p,c,ACC_changeNfc,true);}
@@ -329,7 +349,8 @@ function NFCUI_identify(device,online,progress,context) {
         }
         if(plan.revoked)f.enabled.value=0;
         selected.value=plan.slot;
-        NFCUI_status(device,"Gerät identifiziert, Platz "+plan.slot+(plan.revoked?": GESPERRT. Nur über Erneut zulassen freigeben.":". Bezeichnung und freie Tag-ID vergeben; Berechtigung aktivieren und herunterladen."));
+        var text="Gerät identifiziert, Platz "+plan.slot+(plan.revoked?": GESPERRT. Nur über Erneut zulassen freigeben.":". Vorhandene Berechtigung bleibt erhalten; neue Zuordnung konfigurieren und herunterladen.");
+        NFCUI_status(device,text); HK_setOnlineStatus(device,text);
         if(progress.isCanceled())throw new Error("Home Key: Abgebrochen");
         progress.setProgress(100);
     } catch(error) {
