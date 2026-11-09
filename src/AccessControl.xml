@@ -20,7 +20,7 @@
 
   <op:ETS OpenKnxId="0xA6"
     ApplicationNumber="0x01"
-    ApplicationVersion="11.7.0"
+    ApplicationVersion="11.8.0"
     ReplacesVersionsDownTo="4.0"
     ApplicationRevision="0"
     ProductName="Zutrittskontrolle"
@@ -175,9 +175,10 @@
             </when></choose>
           </ParameterBlock>
           <op:include href="../lib/OFM-AccessControl/src/AccessControl.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*[not(@Name='Basic')]" prefix="ACC" />
+          <op:include href="../lib/OFM-HomeKey/src/HomeKey.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/ParameterBlock[@Name='AuthorizationDownload']" prefix="HK" />
           <choose ParamRefId="%AID%_UP-2000034_R-200003401">
             <when test="!=0">
-              <op:include href="../lib/OFM-HomeKey/src/HomeKey.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*" prefix="HK" />
+              <op:include href="../lib/OFM-HomeKey/src/HomeKey.share.xml" xpath="//ApplicationProgram/Dynamic/Channel/*[not(@Name='AuthorizationDownload')]" prefix="HK" />
             </when>
           </choose>
         </Channel>

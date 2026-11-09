@@ -12,6 +12,27 @@ remains available for editing and checking pending changes. Editing a free slot,
 description, Tag-ID or action does not change device-view values. The snapshot
 is not a live connection: read again after programming the device.
 
+## HomeKey downloads independent of editor visibility (11.8)
+
+All 84 stored HomeKey policy/permission fields are referenced by an unconditional
+`AuthorizationDownload` parameter block with `Access="None"`. The block reuses
+the original ParameterRefs, so the editor, scripts and download encode the same
+values. It stays outside the NFC scanner selector; the existing memory layout
+and `LegacyPatchAlways` attributes are retained.
+
+This matters for XKNX, which builds the download image from active references.
+Previously, selecting **anlernen** hid the issuer/endpoint references and left
+their bytes empty in the download, even though the ETS draft displayed the IDs.
+**Zugänge einlesen** correctly excluded that incomplete device row. Showing the
+fields with **anlegen** made the same image include the missing 28 ID bytes.
+
+Hardware validation on the ESP32-S3 IP controller (2026-11-09): application-only
+USB firmware flash, XKNX product update preserving parameters/group links, full
+11.8 download while **anlernen** was selected, and successful device readback of
+both the active Home Key (Tag-ID 0) and the UID tag (Tag-ID 1), without
+conflicts. Parameter previews with another HomeKey slot selected and with UID
+mode selected both reported zero differences. No key or UID storage was erased.
+
 ## Updating
 
 This change needs **both** the updated firmware and a regenerated ETS product.
