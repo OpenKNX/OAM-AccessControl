@@ -1,6 +1,6 @@
 ------- Built with -------
 8e38048 v1dev_HomeKey lib/knx https://github.com/u20p17/knx.git
-b0311cfb8ff05a81a94d3e6f418fc86f3330a653 v1dev_HomeKey lib/OFM-AccessControl https://github.com/u20p17/OFM-AccessControl.git
+118e3c9fc1f9cb1c5171ac09daac082bd296cc27 v1dev_HomeKey lib/OFM-AccessControl https://github.com/u20p17/OFM-AccessControl.git
 5048828 HEAD lib/OFM-BinaryInput https://github.com/OpenKNX/OFM-BinaryInput.git
 6ee3377 v1dev lib/OFM-ConfigTransfer https://github.com/OpenKNX/OFM-ConfigTransfer
 3fa76cd v1 lib/OFM-Feedback https://github.com/OpenKNX/OFM-Feedback.git
@@ -13,6 +13,6 @@ f822931 HEAD lib/OFM-VirtualButton https://github.com/OpenKNX/OFM-VirtualButton.
 1358ad72b9029ce17aa57b4ff43521c4d4ddcac8 v1dev_HomeKey lib/PN7160 https://github.com/u20p17/PN7160.git
 78ec7dc49f4edc4158ccba855d275e5f3f6a38b7 v1dev_HomeKey lib/DigitalDoorKey https://github.com/u20p17/DigitalDoorKey.git
 d028288250fc732667ff9b228aaf7d6ff8ac50af v1dev_HomeKey lib/PN7161 https://github.com/u20p17/PN7161.git
-364eb3f72d75b9b972a5684306a657a3de621b73 fix/esp32-web-memory lib/OFM-HomeKey https://github.com/u20p17/OFM-HomeKey.git
+0576bb1dc7907f06f0eedbc268fc248b16e939eb fix/esp32-web-memory lib/OFM-HomeKey https://github.com/u20p17/OFM-HomeKey.git
 9c46cb8db6fad74312dcb73cec90d719dd11d7ac v1dev lib/OFM-Network https://github.com/u20p17/OFM-Network.git
-f39ea9be898644a843ebc7340f3a0d4df049031d main lib/ST25R3916 https://github.com/u20p17/ST25R3916.git
+c15ca4055ebbae237ac2ae45dca6425ced7a0c2c main lib/ST25R3916 https://github.com/u20p17/ST25R3916.git
