@@ -29,7 +29,7 @@ fields with **anlegen** made the same image include the missing 28 ID bytes.
 Hardware validation on the ESP32-S3 IP controller (2026-11-09): application-only
 USB firmware flash, XKNX product update preserving parameters/group links, full
 11.8 download while **anlernen** was selected, and successful device readback of
-both the active Home Key (Tag-ID 0) and the UID tag (Tag-ID 1), without
+both the active Home Key (Tag-ID 0) and the UID tag (Tag-ID 1) without
 conflicts. Parameter previews with another HomeKey slot selected and with UID
 mode selected both reported zero differences. No key or UID storage was erased.
 

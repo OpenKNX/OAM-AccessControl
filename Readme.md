@@ -91,8 +91,8 @@ and rejection of incomplete transfers. Invalid UID lengths are rejected on ESP32
 RP2040 transport body and platform-specific peripheral operations are retained.
 
 The application links the separately committed local `PN7160` checkout. Its
-OGM-Common dependency uses the private checkout at
-`../OGM-Common`,
+OGM-Common dependency uses the private checkout linked through
+`lib/OGM-Common`,
 based on upstream revision `f099eb9` (1.9.1) with the logger prefix overflow fix.
 The exact revision is pinned in `dependencies.txt`. The shared OGM-Common
 development checkout is not used or modified. The ETS configuration uses Common 1.9 and
@@ -135,14 +135,11 @@ or tag IDs are introduced. HomeSpan does not start in UID-only mode. Combined pr
 OFM-AccessControl owns the common reader lifecycle. ECP is emitted only with HomeKey active and a provisioned group ID.
 
 The standalone driver and protocol tests live in the private
-[u20p17/ST25R3916](https://github.com/u20p17/ST25R3916) repository, checked out
-at `../ST25R3916` and linked through
+[u20p17/ST25R3916](https://github.com/u20p17/ST25R3916) repository, linked through
 `lib/ST25R3916`. OFM-HomeKey contains only its `INfcReader` adapter; it generates
 ECP frames and handles authentication and authorization. Integration tests are
 in `test/homekey_st25`; hardware validation
-of iPhone/Watch, Express Mode and range is still pending. The reference and
-implementation decisions are recorded in
-[the integration plan](docs/ST25R3916-integration-plan.md).
+of iPhone/Watch, Express Mode and range is still pending.
 
 ### REG1-ipTpControllerESP-Devboard v00.11 with PN7161
 
@@ -233,7 +230,14 @@ The I2C address is 0x28 and the bus runs at 400 kHz. GPIO19/21/22 are shared
 with Ethernet RMII, so Ethernet must remain disconnected and disabled with
 this wiring. The Home Key reader applies the fixed 3.3 V PMU/TXLDO preset for
 VANT=3.3 V, following the [module vendor's supply configuration](https://www.elechouse.com/docs/pn7161/).
-Reader operation and phone/watch provisioning require hardware validation.
+The native PN7161 transport registers on the existing Wire bus before NFC
+workers start and keeps the same device handle through reader recovery. On a
+shared bus, initialize other devices before the workers start and keep the bus
+configuration and device registrations stable. The Gira keypad changes the
+bus configuration at runtime, so selecting it disables NFC. To validate the
+wiring, check for `NFC: Native I2C ready:` on boot, then test UID and Home Key
+reads and reader recovery. For a shared bus, repeat those checks while reading
+from a second device already registered at a different address.
 
 #### Power supply and startup troubleshooting
 
@@ -687,9 +691,8 @@ on the XIAO still require device testing.
 
 The Arduino-only integration builds without an IDF project conversion. Exact
 local wrapper revisions are recorded in `dependencies.txt`; HomeSpan 2.1.8 is
-pinned in the environment. Modified dependencies, including OFM-HomeKey, are
-checked out under `..` and linked from
-`lib`. Each library has its own Git checkout in `HomeKey/<library-name>`.
+pinned in the environment. Modified dependencies, including OFM-HomeKey, have
+separate Git checkouts linked from `lib`.
 
 Home Key upstream dependencies were checked on 2026-10-30:
 
@@ -699,8 +702,7 @@ Home Key upstream dependencies were checked on 2026-10-30:
 | DigitalDoorKey | [80e4a1e](https://github.com/rednblkx/DigitalDoorKey/commit/80e4a1e14eab3646b62ab3bdad6d2ed01d399375) | Updated Arduino wrapper; crypto shim moved to public includes |
 | PN7161 driver (`rednblkx/pn7160`) | [db5cb56](https://github.com/rednblkx/pn7160/commit/db5cb56b2ccfbaa4c30879043a3597bd6c7d53c8) | Current upstream; existing wrapper retained |
 
-The updated DigitalDoorKey wrapper lives in
-`../DigitalDoorKey` and is linked through `lib/DigitalDoorKey`.
+The updated DigitalDoorKey wrapper is linked through `lib/DigitalDoorKey`.
 Its exact local revision is pinned in `dependencies.txt`.
 The private TLV class is named `DdkTlv8` to avoid a linker collision with
 HomeSpan's incompatible global `TLV8`. The collision caused `LoadProhibited`
@@ -761,8 +763,7 @@ OpenKNX checkouts retain their original remotes. GitHub Actions is disabled on
 the private repositories; no collaborators were added. `dependencies.txt`
 records the private clone URLs and exact revisions of modified dependencies.
 
-The ten private dependencies are checked out directly from GitHub in
-`..`. Application library links use
+Application library links use
 relative paths such as `lib/OFM-Network -> ../../../HomeKey/OFM-Network`.
 `AccessControl.code-workspace` opens these active library links so the editor
 shows the same checkout that PlatformIO builds.
